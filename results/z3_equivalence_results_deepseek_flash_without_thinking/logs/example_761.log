@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_761.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_761.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3093 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which programs' origins are not "Beijing"? Give me the program names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Launch = real -> Float32()
+        Name = text -> StringSort()
+        Origin = text -> StringSort()
+        Owner = text -> StringSort()
+        Program_ID = int -> IntSort()
+      symbols:
+        program(Program_ID, Name, Origin, Launch, Owner)
+        constant Beijing : Origin
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Program_ID ∃o : Origin ∃l : Launch ∃o1 : Owner ( (program(p,n,o,l,o1)) ∧ (o <> 'Beijing') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID EXISTS:∃ IDENT:o COLON:: IDENT:Origin EXISTS:∃ IDENT:l COLON:: IDENT:Launch EXISTS:∃ IDENT:o1 COLON:: IDENT:Owner LPAR:( LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o NEQ:<> LIT:Beijing RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Program_ID
+            EXISTS o:Origin
+              EXISTS l:Launch
+                EXISTS o1:Owner
+                  AND
+                    PRED program(p, n, o, l, o1)
+                    NEQ  o != 'Beijing'
+      Predicted FOL: ∃p0 : Program_ID ∃p1 : Name ∃p2 : Origin ∃p3 : Launch ∃p4 : Owner (program(p0, p1, p2, p3, p4) ∧ p2 ≠ 'Beijing')
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:Program_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Name EXISTS:∃ IDENT:p2 COLON:: IDENT:Origin EXISTS:∃ IDENT:p3 COLON:: IDENT:Launch EXISTS:∃ IDENT:p4 COLON:: IDENT:Owner LPAR:( IDENT:program LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 RPAR:) AND:∧ IDENT:p2 NEQ:≠ LIT:Beijing RPAR:) EOF
+        AST:
+          EXISTS p0:Program_ID
+            EXISTS p1:Name
+              EXISTS p2:Origin
+                EXISTS p3:Launch
+                  EXISTS p4:Owner
+                    AND
+                      PRED program(p0, p1, p2, p3, p4)
+                      NEQ  p2 != 'Beijing'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Origin, global text -> StringSort()
+        o1 : local Owner, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+      Predicted FOL:
+        p0 : local Program_ID, global int -> IntSort()
+        p1 : local Name, global text -> StringSort()
+        p2 : local Origin, global text -> StringSort()
+        p3 : local Launch, global real -> Float32()
+        p4 : local Owner, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5330 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_761.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

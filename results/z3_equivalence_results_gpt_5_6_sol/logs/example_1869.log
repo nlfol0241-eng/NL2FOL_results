@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1869.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1869.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3981 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the instruments used by the musician with the last name "Heilo"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        BandmateId = integer -> IntSort()
+        Firstname = text -> StringSort()
+        Id = integer -> IntSort()
+        Instrument = text -> StringSort()
+        Lastname = text -> StringSort()
+        SongId = integer -> IntSort()
+      symbols:
+        Band(Id, Firstname, Lastname)
+        Instruments(SongId, BandmateId, Instrument)
+        constant Heilo : Lastname
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : SongId ∃b : BandmateId ∃i1 : Id ∃f : Firstname ∃l : Lastname ( (((Instruments(s,b,i)) ∧ (Band(i1,f,l))) ∧ (b = i1)) ∧ (l = 'Heilo') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:BandmateId EXISTS:∃ IDENT:i1 COLON:: IDENT:Id EXISTS:∃ IDENT:f COLON:: IDENT:Firstname EXISTS:∃ IDENT:l COLON:: IDENT:Lastname LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Instruments LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Band LPAR:( IDENT:i1 COMMA:, IDENT:f COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:Heilo RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:BandmateId
+              EXISTS i1:Id
+                EXISTS f:Firstname
+                  EXISTS l:Lastname
+                    AND
+                      AND
+                        AND
+                          PRED Instruments(s, b, i)
+                          PRED Band(i1, f, l)
+                        EQ  b = i1
+                      EQ  l = 'Heilo'
+      Predicted FOL: ∃s : SongId ∃b : BandmateId ∃f : Firstname (Instruments(s, b, i) ∧ Band(b, f, 'Heilo'))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:BandmateId EXISTS:∃ IDENT:f COLON:: IDENT:Firstname LPAR:( IDENT:Instruments LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:i RPAR:) AND:∧ IDENT:Band LPAR:( IDENT:b COMMA:, IDENT:f COMMA:, LIT:Heilo RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:BandmateId
+              EXISTS f:Firstname
+                AND
+                  PRED Instruments(s, b, i)
+                  PRED Band(b, f, 'Heilo')
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Instrument_0 : Instrument   Gold i <-> Predicted i
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local BandmateId, global integer -> IntSort()
+        f : local Firstname, global text -> StringSort()
+        i : local Instrument, global text -> StringSort()
+        i1 : local Id, global integer -> IntSort()
+        l : local Lastname, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+      Predicted FOL:
+        b : local BandmateId, global integer -> IntSort()
+        f : local Firstname, global text -> StringSort()
+        i : local Instrument, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_b_2, gold_i1_3, gold_f_4, gold_l_5], And(And(And(P_Instruments(gold_s_1, gold_b_2, FV_Instrument_0), P_Band(gold_i1_3, gold_f_4, gold_l_5)), (gold_b_2 == gold_i1_3)), (gold_l_5 == L_Heilo)))
+      gold_skolem (witnesses WGOLD_s, WGOLD_b, WGOLD_i1, WGOLD_f, WGOLD_l):  And(And(And(P_Instruments(WGOLD_s, WGOLD_b, FV_Instrument_0), P_Band(WGOLD_i1, WGOLD_f, WGOLD_l)), (WGOLD_b == WGOLD_i1)), (WGOLD_l == L_Heilo))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_b_2, predicted_f_3], And(P_Instruments(predicted_s_1, predicted_b_2, FV_Instrument_0), P_Band(predicted_b_2, predicted_f_3, L_Heilo)))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_b, WPREDICTED_f):  And(P_Instruments(WPREDICTED_s, WPREDICTED_b, FV_Instrument_0), P_Band(WPREDICTED_b, WPREDICTED_f, L_Heilo))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Heilo' at text -> L_Heilo = StringVal('Heilo')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 743 lines, 27985 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1869.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_b, WGOLD_i1, WGOLD_f, WGOLD_l
+      claim: And(And(And(And(Instruments(WGOLD_s, WGOLD_b, FV_Instrument_0), Band(WGOLD_i1, WGOLD_f, WGOLD_l)), WGOLD_b == WGOLD_i1), WGOLD_l == "Heilo"), Not(Exists([predicted_s_1, predicted_b_2, predicted_f_3], And(Instruments(predicted_s_1, predicted_b_2, FV_Instrument_0), Band(predicted_b_2, predicted_f_3, "Heilo")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.009 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.019 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_b, WPREDICTED_f
+      claim: And(And(Instruments(WPREDICTED_s, WPREDICTED_b, FV_Instrument_0), Band(WPREDICTED_b, WPREDICTED_f, "Heilo")), Not(Exists([gold_s_1, gold_b_2, gold_i1_3, gold_f_4, gold_l_5], And(And(And(Instruments(gold_s_1, gold_b_2, FV_Instrument_0), Band(gold_i1_3, gold_f_4, gold_l_5)), gold_b_2 == gold_i1_3), gold_l_5 == "Heilo"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

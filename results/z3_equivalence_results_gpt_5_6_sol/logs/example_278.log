@@ -1,0 +1,126 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_278.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_278.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3287 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the major lakes in united states
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        country_name = varchar(3) -> StringSort()
+        lake_name = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        lake(lake_name, area, country_name, state_name)
+        constant 750 : area
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : area ∃c : country_name ∃s : state_name ( (lake(l,a,c,s)) ∧ (a > 750) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:lake LPAR:( IDENT:l COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:750 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:area
+            EXISTS c:country_name
+              EXISTS s:state_name
+                AND
+                  PRED lake(l, a, c, s)
+                  CMP  a > 750
+      Predicted FOL: ∃a : area ∃s : state_name (lake(l, a, 'usa', s) ∧ a > 750)
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( IDENT:lake LPAR:( IDENT:l COMMA:, IDENT:a COMMA:, LIT:usa COMMA:, IDENT:s RPAR:) AND:∧ IDENT:a GT:> NUM:750 RPAR:) EOF
+        AST:
+          EXISTS a:area
+            EXISTS s:state_name
+              AND
+                PRED lake(l, a, 'usa', s)
+                CMP  a > 750
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_lake_name_0 : lake_name   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        l : local lake_name, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        a : local area, global double -> Float64()
+        l : local lake_name, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_s_3], And(D_double(gold_a_1), D_varchar_3_(gold_c_2), And(P_lake(FV_lake_name_0, gold_a_1, gold_c_2, gold_s_3), (gold_a_1 > L_v_750_double))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_s):  And(D_double(WGOLD_a), D_varchar_3_(WGOLD_c), And(P_lake(FV_lake_name_0, WGOLD_a, WGOLD_c, WGOLD_s), (WGOLD_a > L_v_750_double)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_s_2], And(D_double(predicted_a_1), And(And(P_lake(FV_lake_name_0, predicted_a_1, L_usa, predicted_s_2), D_varchar_3_(L_usa)), (predicted_a_1 > L_v_750_double))))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_s):  And(D_double(WPREDICTED_a), And(And(P_lake(FV_lake_name_0, WPREDICTED_a, L_usa, WPREDICTED_s), D_varchar_3_(L_usa)), (WPREDICTED_a > L_v_750_double)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'usa' at varchar(3) -> L_usa = StringVal('usa')
+      literal '750' at double -> L_v_750_double = FPVal(750.0, Float64())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 735 lines, 27421 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_278.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_s
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), Length(WGOLD_c) <= 3, And(lake(FV_lake_name_0, WGOLD_a, WGOLD_c, WGOLD_s), 1.46484375*(2**9) < WGOLD_a)), Not(Exists([predicted_a_1, predicted_s_2], And(And(Not(fpIsNaN(predicted_a_1)), Not(And(fpIsZero(predicted_a_1), fpIsNegative(predicted_a_1)))), And(And(lake(FV_lake_name_0, predicted_a_1, "usa", predicted_s_2), Length("usa") <= 3), 1.46484375*(2**9) < predicted_a_1)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.013 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 5 relation tuple(s) listed, 3 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          a : area = 388096.00000000006
+          c : country_name = 'u'
+          s : state_name = 'usa'
+        free (answer) variables:
+          FV_lake_name_0 : lake_name = 'usa'
+        literals / constants:
+          usa : varchar(3) = 'usa'
+          750 : area = 750.0
+        relations (each value tagged with the local sort of its position):
+          lake(lake_name, area, country_name, state_name):
+            lake(lake_name='', area=2.225073858507202e-308, country_name='', state_name='!0!')
+            lake(lake_name='', area=2.225073858507202e-308, country_name='usa', state_name='')
+            lake(lake_name='!0!', area=2.225073858507202e-308, country_name='', state_name='')
+            lake(lake_name='usa', area=750.0, country_name='u', state_name='usa')
+            lake(lake_name='usa', area=388096.00000000006, country_name='u', state_name='usa')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          area         : {2.225073858507202e-308, 750.0, 388096.00000000006}
+          country_name : {'', 'u', 'usa'}
+          lake_name    : {'', '!0!', 'usa'}
+          state_name   : {'', '!0!', 'usa'}
+        values shared across local sorts (joins):
+          '!0!' : lake_name, state_name
+          '' : lake_name, state_name
+          'usa' : lake_name, state_name
+   [R2] took 0.037 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_s
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), And(And(lake(FV_lake_name_0, WPREDICTED_a, "usa", WPREDICTED_s), Length("usa") <= 3), 1.46484375*(2**9) < WPREDICTED_a)), Not(Exists([gold_a_1, gold_c_2, gold_s_3], And(And(Not(fpIsNaN(gold_a_1)), Not(And(fpIsZero(gold_a_1), fpIsNegative(gold_a_1)))), Length(gold_c_2) <= 3, And(lake(FV_lake_name_0, gold_a_1, gold_c_2, gold_s_3), 1.46484375*(2**9) < gold_a_1)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

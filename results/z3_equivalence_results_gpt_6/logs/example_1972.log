@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1972.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1972.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3367 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the dates of ceremony corresponding to music festivals that had the category "Best Song" and result "Awarded".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Category = text -> StringSort()
+        Date_of_ceremony = text -> StringSort()
+        ID = int -> IntSort()
+        Music_Festival = text -> StringSort()
+        Result = text -> StringSort()
+        Volume = int -> IntSort()
+      symbols:
+        music_festival(ID, Music_Festival, Date_of_ceremony, Category, Volume, Result)
+        constant Awarded : Result
+        constant Best Song : Category
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃m : Music_Festival ∃c : Category ∃v : Volume ∃r : Result ( (music_festival(i,m,d,c,v,r)) ∧ ((c = 'Best Song') ∧ (r = 'Awarded')) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:m COLON:: IDENT:Music_Festival EXISTS:∃ IDENT:c COLON:: IDENT:Category EXISTS:∃ IDENT:v COLON:: IDENT:Volume EXISTS:∃ IDENT:r COLON:: IDENT:Result LPAR:( LPAR:( IDENT:music_festival LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, IDENT:c COMMA:, IDENT:v COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:Best Song RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:Awarded RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS m:Music_Festival
+              EXISTS c:Category
+                EXISTS v:Volume
+                  EXISTS r:Result
+                    AND
+                      PRED music_festival(i, m, d, c, v, r)
+                      AND
+                        EQ  c = 'Best Song'
+                        EQ  r = 'Awarded'
+      Predicted FOL: ∃i : ID ∃m : Music_Festival ∃v : Volume (music_festival(i, m, d, 'Best Song', v, 'Awarded'))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:m COLON:: IDENT:Music_Festival EXISTS:∃ IDENT:v COLON:: IDENT:Volume LPAR:( IDENT:music_festival LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, LIT:Best Song COMMA:, IDENT:v COMMA:, LIT:Awarded RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS m:Music_Festival
+              EXISTS v:Volume
+                PRED music_festival(i, m, d, 'Best Song', v, 'Awarded')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Date_of_ceremony_0 : Date_of_ceremony   Gold d <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Category, global text -> StringSort()
+        d : local Date_of_ceremony, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        m : local Music_Festival, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        v : local Volume, global int -> IntSort()
+      Predicted FOL:
+        d : local Date_of_ceremony, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        m : local Music_Festival, global text -> StringSort()
+        v : local Volume, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_m_2, gold_c_3, gold_v_4, gold_r_5], And(P_music_festival(gold_i_1, gold_m_2, FV_Date_of_ceremony_0, gold_c_3, gold_v_4, gold_r_5), And((gold_c_3 == L_Best_Song), (gold_r_5 == L_Awarded))))
+      gold_skolem (witnesses WGOLD_i, WGOLD_m, WGOLD_c, WGOLD_v, WGOLD_r):  And(P_music_festival(WGOLD_i, WGOLD_m, FV_Date_of_ceremony_0, WGOLD_c, WGOLD_v, WGOLD_r), And((WGOLD_c == L_Best_Song), (WGOLD_r == L_Awarded)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_m_2, predicted_v_3], P_music_festival(predicted_i_1, predicted_m_2, FV_Date_of_ceremony_0, L_Best_Song, predicted_v_3, L_Awarded))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_m, WPREDICTED_v):  P_music_festival(WPREDICTED_i, WPREDICTED_m, FV_Date_of_ceremony_0, L_Best_Song, WPREDICTED_v, L_Awarded)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Awarded' at text -> L_Awarded = StringVal('Awarded')
+      literal 'Best Song' at text -> L_Best_Song = StringVal('Best Song')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 742 lines, 28058 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1972.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_m, WGOLD_c, WGOLD_v, WGOLD_r
+      claim: And(And(music_festival(WGOLD_i, WGOLD_m, FV_Date_of_ceremony_0, WGOLD_c, WGOLD_v, WGOLD_r), And(WGOLD_c == "Best Song", WGOLD_r == "Awarded")), Not(Exists([predicted_i_1, predicted_m_2, predicted_v_3], music_festival(predicted_i_1, predicted_m_2, FV_Date_of_ceremony_0, "Best Song", predicted_v_3, "Awarded"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_m, WPREDICTED_v
+      claim: And(music_festival(WPREDICTED_i, WPREDICTED_m, FV_Date_of_ceremony_0, "Best Song", WPREDICTED_v, "Awarded"), Not(Exists([gold_i_1, gold_m_2, gold_c_3, gold_v_4, gold_r_5], And(music_festival(gold_i_1, gold_m_2, FV_Date_of_ceremony_0, gold_c_3, gold_v_4, gold_r_5), And(gold_c_3 == "Best Song", gold_r_5 == "Awarded")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,224 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2465.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4175 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of photos taken with the lens brand 'Sigma' or 'Olympus'?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        brand = text -> StringSort()
+        camera_lens_id = int -> IntSort()
+        color = text -> StringSort()
+        focal_length_mm = real -> Float32()
+        id = int -> IntSort()
+        max_aperture = real -> Float32()
+        mountain_id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        camera_lens(id, brand, name, focal_length_mm, max_aperture)
+        photos(id, camera_lens_id, mountain_id, color, name)
+        constant Olympus : brand
+        constant Sigma : brand
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃b : brand ∃f : focal_length_mm ∃m : max_aperture ∃i1 : id ∃c : camera_lens_id ∃m1 : mountain_id ∃c1 : color ∃n1 : name ( (((camera_lens(i,b,n,f,m)) ∧ (photos(i1,c,m1,c1,n1))) ∧ (c = i)) ∧ ((b = 'Sigma') ∨ (b = 'Olympus')) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:b COLON:: IDENT:brand EXISTS:∃ IDENT:f COLON:: IDENT:focal_length_mm EXISTS:∃ IDENT:m COLON:: IDENT:max_aperture EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:c COLON:: IDENT:camera_lens_id EXISTS:∃ IDENT:m1 COLON:: IDENT:mountain_id EXISTS:∃ IDENT:c1 COLON:: IDENT:color EXISTS:∃ IDENT:n1 COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:camera_lens LPAR:( IDENT:i COMMA:, IDENT:b COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:photos LPAR:( IDENT:i1 COMMA:, IDENT:c COMMA:, IDENT:m1 COMMA:, IDENT:c1 COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:b EQ:= LIT:Sigma RPAR:) OR:∨ LPAR:( IDENT:b EQ:= LIT:Olympus RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS b:brand
+              EXISTS f:focal_length_mm
+                EXISTS m:max_aperture
+                  EXISTS i1:id
+                    EXISTS c:camera_lens_id
+                      EXISTS m1:mountain_id
+                        EXISTS c1:color
+                          EXISTS n1:name
+                            AND
+                              AND
+                                AND
+                                  PRED camera_lens(i, b, n, f, m)
+                                  PRED photos(i1, c, m1, c1, n1)
+                                EQ  c = i
+                              OR
+                                EQ  b = 'Sigma'
+                                EQ  b = 'Olympus'
+      Predicted FOL: ∃p_id:id ∃p_lens_id:camera_lens_id ∃p_mtn_id:mountain_id ∃p_color:color ( photos(p_id, p_lens_id, p_mtn_id, p_color, name) ∧ ∃l_brand:brand ∃l_name:name ∃l_focal:focal_length_mm ∃l_ap:max_aperture ( camera_lens(p_lens_id, l_brand, l_name, l_focal, l_ap) ∧ (l_brand = 'Sigma' ∨ l_brand = 'Olympus') ) )
+        tokens: EXISTS:∃ IDENT:p_id COLON:: IDENT:id EXISTS:∃ IDENT:p_lens_id COLON:: IDENT:camera_lens_id EXISTS:∃ IDENT:p_mtn_id COLON:: IDENT:mountain_id EXISTS:∃ IDENT:p_color COLON:: IDENT:color LPAR:( IDENT:photos LPAR:( IDENT:p_id COMMA:, IDENT:p_lens_id COMMA:, IDENT:p_mtn_id COMMA:, IDENT:p_color COMMA:, IDENT:name RPAR:) AND:∧ EXISTS:∃ IDENT:l_brand COLON:: IDENT:brand EXISTS:∃ IDENT:l_name COLON:: IDENT:name EXISTS:∃ IDENT:l_focal COLON:: IDENT:focal_length_mm EXISTS:∃ IDENT:l_ap COLON:: IDENT:max_aperture LPAR:( IDENT:camera_lens LPAR:( IDENT:p_lens_id COMMA:, IDENT:l_brand COMMA:, IDENT:l_name COMMA:, IDENT:l_focal COMMA:, IDENT:l_ap RPAR:) AND:∧ LPAR:( IDENT:l_brand EQ:= LIT:Sigma OR:∨ IDENT:l_brand EQ:= LIT:Olympus RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p_id:id
+            EXISTS p_lens_id:camera_lens_id
+              EXISTS p_mtn_id:mountain_id
+                EXISTS p_color:color
+                  AND
+                    PRED photos(p_id, p_lens_id, p_mtn_id, p_color, name)
+                    EXISTS l_brand:brand
+                      EXISTS l_name:name
+                        EXISTS l_focal:focal_length_mm
+                          EXISTS l_ap:max_aperture
+                            AND
+                              PRED camera_lens(p_lens_id, l_brand, l_name, l_focal, l_ap)
+                              OR
+                                EQ  l_brand = 'Sigma'
+                                EQ  l_brand = 'Olympus'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local brand, global text -> StringSort()
+        c : local camera_lens_id, global int -> IntSort()
+        c1 : local color, global text -> StringSort()
+        f : local focal_length_mm, global real -> Float32()
+        i : local id, global int -> IntSort()
+        i1 : local id, global int -> IntSort()
+        m : local max_aperture, global real -> Float32()
+        m1 : local mountain_id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+      Predicted FOL:
+        l_ap : local max_aperture, global real -> Float32()
+        l_brand : local brand, global text -> StringSort()
+        l_focal : local focal_length_mm, global real -> Float32()
+        l_name : local name, global text -> StringSort()
+        name : local name, global text -> StringSort()
+        p_color : local color, global text -> StringSort()
+        p_id : local id, global int -> IntSort()
+        p_lens_id : local camera_lens_id, global int -> IntSort()
+        p_mtn_id : local mountain_id, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_b_2, gold_f_3, gold_m_4, gold_i1_5, gold_c_6, gold_m1_7, gold_c1_8, gold_n1_9], And(D_real(gold_f_3), D_real(gold_m_4), And(And(And(P_camera_lens(gold_i_1, gold_b_2, FV_name_0, gold_f_3, gold_m_4), P_photos(gold_i1_5, gold_c_6, gold_m1_7, gold_c1_8, gold_n1_9)), (gold_c_6 == gold_i_1)), Or((gold_b_2 == L_Sigma), (gold_b_2 == L_Olympus)))))
+      gold_skolem (witnesses WGOLD_i, WGOLD_b, WGOLD_f, WGOLD_m, WGOLD_i1, WGOLD_c, WGOLD_m1, WGOLD_c1, WGOLD_n1):  And(D_real(WGOLD_f), D_real(WGOLD_m), And(And(And(P_camera_lens(WGOLD_i, WGOLD_b, FV_name_0, WGOLD_f, WGOLD_m), P_photos(WGOLD_i1, WGOLD_c, WGOLD_m1, WGOLD_c1, WGOLD_n1)), (WGOLD_c == WGOLD_i)), Or((WGOLD_b == L_Sigma), (WGOLD_b == L_Olympus))))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_id_1, predicted_p_lens_id_2, predicted_p_mtn_id_3, predicted_p_color_4], And(P_photos(predicted_p_id_1, predicted_p_lens_id_2, predicted_p_mtn_id_3, predicted_p_color_4, FV_name_0), Exists([predicted_l_brand_5, predicted_l_name_6, predicted_l_focal_7, predicted_l_ap_8], And(D_real(predicted_l_focal_7), D_real(predicted_l_ap_8), And(P_camera_lens(predicted_p_lens_id_2, predicted_l_brand_5, predicted_l_name_6, predicted_l_focal_7, predicted_l_ap_8), Or((predicted_l_brand_5 == L_Sigma), (predicted_l_brand_5 == L_Olympus)))))))
+      predicted_skolem (witnesses WPREDICTED_p_id, WPREDICTED_p_lens_id, WPREDICTED_p_mtn_id, WPREDICTED_p_color):  And(P_photos(WPREDICTED_p_id, WPREDICTED_p_lens_id, WPREDICTED_p_mtn_id, WPREDICTED_p_color, FV_name_0), Exists([predictedsk_l_brand_1, predictedsk_l_name_2, predictedsk_l_focal_3, predictedsk_l_ap_4], And(D_real(predictedsk_l_focal_3), D_real(predictedsk_l_ap_4), And(P_camera_lens(WPREDICTED_p_lens_id, predictedsk_l_brand_1, predictedsk_l_name_2, predictedsk_l_focal_3, predictedsk_l_ap_4), Or((predictedsk_l_brand_1 == L_Sigma), (predictedsk_l_brand_1 == L_Olympus))))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Olympus' at text -> L_Olympus = StringVal('Olympus')
+      literal 'Sigma' at text -> L_Sigma = StringVal('Sigma')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 775 lines, 31462 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_b, WGOLD_f, WGOLD_m, WGOLD_i1, WGOLD_c, WGOLD_m1, WGOLD_c1, WGOLD_n1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_f)), Not(And(fpIsZero(WGOLD_f), fpIsNegative(WGOLD_f)))), And(Not(fpIsNaN(WGOLD_m)), Not(And(fpIsZero(WGOLD_m), fpIsNegative(WGOLD_m)))), And(And(And(camera_lens(WGOLD_i, WGOLD_b, FV_name_0, WGOLD_f, WGOLD_m), photos(WGOLD_i1, WGOLD_c, WGOLD_m1, WGOLD_c1, WGOLD_n1)), WGOLD_c == WGOLD_i), Or(WGOLD_b == "Sigma", WGOLD_b == "Olympus"))), Not(Exists([predicted_p_id_1, predicted_p_lens_id_2, predicted_p_mtn_id_3, predicted_p_color_4], And(photos(predicted_p_id_1, predicted_p_lens_id_2, predicted_p_mtn_id_3, predicted_p_color_4, FV_name_0), Exists([predicted_l_brand_5, predicted_l_name_6, predicted_l_focal_7, predicted_l_ap_8], And(And(Not(fpIsNaN(predicted_l_focal_7)), Not(And(fpIsZero(predicted_l_focal_7), fpIsNegative(predicted_l_focal_7)))), And(Not(fpIsNaN(predicted_l_ap_8)), Not(And(fpIsZero(predicted_l_ap_8), fpIsNegative(predicted_l_ap_8)))), And(camera_lens(predicted_p_lens_id_2, predicted_l_brand_5, predicted_l_name_6, predicted_l_focal_7, predicted_l_ap_8), Or(predicted_l_brand_5 == "Sigma", predicted_l_brand_5 == "Olympus"))))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.039 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 27 relation tuple(s) listed, 36 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          i : id = 8
+          b : brand = 'Sigma'
+          f : focal_length_mm = 2.524508971102789e-29
+          m : max_aperture = 1.793662034335766e-43
+          i1 : id = 9
+          c : camera_lens_id = 8
+          m1 : mountain_id = 10
+          c1 : color = 'A'
+          n1 : name = ''
+        free (answer) variables:
+          FV_name_0 : name = 'us'
+        literals / constants:
+          Olympus : brand = 'Olympus'
+          Sigma : brand = 'Sigma'
+        relations (each value tagged with the local sort of its position):
+          camera_lens(id, brand, name, focal_length_mm, max_aperture):
+            camera_lens(id=0, brand='', name='', focal_length_mm=1.793662034335766e-43, max_aperture=1.175494490952134e-38)
+            camera_lens(id=0, brand='', name='', focal_length_mm=1.175494490952134e-38, max_aperture=2.524508971102789e-29)
+            camera_lens(id=0, brand='', name='Olympus', focal_length_mm=1.175494490952134e-38, max_aperture=1.1754946310819804e-38)
+            camera_lens(id=0, brand='', name='Sigma', focal_length_mm=1.175494490952134e-38, max_aperture=1.1754946310819804e-38)
+            camera_lens(id=0, brand='A', name='', focal_length_mm=1.175494490952134e-38, max_aperture=1.175494490952134e-38)
+            camera_lens(id=0, brand='Olympus', name='', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=0, brand='Olympus', name='us', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=0, brand='Sigma', name='', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=0, brand='Sigma', name='us', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=0, brand='us', name='', focal_length_mm=1.175494490952134e-38, max_aperture=1.175494490952134e-38)
+            camera_lens(id=2, brand='', name='A', focal_length_mm=1.1754946310819804e-38, max_aperture=1.175494490952134e-38)
+            camera_lens(id=4, brand='', name='', focal_length_mm=1.175494490952134e-38, max_aperture=1.175494490952134e-38)
+            camera_lens(id=8, brand='Olympus', name='', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=8, brand='Olympus', name='us', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=8, brand='Sigma', name='', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=8, brand='Sigma', name='us', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=9, brand='Olympus', name='', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=9, brand='Olympus', name='us', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=9, brand='Sigma', name='', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=9, brand='Sigma', name='us', focal_length_mm=2.524508971102789e-29, max_aperture=1.793662034335766e-43)
+            camera_lens(id=10, brand='', name='', focal_length_mm=1.175494490952134e-38, max_aperture=1.1754946310819804e-38)
+            camera_lens(id=11, brand='', name='', focal_length_mm=1.175494490952134e-38, max_aperture=1.175494490952134e-38)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          photos(id, camera_lens_id, mountain_id, color, name):
+            photos(id=9, camera_lens_id=8, mountain_id=2, color='A', name='')
+            photos(id=9, camera_lens_id=8, mountain_id=8, color='A', name='')
+            photos(id=9, camera_lens_id=8, mountain_id=9, color='A', name='')
+            photos(id=9, camera_lens_id=8, mountain_id=10, color='A', name='')
+            photos(id=9, camera_lens_id=8, mountain_id=11, color='A', name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          brand           : {'', 'A', 'Olympus', 'Sigma', 'us'}
+          camera_lens_id  : {8}
+          color           : {'A'}
+          focal_length_mm : {1.793662034335766e-43, 1.175494490952134e-38, 1.1754946310819804e-38, 2.524508971102789e-29}
+          id              : {0, 2, 4, 8, 9, 10, 11}
+          max_aperture    : {1.793662034335766e-43, 1.175494490952134e-38, 1.1754946310819804e-38, 2.524508971102789e-29}
+          mountain_id     : {2, 8, 9, 10, 11}
+          name            : {'', 'A', 'Olympus', 'Sigma', 'us'}
+        values shared across local sorts (joins):
+          10 : id, mountain_id
+          11 : id, mountain_id
+          2 : id, mountain_id
+          8 : camera_lens_id, id, mountain_id
+          9 : id, mountain_id
+          1.793662034335766e-43 : focal_length_mm, max_aperture
+          1.175494490952134e-38 : focal_length_mm, max_aperture
+          1.1754946310819804e-38 : focal_length_mm, max_aperture
+          2.524508971102789e-29 : focal_length_mm, max_aperture
+          '' : brand, name
+          'A' : brand, color, name
+          'Olympus' : brand, name
+          'Sigma' : brand, name
+          'us' : brand, name
+   [R2] took 0.180 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p_id, WPREDICTED_p_lens_id, WPREDICTED_p_mtn_id, WPREDICTED_p_color
+      claim: And(And(photos(WPREDICTED_p_id, WPREDICTED_p_lens_id, WPREDICTED_p_mtn_id, WPREDICTED_p_color, FV_name_0), Exists([predictedsk_l_brand_1, predictedsk_l_name_2, predictedsk_l_focal_3, predictedsk_l_ap_4], And(And(Not(fpIsNaN(predictedsk_l_focal_3)), Not(And(fpIsZero(predictedsk_l_focal_3), fpIsNegative(predictedsk_l_focal_3)))), And(Not(fpIsNaN(predictedsk_l_ap_4)), Not(And(fpIsZero(predictedsk_l_ap_4), fpIsNegative(predictedsk_l_ap_4)))), And(camera_lens(WPREDICTED_p_lens_id, predictedsk_l_brand_1, predictedsk_l_name_2, predictedsk_l_focal_3, predictedsk_l_ap_4), Or(predictedsk_l_brand_1 == "Sigma", predictedsk_l_brand_1 == "Olympus"))))), Not(Exists([gold_i_1, gold_b_2, gold_f_3, gold_m_4, gold_i1_5, gold_c_6, gold_m1_7, gold_c1_8, gold_n1_9], And(And(Not(fpIsNaN(gold_f_3)), Not(And(fpIsZero(gold_f_3), fpIsNegative(gold_f_3)))), And(Not(fpIsNaN(gold_m_4)), Not(And(fpIsZero(gold_m_4), fpIsNegative(gold_m_4)))), And(And(And(camera_lens(gold_i_1, gold_b_2, FV_name_0, gold_f_3, gold_m_4), photos(gold_i1_5, gold_c_6, gold_m1_7, gold_c1_8, gold_n1_9)), gold_c_6 == gold_i_1), Or(gold_b_2 == "Sigma", gold_b_2 == "Olympus"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.033 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py", line 723, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py", line 754, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py", line 705, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py", line 603, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py", line 527, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py", line 407, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2465.py", line 407, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

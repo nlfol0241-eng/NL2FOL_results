@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_782.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_782.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3748 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which Payments were processed with Visa? List the payment Id, the date and the amount.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Amount_Payment = integer -> IntSort()
+        Date_Payment_Made = date -> IntSort()
+        Payment_ID = integer -> IntSort()
+        Payment_Method_Code = varchar(255) -> StringSort()
+        Settlement_ID = integer -> IntSort()
+      symbols:
+        Payments(Payment_ID, Settlement_ID, Payment_Method_Code, Date_Payment_Made, Amount_Payment)
+        constant Visa : Payment_Method_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Settlement_ID ∃p1 : Payment_Method_Code ( (Payments(p,s,p1,d,a)) ∧ (p1 = 'Visa') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Settlement_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Payment_Method_Code LPAR:( LPAR:( IDENT:Payments LPAR:( IDENT:p COMMA:, IDENT:s COMMA:, IDENT:p1 COMMA:, IDENT:d COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:Visa RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Settlement_ID
+            EXISTS p1:Payment_Method_Code
+              AND
+                PRED Payments(p, s, p1, d, a)
+                EQ  p1 = 'Visa'
+      Predicted FOL: ∃ y : Settlement_ID ( Payments(x, y, 'Visa', z, w) )
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:Settlement_ID LPAR:( IDENT:Payments LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, LIT:Visa COMMA:, IDENT:z COMMA:, IDENT:w RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:Settlement_ID
+            PRED Payments(x, y, 'Visa', z, w)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Amount_Payment_0 : Amount_Payment   Gold a <-> Predicted w
+      FV_Date_Payment_Made_0 : Date_Payment_Made   Gold d <-> Predicted z
+      FV_Payment_ID_0 : Payment_ID   Gold p <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Amount_Payment, global integer -> IntSort()
+        d : local Date_Payment_Made, global date -> IntSort()
+        p : local Payment_ID, global integer -> IntSort()
+        p1 : local Payment_Method_Code, global varchar(255) -> StringSort()
+        s : local Settlement_ID, global integer -> IntSort()
+      Predicted FOL:
+        w : local Amount_Payment, global integer -> IntSort()
+        x : local Payment_ID, global integer -> IntSort()
+        y : local Settlement_ID, global integer -> IntSort()
+        z : local Date_Payment_Made, global date -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_p1_2], And(D_varchar_255_(gold_p1_2), And(P_Payments(FV_Payment_ID_0, gold_s_1, gold_p1_2, FV_Date_Payment_Made_0, FV_Amount_Payment_0), (gold_p1_2 == L_Visa))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_p1):  And(D_varchar_255_(WGOLD_p1), And(P_Payments(FV_Payment_ID_0, WGOLD_s, WGOLD_p1, FV_Date_Payment_Made_0, FV_Amount_Payment_0), (WGOLD_p1 == L_Visa)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_y_1], And(P_Payments(FV_Payment_ID_0, predicted_y_1, L_Visa, FV_Date_Payment_Made_0, FV_Amount_Payment_0), D_varchar_255_(L_Visa)))
+      predicted_skolem (witnesses WPREDICTED_y):  And(P_Payments(FV_Payment_ID_0, WPREDICTED_y, L_Visa, FV_Date_Payment_Made_0, FV_Amount_Payment_0), D_varchar_255_(L_Visa))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Visa' at varchar(255) -> L_Visa = StringVal('Visa')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 732 lines, 27617 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_782.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_p1
+      claim: And(And(Length(WGOLD_p1) <= 255, And(Payments(FV_Payment_ID_0, WGOLD_s, WGOLD_p1, FV_Date_Payment_Made_0, FV_Amount_Payment_0), WGOLD_p1 == "Visa")), Not(Exists(predicted_y_1, And(Payments(FV_Payment_ID_0, predicted_y_1, "Visa", FV_Date_Payment_Made_0, FV_Amount_Payment_0), Length("Visa") <= 255))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_y
+      claim: And(And(Payments(FV_Payment_ID_0, WPREDICTED_y, "Visa", FV_Date_Payment_Made_0, FV_Amount_Payment_0), Length("Visa") <= 255), Not(Exists([gold_s_1, gold_p1_2], And(Length(gold_p1_2) <= 255, And(Payments(FV_Payment_ID_0, gold_s_1, gold_p1_2, FV_Date_Payment_Made_0, FV_Amount_Payment_0), gold_p1_2 == "Visa")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

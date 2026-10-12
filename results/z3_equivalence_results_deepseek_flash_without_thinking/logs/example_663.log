@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_663.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_663.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2912 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names, dates active, and number of deaths for storms that had 1 or more death?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Damage_millions_USD = real -> Float32()
+        Dates_active = text -> StringSort()
+        Max_speed = int -> IntSort()
+        Name = text -> StringSort()
+        Number_Deaths = int -> IntSort()
+        Storm_ID = int -> IntSort()
+      symbols:
+        storm(Storm_ID, Name, Dates_active, Max_speed, Damage_millions_USD, Number_Deaths)
+        constant 1 : Number_Deaths
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Storm_ID ∃m : Max_speed ∃d1 : Damage_millions_USD ( (storm(s,n,d,m,d1,n1)) ∧ (n1 >= 1) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Storm_ID EXISTS:∃ IDENT:m COLON:: IDENT:Max_speed EXISTS:∃ IDENT:d1 COLON:: IDENT:Damage_millions_USD LPAR:( LPAR:( IDENT:storm LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:m COMMA:, IDENT:d1 COMMA:, IDENT:n1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 GE:>= NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Storm_ID
+            EXISTS m:Max_speed
+              EXISTS d1:Damage_millions_USD
+                AND
+                  PRED storm(s, n, d, m, d1, n1)
+                  CMP  n1 >= 1
+      Predicted FOL: ∃s : Storm_ID ∃n : Name ∃d : Dates_active ∃m : Max_speed ∃dm : Damage_millions_USD ∃nd : Number_Deaths (storm(s, n, d, m, dm, nd) ∧ nd ≥ 1)
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Storm_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:d COLON:: IDENT:Dates_active EXISTS:∃ IDENT:m COLON:: IDENT:Max_speed EXISTS:∃ IDENT:dm COLON:: IDENT:Damage_millions_USD EXISTS:∃ IDENT:nd COLON:: IDENT:Number_Deaths LPAR:( IDENT:storm LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:m COMMA:, IDENT:dm COMMA:, IDENT:nd RPAR:) AND:∧ IDENT:nd GE:≥ NUM:1 RPAR:) EOF
+        AST:
+          EXISTS s:Storm_ID
+            EXISTS n:Name
+              EXISTS d:Dates_active
+                EXISTS m:Max_speed
+                  EXISTS dm:Damage_millions_USD
+                    EXISTS nd:Number_Deaths
+                      AND
+                        PRED storm(s, n, d, m, dm, nd)
+                        CMP  nd >= 1
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (n : Name, d : Dates_active, n1 : Number_Deaths) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Dates_active, global text -> StringSort()
+        d1 : local Damage_millions_USD, global real -> Float32()
+        m : local Max_speed, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Number_Deaths, global int -> IntSort()
+        s : local Storm_ID, global int -> IntSort()
+      Predicted FOL:
+        d : local Dates_active, global text -> StringSort()
+        dm : local Damage_millions_USD, global real -> Float32()
+        m : local Max_speed, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        nd : local Number_Deaths, global int -> IntSort()
+        s : local Storm_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5452 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_663.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (n : Name, d : Dates_active, n1 : Number_Deaths) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

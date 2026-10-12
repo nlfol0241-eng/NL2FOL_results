@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1463.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1463.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2884 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the life spans of representatives from New York state or Indiana state?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Lifespan = text -> StringSort()
+        Name = text -> StringSort()
+        Party = text -> StringSort()
+        Representative_ID = int -> IntSort()
+        State = text -> StringSort()
+      symbols:
+        representative(Representative_ID, Name, State, Party, Lifespan)
+        constant Indiana : State
+        constant New York : State
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Representative_ID ∃n : Name ∃s : State ∃p : Party ( (representative(r,n,s,p,l)) ∧ ((s = 'New York') ∨ (s = 'Indiana')) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Representative_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:p COLON:: IDENT:Party LPAR:( LPAR:( IDENT:representative LPAR:( IDENT:r COMMA:, IDENT:n COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:l RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s EQ:= LIT:New York RPAR:) OR:∨ LPAR:( IDENT:s EQ:= LIT:Indiana RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Representative_ID
+            EXISTS n:Name
+              EXISTS s:State
+                EXISTS p:Party
+                  AND
+                    PRED representative(r, n, s, p, l)
+                    OR
+                      EQ  s = 'New York'
+                      EQ  s = 'Indiana'
+      Predicted FOL: ∃r : Representative_ID ∃n : Name ∃s : State ∃p : Party (representative(r, n, s, p, l) ∧ (s = 'New York' ∨ s = 'Indiana'))
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Representative_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:p COLON:: IDENT:Party LPAR:( IDENT:representative LPAR:( IDENT:r COMMA:, IDENT:n COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:l RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:New York OR:∨ IDENT:s EQ:= LIT:Indiana RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Representative_ID
+            EXISTS n:Name
+              EXISTS s:State
+                EXISTS p:Party
+                  AND
+                    PRED representative(r, n, s, p, l)
+                    OR
+                      EQ  s = 'New York'
+                      EQ  s = 'Indiana'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Lifespan_0 : Lifespan   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Lifespan, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local Party, global text -> StringSort()
+        r : local Representative_ID, global int -> IntSort()
+        s : local State, global text -> StringSort()
+      Predicted FOL:
+        l : local Lifespan, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local Party, global text -> StringSort()
+        r : local Representative_ID, global int -> IntSort()
+        s : local State, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_n_2, gold_s_3, gold_p_4], And(P_representative(gold_r_1, gold_n_2, gold_s_3, gold_p_4, FV_Lifespan_0), Or((gold_s_3 == L_New_York), (gold_s_3 == L_Indiana))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_n, WGOLD_s, WGOLD_p):  And(P_representative(WGOLD_r, WGOLD_n, WGOLD_s, WGOLD_p, FV_Lifespan_0), Or((WGOLD_s == L_New_York), (WGOLD_s == L_Indiana)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_n_2, predicted_s_3, predicted_p_4], And(P_representative(predicted_r_1, predicted_n_2, predicted_s_3, predicted_p_4, FV_Lifespan_0), Or((predicted_s_3 == L_New_York), (predicted_s_3 == L_Indiana))))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_n, WPREDICTED_s, WPREDICTED_p):  And(P_representative(WPREDICTED_r, WPREDICTED_n, WPREDICTED_s, WPREDICTED_p, FV_Lifespan_0), Or((WPREDICTED_s == L_New_York), (WPREDICTED_s == L_Indiana)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Indiana' at text -> L_Indiana = StringVal('Indiana')
+      literal 'New York' at text -> L_New_York = StringVal('New York')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 740 lines, 27997 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1463.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_n, WGOLD_s, WGOLD_p
+      claim: And(And(representative(WGOLD_r, WGOLD_n, WGOLD_s, WGOLD_p, FV_Lifespan_0), Or(WGOLD_s == "New York", WGOLD_s == "Indiana")), Not(Exists([predicted_r_1, predicted_n_2, predicted_s_3, predicted_p_4], And(representative(predicted_r_1, predicted_n_2, predicted_s_3, predicted_p_4, FV_Lifespan_0), Or(predicted_s_3 == "New York", predicted_s_3 == "Indiana")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_n, WPREDICTED_s, WPREDICTED_p
+      claim: And(And(representative(WPREDICTED_r, WPREDICTED_n, WPREDICTED_s, WPREDICTED_p, FV_Lifespan_0), Or(WPREDICTED_s == "New York", WPREDICTED_s == "Indiana")), Not(Exists([gold_r_1, gold_n_2, gold_s_3, gold_p_4], And(representative(gold_r_1, gold_n_2, gold_s_3, gold_p_4, FV_Lifespan_0), Or(gold_s_3 == "New York", gold_s_3 == "Indiana")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

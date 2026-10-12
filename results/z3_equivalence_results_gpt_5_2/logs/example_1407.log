@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1407.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1407.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4009 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the phone and email for customer with first name Aniyah and last name Feest?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        customer_address = varchar(255) -> StringSort()
+        customer_email = varchar(255) -> StringSort()
+        customer_first_name = varchar(20) -> StringSort()
+        customer_id = integer -> IntSort()
+        customer_last_name = varchar(20) -> StringSort()
+        customer_phone = varchar(255) -> StringSort()
+        other_customer_details = varchar(255) -> StringSort()
+      symbols:
+        Customers(customer_id, customer_first_name, customer_last_name, customer_address, customer_phone, customer_email, other_customer_details)
+        constant Aniyah : customer_first_name
+        constant Feest : customer_last_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : customer_id ∃c1 : customer_first_name ∃c2 : customer_last_name ∃c3 : customer_address ∃o : other_customer_details ( (Customers(c,c1,c2,c3,c4,c5,o)) ∧ ((c1 = 'Aniyah') ∧ (c2 = 'Feest')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:c1 COLON:: IDENT:customer_first_name EXISTS:∃ IDENT:c2 COLON:: IDENT:customer_last_name EXISTS:∃ IDENT:c3 COLON:: IDENT:customer_address EXISTS:∃ IDENT:o COLON:: IDENT:other_customer_details LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 COMMA:, IDENT:c4 COMMA:, IDENT:c5 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c1 EQ:= LIT:Aniyah RPAR:) AND:∧ LPAR:( IDENT:c2 EQ:= LIT:Feest RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:customer_id
+            EXISTS c1:customer_first_name
+              EXISTS c2:customer_last_name
+                EXISTS c3:customer_address
+                  EXISTS o:other_customer_details
+                    AND
+                      PRED Customers(c, c1, c2, c3, c4, c5, o)
+                      AND
+                        EQ  c1 = 'Aniyah'
+                        EQ  c2 = 'Feest'
+      Predicted FOL: ∃cid:customer_id ∃addr:customer_address ∃ph:customer_phone ∃em:customer_email ∃od:other_customer_details (Customers(cid, 'Aniyah', 'Feest', addr, ph, em, od) ∧ phone = ph ∧ email = em)
+        tokens: EXISTS:∃ IDENT:cid COLON:: IDENT:customer_id EXISTS:∃ IDENT:addr COLON:: IDENT:customer_address EXISTS:∃ IDENT:ph COLON:: IDENT:customer_phone EXISTS:∃ IDENT:em COLON:: IDENT:customer_email EXISTS:∃ IDENT:od COLON:: IDENT:other_customer_details LPAR:( IDENT:Customers LPAR:( IDENT:cid COMMA:, LIT:Aniyah COMMA:, LIT:Feest COMMA:, IDENT:addr COMMA:, IDENT:ph COMMA:, IDENT:em COMMA:, IDENT:od RPAR:) AND:∧ IDENT:phone EQ:= IDENT:ph AND:∧ IDENT:email EQ:= IDENT:em RPAR:) EOF
+        AST:
+          EXISTS cid:customer_id
+            EXISTS addr:customer_address
+              EXISTS ph:customer_phone
+                EXISTS em:customer_email
+                  EXISTS od:other_customer_details
+                    AND
+                      PRED Customers(cid, 'Aniyah', 'Feest', addr, ph, em, od)
+                      EQ  phone = ph
+                      EQ  email = em
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_customer_email_0 : customer_email   Gold c5 <-> Predicted email
+      FV_customer_phone_0 : customer_phone   Gold c4 <-> Predicted phone
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local customer_id, global integer -> IntSort()
+        c1 : local customer_first_name, global varchar(20) -> StringSort()
+        c2 : local customer_last_name, global varchar(20) -> StringSort()
+        c3 : local customer_address, global varchar(255) -> StringSort()
+        c4 : local customer_phone, global varchar(255) -> StringSort()
+        c5 : local customer_email, global varchar(255) -> StringSort()
+        o : local other_customer_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        addr : local customer_address, global varchar(255) -> StringSort()
+        cid : local customer_id, global integer -> IntSort()
+        em : local customer_email, global varchar(255) -> StringSort()
+        email : local customer_email, global varchar(255) -> StringSort()
+        od : local other_customer_details, global varchar(255) -> StringSort()
+        ph : local customer_phone, global varchar(255) -> StringSort()
+        phone : local customer_phone, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_c2_3, gold_c3_4, gold_o_5], And(D_varchar_20_(gold_c1_2), D_varchar_20_(gold_c2_3), D_varchar_255_(gold_c3_4), D_varchar_255_(gold_o_5), And(P_Customers(gold_c_1, gold_c1_2, gold_c2_3, gold_c3_4, FV_customer_phone_0, FV_customer_email_0, gold_o_5), And((gold_c1_2 == L_Aniyah), (gold_c2_3 == L_Feest)))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_c2, WGOLD_c3, WGOLD_o):  And(D_varchar_20_(WGOLD_c1), D_varchar_20_(WGOLD_c2), D_varchar_255_(WGOLD_c3), D_varchar_255_(WGOLD_o), And(P_Customers(WGOLD_c, WGOLD_c1, WGOLD_c2, WGOLD_c3, FV_customer_phone_0, FV_customer_email_0, WGOLD_o), And((WGOLD_c1 == L_Aniyah), (WGOLD_c2 == L_Feest))))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_cid_1, predicted_addr_2, predicted_ph_3, predicted_em_4, predicted_od_5], And(D_varchar_255_(predicted_addr_2), D_varchar_255_(predicted_ph_3), D_varchar_255_(predicted_em_4), D_varchar_255_(predicted_od_5), And(And(P_Customers(predicted_cid_1, L_Aniyah, L_Feest, predicted_addr_2, predicted_ph_3, predicted_em_4, predicted_od_5), D_varchar_20_(L_Aniyah), D_varchar_20_(L_Feest)), (FV_customer_phone_0 == predicted_ph_3), (FV_customer_email_0 == predicted_em_4))))
+      predicted_skolem (witnesses WPREDICTED_cid, WPREDICTED_addr, WPREDICTED_ph, WPREDICTED_em, WPREDICTED_od):  And(D_varchar_255_(WPREDICTED_addr), D_varchar_255_(WPREDICTED_ph), D_varchar_255_(WPREDICTED_em), D_varchar_255_(WPREDICTED_od), And(And(P_Customers(WPREDICTED_cid, L_Aniyah, L_Feest, WPREDICTED_addr, WPREDICTED_ph, WPREDICTED_em, WPREDICTED_od), D_varchar_20_(L_Aniyah), D_varchar_20_(L_Feest)), (FV_customer_phone_0 == WPREDICTED_ph), (FV_customer_email_0 == WPREDICTED_em)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Aniyah' at varchar(20) -> L_Aniyah = StringVal('Aniyah')
+      literal 'Feest' at varchar(20) -> L_Feest = StringVal('Feest')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 760 lines, 30825 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1407.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_customer_email_0) <= 255
+      [1] Length(FV_customer_phone_0) <= 255
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_c2, WGOLD_c3, WGOLD_o
+      claim: And(And(Length(WGOLD_c1) <= 20, Length(WGOLD_c2) <= 20, Length(WGOLD_c3) <= 255, Length(WGOLD_o) <= 255, And(Customers(WGOLD_c, WGOLD_c1, WGOLD_c2, WGOLD_c3, FV_customer_phone_0, FV_customer_email_0, WGOLD_o), And(WGOLD_c1 == "Aniyah", WGOLD_c2 == "Feest"))), Not(Exists([predicted_cid_1, predicted_addr_2, predicted_ph_3, predicted_em_4, predicted_od_5], And(Length(predicted_addr_2) <= 255, Length(predicted_ph_3) <= 255, Length(predicted_em_4) <= 255, Length(predicted_od_5) <= 255, And(And(Customers(predicted_cid_1, "Aniyah", "Feest", predicted_addr_2, predicted_ph_3, predicted_em_4, predicted_od_5), Length("Aniyah") <= 20, Length("Feest") <= 20), FV_customer_phone_0 == predicted_ph_3, FV_customer_email_0 == predicted_em_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.020 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_cid, WPREDICTED_addr, WPREDICTED_ph, WPREDICTED_em, WPREDICTED_od
+      claim: And(And(Length(WPREDICTED_addr) <= 255, Length(WPREDICTED_ph) <= 255, Length(WPREDICTED_em) <= 255, Length(WPREDICTED_od) <= 255, And(And(Customers(WPREDICTED_cid, "Aniyah", "Feest", WPREDICTED_addr, WPREDICTED_ph, WPREDICTED_em, WPREDICTED_od), Length("Aniyah") <= 20, Length("Feest") <= 20), FV_customer_phone_0 == WPREDICTED_ph, FV_customer_email_0 == WPREDICTED_em)), Not(Exists([gold_c_1, gold_c1_2, gold_c2_3, gold_c3_4, gold_o_5], And(Length(gold_c1_2) <= 20, Length(gold_c2_3) <= 20, Length(gold_c3_4) <= 255, Length(gold_o_5) <= 255, And(Customers(gold_c_1, gold_c1_2, gold_c2_3, gold_c3_4, FV_customer_phone_0, FV_customer_email_0, gold_o_5), And(gold_c1_2 == "Aniyah", gold_c2_3 == "Feest"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

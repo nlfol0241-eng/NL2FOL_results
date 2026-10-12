@@ -1,0 +1,125 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3108.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3108.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3874 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the address and staff number of the shops that do not have any happy hour.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Address = text -> StringSort()
+        HH_ID = int -> IntSort()
+        Month = text -> StringSort()
+        Num_of_shaff_in_charge = int -> IntSort()
+        Num_of_staff = text -> StringSort()
+        Open_Year = text -> StringSort()
+        Score = real -> Float32()
+        Shop_ID = int -> IntSort()
+      symbols:
+        happy_hour(HH_ID, Shop_ID, Month, Num_of_shaff_in_charge)
+        shop(Shop_ID, Address, Num_of_staff, Score, Open_Year)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : Open_Year ∃s1 : Score ∃s : Shop_ID( (shop(s,a,n,s1,o)) ∧ (¬(∃s2 : Shop_ID( ((shop(s,a,n,s1,o)) ∧ (∃h : HH_ID ∃n1 : Num_of_shaff_in_charge ∃m : Month( happy_hour(h,s2,m,n1) ))) ∧ (s = s2) ))) )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:Open_Year EXISTS:∃ IDENT:s1 COLON:: IDENT:Score EXISTS:∃ IDENT:s COLON:: IDENT:Shop_ID LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:s1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:Shop_ID LPAR:( LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:s1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:h COLON:: IDENT:HH_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_shaff_in_charge EXISTS:∃ IDENT:m COLON:: IDENT:Month LPAR:( IDENT:happy_hour LPAR:( IDENT:h COMMA:, IDENT:s2 COMMA:, IDENT:m COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:Open_Year
+            EXISTS s1:Score
+              EXISTS s:Shop_ID
+                AND
+                  PRED shop(s, a, n, s1, o)
+                  NOT
+                    EXISTS s2:Shop_ID
+                      AND
+                        AND
+                          PRED shop(s, a, n, s1, o)
+                          EXISTS h:HH_ID
+                            EXISTS n1:Num_of_shaff_in_charge
+                              EXISTS m:Month
+                                PRED happy_hour(h, s2, m, n1)
+                        EQ  s = s2
+      Predicted FOL: ∃sid:Shop_ID ∃sc:Score ∃oy:Open_Year ( shop(sid, address, staffnum, sc, oy) ∧ ¬∃hhid:HH_ID ∃m:Month ∃n:Num_of_shaff_in_charge happy_hour(hhid, sid, m, n) )
+        tokens: EXISTS:∃ IDENT:sid COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:sc COLON:: IDENT:Score EXISTS:∃ IDENT:oy COLON:: IDENT:Open_Year LPAR:( IDENT:shop LPAR:( IDENT:sid COMMA:, IDENT:address COMMA:, IDENT:staffnum COMMA:, IDENT:sc COMMA:, IDENT:oy RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:hhid COLON:: IDENT:HH_ID EXISTS:∃ IDENT:m COLON:: IDENT:Month EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_shaff_in_charge IDENT:happy_hour LPAR:( IDENT:hhid COMMA:, IDENT:sid COMMA:, IDENT:m COMMA:, IDENT:n RPAR:) RPAR:) EOF
+        AST:
+          EXISTS sid:Shop_ID
+            EXISTS sc:Score
+              EXISTS oy:Open_Year
+                AND
+                  PRED shop(sid, address, staffnum, sc, oy)
+                  NOT
+                    EXISTS hhid:HH_ID
+                      EXISTS m:Month
+                        EXISTS n:Num_of_shaff_in_charge
+                          PRED happy_hour(hhid, sid, m, n)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Address_0 : Address   Gold a <-> Predicted address
+      FV_Num_of_staff_0 : Num_of_staff   Gold n <-> Predicted staffnum
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address, global text -> StringSort()
+        h : local HH_ID, global int -> IntSort()
+        m : local Month, global text -> StringSort()
+        n : local Num_of_staff, global text -> StringSort()
+        n1 : local Num_of_shaff_in_charge, global int -> IntSort()
+        o : local Open_Year, global text -> StringSort()
+        s : local Shop_ID, global int -> IntSort()
+        s1 : local Score, global real -> Float32()
+        s2 : local Shop_ID, global int -> IntSort()
+      Predicted FOL:
+        address : local Address, global text -> StringSort()
+        hhid : local HH_ID, global int -> IntSort()
+        m : local Month, global text -> StringSort()
+        n : local Num_of_shaff_in_charge, global int -> IntSort()
+        oy : local Open_Year, global text -> StringSort()
+        sc : local Score, global real -> Float32()
+        sid : local Shop_ID, global int -> IntSort()
+        staffnum : local Num_of_staff, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_o_1, gold_s1_2, gold_s_3], And(D_real(gold_s1_2), And(P_shop(gold_s_3, FV_Address_0, FV_Num_of_staff_0, gold_s1_2, gold_o_1), Not(Exists([gold_s2_4], And(And(P_shop(gold_s_3, FV_Address_0, FV_Num_of_staff_0, gold_s1_2, gold_o_1), Exists([gold_h_5, gold_n1_6, gold_m_7], P_happy_hour(gold_h_5, gold_s2_4, gold_m_7, gold_n1_6))), (gold_s_3 == gold_s2_4)))))))
+      gold_skolem (witnesses WGOLD_o, WGOLD_s1, WGOLD_s):  And(D_real(WGOLD_s1), And(P_shop(WGOLD_s, FV_Address_0, FV_Num_of_staff_0, WGOLD_s1, WGOLD_o), Not(Exists([goldsk_s2_1], And(And(P_shop(WGOLD_s, FV_Address_0, FV_Num_of_staff_0, WGOLD_s1, WGOLD_o), Exists([goldsk_h_2, goldsk_n1_3, goldsk_m_4], P_happy_hour(goldsk_h_2, goldsk_s2_1, goldsk_m_4, goldsk_n1_3))), (WGOLD_s == goldsk_s2_1))))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_sid_1, predicted_sc_2, predicted_oy_3], And(D_real(predicted_sc_2), And(P_shop(predicted_sid_1, FV_Address_0, FV_Num_of_staff_0, predicted_sc_2, predicted_oy_3), Not(Exists([predicted_hhid_4, predicted_m_5, predicted_n_6], P_happy_hour(predicted_hhid_4, predicted_sid_1, predicted_m_5, predicted_n_6))))))
+      predicted_skolem (witnesses WPREDICTED_sid, WPREDICTED_sc, WPREDICTED_oy):  And(D_real(WPREDICTED_sc), And(P_shop(WPREDICTED_sid, FV_Address_0, FV_Num_of_staff_0, WPREDICTED_sc, WPREDICTED_oy), Not(Exists([predictedsk_hhid_1, predictedsk_m_2, predictedsk_n_3], P_happy_hour(predictedsk_hhid_1, WPREDICTED_sid, predictedsk_m_2, predictedsk_n_3)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 758 lines, 29921 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3108.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_o, WGOLD_s1, WGOLD_s
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s1)), Not(And(fpIsZero(WGOLD_s1), fpIsNegative(WGOLD_s1)))), And(shop(WGOLD_s, FV_Address_0, FV_Num_of_staff_0, WGOLD_s1, WGOLD_o), Not(Exists(goldsk_s2_1, And(And(shop(WGOLD_s, FV_Address_0, FV_Num_of_staff_0, WGOLD_s1, WGOLD_o), Exists([goldsk_h_2, goldsk_n1_3, goldsk_m_4], happy_hour(goldsk_h_2, goldsk_s2_1, goldsk_m_4, goldsk_n1_3))), WGOLD_s == goldsk_s2_1))))), Not(Exists([predicted_sid_1, predicted_sc_2, predicted_oy_3], And(And(Not(fpIsNaN(predicted_sc_2)), Not(And(fpIsZero(predicted_sc_2), fpIsNegative(predicted_sc_2)))), And(shop(predicted_sid_1, FV_Address_0, FV_Num_of_staff_0, predicted_sc_2, predicted_oy_3), Not(Exists([predicted_hhid_4, predicted_m_5, predicted_n_6], happy_hour(predicted_hhid_4, predicted_sid_1, predicted_m_5, predicted_n_6))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.018 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_sid, WPREDICTED_sc, WPREDICTED_oy
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_sc)), Not(And(fpIsZero(WPREDICTED_sc), fpIsNegative(WPREDICTED_sc)))), And(shop(WPREDICTED_sid, FV_Address_0, FV_Num_of_staff_0, WPREDICTED_sc, WPREDICTED_oy), Not(Exists([predictedsk_hhid_1, predictedsk_m_2, predictedsk_n_3], happy_hour(predictedsk_hhid_1, WPREDICTED_sid, predictedsk_m_2, predictedsk_n_3))))), Not(Exists([gold_o_1, gold_s1_2, gold_s_3], And(And(Not(fpIsNaN(gold_s1_2)), Not(And(fpIsZero(gold_s1_2), fpIsNegative(gold_s1_2)))), And(shop(gold_s_3, FV_Address_0, FV_Num_of_staff_0, gold_s1_2, gold_o_1), Not(Exists(gold_s2_4, And(And(shop(gold_s_3, FV_Address_0, FV_Num_of_staff_0, gold_s1_2, gold_o_1), Exists([gold_h_5, gold_n1_6, gold_m_7], happy_hour(gold_h_5, gold_s2_4, gold_m_7, gold_n1_6))), gold_s_3 == gold_s2_4))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.015 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

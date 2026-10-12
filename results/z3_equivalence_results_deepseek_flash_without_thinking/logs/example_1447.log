@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1447.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1447.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4121 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the positions of players on the team Ryley Goldner.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 10 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        College = text -> StringSort()
+        Country = int -> IntSort()
+        Draft_Class = text -> StringSort()
+        Draft_Pick_Number = int -> IntSort()
+        Name = text -> StringSort()
+        Player = text -> StringSort()
+        Position = text -> StringSort()
+        Season = real -> Float32()
+        Team = int -> IntSort()
+        Team_id = int -> IntSort()
+      symbols:
+        match_season(Season, Player, Position, Country, Team, Draft_Pick_Number, Draft_Class, College)
+        team(Team_id, Name)
+        constant Ryley Goldner : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Season ∃p : Player ∃c : Country ∃t : Team ∃d : Draft_Pick_Number ∃d1 : Draft_Class ∃c1 : College ∃t1 : Team_id ∃n : Name ( (((match_season(s,p,p1,c,t,d,d1,c1)) ∧ (team(t1,n))) ∧ (t = t1)) ∧ (n = 'Ryley Goldner') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Season EXISTS:∃ IDENT:p COLON:: IDENT:Player EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:d COLON:: IDENT:Draft_Pick_Number EXISTS:∃ IDENT:d1 COLON:: IDENT:Draft_Class EXISTS:∃ IDENT:c1 COLON:: IDENT:College EXISTS:∃ IDENT:t1 COLON:: IDENT:Team_id EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:match_season LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:team LPAR:( IDENT:t1 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Ryley Goldner RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Season
+            EXISTS p:Player
+              EXISTS c:Country
+                EXISTS t:Team
+                  EXISTS d:Draft_Pick_Number
+                    EXISTS d1:Draft_Class
+                      EXISTS c1:College
+                        EXISTS t1:Team_id
+                          EXISTS n:Name
+                            AND
+                              AND
+                                AND
+                                  PRED match_season(s, p, p1, c, t, d, d1, c1)
+                                  PRED team(t1, n)
+                                EQ  t = t1
+                              EQ  n = 'Ryley Goldner'
+      Predicted FOL: ∃t : Team_id ∃n : Name (team(t, n) ∧ n = 'Ryley Goldner' ∧ ∃p : Player ∃pos : Position match_season(_, p, pos, _, t, _, _, _))
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Team_id EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( IDENT:team LPAR:( IDENT:t COMMA:, IDENT:n RPAR:) AND:∧ IDENT:n EQ:= LIT:Ryley Goldner AND:∧ EXISTS:∃ IDENT:p COLON:: IDENT:Player EXISTS:∃ IDENT:pos COLON:: IDENT:Position IDENT:match_season LPAR:( IDENT:_ COMMA:, IDENT:p COMMA:, IDENT:pos COMMA:, IDENT:_ COMMA:, IDENT:t COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Team_id
+            EXISTS n:Name
+              AND
+                PRED team(t, n)
+                EQ  n = 'Ryley Goldner'
+                EXISTS p:Player
+                  EXISTS pos:Position
+                    PRED match_season(_, p, pos, _, t, _, _, _)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) _ occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (p1 : Position) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable '_' used at incompatible global sorts real and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable '_' used at incompatible global sorts real and int

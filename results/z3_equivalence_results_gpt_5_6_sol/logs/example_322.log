@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_322.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_322.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5581 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What year is the movie " The Imitation Game " from ?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        budget = text -> StringSort()
+        mid = int -> IntSort()
+        release_year = int -> IntSort()
+        title = text -> StringSort()
+        title_aka = text -> StringSort()
+      symbols:
+        movie(mid, title, release_year, title_aka, budget)
+        constant The Imitation Game : title
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mid ∃t : title ∃t1 : title_aka ∃b : budget ( (movie(m,t,r,t1,b)) ∧ (t = 'The Imitation Game') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:t1 COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget LPAR:( LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:t1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:The Imitation Game RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS t:title
+              EXISTS t1:title_aka
+                EXISTS b:budget
+                  AND
+                    PRED movie(m, t, r, t1, b)
+                    EQ  t = 'The Imitation Game'
+      Predicted FOL: ∃m : mid ∃a : title_aka ∃b : budget movie(m, 'The Imitation Game', y, a, b)
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:a COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget IDENT:movie LPAR:( IDENT:m COMMA:, LIT:The Imitation Game COMMA:, IDENT:y COMMA:, IDENT:a COMMA:, IDENT:b RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS a:title_aka
+              EXISTS b:budget
+                PRED movie(m, 'The Imitation Game', y, a, b)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_release_year_0 : release_year   Gold r <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local budget, global text -> StringSort()
+        m : local mid, global int -> IntSort()
+        r : local release_year, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        t1 : local title_aka, global text -> StringSort()
+      Predicted FOL:
+        a : local title_aka, global text -> StringSort()
+        b : local budget, global text -> StringSort()
+        m : local mid, global int -> IntSort()
+        y : local release_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_t_2, gold_t1_3, gold_b_4], And(P_movie(gold_m_1, gold_t_2, FV_release_year_0, gold_t1_3, gold_b_4), (gold_t_2 == L_The_Imitation_Game)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_t, WGOLD_t1, WGOLD_b):  And(P_movie(WGOLD_m, WGOLD_t, FV_release_year_0, WGOLD_t1, WGOLD_b), (WGOLD_t == L_The_Imitation_Game))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_a_2, predicted_b_3], P_movie(predicted_m_1, L_The_Imitation_Game, FV_release_year_0, predicted_a_2, predicted_b_3))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_a, WPREDICTED_b):  P_movie(WPREDICTED_m, L_The_Imitation_Game, FV_release_year_0, WPREDICTED_a, WPREDICTED_b)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'The Imitation Game' at text -> L_The_Imitation_Game = StringVal('The Imitation Game')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 735 lines, 27382 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_322.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_t, WGOLD_t1, WGOLD_b
+      claim: And(And(movie(WGOLD_m, WGOLD_t, FV_release_year_0, WGOLD_t1, WGOLD_b), WGOLD_t == "The Imitation Game"), Not(Exists([predicted_m_1, predicted_a_2, predicted_b_3], movie(predicted_m_1, "The Imitation Game", FV_release_year_0, predicted_a_2, predicted_b_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_a, WPREDICTED_b
+      claim: And(movie(WPREDICTED_m, "The Imitation Game", FV_release_year_0, WPREDICTED_a, WPREDICTED_b), Not(Exists([gold_m_1, gold_t_2, gold_t1_3, gold_b_4], And(movie(gold_m_1, gold_t_2, FV_release_year_0, gold_t1_3, gold_b_4), gold_t_2 == "The Imitation Game"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

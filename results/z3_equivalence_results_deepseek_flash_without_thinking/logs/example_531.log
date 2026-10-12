@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_531.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_531.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4402 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the apartment number and the room count of each apartment?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        char(10) -> StringSort()   [domain Length(x) <= 10; length <= 10 (blank padding not modelled)]
+        char(5) -> StringSort()   [domain Length(x) <= 5; length <= 5 (blank padding not modelled)]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        apt_id = integer -> IntSort()
+        apt_number = char(10) -> StringSort()
+        apt_type_code = char(15) -> StringSort()
+        bathroom_count = integer -> IntSort()
+        bedroom_count = integer -> IntSort()
+        building_id = integer -> IntSort()
+        room_count = char(5) -> StringSort()
+      symbols:
+        Apartments(apt_id, building_id, apt_type_code, apt_number, bathroom_count, bedroom_count, room_count)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apt_id ∃b : building_id ∃a1 : apt_type_code ∃b1 : bathroom_count ∃b2 : bedroom_count ( Apartments(a,b,a1,a2,b1,b2,r) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apt_id EXISTS:∃ IDENT:b COLON:: IDENT:building_id EXISTS:∃ IDENT:a1 COLON:: IDENT:apt_type_code EXISTS:∃ IDENT:b1 COLON:: IDENT:bathroom_count EXISTS:∃ IDENT:b2 COLON:: IDENT:bedroom_count LPAR:( IDENT:Apartments LPAR:( IDENT:a COMMA:, IDENT:b COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apt_id
+            EXISTS b:building_id
+              EXISTS a1:apt_type_code
+                EXISTS b1:bathroom_count
+                  EXISTS b2:bedroom_count
+                    PRED Apartments(a, b, a1, a2, b1, b2, r)
+      Predicted FOL: ∀x_apt_id : apt_id ∀x_building_id : building_id ∀x_apt_type_code : apt_type_code ∀x_apt_number : apt_number ∀x_bathroom_count : bathroom_count ∀x_bedroom_count : bedroom_count ∀x_room_count : room_count (Apartments(x_apt_id, x_building_id, x_apt_type_code, x_apt_number, x_bathroom_count, x_bedroom_count, x_room_count) → (x_apt_number = x_apt_number ∧ x_room_count = x_room_count))
+        tokens: FORALL:∀ IDENT:x_apt_id COLON:: IDENT:apt_id FORALL:∀ IDENT:x_building_id COLON:: IDENT:building_id FORALL:∀ IDENT:x_apt_type_code COLON:: IDENT:apt_type_code FORALL:∀ IDENT:x_apt_number COLON:: IDENT:apt_number FORALL:∀ IDENT:x_bathroom_count COLON:: IDENT:bathroom_count FORALL:∀ IDENT:x_bedroom_count COLON:: IDENT:bedroom_count FORALL:∀ IDENT:x_room_count COLON:: IDENT:room_count LPAR:( IDENT:Apartments LPAR:( IDENT:x_apt_id COMMA:, IDENT:x_building_id COMMA:, IDENT:x_apt_type_code COMMA:, IDENT:x_apt_number COMMA:, IDENT:x_bathroom_count COMMA:, IDENT:x_bedroom_count COMMA:, IDENT:x_room_count RPAR:) IMPL:→ LPAR:( IDENT:x_apt_number EQ:= IDENT:x_apt_number AND:∧ IDENT:x_room_count EQ:= IDENT:x_room_count RPAR:) RPAR:) EOF
+        AST:
+          FORALL x_apt_id:apt_id
+            FORALL x_building_id:building_id
+              FORALL x_apt_type_code:apt_type_code
+                FORALL x_apt_number:apt_number
+                  FORALL x_bathroom_count:bathroom_count
+                    FORALL x_bedroom_count:bedroom_count
+                      FORALL x_room_count:room_count
+                        IMPLIES
+                          PRED Apartments(x_apt_id, x_building_id, x_apt_type_code, x_apt_number, x_bathroom_count, x_bedroom_count, x_room_count)
+                          AND
+                            EQ  x_apt_number = x_apt_number
+                            EQ  x_room_count = x_room_count
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (a2 : apt_number, r : room_count) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apt_id, global integer -> IntSort()
+        a1 : local apt_type_code, global char(15) -> StringSort()
+        a2 : local apt_number, global char(10) -> StringSort()
+        b : local building_id, global integer -> IntSort()
+        b1 : local bathroom_count, global integer -> IntSort()
+        b2 : local bedroom_count, global integer -> IntSort()
+        r : local room_count, global char(5) -> StringSort()
+      Predicted FOL:
+        x_apt_id : local apt_id, global integer -> IntSort()
+        x_apt_number : local apt_number, global char(10) -> StringSort()
+        x_apt_type_code : local apt_type_code, global char(15) -> StringSort()
+        x_bathroom_count : local bathroom_count, global integer -> IntSort()
+        x_bedroom_count : local bedroom_count, global integer -> IntSort()
+        x_building_id : local building_id, global integer -> IntSort()
+        x_room_count : local room_count, global char(5) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5675 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_531.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (a2 : apt_number, r : room_count) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

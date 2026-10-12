@@ -1,0 +1,75 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_615.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_615.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2954 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: find all dependent names who have a spouse relation with some employee.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Bdate = text -> StringSort()
+        Dependent_name = text -> StringSort()
+        Essn = integer -> IntSort()
+        Relationship = text -> StringSort()
+        Sex = text -> StringSort()
+      symbols:
+        dependent(Essn, Dependent_name, Sex, Bdate, Relationship)
+        constant Spouse : Relationship
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Essn ∃s : Sex ∃b : Bdate ∃r : Relationship ( (dependent(e,d,s,b,r)) ∧ (r = 'Spouse') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Essn EXISTS:∃ IDENT:s COLON:: IDENT:Sex EXISTS:∃ IDENT:b COLON:: IDENT:Bdate EXISTS:∃ IDENT:r COLON:: IDENT:Relationship LPAR:( LPAR:( IDENT:dependent LPAR:( IDENT:e COMMA:, IDENT:d COMMA:, IDENT:s COMMA:, IDENT:b COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:Spouse RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Essn
+            EXISTS s:Sex
+              EXISTS b:Bdate
+                EXISTS r:Relationship
+                  AND
+                    PRED dependent(e, d, s, b, r)
+                    EQ  r = 'Spouse'
+      Predicted FOL: ∃x : Essn ∃y : Dependent_name ∃z : Sex ∃w : Bdate (dependent(x, y, z, w, Spouse) ∧ employee(x, x, x, x, x, x, x, x, x, x))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Essn EXISTS:∃ IDENT:y COLON:: IDENT:Dependent_name EXISTS:∃ IDENT:z COLON:: IDENT:Sex EXISTS:∃ IDENT:w COLON:: IDENT:Bdate LPAR:( IDENT:dependent LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:Spouse RPAR:) AND:∧ IDENT:employee LPAR:( IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Essn
+            EXISTS y:Dependent_name
+              EXISTS z:Sex
+                EXISTS w:Bdate
+                  AND
+                    PRED dependent(x, y, z, w, Spouse<const>)
+                    PRED employee(x, x, x, x, x, x, x, x, x, x)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d : Dependent_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'employee' has no declared arity
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 1 more time]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 144, in infer
+    raise ValueError(f"predicate {node[1]!r} has no declared arity")
+ValueError: predicate 'employee' has no declared arity

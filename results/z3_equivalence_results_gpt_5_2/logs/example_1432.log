@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1432.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1432.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3566 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the schools that were either founded after 1850 or public.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Affiliation = text -> StringSort()
+        Enrollment = real -> Float32()
+        Founded = real -> Float32()
+        Location = text -> StringSort()
+        Nickname = text -> StringSort()
+        Primary_conference = text -> StringSort()
+        School = text -> StringSort()
+        School_ID = int -> IntSort()
+      symbols:
+        university(School_ID, School, Location, Founded, Affiliation, Enrollment, Nickname, Primary_conference)
+        constant 1850 : Founded
+        constant Public : Affiliation
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : School_ID ∃l : Location ∃f : Founded ∃a : Affiliation ∃e : Enrollment ∃n : Nickname ∃p : Primary_conference ( (university(s,s1,l,f,a,e,n,p)) ∧ ((f > 1850) ∨ (a = 'Public')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:School_ID EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:a COLON:: IDENT:Affiliation EXISTS:∃ IDENT:e COLON:: IDENT:Enrollment EXISTS:∃ IDENT:n COLON:: IDENT:Nickname EXISTS:∃ IDENT:p COLON:: IDENT:Primary_conference LPAR:( LPAR:( IDENT:university LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f GT:> NUM:1850 RPAR:) OR:∨ LPAR:( IDENT:a EQ:= LIT:Public RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:School_ID
+            EXISTS l:Location
+              EXISTS f:Founded
+                EXISTS a:Affiliation
+                  EXISTS e:Enrollment
+                    EXISTS n:Nickname
+                      EXISTS p:Primary_conference
+                        AND
+                          PRED university(s, s1, l, f, a, e, n, p)
+                          OR
+                            CMP  f > 1850
+                            EQ  a = 'Public'
+      Predicted FOL: ∃s:School (∃id:School_ID ∃loc:Location ∃f:Founded ∃aff:Affiliation ∃en:Enrollment ∃nick:Nickname ∃conf:Primary_conference (university(id, s, loc, f, aff, en, nick, conf) ∧ (1850 < f ∨ aff = 'Public')))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:School LPAR:( EXISTS:∃ IDENT:id COLON:: IDENT:School_ID EXISTS:∃ IDENT:loc COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:aff COLON:: IDENT:Affiliation EXISTS:∃ IDENT:en COLON:: IDENT:Enrollment EXISTS:∃ IDENT:nick COLON:: IDENT:Nickname EXISTS:∃ IDENT:conf COLON:: IDENT:Primary_conference LPAR:( IDENT:university LPAR:( IDENT:id COMMA:, IDENT:s COMMA:, IDENT:loc COMMA:, IDENT:f COMMA:, IDENT:aff COMMA:, IDENT:en COMMA:, IDENT:nick COMMA:, IDENT:conf RPAR:) AND:∧ LPAR:( NUM:1850 LT:< IDENT:f OR:∨ IDENT:aff EQ:= LIT:Public RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:School
+            EXISTS id:School_ID
+              EXISTS loc:Location
+                EXISTS f:Founded
+                  EXISTS aff:Affiliation
+                    EXISTS en:Enrollment
+                      EXISTS nick:Nickname
+                        EXISTS conf:Primary_conference
+                          AND
+                            PRED university(id, s, loc, f, aff, en, nick, conf)
+                            OR
+                              CMP  1850 < f
+                              EQ  aff = 'Public'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s1 : School) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Affiliation, global text -> StringSort()
+        e : local Enrollment, global real -> Float32()
+        f : local Founded, global real -> Float32()
+        l : local Location, global text -> StringSort()
+        n : local Nickname, global text -> StringSort()
+        p : local Primary_conference, global text -> StringSort()
+        s : local School_ID, global int -> IntSort()
+        s1 : local School, global text -> StringSort()
+      Predicted FOL:
+        aff : local Affiliation, global text -> StringSort()
+        conf : local Primary_conference, global text -> StringSort()
+        en : local Enrollment, global real -> Float32()
+        f : local Founded, global real -> Float32()
+        id : local School_ID, global int -> IntSort()
+        loc : local Location, global text -> StringSort()
+        nick : local Nickname, global text -> StringSort()
+        s : local School, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5516 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1432.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s1 : School) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

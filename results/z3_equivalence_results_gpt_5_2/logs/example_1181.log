@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1181.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1181.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3677 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are flight numbers of flights departing from City "Aberdeen "?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        AirportCode = text -> StringSort()
+        AirportName = text -> StringSort()
+        City = text -> StringSort()
+        Country = text -> StringSort()
+        CountryAbbrev = text -> StringSort()
+        DestAirport = text -> StringSort()
+        FlightNo = integer -> IntSort()
+        SourceAirport = text -> StringSort()
+        a_uid = integer -> IntSort()
+      symbols:
+        airports(City, AirportCode, AirportName, Country, CountryAbbrev)
+        flights(a_uid, FlightNo, SourceAirport, DestAirport)
+        constant Aberdeen : City
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : a_uid ∃s : SourceAirport ∃d : DestAirport ∃c : City ∃p : AirportCode ∃n : AirportName ∃c1 : Country ∃r : CountryAbbrev ( (((flights(a,f,s,d)) ∧ (airports(c,p,n,c1,r))) ∧ (s = p)) ∧ (c = 'Aberdeen') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:a_uid EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:d COLON:: IDENT:DestAirport EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:p COLON:: IDENT:AirportCode EXISTS:∃ IDENT:n COLON:: IDENT:AirportName EXISTS:∃ IDENT:c1 COLON:: IDENT:Country EXISTS:∃ IDENT:r COLON:: IDENT:CountryAbbrev LPAR:( LPAR:( LPAR:( LPAR:( IDENT:flights LPAR:( IDENT:a COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:airports LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:n COMMA:, IDENT:c1 COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Aberdeen RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:a_uid
+            EXISTS s:SourceAirport
+              EXISTS d:DestAirport
+                EXISTS c:City
+                  EXISTS p:AirportCode
+                    EXISTS n:AirportName
+                      EXISTS c1:Country
+                        EXISTS r:CountryAbbrev
+                          AND
+                            AND
+                              AND
+                                PRED flights(a, f, s, d)
+                                PRED airports(c, p, n, c1, r)
+                              EQ  s = p
+                            EQ  c = 'Aberdeen'
+      Predicted FOL: ∃u:a_uid ∃s:SourceAirport ∃d:DestAirport (flights(u, x, s, d) ∧ ∃ac:AirportCode ∃an:AirportName ∃co:Country ∃cab:CountryAbbrev (airports(Aberdeen, s, ac, an, co, cab)))
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:a_uid EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:d COLON:: IDENT:DestAirport LPAR:( IDENT:flights LPAR:( IDENT:u COMMA:, IDENT:x COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) AND:∧ EXISTS:∃ IDENT:ac COLON:: IDENT:AirportCode EXISTS:∃ IDENT:an COLON:: IDENT:AirportName EXISTS:∃ IDENT:co COLON:: IDENT:Country EXISTS:∃ IDENT:cab COLON:: IDENT:CountryAbbrev LPAR:( IDENT:airports LPAR:( IDENT:Aberdeen COMMA:, IDENT:s COMMA:, IDENT:ac COMMA:, IDENT:an COMMA:, IDENT:co COMMA:, IDENT:cab RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:a_uid
+            EXISTS s:SourceAirport
+              EXISTS d:DestAirport
+                AND
+                  PRED flights(u, x, s, d)
+                  EXISTS ac:AirportCode
+                    EXISTS an:AirportName
+                      EXISTS co:Country
+                        EXISTS cab:CountryAbbrev
+                          PRED airports(Aberdeen<const>, s, ac, an, co, cab)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_FlightNo_0 : FlightNo   Gold f <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'airports' applied to 6 arguments but declared with arity 5
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 1 more time]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 146, in infer
+    raise ValueError(
+ValueError: predicate 'airports' applied to 6 arguments but declared with arity 5

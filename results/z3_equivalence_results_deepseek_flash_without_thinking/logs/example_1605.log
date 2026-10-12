@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1605.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1605.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3347 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: How many kids stay in the rooms reserved by ROY SWEAZY?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Adults = integer -> IntSort()
+        CheckIn = text -> StringSort()
+        CheckOut = text -> StringSort()
+        Code = integer -> IntSort()
+        FirstName = text -> StringSort()
+        Kids = integer -> IntSort()
+        LastName = text -> StringSort()
+        Rate = real -> Float32()
+        Room = text -> StringSort()
+      symbols:
+        Reservations(Code, Room, CheckIn, CheckOut, Rate, LastName, FirstName, Adults, Kids)
+        constant ROY : FirstName
+        constant SWEAZY : LastName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Code ∃r : Room ∃c1 : CheckIn ∃c2 : CheckOut ∃r1 : Rate ∃l : LastName ∃f : FirstName ∃a : Adults ( (Reservations(c,r,c1,c2,r1,l,f,a,k)) ∧ ((f = 'ROY') ∧ (l = 'SWEAZY')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:r COLON:: IDENT:Room EXISTS:∃ IDENT:c1 COLON:: IDENT:CheckIn EXISTS:∃ IDENT:c2 COLON:: IDENT:CheckOut EXISTS:∃ IDENT:r1 COLON:: IDENT:Rate EXISTS:∃ IDENT:l COLON:: IDENT:LastName EXISTS:∃ IDENT:f COLON:: IDENT:FirstName EXISTS:∃ IDENT:a COLON:: IDENT:Adults LPAR:( LPAR:( IDENT:Reservations LPAR:( IDENT:c COMMA:, IDENT:r COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:r1 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:k RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f EQ:= LIT:ROY RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:SWEAZY RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Code
+            EXISTS r:Room
+              EXISTS c1:CheckIn
+                EXISTS c2:CheckOut
+                  EXISTS r1:Rate
+                    EXISTS l:LastName
+                      EXISTS f:FirstName
+                        EXISTS a:Adults
+                          AND
+                            PRED Reservations(c, r, c1, c2, r1, l, f, a, k)
+                            AND
+                              EQ  f = 'ROY'
+                              EQ  l = 'SWEAZY'
+      Predicted FOL: ∃k : Kids ( Reservations(c, r, ci, co, ra, 'SWEAZY', 'ROY', a, k) ∧ ∀k' : Kids ( Reservations(c', r', ci', co', ra', 'SWEAZY', 'ROY', a', k') → k' = k ) )
+        tokens: EXISTS:∃ IDENT:k COLON:: IDENT:Kids LPAR:( IDENT:Reservations LPAR:( IDENT:c COMMA:, IDENT:r COMMA:, IDENT:ci COMMA:, IDENT:co COMMA:, IDENT:ra COMMA:, LIT:SWEAZY COMMA:, LIT:ROY COMMA:, IDENT:a COMMA:, IDENT:k RPAR:) AND:∧ FORALL:∀ IDENT:k' COLON:: IDENT:Kids LPAR:( IDENT:Reservations LPAR:( IDENT:c' COMMA:, IDENT:r' COMMA:, IDENT:ci' COMMA:, IDENT:co' COMMA:, IDENT:ra' COMMA:, LIT:SWEAZY COMMA:, LIT:ROY COMMA:, IDENT:a' COMMA:, IDENT:k' RPAR:) IMPL:→ IDENT:k' EQ:= IDENT:k RPAR:) RPAR:) EOF
+        AST:
+          EXISTS k:Kids
+            AND
+              PRED Reservations(c, r, ci, co, ra, 'SWEAZY', 'ROY', a, k)
+              FORALL k':Kids
+                IMPLIES
+                  PRED Reservations(c', r', ci', co', ra', 'SWEAZY', 'ROY', a', k')
+                  EQ  k' = k
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) c, r, ci, co, ra, a, c', r', ci', co', ra', a' occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (k : Kids) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 23 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Adults, global integer -> IntSort()
+        c : local Code, global integer -> IntSort()
+        c1 : local CheckIn, global text -> StringSort()
+        c2 : local CheckOut, global text -> StringSort()
+        f : local FirstName, global text -> StringSort()
+        k : local Kids, global integer -> IntSort()
+        l : local LastName, global text -> StringSort()
+        r : local Room, global text -> StringSort()
+        r1 : local Rate, global real -> Float32()
+      Predicted FOL:
+        a : local Adults, global integer -> IntSort()
+        a' : local Adults, global integer -> IntSort()
+        c : local Code, global integer -> IntSort()
+        c' : local Code, global integer -> IntSort()
+        ci : local CheckIn, global text -> StringSort()
+        ci' : local CheckIn, global text -> StringSort()
+        co : local CheckOut, global text -> StringSort()
+        co' : local CheckOut, global text -> StringSort()
+        k : local Kids, global integer -> IntSort()
+        k' : local Kids, global integer -> IntSort()
+        r : local Room, global text -> StringSort()
+        r' : local Room, global text -> StringSort()
+        ra : local Rate, global real -> Float32()
+        ra' : local Rate, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5583 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1605.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (k : Kids) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) c, r, ci, co, ra, a, c', r', ci', co', ra', a' occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

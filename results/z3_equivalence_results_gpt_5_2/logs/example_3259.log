@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3259.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3259.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5520 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the product type codes that have both products with price higher than 4500 and products with price lower than 3000.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        decimal(20,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -10000000000000000, x < 10000000000000000); 20 digits, 4 after the point]
+      local sorts:
+        Product_ID = integer -> IntSort()
+        Product_Name = varchar(255) -> StringSort()
+        Product_Price = decimal(20,4) -> RealSort()
+        Product_Type_Code = char(15) -> StringSort()
+      symbols:
+        Products(Product_ID, Product_Type_Code, Product_Name, Product_Price)
+        constant 3000 : Product_Price
+        constant 4500 : Product_Price
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃p2 : Product_Name ∃p3 : Product_Price ∃p : Product_ID( (Products(p,p1,p2,p3)) ∧ (p3 > 4500) )) ∧ (¬((∃p2 : Product_Name ∃p3 : Product_Price ∃p : Product_ID( (Products(p,p1,p2,p3)) ∧ (p3 > 4500) )) ∧ (¬(∃p2 : Product_Name ∃p3 : Product_Price ∃p : Product_ID( (Products(p,p1,p2,p3)) ∧ (p3 < 3000) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:p2 COLON:: IDENT:Product_Name EXISTS:∃ IDENT:p3 COLON:: IDENT:Product_Price EXISTS:∃ IDENT:p COLON:: IDENT:Product_ID LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p3 GT:> NUM:4500 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:p2 COLON:: IDENT:Product_Name EXISTS:∃ IDENT:p3 COLON:: IDENT:Product_Price EXISTS:∃ IDENT:p COLON:: IDENT:Product_ID LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p3 GT:> NUM:4500 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p2 COLON:: IDENT:Product_Name EXISTS:∃ IDENT:p3 COLON:: IDENT:Product_Price EXISTS:∃ IDENT:p COLON:: IDENT:Product_ID LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p3 LT:< NUM:3000 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p2:Product_Name
+              EXISTS p3:Product_Price
+                EXISTS p:Product_ID
+                  AND
+                    PRED Products(p, p1, p2, p3)
+                    CMP  p3 > 4500
+            NOT
+              AND
+                EXISTS p2:Product_Name
+                  EXISTS p3:Product_Price
+                    EXISTS p:Product_ID
+                      AND
+                        PRED Products(p, p1, p2, p3)
+                        CMP  p3 > 4500
+                NOT
+                  EXISTS p2:Product_Name
+                    EXISTS p3:Product_Price
+                      EXISTS p:Product_ID
+                        AND
+                          PRED Products(p, p1, p2, p3)
+                          CMP  p3 < 3000
+      Predicted FOL: ∃ptc:Product_Type_Code ( (∃pidH:Product_ID ∃pnH:Product_Name ∃ppH:Product_Price (Products(pidH, ptc, pnH, ppH) ∧ ppH > 4500)) ∧ (∃pidL:Product_ID ∃pnL:Product_Name ∃ppL:Product_Price (Products(pidL, ptc, pnL, ppL) ∧ ppL < 3000)) )
+        tokens: EXISTS:∃ IDENT:ptc COLON:: IDENT:Product_Type_Code LPAR:( LPAR:( EXISTS:∃ IDENT:pidH COLON:: IDENT:Product_ID EXISTS:∃ IDENT:pnH COLON:: IDENT:Product_Name EXISTS:∃ IDENT:ppH COLON:: IDENT:Product_Price LPAR:( IDENT:Products LPAR:( IDENT:pidH COMMA:, IDENT:ptc COMMA:, IDENT:pnH COMMA:, IDENT:ppH RPAR:) AND:∧ IDENT:ppH GT:> NUM:4500 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:pidL COLON:: IDENT:Product_ID EXISTS:∃ IDENT:pnL COLON:: IDENT:Product_Name EXISTS:∃ IDENT:ppL COLON:: IDENT:Product_Price LPAR:( IDENT:Products LPAR:( IDENT:pidL COMMA:, IDENT:ptc COMMA:, IDENT:pnL COMMA:, IDENT:ppL RPAR:) AND:∧ IDENT:ppL LT:< NUM:3000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS ptc:Product_Type_Code
+            AND
+              EXISTS pidH:Product_ID
+                EXISTS pnH:Product_Name
+                  EXISTS ppH:Product_Price
+                    AND
+                      PRED Products(pidH, ptc, pnH, ppH)
+                      CMP  ppH > 4500
+              EXISTS pidL:Product_ID
+                EXISTS pnL:Product_Name
+                  EXISTS ppL:Product_Price
+                    AND
+                      PRED Products(pidL, ptc, pnL, ppL)
+                      CMP  ppL < 3000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p1 : Product_Type_Code) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local Product_ID, global integer -> IntSort()
+        p1 : local Product_Type_Code, global char(15) -> StringSort()
+        p2 : local Product_Name, global varchar(255) -> StringSort()
+        p3 : local Product_Price, global decimal(20,4) -> RealSort()
+      Predicted FOL:
+        pidH : local Product_ID, global integer -> IntSort()
+        pidL : local Product_ID, global integer -> IntSort()
+        pnH : local Product_Name, global varchar(255) -> StringSort()
+        pnL : local Product_Name, global varchar(255) -> StringSort()
+        ppH : local Product_Price, global decimal(20,4) -> RealSort()
+        ppL : local Product_Price, global decimal(20,4) -> RealSort()
+        ptc : local Product_Type_Code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5759 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3259.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p1 : Product_Type_Code) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

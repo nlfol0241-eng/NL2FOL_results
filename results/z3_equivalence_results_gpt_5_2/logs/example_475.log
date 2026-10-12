@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_475.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_475.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6565 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the different billing countries for all invoices.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 9 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        varchar(70) -> StringSort()   [domain Length(x) <= 70; length <= 70]
+        decimal(10,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000000, x < 100000000); 10 digits, 2 after the point]
+      local sorts:
+        BillingAddress = varchar(70) -> StringSort()
+        BillingCity = varchar(40) -> StringSort()
+        BillingCountry = varchar(40) -> StringSort()
+        BillingPostalCode = varchar(10) -> StringSort()
+        BillingState = varchar(40) -> StringSort()
+        CustomerId = integer -> IntSort()
+        InvoiceDate = datetime -> IntSort()
+        InvoiceId = integer -> IntSort()
+        Total = decimal(10,2) -> RealSort()
+      symbols:
+        Invoice(InvoiceId, CustomerId, InvoiceDate, BillingAddress, BillingCity, BillingState, BillingCountry, BillingPostalCode, Total)
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : InvoiceId ∃c : CustomerId ∃i1 : InvoiceDate ∃b : BillingAddress ∃b1 : BillingCity ∃b2 : BillingState ∃b4 : BillingPostalCode ∃t : Total ( Invoice(i,c,i1,b,b1,b2,b3,b4,t) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:InvoiceId EXISTS:∃ IDENT:c COLON:: IDENT:CustomerId EXISTS:∃ IDENT:i1 COLON:: IDENT:InvoiceDate EXISTS:∃ IDENT:b COLON:: IDENT:BillingAddress EXISTS:∃ IDENT:b1 COLON:: IDENT:BillingCity EXISTS:∃ IDENT:b2 COLON:: IDENT:BillingState EXISTS:∃ IDENT:b4 COLON:: IDENT:BillingPostalCode EXISTS:∃ IDENT:t COLON:: IDENT:Total LPAR:( IDENT:Invoice LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:i1 COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:b3 COMMA:, IDENT:b4 COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:InvoiceId
+            EXISTS c:CustomerId
+              EXISTS i1:InvoiceDate
+                EXISTS b:BillingAddress
+                  EXISTS b1:BillingCity
+                    EXISTS b2:BillingState
+                      EXISTS b4:BillingPostalCode
+                        EXISTS t:Total
+                          PRED Invoice(i, c, i1, b, b1, b2, b3, b4, t)
+      Predicted FOL: ∃bc : BillingCountry ( ∃e0 : InvoiceId ∃e1 : CustomerId ∃e2 : InvoiceDate ∃e3 : BillingAddress ∃e4 : BillingCity ∃e5 : BillingState ∃e7 : BillingPostalCode ∃e8 : Total ( Invoice(e0, e1, e2, e3, e4, e5, bc, e7, e8) ) )
+        tokens: EXISTS:∃ IDENT:bc COLON:: IDENT:BillingCountry LPAR:( EXISTS:∃ IDENT:e0 COLON:: IDENT:InvoiceId EXISTS:∃ IDENT:e1 COLON:: IDENT:CustomerId EXISTS:∃ IDENT:e2 COLON:: IDENT:InvoiceDate EXISTS:∃ IDENT:e3 COLON:: IDENT:BillingAddress EXISTS:∃ IDENT:e4 COLON:: IDENT:BillingCity EXISTS:∃ IDENT:e5 COLON:: IDENT:BillingState EXISTS:∃ IDENT:e7 COLON:: IDENT:BillingPostalCode EXISTS:∃ IDENT:e8 COLON:: IDENT:Total LPAR:( IDENT:Invoice LPAR:( IDENT:e0 COMMA:, IDENT:e1 COMMA:, IDENT:e2 COMMA:, IDENT:e3 COMMA:, IDENT:e4 COMMA:, IDENT:e5 COMMA:, IDENT:bc COMMA:, IDENT:e7 COMMA:, IDENT:e8 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS bc:BillingCountry
+            EXISTS e0:InvoiceId
+              EXISTS e1:CustomerId
+                EXISTS e2:InvoiceDate
+                  EXISTS e3:BillingAddress
+                    EXISTS e4:BillingCity
+                      EXISTS e5:BillingState
+                        EXISTS e7:BillingPostalCode
+                          EXISTS e8:Total
+                            PRED Invoice(e0, e1, e2, e3, e4, e5, bc, e7, e8)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (b3 : BillingCountry) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local BillingAddress, global varchar(70) -> StringSort()
+        b1 : local BillingCity, global varchar(40) -> StringSort()
+        b2 : local BillingState, global varchar(40) -> StringSort()
+        b3 : local BillingCountry, global varchar(40) -> StringSort()
+        b4 : local BillingPostalCode, global varchar(10) -> StringSort()
+        c : local CustomerId, global integer -> IntSort()
+        i : local InvoiceId, global integer -> IntSort()
+        i1 : local InvoiceDate, global datetime -> IntSort()
+        t : local Total, global decimal(10,2) -> RealSort()
+      Predicted FOL:
+        bc : local BillingCountry, global varchar(40) -> StringSort()
+        e0 : local InvoiceId, global integer -> IntSort()
+        e1 : local CustomerId, global integer -> IntSort()
+        e2 : local InvoiceDate, global datetime -> IntSort()
+        e3 : local BillingAddress, global varchar(70) -> StringSort()
+        e4 : local BillingCity, global varchar(40) -> StringSort()
+        e5 : local BillingState, global varchar(40) -> StringSort()
+        e7 : local BillingPostalCode, global varchar(10) -> StringSort()
+        e8 : local Total, global decimal(10,2) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5532 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_475.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (b3 : BillingCountry) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

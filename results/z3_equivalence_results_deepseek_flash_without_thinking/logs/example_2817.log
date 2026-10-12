@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2817.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2817.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5746 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which customers have used the service named "Close a policy" or "Upgrade a policy"? Give me the customer names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+      local sorts:
+        Customer_ID = integer -> IntSort()
+        Customer_name = varchar(40) -> StringSort()
+        FNOL_ID = integer -> IntSort()
+        Policy_ID = integer -> IntSort()
+        Service_ID = integer -> IntSort()
+        Service_name = varchar(40) -> StringSort()
+      symbols:
+        Customers(Customer_ID, Customer_name)
+        First_Notification_of_Loss(FNOL_ID, Customer_ID, Policy_ID, Service_ID)
+        Services(Service_ID, Service_name)
+        constant Close a policy : Service_name
+        constant Upgrade a policy : Service_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Customer_ID ∃f : FNOL_ID ∃c2 : Customer_ID ∃p : Policy_ID ∃s : Service_ID ∃s1 : Service_ID ∃s2 : Service_name ( (((((Customers(c,c1)) ∧ (First_Notification_of_Loss(f,c2,p,s))) ∧ (c = c2)) ∧ (Services(s1,s2))) ∧ (s = s1)) ∧ ((s2 = 'Close a policy') ∨ (s2 = 'Upgrade a policy')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:f COLON:: IDENT:FNOL_ID EXISTS:∃ IDENT:c2 COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Service_ID EXISTS:∃ IDENT:s2 COLON:: IDENT:Service_name LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:First_Notification_of_Loss LPAR:( IDENT:f COMMA:, IDENT:c2 COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Services LPAR:( IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s2 EQ:= LIT:Close a policy RPAR:) OR:∨ LPAR:( IDENT:s2 EQ:= LIT:Upgrade a policy RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Customer_ID
+            EXISTS f:FNOL_ID
+              EXISTS c2:Customer_ID
+                EXISTS p:Policy_ID
+                  EXISTS s:Service_ID
+                    EXISTS s1:Service_ID
+                      EXISTS s2:Service_name
+                        AND
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED Customers(c, c1)
+                                  PRED First_Notification_of_Loss(f, c2, p, s)
+                                EQ  c = c2
+                              PRED Services(s1, s2)
+                            EQ  s = s1
+                          OR
+                            EQ  s2 = 'Close a policy'
+                            EQ  s2 = 'Upgrade a policy'
+      Predicted FOL: ∃s : Service_ID (Services(s, 'Close a policy') ∨ Services(s, 'Upgrade a policy')) ∧ ∀c : Customer_ID ∀n : Customer_name (Customers(c, n) → ∃f : FNOL_ID ∃p : Policy_ID ∃s : Service_ID (First_Notification_of_Loss(f, c, p, s) ∧ (Services(s, 'Close a policy') ∨ Services(s, 'Upgrade a policy'))))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID LPAR:( IDENT:Services LPAR:( IDENT:s COMMA:, LIT:Close a policy RPAR:) OR:∨ IDENT:Services LPAR:( IDENT:s COMMA:, LIT:Upgrade a policy RPAR:) RPAR:) AND:∧ FORALL:∀ IDENT:c COLON:: IDENT:Customer_ID FORALL:∀ IDENT:n COLON:: IDENT:Customer_name LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:n RPAR:) IMPL:→ EXISTS:∃ IDENT:f COLON:: IDENT:FNOL_ID EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID LPAR:( IDENT:First_Notification_of_Loss LPAR:( IDENT:f COMMA:, IDENT:c COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) AND:∧ LPAR:( IDENT:Services LPAR:( IDENT:s COMMA:, LIT:Close a policy RPAR:) OR:∨ IDENT:Services LPAR:( IDENT:s COMMA:, LIT:Upgrade a policy RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Service_ID
+            AND
+              OR
+                PRED Services(s, 'Close a policy')
+                PRED Services(s, 'Upgrade a policy')
+              FORALL c:Customer_ID
+                FORALL n:Customer_name
+                  IMPLIES
+                    PRED Customers(c, n)
+                    EXISTS f:FNOL_ID
+                      EXISTS p:Policy_ID
+                        EXISTS s:Service_ID
+                          AND
+                            PRED First_Notification_of_Loss(f, c, p, s)
+                            OR
+                              PRED Services(s, 'Close a policy')
+                              PRED Services(s, 'Upgrade a policy')
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c1 : Customer_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        c1 : local Customer_name, global varchar(40) -> StringSort()
+        c2 : local Customer_ID, global integer -> IntSort()
+        f : local FNOL_ID, global integer -> IntSort()
+        p : local Policy_ID, global integer -> IntSort()
+        s : local Service_ID, global integer -> IntSort()
+        s1 : local Service_ID, global integer -> IntSort()
+        s2 : local Service_name, global varchar(40) -> StringSort()
+      Predicted FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        f : local FNOL_ID, global integer -> IntSort()
+        n : local Customer_name, global varchar(40) -> StringSort()
+        p : local Policy_ID, global integer -> IntSort()
+        s : local Service_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5783 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2817.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c1 : Customer_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

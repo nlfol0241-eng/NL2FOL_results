@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1180.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1180.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3645 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which flight numbers correspond to United Airlines flights?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Abbreviation = text -> StringSort()
+        Airline = text -> StringSort()
+        Country = text -> StringSort()
+        DestAirport = text -> StringSort()
+        FlightNo = integer -> IntSort()
+        SourceAirport = text -> StringSort()
+        a_uid = integer -> IntSort()
+        uid = integer -> IntSort()
+      symbols:
+        airlines(uid, Airline, Abbreviation, Country)
+        flights(a_uid, FlightNo, SourceAirport, DestAirport)
+        constant United Airlines : Airline
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : a_uid ∃s : SourceAirport ∃d : DestAirport ∃u : uid ∃a1 : Airline ∃a2 : Abbreviation ∃c : Country ( (((flights(a,f,s,d)) ∧ (airlines(u,a1,a2,c))) ∧ (u = a)) ∧ (a1 = 'United Airlines') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:a_uid EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:d COLON:: IDENT:DestAirport EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:a1 COLON:: IDENT:Airline EXISTS:∃ IDENT:a2 COLON:: IDENT:Abbreviation EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( LPAR:( LPAR:( IDENT:flights LPAR:( IDENT:a COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:airlines LPAR:( IDENT:u COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:u EQ:= IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:United Airlines RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:a_uid
+            EXISTS s:SourceAirport
+              EXISTS d:DestAirport
+                EXISTS u:uid
+                  EXISTS a1:Airline
+                    EXISTS a2:Abbreviation
+                      EXISTS c:Country
+                        AND
+                          AND
+                            AND
+                              PRED flights(a, f, s, d)
+                              PRED airlines(u, a1, a2, c)
+                            EQ  u = a
+                          EQ  a1 = 'United Airlines'
+      Predicted FOL: ∃u : uid ∃a : Airline ∃ab : Abbreviation ∃c : Country (airlines(u, a, ab, c) ∧ a = 'United Airlines' ∧ ∃f : FlightNo (flights(u, f, SourceAirport, DestAirport)))
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:a COLON:: IDENT:Airline EXISTS:∃ IDENT:ab COLON:: IDENT:Abbreviation EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( IDENT:airlines LPAR:( IDENT:u COMMA:, IDENT:a COMMA:, IDENT:ab COMMA:, IDENT:c RPAR:) AND:∧ IDENT:a EQ:= LIT:United Airlines AND:∧ EXISTS:∃ IDENT:f COLON:: IDENT:FlightNo LPAR:( IDENT:flights LPAR:( IDENT:u COMMA:, IDENT:f COMMA:, IDENT:SourceAirport COMMA:, IDENT:DestAirport RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS a:Airline
+              EXISTS ab:Abbreviation
+                EXISTS c:Country
+                  AND
+                    PRED airlines(u, a, ab, c)
+                    EQ  a = 'United Airlines'
+                    EXISTS f:FlightNo
+                      PRED flights(u, f, SourceAirport, DestAirport)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) SourceAirport, DestAirport occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (f : FlightNo) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local a_uid, global integer -> IntSort()
+        a1 : local Airline, global text -> StringSort()
+        a2 : local Abbreviation, global text -> StringSort()
+        c : local Country, global text -> StringSort()
+        d : local DestAirport, global text -> StringSort()
+        f : local FlightNo, global integer -> IntSort()
+        s : local SourceAirport, global text -> StringSort()
+        u : local uid, global integer -> IntSort()
+      Predicted FOL:
+        DestAirport : local DestAirport, global text -> StringSort()
+        SourceAirport : local SourceAirport, global text -> StringSort()
+        a : local Airline, global text -> StringSort()
+        ab : local Abbreviation, global text -> StringSort()
+        c : local Country, global text -> StringSort()
+        f : local FlightNo, global integer -> IntSort()
+        u : local uid, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5603 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1180.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (f : FlightNo) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) SourceAirport, DestAirport occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,95 @@
+{
+  "NL": "List the names of journalists who have not reported any event.",
+  "Vocabulary": {
+    "Predicates": [
+      "journalist",
+      "news_report"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "journalist": [
+        "journalist_ID",
+        "Name",
+        "Nationality",
+        "Age",
+        "Years_working"
+      ],
+      "news_report": [
+        "journalist_ID",
+        "Event_ID",
+        "Work_Type"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a0'∀a1'∀a2'∀a3'∀a4'( event(a0, a1, a2, a3, a4) ∧ event(a0', a1', a2', a3', a4') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( journalist(b0, b1, b2, b3, b4) ∧ journalist(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( news_report(c0, c1, c2) ∧ news_report(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( news_report(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4 ( event(a0, a1, a2, a3, a4) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( news_report(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4 ( journalist(b0, b1, b2, b3, b4) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "journalist": {
+        "A": "journalist",
+        "A0": "journalist_ID",
+        "A1": "Name",
+        "A2": "Nationality",
+        "A3": "Age",
+        "A4": "Years_working"
+      },
+      "news_report": {
+        "B": "news_report",
+        "B0": "journalist_ID",
+        "B1": "Event_ID",
+        "B2": "Work_Type"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃n1 : Nationality ∃y : Years_working ∃a : Age ∃j : journalist_ID( (journalist(j,n,n1,a,y)) ∧ (¬(∃j1 : journalist_ID( ((journalist(j,n,n1,a,y)) ∧ (∃w : Work_Type ∃e : Event_ID( news_report(j1,e,w) ))) ∧ (j = j1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "RC": "[E]?A2,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (~([E]?B0( ((A(?A0,?A1,?A2,?A3,?A4)) & ([E]?B2,?B1( B(?B0,?B1,?B2) ))) & (?A0 = ?B0) ))) )",
+    "string": "∃A2 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (¬(∃B0( ((A(A0,A1,A2,A3,A4)) ∧ (∃B2 ∃B1( B(B0,B1,B2) ))) ∧ (A0 = B0) ))) )",
+    "free variables": "A1",
+    "db_id": "news_report",
+    "processed_sql": "SELECT Name FROM journalist WHERE journalist_ID NOT IN (SELECT journalist_ID FROM news_report)"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "journalist": {
+      "sortaxiom0": "journalist_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Nationality = text",
+      "sortaxiom3": "Age = text",
+      "sortaxiom4": "Years_working = int"
+    },
+    "news_report": {
+      "sortaxiom0": "journalist_ID = int",
+      "sortaxiom1": "Event_ID = int",
+      "sortaxiom2": "Work_Type = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Name FROM journalist WHERE journalist_ID NOT IN (SELECT journalist_ID FROM news_report)"
+  },
+  "id": 3201,
+  "Predicted FOL": {
+    "string": "\\exists j : journalist_ID \\exists n : Name \\exists nat : Nationality \\exists a : Age \\exists y : Years_working ( journalist(j, n, nat, a, y) \\land \\neg \\exists e : Event_ID \\exists w : Work_Type news_report(j, e, w) )",
+    "free vars": ""
+  }
+}

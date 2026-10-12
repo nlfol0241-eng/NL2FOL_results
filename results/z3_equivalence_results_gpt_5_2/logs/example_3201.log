@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3201.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3201.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3534 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of journalists who have not reported any event.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Event_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Work_Type = text -> StringSort()
+        Years_working = int -> IntSort()
+        journalist_ID = int -> IntSort()
+      symbols:
+        journalist(journalist_ID, Name, Nationality, Age, Years_working)
+        news_report(journalist_ID, Event_ID, Work_Type)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n1 : Nationality ∃y : Years_working ∃a : Age ∃j : journalist_ID( (journalist(j,n,n1,a,y)) ∧ (¬(∃j1 : journalist_ID( ((journalist(j,n,n1,a,y)) ∧ (∃w : Work_Type ∃e : Event_ID( news_report(j1,e,w) ))) ∧ (j = j1) ))) )
+        tokens: EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:y COLON:: IDENT:Years_working EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:j COLON:: IDENT:journalist_ID LPAR:( LPAR:( IDENT:journalist LPAR:( IDENT:j COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:j1 COLON:: IDENT:journalist_ID LPAR:( LPAR:( LPAR:( IDENT:journalist LPAR:( IDENT:j COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:w COLON:: IDENT:Work_Type EXISTS:∃ IDENT:e COLON:: IDENT:Event_ID LPAR:( IDENT:news_report LPAR:( IDENT:j1 COMMA:, IDENT:e COMMA:, IDENT:w RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:j EQ:= IDENT:j1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n1:Nationality
+            EXISTS y:Years_working
+              EXISTS a:Age
+                EXISTS j:journalist_ID
+                  AND
+                    PRED journalist(j, n, n1, a, y)
+                    NOT
+                      EXISTS j1:journalist_ID
+                        AND
+                          AND
+                            PRED journalist(j, n, n1, a, y)
+                            EXISTS w:Work_Type
+                              EXISTS e:Event_ID
+                                PRED news_report(j1, e, w)
+                          EQ  j = j1
+      Predicted FOL: ∃jName:Name ∃jNat:Nationality ∃jAge:Age ∃jYw:Years_working ( journalist(jID, jName, jNat, jAge, jYw) ∧ ¬∃eID:Event_ID ∃wt:Work_Type news_report(jID, eID, wt) )
+        tokens: EXISTS:∃ IDENT:jName COLON:: IDENT:Name EXISTS:∃ IDENT:jNat COLON:: IDENT:Nationality EXISTS:∃ IDENT:jAge COLON:: IDENT:Age EXISTS:∃ IDENT:jYw COLON:: IDENT:Years_working LPAR:( IDENT:journalist LPAR:( IDENT:jID COMMA:, IDENT:jName COMMA:, IDENT:jNat COMMA:, IDENT:jAge COMMA:, IDENT:jYw RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:eID COLON:: IDENT:Event_ID EXISTS:∃ IDENT:wt COLON:: IDENT:Work_Type IDENT:news_report LPAR:( IDENT:jID COMMA:, IDENT:eID COMMA:, IDENT:wt RPAR:) RPAR:) EOF
+        AST:
+          EXISTS jName:Name
+            EXISTS jNat:Nationality
+              EXISTS jAge:Age
+                EXISTS jYw:Years_working
+                  AND
+                    PRED journalist(jID, jName, jNat, jAge, jYw)
+                    NOT
+                      EXISTS eID:Event_ID
+                        EXISTS wt:Work_Type
+                          PRED news_report(jID, eID, wt)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (n : Name) -> ['StringSort()'] vs Predicted (jID : journalist_ID) -> ['numeric']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        e : local Event_ID, global int -> IntSort()
+        j : local journalist_ID, global int -> IntSort()
+        j1 : local journalist_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        w : local Work_Type, global text -> StringSort()
+        y : local Years_working, global int -> IntSort()
+      Predicted FOL:
+        eID : local Event_ID, global int -> IntSort()
+        jAge : local Age, global text -> StringSort()
+        jID : local journalist_ID, global int -> IntSort()
+        jName : local Name, global text -> StringSort()
+        jNat : local Nationality, global text -> StringSort()
+        jYw : local Years_working, global int -> IntSort()
+        wt : local Work_Type, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5546 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3201.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: the free variables have different value types: Gold (n : Name) -> ['StringSort()'] vs Predicted (jID : journalist_ID) -> ['numeric']
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2330.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2330.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5232 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which customers have an insurance policy with the type code "Deputy" or "Uniform"? Return the customer details.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Customer_Details = varchar(255) -> StringSort()
+        Customer_ID = integer -> IntSort()
+        End_Date = datetime -> IntSort()
+        Policy_ID = integer -> IntSort()
+        Policy_Type_Code = char(15) -> StringSort()
+        Start_Date = datetime -> IntSort()
+      symbols:
+        Customers(Customer_ID, Customer_Details)
+        Policies(Policy_ID, Customer_ID, Policy_Type_Code, Start_Date, End_Date)
+        constant Deputy : Policy_Type_Code
+        constant Uniform : Policy_Type_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Policy_ID ∃c : Customer_ID ∃p1 : Policy_Type_Code ∃s : Start_Date ∃e : End_Date ∃c1 : Customer_ID ( (((Policies(p,c,p1,s,e)) ∧ (Customers(c1,c2))) ∧ (c = c1)) ∧ ((p1 = 'Deputy') ∨ (p1 = 'Uniform')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Policy_Type_Code EXISTS:∃ IDENT:s COLON:: IDENT:Start_Date EXISTS:∃ IDENT:e COLON:: IDENT:End_Date EXISTS:∃ IDENT:c1 COLON:: IDENT:Customer_ID LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Policies LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Customers LPAR:( IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:p1 EQ:= LIT:Deputy RPAR:) OR:∨ LPAR:( IDENT:p1 EQ:= LIT:Uniform RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Policy_ID
+            EXISTS c:Customer_ID
+              EXISTS p1:Policy_Type_Code
+                EXISTS s:Start_Date
+                  EXISTS e:End_Date
+                    EXISTS c1:Customer_ID
+                      AND
+                        AND
+                          AND
+                            PRED Policies(p, c, p1, s, e)
+                            PRED Customers(c1, c2)
+                          EQ  c = c1
+                        OR
+                          EQ  p1 = 'Deputy'
+                          EQ  p1 = 'Uniform'
+      Predicted FOL: ∃cid:Customer_ID ∃cd:Customer_Details ( Customers(cid, cd) ∧ ∃pid:Policy_ID ∃ptc:Policy_Type_Code ∃sd:Start_Date ∃ed:End_Date ( Policies(pid, cid, ptc, sd, ed) ∧ (ptc = Deputy ∨ ptc = Uniform) ) )
+        tokens: EXISTS:∃ IDENT:cid COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:cd COLON:: IDENT:Customer_Details LPAR:( IDENT:Customers LPAR:( IDENT:cid COMMA:, IDENT:cd RPAR:) AND:∧ EXISTS:∃ IDENT:pid COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:ptc COLON:: IDENT:Policy_Type_Code EXISTS:∃ IDENT:sd COLON:: IDENT:Start_Date EXISTS:∃ IDENT:ed COLON:: IDENT:End_Date LPAR:( IDENT:Policies LPAR:( IDENT:pid COMMA:, IDENT:cid COMMA:, IDENT:ptc COMMA:, IDENT:sd COMMA:, IDENT:ed RPAR:) AND:∧ LPAR:( IDENT:ptc EQ:= IDENT:Deputy OR:∨ IDENT:ptc EQ:= IDENT:Uniform RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS cid:Customer_ID
+            EXISTS cd:Customer_Details
+              AND
+                PRED Customers(cid, cd)
+                EXISTS pid:Policy_ID
+                  EXISTS ptc:Policy_Type_Code
+                    EXISTS sd:Start_Date
+                      EXISTS ed:End_Date
+                        AND
+                          PRED Policies(pid, cid, ptc, sd, ed)
+                          OR
+                            EQ  ptc = Deputy<const>
+                            EQ  ptc = Uniform<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c2 : Customer_Details) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        c1 : local Customer_ID, global integer -> IntSort()
+        c2 : local Customer_Details, global varchar(255) -> StringSort()
+        e : local End_Date, global datetime -> IntSort()
+        p : local Policy_ID, global integer -> IntSort()
+        p1 : local Policy_Type_Code, global char(15) -> StringSort()
+        s : local Start_Date, global datetime -> IntSort()
+      Predicted FOL:
+        cd : local Customer_Details, global varchar(255) -> StringSort()
+        cid : local Customer_ID, global integer -> IntSort()
+        ed : local End_Date, global datetime -> IntSort()
+        pid : local Policy_ID, global integer -> IntSort()
+        ptc : local Policy_Type_Code, global char(15) -> StringSort()
+        sd : local Start_Date, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5604 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2330.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c2 : Customer_Details) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

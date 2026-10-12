@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_868.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_868.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2573 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Where us the club named "Tennis Club" located?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+        varchar(1024) -> StringSort()   [domain Length(x) <= 1024; length <= 1024]
+      local sorts:
+        ClubDesc = varchar(1024) -> StringSort()
+        ClubID = integer -> IntSort()
+        ClubLocation = varchar(40) -> StringSort()
+        ClubName = varchar(40) -> StringSort()
+      symbols:
+        Club(ClubID, ClubName, ClubDesc, ClubLocation)
+        constant Tennis Club : ClubName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : ClubID ∃c1 : ClubName ∃c2 : ClubDesc ( (Club(c,c1,c2,c3)) ∧ (c1 = 'Tennis Club') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:ClubID EXISTS:∃ IDENT:c1 COLON:: IDENT:ClubName EXISTS:∃ IDENT:c2 COLON:: IDENT:ClubDesc LPAR:( LPAR:( IDENT:Club LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Tennis Club RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:ClubID
+            EXISTS c1:ClubName
+              EXISTS c2:ClubDesc
+                AND
+                  PRED Club(c, c1, c2, c3)
+                  EQ  c1 = 'Tennis Club'
+      Predicted FOL: ∃x : ClubID ∃y : ClubName ∃z : ClubDesc ∃w : ClubLocation (Club(x, y, z, w) ∧ y = 'Tennis Club')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:ClubID EXISTS:∃ IDENT:y COLON:: IDENT:ClubName EXISTS:∃ IDENT:z COLON:: IDENT:ClubDesc EXISTS:∃ IDENT:w COLON:: IDENT:ClubLocation LPAR:( IDENT:Club LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w RPAR:) AND:∧ IDENT:y EQ:= LIT:Tennis Club RPAR:) EOF
+        AST:
+          EXISTS x:ClubID
+            EXISTS y:ClubName
+              EXISTS z:ClubDesc
+                EXISTS w:ClubLocation
+                  AND
+                    PRED Club(x, y, z, w)
+                    EQ  y = 'Tennis Club'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c3 : ClubLocation) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local ClubID, global integer -> IntSort()
+        c1 : local ClubName, global varchar(40) -> StringSort()
+        c2 : local ClubDesc, global varchar(1024) -> StringSort()
+        c3 : local ClubLocation, global varchar(40) -> StringSort()
+      Predicted FOL:
+        w : local ClubLocation, global varchar(40) -> StringSort()
+        x : local ClubID, global integer -> IntSort()
+        y : local ClubName, global varchar(40) -> StringSort()
+        z : local ClubDesc, global varchar(1024) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5294 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_868.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c3 : ClubLocation) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

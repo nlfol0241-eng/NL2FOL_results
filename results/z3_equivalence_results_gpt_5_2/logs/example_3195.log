@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3195.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3195.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3250 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of regions that were not affected?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Number_city_affected = real -> Float32()
+        Region_code = text -> StringSort()
+        Region_id = int -> IntSort()
+        Region_name = text -> StringSort()
+        Storm_ID = int -> IntSort()
+      symbols:
+        affected_region(Region_id, Storm_ID, Number_city_affected)
+        region(Region_id, Region_code, Region_name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r1 : Region_code ∃r : Region_id( (region(r,r1,r2)) ∧ (¬(∃r3 : Region_id( ((region(r,r1,r2)) ∧ (∃n : Number_city_affected ∃s : Storm_ID( affected_region(r3,s,n) ))) ∧ (r = r3) ))) )
+        tokens: EXISTS:∃ IDENT:r1 COLON:: IDENT:Region_code EXISTS:∃ IDENT:r COLON:: IDENT:Region_id LPAR:( LPAR:( IDENT:region LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:r3 COLON:: IDENT:Region_id LPAR:( LPAR:( LPAR:( IDENT:region LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:n COLON:: IDENT:Number_city_affected EXISTS:∃ IDENT:s COLON:: IDENT:Storm_ID LPAR:( IDENT:affected_region LPAR:( IDENT:r3 COMMA:, IDENT:s COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:r3 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r1:Region_code
+            EXISTS r:Region_id
+              AND
+                PRED region(r, r1, r2)
+                NOT
+                  EXISTS r3:Region_id
+                    AND
+                      AND
+                        PRED region(r, r1, r2)
+                        EXISTS n:Number_city_affected
+                          EXISTS s:Storm_ID
+                            PRED affected_region(r3, s, n)
+                      EQ  r = r3
+      Predicted FOL: ∃rid:Region_id ∃rcode:Region_code ( region(rid, rcode, rname) ∧ ¬∃sid:Storm_ID ∃nca:Number_city_affected affected_region(rid, sid, nca) )
+        tokens: EXISTS:∃ IDENT:rid COLON:: IDENT:Region_id EXISTS:∃ IDENT:rcode COLON:: IDENT:Region_code LPAR:( IDENT:region LPAR:( IDENT:rid COMMA:, IDENT:rcode COMMA:, IDENT:rname RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:sid COLON:: IDENT:Storm_ID EXISTS:∃ IDENT:nca COLON:: IDENT:Number_city_affected IDENT:affected_region LPAR:( IDENT:rid COMMA:, IDENT:sid COMMA:, IDENT:nca RPAR:) RPAR:) EOF
+        AST:
+          EXISTS rid:Region_id
+            EXISTS rcode:Region_code
+              AND
+                PRED region(rid, rcode, rname)
+                NOT
+                  EXISTS sid:Storm_ID
+                    EXISTS nca:Number_city_affected
+                      PRED affected_region(rid, sid, nca)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Region_name_0 : Region_name   Gold r2 <-> Predicted rname
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Number_city_affected, global real -> Float32()
+        r : local Region_id, global int -> IntSort()
+        r1 : local Region_code, global text -> StringSort()
+        r2 : local Region_name, global text -> StringSort()
+        r3 : local Region_id, global int -> IntSort()
+        s : local Storm_ID, global int -> IntSort()
+      Predicted FOL:
+        nca : local Number_city_affected, global real -> Float32()
+        rcode : local Region_code, global text -> StringSort()
+        rid : local Region_id, global int -> IntSort()
+        rname : local Region_name, global text -> StringSort()
+        sid : local Storm_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r1_1, gold_r_2], And(P_region(gold_r_2, gold_r1_1, FV_Region_name_0), Not(Exists([gold_r3_3], And(And(P_region(gold_r_2, gold_r1_1, FV_Region_name_0), Exists([gold_n_4, gold_s_5], And(D_real(gold_n_4), P_affected_region(gold_r3_3, gold_s_5, gold_n_4)))), (gold_r_2 == gold_r3_3))))))
+      gold_skolem (witnesses WGOLD_r1, WGOLD_r):  And(P_region(WGOLD_r, WGOLD_r1, FV_Region_name_0), Not(Exists([goldsk_r3_1], And(And(P_region(WGOLD_r, WGOLD_r1, FV_Region_name_0), Exists([goldsk_n_2, goldsk_s_3], And(D_real(goldsk_n_2), P_affected_region(goldsk_r3_1, goldsk_s_3, goldsk_n_2)))), (WGOLD_r == goldsk_r3_1)))))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_rid_1, predicted_rcode_2], And(P_region(predicted_rid_1, predicted_rcode_2, FV_Region_name_0), Not(Exists([predicted_sid_3, predicted_nca_4], And(D_real(predicted_nca_4), P_affected_region(predicted_rid_1, predicted_sid_3, predicted_nca_4))))))
+      predicted_skolem (witnesses WPREDICTED_rid, WPREDICTED_rcode):  And(P_region(WPREDICTED_rid, WPREDICTED_rcode, FV_Region_name_0), Not(Exists([predictedsk_sid_1, predictedsk_nca_2], And(D_real(predictedsk_nca_2), P_affected_region(WPREDICTED_rid, predictedsk_sid_1, predictedsk_nca_2)))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 740 lines, 28701 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3195.py
+   [G8] took 0.030 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r1, WGOLD_r
+      claim: And(And(region(WGOLD_r, WGOLD_r1, FV_Region_name_0), Not(Exists(goldsk_r3_1, And(And(region(WGOLD_r, WGOLD_r1, FV_Region_name_0), Exists([goldsk_n_2, goldsk_s_3], And(And(Not(fpIsNaN(goldsk_n_2)), Not(And(fpIsZero(goldsk_n_2), fpIsNegative(goldsk_n_2)))), affected_region(goldsk_r3_1, goldsk_s_3, goldsk_n_2)))), WGOLD_r == goldsk_r3_1)))), Not(Exists([predicted_rid_1, predicted_rcode_2], And(region(predicted_rid_1, predicted_rcode_2, FV_Region_name_0), Not(Exists([predicted_sid_3, predicted_nca_4], And(And(Not(fpIsNaN(predicted_nca_4)), Not(And(fpIsZero(predicted_nca_4), fpIsNegative(predicted_nca_4)))), affected_region(predicted_rid_1, predicted_sid_3, predicted_nca_4))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_rid, WPREDICTED_rcode
+      claim: And(And(region(WPREDICTED_rid, WPREDICTED_rcode, FV_Region_name_0), Not(Exists([predictedsk_sid_1, predictedsk_nca_2], And(And(Not(fpIsNaN(predictedsk_nca_2)), Not(And(fpIsZero(predictedsk_nca_2), fpIsNegative(predictedsk_nca_2)))), affected_region(WPREDICTED_rid, predictedsk_sid_1, predictedsk_nca_2))))), Not(Exists([gold_r1_1, gold_r_2], And(region(gold_r_2, gold_r1_1, FV_Region_name_0), Not(Exists(gold_r3_3, And(And(region(gold_r_2, gold_r1_1, FV_Region_name_0), Exists([gold_n_4, gold_s_5], And(And(Not(fpIsNaN(gold_n_4)), Not(And(fpIsZero(gold_n_4), fpIsNegative(gold_n_4)))), affected_region(gold_r3_3, gold_s_5, gold_n_4)))), gold_r_2 == gold_r3_3)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

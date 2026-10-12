@@ -1,0 +1,78 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2901.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2901.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4739 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which vocal type did the musician with last name "Heilo" played in the song with title "Der Kapitan"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Bandmate = integer -> IntSort()
+        Firstname = text -> StringSort()
+        Id = integer -> IntSort()
+        Lastname = text -> StringSort()
+        SongId = integer -> IntSort()
+        Title = text -> StringSort()
+        Type = text -> StringSort()
+      symbols:
+        Band(Id, Firstname, Lastname)
+        Songs(SongId, Title)
+        Vocals(SongId, Bandmate, Type)
+        constant Der Kapitan : Title
+        constant Heilo : Lastname
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : SongId ∃b : Bandmate ∃s1 : SongId ∃t1 : Title ∃i : Id ∃f : Firstname ∃l : Lastname ( (((((Vocals(s,b,t)) ∧ (Songs(s1,t1))) ∧ (s = s1)) ∧ (Band(i,f,l))) ∧ (b = i)) ∧ ((l = 'Heilo') ∧ (t1 = 'Der Kapitan')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:s1 COLON:: IDENT:SongId EXISTS:∃ IDENT:t1 COLON:: IDENT:Title EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:f COLON:: IDENT:Firstname EXISTS:∃ IDENT:l COLON:: IDENT:Lastname LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Songs LPAR:( IDENT:s1 COMMA:, IDENT:t1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Band LPAR:( IDENT:i COMMA:, IDENT:f COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:l EQ:= LIT:Heilo RPAR:) AND:∧ LPAR:( IDENT:t1 EQ:= LIT:Der Kapitan RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:Bandmate
+              EXISTS s1:SongId
+                EXISTS t1:Title
+                  EXISTS i:Id
+                    EXISTS f:Firstname
+                      EXISTS l:Lastname
+                        AND
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED Vocals(s, b, t)
+                                  PRED Songs(s1, t1)
+                                EQ  s = s1
+                              PRED Band(i, f, l)
+                            EQ  b = i
+                          AND
+                            EQ  l = 'Heilo'
+                            EQ  t1 = 'Der Kapitan'
+      Predicted FOL: ∃s : SongId ∃b : Bandmate ∃t : Type (Songs(s, 'Der Kapitan') ∧ Band(b, x, 'Heilo') ∧ Vocals(s, b, t))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:t COLON:: IDENT:Type LPAR:( IDENT:Songs LPAR:( IDENT:s COMMA:, LIT:Der Kapitan RPAR:) AND:∧ IDENT:Band LPAR:( IDENT:b COMMA:, IDENT:x COMMA:, LIT:Heilo RPAR:) AND:∧ IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:Bandmate
+              EXISTS t:Type
+                AND
+                  PRED Songs(s, 'Der Kapitan')
+                  PRED Band(b, x, 'Heilo')
+                  PRED Vocals(s, b, t)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['Type'] vs Predicted ['Firstname']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['Type'] vs Predicted ['Firstname']

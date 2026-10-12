@@ -1,0 +1,125 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2517.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2517.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3219 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all females who are friends with Zach?
+   [G1] took 0.018 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        age = integer -> IntSort()
+        city = text -> StringSort()
+        friend = varchar(20) -> StringSort()
+        gender = text -> StringSort()
+        job = text -> StringSort()
+        name = varchar(20) -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        Person(name, age, city, gender, job)
+        PersonFriend(name, friend, year)
+        constant Zach : friend
+        constant female : gender
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : age ∃c : city ∃g : gender ∃j : job ∃n1 : name ∃f : friend ∃y : year ( (((Person(n,a,c,g,j)) ∧ (PersonFriend(n1,f,y))) ∧ (n = n1)) ∧ ((f = 'Zach') ∧ (g = 'female')) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:age EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:f COLON:: IDENT:friend EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:PersonFriend LPAR:( IDENT:n1 COMMA:, IDENT:f COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= IDENT:n1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f EQ:= LIT:Zach RPAR:) AND:∧ LPAR:( IDENT:g EQ:= LIT:female RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:age
+            EXISTS c:city
+              EXISTS g:gender
+                EXISTS j:job
+                  EXISTS n1:name
+                    EXISTS f:friend
+                      EXISTS y:year
+                        AND
+                          AND
+                            AND
+                              PRED Person(n, a, c, g, j)
+                              PRED PersonFriend(n1, f, y)
+                            EQ  n = n1
+                          AND
+                            EQ  f = 'Zach'
+                            EQ  g = 'female'
+      Predicted FOL: ∃a:age ∃c:city ∃g:gender ∃j:job ∃y:year (Person(n, a, c, g, j) ∧ g = 'female' ∧ PersonFriend(n, 'Zach', y))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:age EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) AND:∧ IDENT:g EQ:= LIT:female AND:∧ IDENT:PersonFriend LPAR:( IDENT:n COMMA:, LIT:Zach COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:age
+            EXISTS c:city
+              EXISTS g:gender
+                EXISTS j:job
+                  EXISTS y:year
+                    AND
+                      PRED Person(n, a, c, g, j)
+                      EQ  g = 'female'
+                      PRED PersonFriend(n, 'Zach', y)
+   [G3] took 0.016 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        f : local friend, global varchar(20) -> StringSort()
+        g : local gender, global text -> StringSort()
+        j : local job, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        n1 : local name, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        a : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        g : local gender, global text -> StringSort()
+        j : local job, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_g_3, gold_j_4, gold_n1_5, gold_f_6, gold_y_7], And(D_varchar_20_(gold_n1_5), D_varchar_20_(gold_f_6), And(And(And(P_Person(FV_name_0, gold_a_1, gold_c_2, gold_g_3, gold_j_4), P_PersonFriend(gold_n1_5, gold_f_6, gold_y_7)), (FV_name_0 == gold_n1_5)), And((gold_f_6 == L_Zach), (gold_g_3 == L_female)))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_n1, WGOLD_f, WGOLD_y):  And(D_varchar_20_(WGOLD_n1), D_varchar_20_(WGOLD_f), And(And(And(P_Person(FV_name_0, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), P_PersonFriend(WGOLD_n1, WGOLD_f, WGOLD_y)), (FV_name_0 == WGOLD_n1)), And((WGOLD_f == L_Zach), (WGOLD_g == L_female))))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_c_2, predicted_g_3, predicted_j_4, predicted_y_5], And(P_Person(FV_name_0, predicted_a_1, predicted_c_2, predicted_g_3, predicted_j_4), (predicted_g_3 == L_female), And(P_PersonFriend(FV_name_0, L_Zach, predicted_y_5), D_varchar_20_(L_Zach))))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_g, WPREDICTED_j, WPREDICTED_y):  And(P_Person(FV_name_0, WPREDICTED_a, WPREDICTED_c, WPREDICTED_g, WPREDICTED_j), (WPREDICTED_g == L_female), And(P_PersonFriend(FV_name_0, L_Zach, WPREDICTED_y), D_varchar_20_(L_Zach)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.013 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Zach' at varchar(20) -> L_Zach = StringVal('Zach')
+      literal 'female' at text -> L_female = StringVal('female')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 763 lines, 29378 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2517.py
+   [G8] took 0.028 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_name_0) <= 20
+   [R1] took 0.006 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_n1, WGOLD_f, WGOLD_y
+      claim: And(And(Length(WGOLD_n1) <= 20, Length(WGOLD_f) <= 20, And(And(And(Person(FV_name_0, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), PersonFriend(WGOLD_n1, WGOLD_f, WGOLD_y)), FV_name_0 == WGOLD_n1), And(WGOLD_f == "Zach", WGOLD_g == "female"))), Not(Exists([predicted_a_1, predicted_c_2, predicted_g_3, predicted_j_4, predicted_y_5], And(Person(FV_name_0, predicted_a_1, predicted_c_2, predicted_g_3, predicted_j_4), predicted_g_3 == "female", And(PersonFriend(FV_name_0, "Zach", predicted_y_5), Length("Zach") <= 20)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.032 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.139 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_g, WPREDICTED_j, WPREDICTED_y
+      claim: And(And(Person(FV_name_0, WPREDICTED_a, WPREDICTED_c, WPREDICTED_g, WPREDICTED_j), WPREDICTED_g == "female", And(PersonFriend(FV_name_0, "Zach", WPREDICTED_y), Length("Zach") <= 20)), Not(Exists([gold_a_1, gold_c_2, gold_g_3, gold_j_4, gold_n1_5, gold_f_6, gold_y_7], And(Length(gold_n1_5) <= 20, Length(gold_f_6) <= 20, And(And(And(Person(FV_name_0, gold_a_1, gold_c_2, gold_g_3, gold_j_4), PersonFriend(gold_n1_5, gold_f_6, gold_y_7)), FV_name_0 == gold_n1_5), And(gold_f_6 == "Zach", gold_g_3 == "female"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.021 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.067 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

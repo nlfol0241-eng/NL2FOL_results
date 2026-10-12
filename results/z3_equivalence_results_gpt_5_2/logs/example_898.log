@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_898.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_898.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4306 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give the phones for departments in room 268.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+        integer -> IntSort()
+        varchar(25) -> StringSort()   [domain Length(x) <= 25; length <= 25]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        varchar(13) -> StringSort()   [domain Length(x) <= 13; length <= 13]
+      local sorts:
+        Building = varchar(13) -> StringSort()
+        DNO = integer -> IntSort()
+        DName = varchar(25) -> StringSort()
+        DPhone = integer -> IntSort()
+        Division = varchar(2) -> StringSort()
+        Room = varchar(5) -> StringSort()
+      symbols:
+        Department(DNO, Division, DName, Room, Building, DPhone)
+        constant 268 : Room
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : DNO ∃d1 : Division ∃d2 : DName ∃r : Room ∃b : Building ( (Department(d,d1,d2,r,b,d3)) ∧ (r = 268) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:DNO EXISTS:∃ IDENT:d1 COLON:: IDENT:Division EXISTS:∃ IDENT:d2 COLON:: IDENT:DName EXISTS:∃ IDENT:r COLON:: IDENT:Room EXISTS:∃ IDENT:b COLON:: IDENT:Building LPAR:( LPAR:( IDENT:Department LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:r COMMA:, IDENT:b COMMA:, IDENT:d3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= NUM:268 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:DNO
+            EXISTS d1:Division
+              EXISTS d2:DName
+                EXISTS r:Room
+                  EXISTS b:Building
+                    AND
+                      PRED Department(d, d1, d2, r, b, d3)
+                      EQ  r = 268
+      Predicted FOL: ∃dno:DNO ∃div:Division ∃dname:DName ∃bld:Building (Department(dno, div, dname, 268, bld, DPhone))
+        tokens: EXISTS:∃ IDENT:dno COLON:: IDENT:DNO EXISTS:∃ IDENT:div COLON:: IDENT:Division EXISTS:∃ IDENT:dname COLON:: IDENT:DName EXISTS:∃ IDENT:bld COLON:: IDENT:Building LPAR:( IDENT:Department LPAR:( IDENT:dno COMMA:, IDENT:div COMMA:, IDENT:dname COMMA:, NUM:268 COMMA:, IDENT:bld COMMA:, IDENT:DPhone RPAR:) RPAR:) EOF
+        AST:
+          EXISTS dno:DNO
+            EXISTS div:Division
+              EXISTS dname:DName
+                EXISTS bld:Building
+                  PRED Department(dno, div, dname, 268, bld, DPhone)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_DPhone_0 : DPhone   Gold d3 <-> Predicted DPhone
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Building, global varchar(13) -> StringSort()
+        d : local DNO, global integer -> IntSort()
+        d1 : local Division, global varchar(2) -> StringSort()
+        d2 : local DName, global varchar(25) -> StringSort()
+        d3 : local DPhone, global integer -> IntSort()
+        r : local Room, global varchar(5) -> StringSort()
+      Predicted FOL:
+        DPhone : local DPhone, global integer -> IntSort()
+        bld : local Building, global varchar(13) -> StringSort()
+        div : local Division, global varchar(2) -> StringSort()
+        dname : local DName, global varchar(25) -> StringSort()
+        dno : local DNO, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_d2_3, gold_r_4, gold_b_5], And(D_varchar_2_(gold_d1_2), D_varchar_25_(gold_d2_3), D_varchar_5_(gold_r_4), D_varchar_13_(gold_b_5), And(P_Department(gold_d_1, gold_d1_2, gold_d2_3, gold_r_4, gold_b_5, FV_DPhone_0), (gold_r_4 == L_v_268))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_r, WGOLD_b):  And(D_varchar_2_(WGOLD_d1), D_varchar_25_(WGOLD_d2), D_varchar_5_(WGOLD_r), D_varchar_13_(WGOLD_b), And(P_Department(WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_r, WGOLD_b, FV_DPhone_0), (WGOLD_r == L_v_268)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_dno_1, predicted_div_2, predicted_dname_3, predicted_bld_4], And(D_varchar_2_(predicted_div_2), D_varchar_25_(predicted_dname_3), D_varchar_13_(predicted_bld_4), And(P_Department(predicted_dno_1, predicted_div_2, predicted_dname_3, L_v_268, predicted_bld_4, FV_DPhone_0), D_varchar_5_(L_v_268))))
+      predicted_skolem (witnesses WPREDICTED_dno, WPREDICTED_div, WPREDICTED_dname, WPREDICTED_bld):  And(D_varchar_2_(WPREDICTED_div), D_varchar_25_(WPREDICTED_dname), D_varchar_13_(WPREDICTED_bld), And(P_Department(WPREDICTED_dno, WPREDICTED_div, WPREDICTED_dname, L_v_268, WPREDICTED_bld, FV_DPhone_0), D_varchar_5_(L_v_268)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '268' at varchar(5) -> L_v_268 = StringVal('268')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 759 lines, 29034 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_898.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_r, WGOLD_b
+      claim: And(And(Length(WGOLD_d1) <= 2, Length(WGOLD_d2) <= 25, Length(WGOLD_r) <= 5, Length(WGOLD_b) <= 13, And(Department(WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_r, WGOLD_b, FV_DPhone_0), WGOLD_r == "268")), Not(Exists([predicted_dno_1, predicted_div_2, predicted_dname_3, predicted_bld_4], And(Length(predicted_div_2) <= 2, Length(predicted_dname_3) <= 25, Length(predicted_bld_4) <= 13, And(Department(predicted_dno_1, predicted_div_2, predicted_dname_3, "268", predicted_bld_4, FV_DPhone_0), Length("268") <= 5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.009 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.024 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_dno, WPREDICTED_div, WPREDICTED_dname, WPREDICTED_bld
+      claim: And(And(Length(WPREDICTED_div) <= 2, Length(WPREDICTED_dname) <= 25, Length(WPREDICTED_bld) <= 13, And(Department(WPREDICTED_dno, WPREDICTED_div, WPREDICTED_dname, "268", WPREDICTED_bld, FV_DPhone_0), Length("268") <= 5)), Not(Exists([gold_d_1, gold_d1_2, gold_d2_3, gold_r_4, gold_b_5], And(Length(gold_d1_2) <= 2, Length(gold_d2_3) <= 25, Length(gold_r_4) <= 5, Length(gold_b_5) <= 13, And(Department(gold_d_1, gold_d1_2, gold_d2_3, gold_r_4, gold_b_5, FV_DPhone_0), gold_r_4 == "268")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.016 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

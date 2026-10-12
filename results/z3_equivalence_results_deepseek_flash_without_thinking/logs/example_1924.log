@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1924.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1924.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2782 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of authors from college "Florida" or "Temple"
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Author = text -> StringSort()
+        College = text -> StringSort()
+        Scores = real -> Float32()
+        Submission_ID = int -> IntSort()
+      symbols:
+        submission(Submission_ID, Scores, Author, College)
+        constant Florida : College
+        constant Temple : College
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Submission_ID ∃s1 : Scores ∃c : College ( (submission(s,s1,a,c)) ∧ ((c = 'Florida') ∨ (c = 'Temple')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:c COLON:: IDENT:College LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:Florida RPAR:) OR:∨ LPAR:( IDENT:c EQ:= LIT:Temple RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Submission_ID
+            EXISTS s1:Scores
+              EXISTS c:College
+                AND
+                  PRED submission(s, s1, a, c)
+                  OR
+                    EQ  c = 'Florida'
+                    EQ  c = 'Temple'
+      Predicted FOL: ∃s : Submission_ID ∃r : Scores ∃a : Author ∃c : College (submission(s, r, a, c) ∧ (c = 'Florida' ∨ c = 'Temple'))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:r COLON:: IDENT:Scores EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:c COLON:: IDENT:College LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:r COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Florida OR:∨ IDENT:c EQ:= LIT:Temple RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Submission_ID
+            EXISTS r:Scores
+              EXISTS a:Author
+                EXISTS c:College
+                  AND
+                    PRED submission(s, r, a, c)
+                    OR
+                      EQ  c = 'Florida'
+                      EQ  c = 'Temple'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (a : Author) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        s : local Submission_ID, global int -> IntSort()
+        s1 : local Scores, global real -> Float32()
+      Predicted FOL:
+        a : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        r : local Scores, global real -> Float32()
+        s : local Submission_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5336 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1924.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (a : Author) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

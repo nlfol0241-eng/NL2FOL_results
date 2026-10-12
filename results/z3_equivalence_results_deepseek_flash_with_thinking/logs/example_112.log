@@ -1,0 +1,48 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_112.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_112.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4555 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: How much does each charge type costs? List both charge type and amount.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+      local sorts:
+        charge_amount = decimal(19,4) -> RealSort()
+        charge_id = integer -> IntSort()
+        charge_type = varchar(10) -> StringSort()
+      symbols:
+        Charges(charge_id, charge_type, charge_amount)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : charge_id ( Charges(c,c1,c2) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:charge_id LPAR:( IDENT:Charges LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:charge_id
+            PRED Charges(c, c1, c2)
+      Predicted FOL: ∃ x : integer Charges(x, y, z)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:integer IDENT:Charges LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) EOF
+        AST:
+          EXISTS x:integer
+            PRED Charges(x, y, z)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free variable '4)' lacks a sort annotation
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 90, in analyze
+    pred_fv = parse_free_vars(pred_spec.get("free vars"))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 26, in parse_free_vars
+    raise ValueError(f"free variable {it!r} lacks a sort annotation")
+ValueError: free variable '4)' lacks a sort annotation

@@ -1,0 +1,51 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_830.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_830.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4989 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the code of the document type "Paper".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Document_Type_Code = char(15) -> StringSort()
+        Document_Type_Description = varchar(255) -> StringSort()
+        Document_Type_Name = varchar(255) -> StringSort()
+      symbols:
+        Ref_Document_Types(Document_Type_Code, Document_Type_Name, Document_Type_Description)
+        constant Paper : Document_Type_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d1 : Document_Type_Name ∃d2 : Document_Type_Description ( (Ref_Document_Types(d,d1,d2)) ∧ (d1 = 'Paper') )
+        tokens: EXISTS:∃ IDENT:d1 COLON:: IDENT:Document_Type_Name EXISTS:∃ IDENT:d2 COLON:: IDENT:Document_Type_Description LPAR:( LPAR:( IDENT:Ref_Document_Types LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:Paper RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d1:Document_Type_Name
+            EXISTS d2:Document_Type_Description
+              AND
+                PRED Ref_Document_Types(d, d1, d2)
+                EQ  d1 = 'Paper'
+      Predicted FOL: ∃x : Document_Type_Code (Ref_Document_Types(x, 'Paper', y))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Document_Type_Code LPAR:( IDENT:Ref_Document_Types LPAR:( IDENT:x COMMA:, LIT:Paper COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Document_Type_Code
+            PRED Ref_Document_Types(x, 'Paper', y)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['Document_Type_Code'] vs Predicted ['Document_Type_Description']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['Document_Type_Code'] vs Predicted ['Document_Type_Description']

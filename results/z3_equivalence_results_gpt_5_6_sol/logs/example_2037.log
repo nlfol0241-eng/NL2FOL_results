@@ -1,0 +1,122 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2037.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2037.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4931 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which customers have orders with status "Packing"? Give me the customer names.
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        customer_details = varchar(255) -> StringSort()
+        customer_id = integer -> IntSort()
+        customer_name = varchar(80) -> StringSort()
+        date_order_placed = datetime -> IntSort()
+        order_details = varchar(255) -> StringSort()
+        order_id = integer -> IntSort()
+        order_status = varchar(10) -> StringSort()
+      symbols:
+        Customers(customer_id, customer_name, customer_details)
+        Orders(order_id, customer_id, order_status, date_order_placed, order_details)
+        constant Packing : order_status
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : customer_id ∃c2 : customer_details ∃o : order_id ∃c3 : customer_id ∃o1 : order_status ∃d : date_order_placed ∃o2 : order_details ( (((Customers(c,c1,c2)) ∧ (Orders(o,c3,o1,d,o2))) ∧ (c = c3)) ∧ (o1 = 'Packing') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:c2 COLON:: IDENT:customer_details EXISTS:∃ IDENT:o COLON:: IDENT:order_id EXISTS:∃ IDENT:c3 COLON:: IDENT:customer_id EXISTS:∃ IDENT:o1 COLON:: IDENT:order_status EXISTS:∃ IDENT:d COLON:: IDENT:date_order_placed EXISTS:∃ IDENT:o2 COLON:: IDENT:order_details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Orders LPAR:( IDENT:o COMMA:, IDENT:c3 COMMA:, IDENT:o1 COMMA:, IDENT:d COMMA:, IDENT:o2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o1 EQ:= LIT:Packing RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:customer_id
+            EXISTS c2:customer_details
+              EXISTS o:order_id
+                EXISTS c3:customer_id
+                  EXISTS o1:order_status
+                    EXISTS d:date_order_placed
+                      EXISTS o2:order_details
+                        AND
+                          AND
+                            AND
+                              PRED Customers(c, c1, c2)
+                              PRED Orders(o, c3, o1, d, o2)
+                            EQ  c = c3
+                          EQ  o1 = 'Packing'
+      Predicted FOL: ∃cid:customer_id ∃details:customer_details ∃oid:order_id ∃placed:date_order_placed ∃odetails:order_details (Customers(cid, customer_name, details) ∧ Orders(oid, cid, 'Packing', placed, odetails))
+        tokens: EXISTS:∃ IDENT:cid COLON:: IDENT:customer_id EXISTS:∃ IDENT:details COLON:: IDENT:customer_details EXISTS:∃ IDENT:oid COLON:: IDENT:order_id EXISTS:∃ IDENT:placed COLON:: IDENT:date_order_placed EXISTS:∃ IDENT:odetails COLON:: IDENT:order_details LPAR:( IDENT:Customers LPAR:( IDENT:cid COMMA:, IDENT:customer_name COMMA:, IDENT:details RPAR:) AND:∧ IDENT:Orders LPAR:( IDENT:oid COMMA:, IDENT:cid COMMA:, LIT:Packing COMMA:, IDENT:placed COMMA:, IDENT:odetails RPAR:) RPAR:) EOF
+        AST:
+          EXISTS cid:customer_id
+            EXISTS details:customer_details
+              EXISTS oid:order_id
+                EXISTS placed:date_order_placed
+                  EXISTS odetails:order_details
+                    AND
+                      PRED Customers(cid, customer_name, details)
+                      PRED Orders(oid, cid, 'Packing', placed, odetails)
+   [G3] took 0.006 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_customer_name_0 : customer_name   Gold c1 <-> Predicted customer_name
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local customer_id, global integer -> IntSort()
+        c1 : local customer_name, global varchar(80) -> StringSort()
+        c2 : local customer_details, global varchar(255) -> StringSort()
+        c3 : local customer_id, global integer -> IntSort()
+        d : local date_order_placed, global datetime -> IntSort()
+        o : local order_id, global integer -> IntSort()
+        o1 : local order_status, global varchar(10) -> StringSort()
+        o2 : local order_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        cid : local customer_id, global integer -> IntSort()
+        customer_name : local customer_name, global varchar(80) -> StringSort()
+        details : local customer_details, global varchar(255) -> StringSort()
+        odetails : local order_details, global varchar(255) -> StringSort()
+        oid : local order_id, global integer -> IntSort()
+        placed : local date_order_placed, global datetime -> IntSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c2_2, gold_o_3, gold_c3_4, gold_o1_5, gold_d_6, gold_o2_7], And(D_varchar_255_(gold_c2_2), D_varchar_10_(gold_o1_5), D_varchar_255_(gold_o2_7), And(And(And(P_Customers(gold_c_1, FV_customer_name_0, gold_c2_2), P_Orders(gold_o_3, gold_c3_4, gold_o1_5, gold_d_6, gold_o2_7)), (gold_c_1 == gold_c3_4)), (gold_o1_5 == L_Packing))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c2, WGOLD_o, WGOLD_c3, WGOLD_o1, WGOLD_d, WGOLD_o2):  And(D_varchar_255_(WGOLD_c2), D_varchar_10_(WGOLD_o1), D_varchar_255_(WGOLD_o2), And(And(And(P_Customers(WGOLD_c, FV_customer_name_0, WGOLD_c2), P_Orders(WGOLD_o, WGOLD_c3, WGOLD_o1, WGOLD_d, WGOLD_o2)), (WGOLD_c == WGOLD_c3)), (WGOLD_o1 == L_Packing)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_cid_1, predicted_details_2, predicted_oid_3, predicted_placed_4, predicted_odetails_5], And(D_varchar_255_(predicted_details_2), D_varchar_255_(predicted_odetails_5), And(P_Customers(predicted_cid_1, FV_customer_name_0, predicted_details_2), And(P_Orders(predicted_oid_3, predicted_cid_1, L_Packing, predicted_placed_4, predicted_odetails_5), D_varchar_10_(L_Packing)))))
+      predicted_skolem (witnesses WPREDICTED_cid, WPREDICTED_details, WPREDICTED_oid, WPREDICTED_placed, WPREDICTED_odetails):  And(D_varchar_255_(WPREDICTED_details), D_varchar_255_(WPREDICTED_odetails), And(P_Customers(WPREDICTED_cid, FV_customer_name_0, WPREDICTED_details), And(P_Orders(WPREDICTED_oid, WPREDICTED_cid, L_Packing, WPREDICTED_placed, WPREDICTED_odetails), D_varchar_10_(L_Packing))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Packing' at varchar(10) -> L_Packing = StringVal('Packing')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 773 lines, 30967 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2037.py
+   [G8] took 0.008 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_customer_name_0) <= 80
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c2, WGOLD_o, WGOLD_c3, WGOLD_o1, WGOLD_d, WGOLD_o2
+      claim: And(And(Length(WGOLD_c2) <= 255, Length(WGOLD_o1) <= 10, Length(WGOLD_o2) <= 255, And(And(And(Customers(WGOLD_c, FV_customer_name_0, WGOLD_c2), Orders(WGOLD_o, WGOLD_c3, WGOLD_o1, WGOLD_d, WGOLD_o2)), WGOLD_c == WGOLD_c3), WGOLD_o1 == "Packing")), Not(Exists([predicted_cid_1, predicted_details_2, predicted_oid_3, predicted_placed_4, predicted_odetails_5], And(Length(predicted_details_2) <= 255, Length(predicted_odetails_5) <= 255, And(Customers(predicted_cid_1, FV_customer_name_0, predicted_details_2), And(Orders(predicted_oid_3, predicted_cid_1, "Packing", predicted_placed_4, predicted_odetails_5), Length("Packing") <= 10))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.014 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.049 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_cid, WPREDICTED_details, WPREDICTED_oid, WPREDICTED_placed, WPREDICTED_odetails
+      claim: And(And(Length(WPREDICTED_details) <= 255, Length(WPREDICTED_odetails) <= 255, And(Customers(WPREDICTED_cid, FV_customer_name_0, WPREDICTED_details), And(Orders(WPREDICTED_oid, WPREDICTED_cid, "Packing", WPREDICTED_placed, WPREDICTED_odetails), Length("Packing") <= 10))), Not(Exists([gold_c_1, gold_c2_2, gold_o_3, gold_c3_4, gold_o1_5, gold_d_6, gold_o2_7], And(Length(gold_c2_2) <= 255, Length(gold_o1_5) <= 10, Length(gold_o2_7) <= 255, And(And(And(Customers(gold_c_1, FV_customer_name_0, gold_c2_2), Orders(gold_o_3, gold_c3_4, gold_o1_5, gold_d_6, gold_o2_7)), gold_c_1 == gold_c3_4), gold_o1_5 == "Packing")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.012 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.033 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,126 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2153.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2153.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4786 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what papers were published in Academic radiology in 1995 ?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(100) -> StringSort()   [domain Length(x) <= 100; length <= 100]
+        integer -> IntSort()
+        varchar(300) -> StringSort()   [domain Length(x) <= 300; length <= 300]
+      local sorts:
+        journalId = integer -> IntSort()
+        journalName = varchar(100) -> StringSort()
+        numCitedBy = integer -> IntSort()
+        numCiting = integer -> IntSort()
+        paperId = integer -> IntSort()
+        title = varchar(300) -> StringSort()
+        venueId = integer -> IntSort()
+        year = integer -> IntSort()
+      symbols:
+        journal(journalId, journalName)
+        paper(paperId, title, venueId, year, numCiting, numCitedBy, journalId)
+        constant 1995 : year
+        constant Academic radiology : journalName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : title ∃v : venueId ∃y : year ∃n : numCiting ∃n1 : numCitedBy ∃j : journalId ∃j1 : journalId ∃j2 : journalName ( (((paper(p,t,v,y,n,n1,j)) ∧ (journal(j1,j2))) ∧ (j = j1)) ∧ ((j2 = 'Academic radiology') ∧ (y = 1995)) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:v COLON:: IDENT:venueId EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:n COLON:: IDENT:numCiting EXISTS:∃ IDENT:n1 COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:j COLON:: IDENT:journalId EXISTS:∃ IDENT:j1 COLON:: IDENT:journalId EXISTS:∃ IDENT:j2 COLON:: IDENT:journalName LPAR:( LPAR:( LPAR:( LPAR:( IDENT:paper LPAR:( IDENT:p COMMA:, IDENT:t COMMA:, IDENT:v COMMA:, IDENT:y COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:journal LPAR:( IDENT:j1 COMMA:, IDENT:j2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:j EQ:= IDENT:j1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:j2 EQ:= LIT:Academic radiology RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:1995 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:title
+            EXISTS v:venueId
+              EXISTS y:year
+                EXISTS n:numCiting
+                  EXISTS n1:numCitedBy
+                    EXISTS j:journalId
+                      EXISTS j1:journalId
+                        EXISTS j2:journalName
+                          AND
+                            AND
+                              AND
+                                PRED paper(p, t, v, y, n, n1, j)
+                                PRED journal(j1, j2)
+                              EQ  j = j1
+                            AND
+                              EQ  j2 = 'Academic radiology'
+                              EQ  y = 1995
+      Predicted FOL: ∃t : title ∃v : venueId ∃nc : numCiting ∃ncb : numCitedBy ∃j : journalId ( paper(x, t, v, 1995, nc, ncb, j) ∧ journal(j, 'Academic radiology') )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:v COLON:: IDENT:venueId EXISTS:∃ IDENT:nc COLON:: IDENT:numCiting EXISTS:∃ IDENT:ncb COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:j COLON:: IDENT:journalId LPAR:( IDENT:paper LPAR:( IDENT:x COMMA:, IDENT:t COMMA:, IDENT:v COMMA:, NUM:1995 COMMA:, IDENT:nc COMMA:, IDENT:ncb COMMA:, IDENT:j RPAR:) AND:∧ IDENT:journal LPAR:( IDENT:j COMMA:, LIT:Academic radiology RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:title
+            EXISTS v:venueId
+              EXISTS nc:numCiting
+                EXISTS ncb:numCitedBy
+                  EXISTS j:journalId
+                    AND
+                      PRED paper(x, t, v, 1995, nc, ncb, j)
+                      PRED journal(j, 'Academic radiology')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_paperId_0 : paperId   Gold p <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        j : local journalId, global integer -> IntSort()
+        j1 : local journalId, global integer -> IntSort()
+        j2 : local journalName, global varchar(100) -> StringSort()
+        n : local numCiting, global integer -> IntSort()
+        n1 : local numCitedBy, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+        t : local title, global varchar(300) -> StringSort()
+        v : local venueId, global integer -> IntSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        j : local journalId, global integer -> IntSort()
+        nc : local numCiting, global integer -> IntSort()
+        ncb : local numCitedBy, global integer -> IntSort()
+        t : local title, global varchar(300) -> StringSort()
+        v : local venueId, global integer -> IntSort()
+        x : local paperId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_v_2, gold_y_3, gold_n_4, gold_n1_5, gold_j_6, gold_j1_7, gold_j2_8], And(D_varchar_300_(gold_t_1), D_varchar_100_(gold_j2_8), And(And(And(P_paper(FV_paperId_0, gold_t_1, gold_v_2, gold_y_3, gold_n_4, gold_n1_5, gold_j_6), P_journal(gold_j1_7, gold_j2_8)), (gold_j_6 == gold_j1_7)), And((gold_j2_8 == L_Academic_radiology), (gold_y_3 == L_v_1995_integer)))))
+      gold_skolem (witnesses WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j, WGOLD_j1, WGOLD_j2):  And(D_varchar_300_(WGOLD_t), D_varchar_100_(WGOLD_j2), And(And(And(P_paper(FV_paperId_0, WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j), P_journal(WGOLD_j1, WGOLD_j2)), (WGOLD_j == WGOLD_j1)), And((WGOLD_j2 == L_Academic_radiology), (WGOLD_y == L_v_1995_integer))))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_t_1, predicted_v_2, predicted_nc_3, predicted_ncb_4, predicted_j_5], And(D_varchar_300_(predicted_t_1), And(P_paper(FV_paperId_0, predicted_t_1, predicted_v_2, L_v_1995_integer, predicted_nc_3, predicted_ncb_4, predicted_j_5), And(P_journal(predicted_j_5, L_Academic_radiology), D_varchar_100_(L_Academic_radiology)))))
+      predicted_skolem (witnesses WPREDICTED_t, WPREDICTED_v, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j):  And(D_varchar_300_(WPREDICTED_t), And(P_paper(FV_paperId_0, WPREDICTED_t, WPREDICTED_v, L_v_1995_integer, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j), And(P_journal(WPREDICTED_j, L_Academic_radiology), D_varchar_100_(L_Academic_radiology))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Academic radiology' at varchar(100) -> L_Academic_radiology = StringVal('Academic radiology')
+      literal '1995' at integer -> L_v_1995_integer = IntVal(1995)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 770 lines, 30332 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2153.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j, WGOLD_j1, WGOLD_j2
+      claim: And(And(Length(WGOLD_t) <= 300, Length(WGOLD_j2) <= 100, And(And(And(paper(FV_paperId_0, WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j), journal(WGOLD_j1, WGOLD_j2)), WGOLD_j == WGOLD_j1), And(WGOLD_j2 == "Academic radiology", 1995 == WGOLD_y))), Not(Exists([predicted_t_1, predicted_v_2, predicted_nc_3, predicted_ncb_4, predicted_j_5], And(Length(predicted_t_1) <= 300, And(paper(FV_paperId_0, predicted_t_1, predicted_v_2, 1995, predicted_nc_3, predicted_ncb_4, predicted_j_5), And(journal(predicted_j_5, "Academic radiology"), Length("Academic radiology") <= 100))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_t, WPREDICTED_v, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j
+      claim: And(And(Length(WPREDICTED_t) <= 300, And(paper(FV_paperId_0, WPREDICTED_t, WPREDICTED_v, 1995, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j), And(journal(WPREDICTED_j, "Academic radiology"), Length("Academic radiology") <= 100))), Not(Exists([gold_t_1, gold_v_2, gold_y_3, gold_n_4, gold_n1_5, gold_j_6, gold_j1_7, gold_j2_8], And(Length(gold_t_1) <= 300, Length(gold_j2_8) <= 100, And(And(And(paper(FV_paperId_0, gold_t_1, gold_v_2, gold_y_3, gold_n_4, gold_n1_5, gold_j_6), journal(gold_j1_7, gold_j2_8)), gold_j_6 == gold_j1_7), And(gold_j2_8 == "Academic radiology", 1995 == gold_y_3))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

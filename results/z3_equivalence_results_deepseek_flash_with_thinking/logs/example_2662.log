@@ -1,0 +1,188 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2662.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2662.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4063 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the lakes in states bordering texas
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        border = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        lake_name = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        lake(lake_name, area, country_name, state_name)
+        constant texas : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : country_name ∃a : area ∃s : state_name( ∃b : border( ((lake(l,a,c,s)) ∧ (∃s1 : state_name( (border_info(s1,b)) ∧ (s1 = 'texas') ))) ∧ (s = b) ) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:border LPAR:( LPAR:( LPAR:( IDENT:lake LPAR:( IDENT:l COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:texas RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:b RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:country_name
+            EXISTS a:area
+              EXISTS s:state_name
+                EXISTS b:border
+                  AND
+                    AND
+                      PRED lake(l, a, c, s)
+                      EXISTS s1:state_name
+                        AND
+                          PRED border_info(s1, b)
+                          EQ  s1 = 'texas'
+                    EQ  s = b
+      Predicted FOL: ∃a : area ∃c : country_name ∃s : state_name (border_info(s, 'texas') ∧ lake(l, a, c, s))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( IDENT:border_info LPAR:( IDENT:s COMMA:, LIT:texas RPAR:) AND:∧ IDENT:lake LPAR:( IDENT:l COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:area
+            EXISTS c:country_name
+              EXISTS s:state_name
+                AND
+                  PRED border_info(s, 'texas')
+                  PRED lake(l, a, c, s)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_lake_name_0 : lake_name   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        b : local border, global text -> StringSort()
+        c : local country_name, global varchar(3) -> StringSort()
+        l : local lake_name, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+        s1 : local state_name, global text -> StringSort()
+      Predicted FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        l : local lake_name, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_a_2, gold_s_3, gold_b_4], And(D_varchar_3_(gold_c_1), D_double(gold_a_2), And(And(P_lake(FV_lake_name_0, gold_a_2, gold_c_1, gold_s_3), Exists([gold_s1_5], And(P_border_info(gold_s1_5, gold_b_4), (gold_s1_5 == L_texas)))), (gold_s_3 == gold_b_4))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_b):  And(D_varchar_3_(WGOLD_c), D_double(WGOLD_a), And(And(P_lake(FV_lake_name_0, WGOLD_a, WGOLD_c, WGOLD_s), Exists([goldsk_s1_1], And(P_border_info(goldsk_s1_1, WGOLD_b), (goldsk_s1_1 == L_texas)))), (WGOLD_s == WGOLD_b)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_c_2, predicted_s_3], And(D_double(predicted_a_1), D_varchar_3_(predicted_c_2), And(P_border_info(predicted_s_3, L_texas), P_lake(FV_lake_name_0, predicted_a_1, predicted_c_2, predicted_s_3))))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_s):  And(D_double(WPREDICTED_a), D_varchar_3_(WPREDICTED_c), And(P_border_info(WPREDICTED_s, L_texas), P_lake(FV_lake_name_0, WPREDICTED_a, WPREDICTED_c, WPREDICTED_s)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'texas' at text -> L_texas = StringVal('texas')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 746 lines, 28451 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2662.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_b
+      claim: And(And(Length(WGOLD_c) <= 3, And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(And(lake(FV_lake_name_0, WGOLD_a, WGOLD_c, WGOLD_s), Exists(goldsk_s1_1, And(border_info(goldsk_s1_1, WGOLD_b), goldsk_s1_1 == "texas"))), WGOLD_s == WGOLD_b)), Not(Exists([predicted_a_1, predicted_c_2, predicted_s_3], And(And(Not(fpIsNaN(predicted_a_1)), Not(And(fpIsZero(predicted_a_1), fpIsNegative(predicted_a_1)))), Length(predicted_c_2) <= 3, And(border_info(predicted_s_3, "texas"), lake(FV_lake_name_0, predicted_a_1, predicted_c_2, predicted_s_3))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.010 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 12 relation tuple(s) listed, 14 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          c : country_name = ''
+          a : area = 4.77947630625961e-299
+          s : state_name = ''
+          b : border = ''
+        free (answer) variables:
+          FV_lake_name_0 : lake_name = ''
+        literals / constants:
+          texas : state_name = 'texas'
+        relations (each value tagged with the local sort of its position):
+          border_info(state_name, border):
+            border_info(state_name='!0!', border='')
+            border_info(state_name='A', border='')
+            border_info(state_name='B', border='')
+            border_info(state_name='texas', border='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          lake(lake_name, area, country_name, state_name):
+            lake(lake_name='', area=2.225073858507202e-308, country_name='', state_name='!0!')
+            lake(lake_name='', area=2.225073858507202e-308, country_name='', state_name='A')
+            lake(lake_name='', area=4.77947630625961e-299, country_name='', state_name='')
+            lake(lake_name='', area=4.77947630625961e-299, country_name='', state_name='texas')
+            lake(lake_name='!0!', area=2.225073858507202e-308, country_name='A', state_name='B')
+            lake(lake_name='A', area=2.225073858507202e-308, country_name='', state_name='')
+            lake(lake_name='B', area=2.225073858507202e-308, country_name='', state_name='')
+            lake(lake_name='texas', area=2.225073858507202e-308, country_name='', state_name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          area         : {2.225073858507202e-308, 4.77947630625961e-299}
+          border       : {''}
+          country_name : {'', 'A'}
+          lake_name    : {'', '!0!', 'A', 'B', 'texas'}
+          state_name   : {'', '!0!', 'A', 'B', 'texas'}
+        values shared across local sorts (joins):
+          '!0!' : lake_name, state_name
+          '' : border, lake_name, state_name
+          'A' : lake_name, state_name
+          'B' : lake_name, state_name
+          'texas' : lake_name, state_name
+   [R2] took 0.069 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_s
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), Length(WPREDICTED_c) <= 3, And(border_info(WPREDICTED_s, "texas"), lake(FV_lake_name_0, WPREDICTED_a, WPREDICTED_c, WPREDICTED_s))), Not(Exists([gold_c_1, gold_a_2, gold_s_3, gold_b_4], And(Length(gold_c_1) <= 3, And(Not(fpIsNaN(gold_a_2)), Not(And(fpIsZero(gold_a_2), fpIsNegative(gold_a_2)))), And(And(lake(FV_lake_name_0, gold_a_2, gold_c_1, gold_s_3), Exists(gold_s1_5, And(border_info(gold_s1_5, gold_b_4), gold_s1_5 == "texas"))), gold_s_3 == gold_b_4)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 12 relation tuple(s) listed, 15 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          a : area = 4.780642885782739e-299
+          c : country_name = ''
+          s : state_name = ''
+        free (answer) variables:
+          FV_lake_name_0 : lake_name = ''
+        literals / constants:
+          texas : state_name = 'texas'
+        relations (each value tagged with the local sort of its position):
+          border_info(state_name, border):
+            border_info(state_name='', border='A')
+            border_info(state_name='', border='B')
+            border_info(state_name='', border='C')
+            border_info(state_name='', border='texas')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          lake(lake_name, area, country_name, state_name):
+            lake(lake_name='', area=2.225073858507202e-308, country_name='', state_name='A')
+            lake(lake_name='', area=2.225073858507202e-308, country_name='', state_name='C')
+            lake(lake_name='', area=4.780642885782739e-299, country_name='', state_name='')
+            lake(lake_name='', area=4.780642885782739e-299, country_name='', state_name='texas')
+            lake(lake_name='A', area=2.225073858507202e-308, country_name='', state_name='')
+            lake(lake_name='B', area=2.225073858507202e-308, country_name='', state_name='')
+            lake(lake_name='C', area=2.225073858507202e-308, country_name='A', state_name='B')
+            lake(lake_name='texas', area=2.225073858507202e-308, country_name='', state_name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          area         : {2.225073858507202e-308, 4.780642885782739e-299}
+          border       : {'A', 'B', 'C', 'texas'}
+          country_name : {'', 'A'}
+          lake_name    : {'', 'A', 'B', 'C', 'texas'}
+          state_name   : {'', 'A', 'B', 'C', 'texas'}
+        values shared across local sorts (joins):
+          '' : lake_name, state_name
+          'A' : border, lake_name, state_name
+          'B' : border, lake_name, state_name
+          'C' : border, lake_name, state_name
+          'texas' : border, lake_name, state_name
+   [R3] took 0.053 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

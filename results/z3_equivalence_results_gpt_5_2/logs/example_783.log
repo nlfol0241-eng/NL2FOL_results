@@ -1,0 +1,165 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_783.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_783.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3869 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give me the payment Id, the date and the amount for all the payments processed with Visa.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Amount_Payment = integer -> IntSort()
+        Date_Payment_Made = date -> IntSort()
+        Payment_ID = integer -> IntSort()
+        Payment_Method_Code = varchar(255) -> StringSort()
+        Settlement_ID = integer -> IntSort()
+      symbols:
+        Payments(Payment_ID, Settlement_ID, Payment_Method_Code, Date_Payment_Made, Amount_Payment)
+        constant Visa : Payment_Method_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Settlement_ID ∃p1 : Payment_Method_Code ( (Payments(p,s,p1,d,a)) ∧ (p1 = 'Visa') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Settlement_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Payment_Method_Code LPAR:( LPAR:( IDENT:Payments LPAR:( IDENT:p COMMA:, IDENT:s COMMA:, IDENT:p1 COMMA:, IDENT:d COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:Visa RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Settlement_ID
+            EXISTS p1:Payment_Method_Code
+              AND
+                PRED Payments(p, s, p1, d, a)
+                EQ  p1 = 'Visa'
+      Predicted FOL: ∀p0:Payment_ID∀p1:Settlement_ID∀p2:Payment_Method_Code∀p3:Date_Payment_Made∀p4:Amount_Payment( Payments(p0, p1, p2, p3, p4) ∧ p2 = Visa → (p0 = pid ∧ p3 = dt ∧ p4 = amt) )
+        tokens: FORALL:∀ IDENT:p0 COLON:: IDENT:Payment_ID FORALL:∀ IDENT:p1 COLON:: IDENT:Settlement_ID FORALL:∀ IDENT:p2 COLON:: IDENT:Payment_Method_Code FORALL:∀ IDENT:p3 COLON:: IDENT:Date_Payment_Made FORALL:∀ IDENT:p4 COLON:: IDENT:Amount_Payment LPAR:( IDENT:Payments LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 RPAR:) AND:∧ IDENT:p2 EQ:= IDENT:Visa IMPL:→ LPAR:( IDENT:p0 EQ:= IDENT:pid AND:∧ IDENT:p3 EQ:= IDENT:dt AND:∧ IDENT:p4 EQ:= IDENT:amt RPAR:) RPAR:) EOF
+        AST:
+          FORALL p0:Payment_ID
+            FORALL p1:Settlement_ID
+              FORALL p2:Payment_Method_Code
+                FORALL p3:Date_Payment_Made
+                  FORALL p4:Amount_Payment
+                    IMPLIES
+                      AND
+                        PRED Payments(p0, p1, p2, p3, p4)
+                        EQ  p2 = Visa<const>
+                      AND
+                        EQ  p0 = pid
+                        EQ  p3 = dt
+                        EQ  p4 = amt
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Amount_Payment_0 : Amount_Payment   Gold a <-> Predicted amt
+      FV_Date_Payment_Made_0 : Date_Payment_Made   Gold d <-> Predicted dt
+      FV_Payment_ID_0 : Payment_ID   Gold p <-> Predicted pid
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Amount_Payment, global integer -> IntSort()
+        d : local Date_Payment_Made, global date -> IntSort()
+        p : local Payment_ID, global integer -> IntSort()
+        p1 : local Payment_Method_Code, global varchar(255) -> StringSort()
+        s : local Settlement_ID, global integer -> IntSort()
+      Predicted FOL:
+        amt : local Amount_Payment, global integer -> IntSort()
+        dt : local Date_Payment_Made, global date -> IntSort()
+        p0 : local Payment_ID, global integer -> IntSort()
+        p1 : local Settlement_ID, global integer -> IntSort()
+        p2 : local Payment_Method_Code, global varchar(255) -> StringSort()
+        p3 : local Date_Payment_Made, global date -> IntSort()
+        p4 : local Amount_Payment, global integer -> IntSort()
+        pid : local Payment_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_p1_2], And(D_varchar_255_(gold_p1_2), And(P_Payments(FV_Payment_ID_0, gold_s_1, gold_p1_2, FV_Date_Payment_Made_0, FV_Amount_Payment_0), (gold_p1_2 == L_Visa))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_p1):  And(D_varchar_255_(WGOLD_p1), And(P_Payments(FV_Payment_ID_0, WGOLD_s, WGOLD_p1, FV_Date_Payment_Made_0, FV_Amount_Payment_0), (WGOLD_p1 == L_Visa)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  ForAll([predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5], Implies(And(D_varchar_255_(predicted_p2_3)), Implies(And(P_Payments(predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5), (predicted_p2_3 == L_Visa)), And((predicted_p0_1 == FV_Payment_ID_0), (predicted_p3_4 == FV_Date_Payment_Made_0), (predicted_p4_5 == FV_Amount_Payment_0)))))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Visa' at varchar(255) -> L_Visa = StringVal('Visa')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 733 lines, 28002 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_783.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_p1
+      claim: And(And(Length(WGOLD_p1) <= 255, And(Payments(FV_Payment_ID_0, WGOLD_s, WGOLD_p1, FV_Date_Payment_Made_0, FV_Amount_Payment_0), WGOLD_p1 == "Visa")), Not(ForAll([predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5], Implies(And(Length(predicted_p2_3) <= 255), Implies(And(Payments(predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5), predicted_p2_3 == "Visa"), And(predicted_p0_1 == FV_Payment_ID_0, predicted_p3_4 == FV_Date_Payment_Made_0, predicted_p4_5 == FV_Amount_Payment_0))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.003 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 11 relation tuple(s) listed, 10 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          s : Settlement_ID = 3
+          p1 : Payment_Method_Code = 'Visa'
+        free (answer) variables:
+          FV_Amount_Payment_0 : Amount_Payment = 5
+          FV_Date_Payment_Made_0 : Date_Payment_Made = 1970-01-05
+          FV_Payment_ID_0 : Payment_ID = 2
+        literals / constants:
+          Visa : Payment_Method_Code = 'Visa'
+        relations (each value tagged with the local sort of its position):
+          Payments(Payment_ID, Settlement_ID, Payment_Method_Code, Date_Payment_Made, Amount_Payment):
+            Payments(Payment_ID=0, Settlement_ID=0, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=2)
+            Payments(Payment_ID=0, Settlement_ID=0, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=3)
+            Payments(Payment_ID=0, Settlement_ID=0, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=4)
+            Payments(Payment_ID=0, Settlement_ID=2, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=0)
+            Payments(Payment_ID=0, Settlement_ID=5, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=0)
+            Payments(Payment_ID=0, Settlement_ID=6, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=0)
+            Payments(Payment_ID=2, Settlement_ID=3, Payment_Method_Code='Visa', Date_Payment_Made=1970-01-05, Amount_Payment=5)
+            Payments(Payment_ID=3, Settlement_ID=4, Payment_Method_Code='', Date_Payment_Made=1970-01-06, Amount_Payment=6)
+            Payments(Payment_ID=4, Settlement_ID=0, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=0)
+            Payments(Payment_ID=5, Settlement_ID=0, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=0)
+            Payments(Payment_ID=6, Settlement_ID=0, Payment_Method_Code='', Date_Payment_Made=1970-01-01, Amount_Payment=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Amount_Payment      : {0, 2, 3, 4, 5, 6}
+          Date_Payment_Made   : {1970-01-01, 1970-01-05, 1970-01-06}
+          Payment_ID          : {0, 2, 3, 4, 5, 6}
+          Payment_Method_Code : {'', 'Visa'}
+          Settlement_ID       : {0, 2, 3, 4, 5, 6}
+        values shared across local sorts (joins):
+          0 : Amount_Payment, Payment_ID, Settlement_ID
+          2 : Amount_Payment, Payment_ID, Settlement_ID
+          3 : Amount_Payment, Payment_ID, Settlement_ID
+          4 : Amount_Payment, Payment_ID, Settlement_ID
+          5 : Amount_Payment, Payment_ID, Settlement_ID
+          6 : Amount_Payment, Payment_ID, Settlement_ID
+   [R2] took 0.057 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(ForAll([predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5], Implies(And(Length(predicted_p2_3) <= 255), Implies(And(Payments(predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5), predicted_p2_3 == "Visa"), And(predicted_p0_1 == FV_Payment_ID_0, predicted_p3_4 == FV_Date_Payment_Made_0, predicted_p4_5 == FV_Amount_Payment_0)))), Not(Exists([gold_s_1, gold_p1_2], And(Length(gold_p1_2) <= 255, And(Payments(FV_Payment_ID_0, gold_s_1, gold_p1_2, FV_Date_Payment_Made_0, FV_Amount_Payment_0), gold_p1_2 == "Visa")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 0 relation tuple(s) listed, 0 probe queries
+        --- counter-model (local sorts) ---
+        free (answer) variables:
+          FV_Amount_Payment_0 : Amount_Payment = 0
+          FV_Date_Payment_Made_0 : Date_Payment_Made = 1970-01-03
+          FV_Payment_ID_0 : Payment_ID = 2
+        literals / constants:
+          Visa : Payment_Method_Code = 'Visa'
+        relations (each value tagged with the local sort of its position):
+          Payments(Payment_ID, Settlement_ID, Payment_Method_Code, Date_Payment_Made, Amount_Payment):
+            <empty over the values of this model>
+        local-sort domains (values occurring at positions of each local sort):
+          Amount_Payment    : {0}
+          Date_Payment_Made : {1970-01-03}
+          Payment_ID        : {2}
+   [R3] took 0.017 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

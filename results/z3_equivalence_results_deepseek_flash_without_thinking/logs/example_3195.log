@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3195.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3195.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3269 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of regions that were not affected?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Number_city_affected = real -> Float32()
+        Region_code = text -> StringSort()
+        Region_id = int -> IntSort()
+        Region_name = text -> StringSort()
+        Storm_ID = int -> IntSort()
+      symbols:
+        affected_region(Region_id, Storm_ID, Number_city_affected)
+        region(Region_id, Region_code, Region_name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r1 : Region_code ∃r : Region_id( (region(r,r1,r2)) ∧ (¬(∃r3 : Region_id( ((region(r,r1,r2)) ∧ (∃n : Number_city_affected ∃s : Storm_ID( affected_region(r3,s,n) ))) ∧ (r = r3) ))) )
+        tokens: EXISTS:∃ IDENT:r1 COLON:: IDENT:Region_code EXISTS:∃ IDENT:r COLON:: IDENT:Region_id LPAR:( LPAR:( IDENT:region LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:r3 COLON:: IDENT:Region_id LPAR:( LPAR:( LPAR:( IDENT:region LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:n COLON:: IDENT:Number_city_affected EXISTS:∃ IDENT:s COLON:: IDENT:Storm_ID LPAR:( IDENT:affected_region LPAR:( IDENT:r3 COMMA:, IDENT:s COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:r3 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r1:Region_code
+            EXISTS r:Region_id
+              AND
+                PRED region(r, r1, r2)
+                NOT
+                  EXISTS r3:Region_id
+                    AND
+                      AND
+                        PRED region(r, r1, r2)
+                        EXISTS n:Number_city_affected
+                          EXISTS s:Storm_ID
+                            PRED affected_region(r3, s, n)
+                      EQ  r = r3
+      Predicted FOL: ∃r_id : Region_id ∃r_code : Region_code ∃r_name : Region_name (region(r_id, r_code, r_name) ∧ ¬∃s_id : Storm_ID ∃num : Number_city_affected affected_region(r_id, s_id, num))
+        tokens: EXISTS:∃ IDENT:r_id COLON:: IDENT:Region_id EXISTS:∃ IDENT:r_code COLON:: IDENT:Region_code EXISTS:∃ IDENT:r_name COLON:: IDENT:Region_name LPAR:( IDENT:region LPAR:( IDENT:r_id COMMA:, IDENT:r_code COMMA:, IDENT:r_name RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:s_id COLON:: IDENT:Storm_ID EXISTS:∃ IDENT:num COLON:: IDENT:Number_city_affected IDENT:affected_region LPAR:( IDENT:r_id COMMA:, IDENT:s_id COMMA:, IDENT:num RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r_id:Region_id
+            EXISTS r_code:Region_code
+              EXISTS r_name:Region_name
+                AND
+                  PRED region(r_id, r_code, r_name)
+                  NOT
+                    EXISTS s_id:Storm_ID
+                      EXISTS num:Number_city_affected
+                        PRED affected_region(r_id, s_id, num)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (r2 : Region_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Number_city_affected, global real -> Float32()
+        r : local Region_id, global int -> IntSort()
+        r1 : local Region_code, global text -> StringSort()
+        r2 : local Region_name, global text -> StringSort()
+        r3 : local Region_id, global int -> IntSort()
+        s : local Storm_ID, global int -> IntSort()
+      Predicted FOL:
+        num : local Number_city_affected, global real -> Float32()
+        r_code : local Region_code, global text -> StringSort()
+        r_id : local Region_id, global int -> IntSort()
+        r_name : local Region_name, global text -> StringSort()
+        s_id : local Storm_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5482 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3195.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (r2 : Region_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

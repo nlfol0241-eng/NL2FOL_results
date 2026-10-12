@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_380.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_380.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3618 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the attribute data type for the attribute named "Green".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        attribute_data_type = varchar(10) -> StringSort()
+        attribute_id = integer -> IntSort()
+        attribute_name = varchar(30) -> StringSort()
+      symbols:
+        Attribute_Definitions(attribute_id, attribute_name, attribute_data_type)
+        constant Green : attribute_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : attribute_id ∃a1 : attribute_name ( (Attribute_Definitions(a,a1,a2)) ∧ (a1 = 'Green') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:attribute_id EXISTS:∃ IDENT:a1 COLON:: IDENT:attribute_name LPAR:( LPAR:( IDENT:Attribute_Definitions LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:Green RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:attribute_id
+            EXISTS a1:attribute_name
+              AND
+                PRED Attribute_Definitions(a, a1, a2)
+                EQ  a1 = 'Green'
+      Predicted FOL: ∃i : attribute_id Attribute_Definitions(i, 'Green', d)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:attribute_id IDENT:Attribute_Definitions LPAR:( IDENT:i COMMA:, LIT:Green COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS i:attribute_id
+            PRED Attribute_Definitions(i, 'Green', d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_attribute_data_type_0 : attribute_data_type   Gold a2 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local attribute_id, global integer -> IntSort()
+        a1 : local attribute_name, global varchar(30) -> StringSort()
+        a2 : local attribute_data_type, global varchar(10) -> StringSort()
+      Predicted FOL:
+        d : local attribute_data_type, global varchar(10) -> StringSort()
+        i : local attribute_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_a1_2], And(D_varchar_30_(gold_a1_2), And(P_Attribute_Definitions(gold_a_1, gold_a1_2, FV_attribute_data_type_0), (gold_a1_2 == L_Green))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_a1):  And(D_varchar_30_(WGOLD_a1), And(P_Attribute_Definitions(WGOLD_a, WGOLD_a1, FV_attribute_data_type_0), (WGOLD_a1 == L_Green)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1], And(P_Attribute_Definitions(predicted_i_1, L_Green, FV_attribute_data_type_0), D_varchar_30_(L_Green)))
+      predicted_skolem (witnesses WPREDICTED_i):  And(P_Attribute_Definitions(WPREDICTED_i, L_Green, FV_attribute_data_type_0), D_varchar_30_(L_Green))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Green' at varchar(30) -> L_Green = StringVal('Green')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 726 lines, 27089 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_380.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_attribute_data_type_0) <= 10
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_a1
+      claim: And(And(Length(WGOLD_a1) <= 30, And(Attribute_Definitions(WGOLD_a, WGOLD_a1, FV_attribute_data_type_0), WGOLD_a1 == "Green")), Not(Exists(predicted_i_1, And(Attribute_Definitions(predicted_i_1, "Green", FV_attribute_data_type_0), Length("Green") <= 30))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i
+      claim: And(And(Attribute_Definitions(WPREDICTED_i, "Green", FV_attribute_data_type_0), Length("Green") <= 30), Not(Exists([gold_a_1, gold_a1_2], And(Length(gold_a1_2) <= 30, And(Attribute_Definitions(gold_a_1, gold_a1_2, FV_attribute_data_type_0), gold_a1_2 == "Green")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

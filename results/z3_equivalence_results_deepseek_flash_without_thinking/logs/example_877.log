@@ -1,0 +1,65 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_877.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_877.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4637 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the complete description of the researcher role.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+      local sorts:
+        role_code = varchar(10) -> StringSort()
+        role_description = varchar(255) -> StringSort()
+      symbols:
+        Staff_Roles(role_code, role_description)
+        constant researcher : role_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : role_code ( (Staff_Roles(r,r1)) ∧ (r = 'researcher') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:role_code LPAR:( LPAR:( IDENT:Staff_Roles LPAR:( IDENT:r COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:researcher RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:role_code
+            AND
+              PRED Staff_Roles(r, r1)
+              EQ  r = 'researcher'
+      Predicted FOL: ∃x : role_description (Staff_Roles('researcher', x))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:role_description LPAR:( IDENT:Staff_Roles LPAR:( LIT:researcher COMMA:, IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:role_description
+            PRED Staff_Roles('researcher', x)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (r1 : role_description) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 3 variable occurrences in 2 formulas
+      Gold FOL:
+        r : local role_code, global varchar(10) -> StringSort()
+        r1 : local role_description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        x : local role_description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5228 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_877.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (r1 : role_description) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

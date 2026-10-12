@@ -1,0 +1,125 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3325.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3325.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3681 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the school name and type for schools without a school bus.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        bool -> BoolSort()
+        text -> StringSort()
+      local sorts:
+        Driver_ID = int -> IntSort()
+        Grade = text -> StringSort()
+        If_full_time = bool -> BoolSort()
+        Location = text -> StringSort()
+        School = text -> StringSort()
+        School_ID = int -> IntSort()
+        Type = text -> StringSort()
+        Years_Working = int -> IntSort()
+      symbols:
+        school(School_ID, Grade, School, Location, Type)
+        school_bus(School_ID, Driver_ID, Years_Working, If_full_time)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : Grade ∃l : Location ∃s : School_ID( (school(s,g,s1,l,t)) ∧ (¬(∃s2 : School_ID( ((school(s,g,s1,l,t)) ∧ (∃i : If_full_time ∃y : Years_Working ∃d : Driver_ID( school_bus(s2,d,y,i) ))) ∧ (s = s2) ))) )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:s COLON:: IDENT:School_ID LPAR:( LPAR:( IDENT:school LPAR:( IDENT:s COMMA:, IDENT:g COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:School_ID LPAR:( LPAR:( LPAR:( IDENT:school LPAR:( IDENT:s COMMA:, IDENT:g COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:If_full_time EXISTS:∃ IDENT:y COLON:: IDENT:Years_Working EXISTS:∃ IDENT:d COLON:: IDENT:Driver_ID LPAR:( IDENT:school_bus LPAR:( IDENT:s2 COMMA:, IDENT:d COMMA:, IDENT:y COMMA:, IDENT:i RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:Grade
+            EXISTS l:Location
+              EXISTS s:School_ID
+                AND
+                  PRED school(s, g, s1, l, t)
+                  NOT
+                    EXISTS s2:School_ID
+                      AND
+                        AND
+                          PRED school(s, g, s1, l, t)
+                          EXISTS i:If_full_time
+                            EXISTS y:Years_Working
+                              EXISTS d:Driver_ID
+                                PRED school_bus(s2, d, y, i)
+                        EQ  s = s2
+      Predicted FOL: ∃ sid : School_ID ∃ gr : Grade ∃ loc : Location ( school(sid, gr, school_name, loc, school_type) ∧ ¬∃ did : Driver_ID ∃ yr : Years_Working ∃ ft : If_full_time ( school_bus(sid, did, yr, ft) ) )
+        tokens: EXISTS:∃ IDENT:sid COLON:: IDENT:School_ID EXISTS:∃ IDENT:gr COLON:: IDENT:Grade EXISTS:∃ IDENT:loc COLON:: IDENT:Location LPAR:( IDENT:school LPAR:( IDENT:sid COMMA:, IDENT:gr COMMA:, IDENT:school_name COMMA:, IDENT:loc COMMA:, IDENT:school_type RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:did COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:yr COLON:: IDENT:Years_Working EXISTS:∃ IDENT:ft COLON:: IDENT:If_full_time LPAR:( IDENT:school_bus LPAR:( IDENT:sid COMMA:, IDENT:did COMMA:, IDENT:yr COMMA:, IDENT:ft RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS sid:School_ID
+            EXISTS gr:Grade
+              EXISTS loc:Location
+                AND
+                  PRED school(sid, gr, school_name, loc, school_type)
+                  NOT
+                    EXISTS did:Driver_ID
+                      EXISTS yr:Years_Working
+                        EXISTS ft:If_full_time
+                          PRED school_bus(sid, did, yr, ft)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_School_0 : School   Gold s1 <-> Predicted school_name
+      FV_Type_0 : Type   Gold t <-> Predicted school_type
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Driver_ID, global int -> IntSort()
+        g : local Grade, global text -> StringSort()
+        i : local If_full_time, global bool -> BoolSort()
+        l : local Location, global text -> StringSort()
+        s : local School_ID, global int -> IntSort()
+        s1 : local School, global text -> StringSort()
+        s2 : local School_ID, global int -> IntSort()
+        t : local Type, global text -> StringSort()
+        y : local Years_Working, global int -> IntSort()
+      Predicted FOL:
+        did : local Driver_ID, global int -> IntSort()
+        ft : local If_full_time, global bool -> BoolSort()
+        gr : local Grade, global text -> StringSort()
+        loc : local Location, global text -> StringSort()
+        school_name : local School, global text -> StringSort()
+        school_type : local Type, global text -> StringSort()
+        sid : local School_ID, global int -> IntSort()
+        yr : local Years_Working, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_g_1, gold_l_2, gold_s_3], And(P_school(gold_s_3, gold_g_1, FV_School_0, gold_l_2, FV_Type_0), Not(Exists([gold_s2_4], And(And(P_school(gold_s_3, gold_g_1, FV_School_0, gold_l_2, FV_Type_0), Exists([gold_i_5, gold_y_6, gold_d_7], P_school_bus(gold_s2_4, gold_d_7, gold_y_6, gold_i_5))), (gold_s_3 == gold_s2_4))))))
+      gold_skolem (witnesses WGOLD_g, WGOLD_l, WGOLD_s):  And(P_school(WGOLD_s, WGOLD_g, FV_School_0, WGOLD_l, FV_Type_0), Not(Exists([goldsk_s2_1], And(And(P_school(WGOLD_s, WGOLD_g, FV_School_0, WGOLD_l, FV_Type_0), Exists([goldsk_i_2, goldsk_y_3, goldsk_d_4], P_school_bus(goldsk_s2_1, goldsk_d_4, goldsk_y_3, goldsk_i_2))), (WGOLD_s == goldsk_s2_1)))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_sid_1, predicted_gr_2, predicted_loc_3], And(P_school(predicted_sid_1, predicted_gr_2, FV_School_0, predicted_loc_3, FV_Type_0), Not(Exists([predicted_did_4, predicted_yr_5, predicted_ft_6], P_school_bus(predicted_sid_1, predicted_did_4, predicted_yr_5, predicted_ft_6)))))
+      predicted_skolem (witnesses WPREDICTED_sid, WPREDICTED_gr, WPREDICTED_loc):  And(P_school(WPREDICTED_sid, WPREDICTED_gr, FV_School_0, WPREDICTED_loc, FV_Type_0), Not(Exists([predictedsk_did_1, predictedsk_yr_2, predictedsk_ft_3], P_school_bus(WPREDICTED_sid, predictedsk_did_1, predictedsk_yr_2, predictedsk_ft_3))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 757 lines, 29646 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3325.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_g, WGOLD_l, WGOLD_s
+      claim: And(And(school(WGOLD_s, WGOLD_g, FV_School_0, WGOLD_l, FV_Type_0), Not(Exists(goldsk_s2_1, And(And(school(WGOLD_s, WGOLD_g, FV_School_0, WGOLD_l, FV_Type_0), Exists([goldsk_i_2, goldsk_y_3, goldsk_d_4], school_bus(goldsk_s2_1, goldsk_d_4, goldsk_y_3, goldsk_i_2))), WGOLD_s == goldsk_s2_1)))), Not(Exists([predicted_sid_1, predicted_gr_2, predicted_loc_3], And(school(predicted_sid_1, predicted_gr_2, FV_School_0, predicted_loc_3, FV_Type_0), Not(Exists([predicted_did_4, predicted_yr_5, predicted_ft_6], school_bus(predicted_sid_1, predicted_did_4, predicted_yr_5, predicted_ft_6)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_sid, WPREDICTED_gr, WPREDICTED_loc
+      claim: And(And(school(WPREDICTED_sid, WPREDICTED_gr, FV_School_0, WPREDICTED_loc, FV_Type_0), Not(Exists([predictedsk_did_1, predictedsk_yr_2, predictedsk_ft_3], school_bus(WPREDICTED_sid, predictedsk_did_1, predictedsk_yr_2, predictedsk_ft_3)))), Not(Exists([gold_g_1, gold_l_2, gold_s_3], And(school(gold_s_3, gold_g_1, FV_School_0, gold_l_2, FV_Type_0), Not(Exists(gold_s2_4, And(And(school(gold_s_3, gold_g_1, FV_School_0, gold_l_2, FV_Type_0), Exists([gold_i_5, gold_y_6, gold_d_7], school_bus(gold_s2_4, gold_d_7, gold_y_6, gold_i_5))), gold_s_3 == gold_s2_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

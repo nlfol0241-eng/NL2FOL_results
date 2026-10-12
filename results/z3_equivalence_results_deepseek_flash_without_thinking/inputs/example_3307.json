@@ -1,0 +1,85 @@
+{
+  "NL": "Which colleges have both authors with submission score above 90 and authors with submission score below 80?",
+  "Vocabulary": {
+    "Predicates": [
+      "submission"
+    ],
+    "Functions": [],
+    "Constants": [
+      90,
+      80
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "submission": [
+        "Submission_ID",
+        "Scores",
+        "Author",
+        "College"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "90": "Scores",
+      "80": "Scores"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( workshop(a0, a1, a2, a3) ∧ workshop(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b0'∀b1'∀b2'∀b3'( submission(b0, b1, b2, b3) ∧ submission(b0', b1', b2', b3') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( Acceptance(c0, c1, c2) ∧ Acceptance(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( Acceptance(c0, c1, c2) → ∃a0∃a1∃a2∃a3 ( workshop(a0, a1, a2, a3) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( Acceptance(c0, c1, c2) → ∃b0∃b1∃b2∃b3 ( submission(b0, b1, b2, b3) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "submission": {
+        "A": "submission",
+        "A0": "Submission_ID",
+        "A1": "Scores",
+        "A2": "Author",
+        "A3": "College"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": 90,
+      "const2": 80
+    }
+  },
+  "Gold FOL": {
+    "string": "(∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 > 90) )) ∧ (¬((∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 > 90) )) ∧ (¬(∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 < 80) )))))",
+    "free vars": "c : College"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A3](<S>[A1 > 90](A)))<D>((<P>[A3](<S>[A1 > 90](A)))<D>(<P>[A3](<S>[A1 < 80](A))))",
+    "Processed_RA": "(<P>[A3](<S>[A1 = 'A1 > 90'](A)))<D>((<P>[A3](<S>[A1 = 'A1 > 90'](A)))<D>(<P>[A3](<S>[A1 = 'A1 < 80'](A))))",
+    "RC": "([E]?A2,?A1,?A0( (A(?A0,?A1,?A2,?A3)) & (?A1 = A1 > 90) )) & (~(([E]?A2,?A1,?A0( (A(?A0,?A1,?A2,?A3)) & (?A1 = A1 > 90) )) & (~([E]?A2,?A1,?A0( (A(?A0,?A1,?A2,?A3)) & (?A1 = A1 < 80) )))))",
+    "string": "(∃A2 ∃A1 ∃A0( (A(A0,A1,A2,A3)) ∧ (A1 > 90) )) ∧ (¬((∃A2 ∃A1 ∃A0( (A(A0,A1,A2,A3)) ∧ (A1 > 90) )) ∧ (¬(∃A2 ∃A1 ∃A0( (A(A0,A1,A2,A3)) ∧ (A1 < 80) )))))",
+    "free variables": "A3",
+    "db_id": "workshop_paper",
+    "processed_sql": "SELECT College FROM submission WHERE Scores  >  90 INTERSECT SELECT College FROM submission WHERE Scores  <  80"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "submission": {
+      "sortaxiom0": "Submission_ID = int",
+      "sortaxiom1": "Scores = real",
+      "sortaxiom2": "Author = text",
+      "sortaxiom3": "College = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT College FROM submission WHERE Scores  >  90 INTERSECT SELECT College FROM submission WHERE Scores  <  80"
+  },
+  "id": 3307,
+  "Predicted FOL": {
+    "string": "∃x : College (∃s1 : Submission_ID ∃sc1 : Scores ∃a1 : Author (submission(s1, sc1, a1, x) ∧ sc1 > 90) ∧ ∃s2 : Submission_ID ∃sc2 : Scores ∃a2 : Author (submission(s2, sc2, a2, x) ∧ sc2 < 80))",
+    "free vars": ""
+  }
+}

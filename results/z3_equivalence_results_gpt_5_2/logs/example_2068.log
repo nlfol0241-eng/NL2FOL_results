@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2068.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2068.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3789 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name of the teacher for the math course.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Course = text -> StringSort()
+        Course_ID = int -> IntSort()
+        Grade = int -> IntSort()
+        Hometown = text -> StringSort()
+        Name = text -> StringSort()
+        Staring_Date = text -> StringSort()
+        Teacher_ID = int -> IntSort()
+      symbols:
+        course(Course_ID, Staring_Date, Course)
+        course_arrange(Course_ID, Teacher_ID, Grade)
+        teacher(Teacher_ID, Name, Age, Hometown)
+        constant Math : Course
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Course_ID ∃t : Teacher_ID ∃g : Grade ∃c1 : Course_ID ∃s : Staring_Date ∃c2 : Course ∃t1 : Teacher_ID ∃a : Age ∃h : Hometown ( (((((course_arrange(c,t,g)) ∧ (course(c1,s,c2))) ∧ (c = c1)) ∧ (teacher(t1,n,a,h))) ∧ (t = t1)) ∧ (c2 = 'Math') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Course_ID EXISTS:∃ IDENT:t COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:c1 COLON:: IDENT:Course_ID EXISTS:∃ IDENT:s COLON:: IDENT:Staring_Date EXISTS:∃ IDENT:c2 COLON:: IDENT:Course EXISTS:∃ IDENT:t1 COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Hometown LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:course_arrange LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:course LPAR:( IDENT:c1 COMMA:, IDENT:s COMMA:, IDENT:c2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:teacher LPAR:( IDENT:t1 COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c2 EQ:= LIT:Math RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Course_ID
+            EXISTS t:Teacher_ID
+              EXISTS g:Grade
+                EXISTS c1:Course_ID
+                  EXISTS s:Staring_Date
+                    EXISTS c2:Course
+                      EXISTS t1:Teacher_ID
+                        EXISTS a:Age
+                          EXISTS h:Hometown
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      PRED course_arrange(c, t, g)
+                                      PRED course(c1, s, c2)
+                                    EQ  c = c1
+                                  PRED teacher(t1, n, a, h)
+                                EQ  t = t1
+                              EQ  c2 = 'Math'
+      Predicted FOL: ∃n:Name ∃tid:Teacher_ID ∃age:Age ∃home:Hometown ∃cid:Course_ID ∃sd:Staring_Date (course(cid, sd, Math) ∧ course_arrange(cid, tid, cid) ∧ teacher(tid, n, age, home))
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:tid COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:age COLON:: IDENT:Age EXISTS:∃ IDENT:home COLON:: IDENT:Hometown EXISTS:∃ IDENT:cid COLON:: IDENT:Course_ID EXISTS:∃ IDENT:sd COLON:: IDENT:Staring_Date LPAR:( IDENT:course LPAR:( IDENT:cid COMMA:, IDENT:sd COMMA:, IDENT:Math RPAR:) AND:∧ IDENT:course_arrange LPAR:( IDENT:cid COMMA:, IDENT:tid COMMA:, IDENT:cid RPAR:) AND:∧ IDENT:teacher LPAR:( IDENT:tid COMMA:, IDENT:n COMMA:, IDENT:age COMMA:, IDENT:home RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Name
+            EXISTS tid:Teacher_ID
+              EXISTS age:Age
+                EXISTS home:Hometown
+                  EXISTS cid:Course_ID
+                    EXISTS sd:Staring_Date
+                      AND
+                        PRED course(cid, sd, Math<const>)
+                        PRED course_arrange(cid, tid, cid)
+                        PRED teacher(tid, n, age, home)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        c : local Course_ID, global int -> IntSort()
+        c1 : local Course_ID, global int -> IntSort()
+        c2 : local Course, global text -> StringSort()
+        g : local Grade, global int -> IntSort()
+        h : local Hometown, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        s : local Staring_Date, global text -> StringSort()
+        t : local Teacher_ID, global int -> IntSort()
+        t1 : local Teacher_ID, global int -> IntSort()
+      Predicted FOL:
+        age : local Age, global text -> StringSort()
+        cid : local Course_ID, global int -> IntSort()
+        home : local Hometown, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        sd : local Staring_Date, global text -> StringSort()
+        tid : local Teacher_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5530 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2068.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

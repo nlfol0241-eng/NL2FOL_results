@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_914.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_914.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2422 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and number of hours spent training for each player who trains for less than 1500 hours?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        HS = numeric(5,0) -> RealSort()
+        pID = numeric(5,0) -> RealSort()
+        pName = varchar(20) -> StringSort()
+        yCard = varchar(3) -> StringSort()
+      symbols:
+        Player(pID, pName, yCard, HS)
+        constant 1500 : HS
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : pID ∃y : yCard ( (Player(p,p1,y,h)) ∧ (h < 1500) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:y COLON:: IDENT:yCard LPAR:( LPAR:( IDENT:Player LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:y COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h LT:< NUM:1500 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:pID
+            EXISTS y:yCard
+              AND
+                PRED Player(p, p1, y, h)
+                CMP  h < 1500
+      Predicted FOL: ∃p : pID ∃y : yCard (Player(p, n, y, h) ∧ h < 1500)
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:y COLON:: IDENT:yCard LPAR:( IDENT:Player LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:h RPAR:) AND:∧ IDENT:h LT:< NUM:1500 RPAR:) EOF
+        AST:
+          EXISTS p:pID
+            EXISTS y:yCard
+              AND
+                PRED Player(p, n, y, h)
+                CMP  h < 1500
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_HS_0 : HS   Gold h <-> Predicted h
+      FV_pName_0 : pName   Gold p1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        h : local HS, global numeric(5,0) -> RealSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pName, global varchar(20) -> StringSort()
+        y : local yCard, global varchar(3) -> StringSort()
+      Predicted FOL:
+        h : local HS, global numeric(5,0) -> RealSort()
+        n : local pName, global varchar(20) -> StringSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        y : local yCard, global varchar(3) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_y_2], And(D_numeric_5_0_(gold_p_1), D_varchar_3_(gold_y_2), And(P_Player(gold_p_1, FV_pName_0, gold_y_2, FV_HS_0), (FV_HS_0 < L_v_1500_numeric_5_0_))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_y):  And(D_numeric_5_0_(WGOLD_p), D_varchar_3_(WGOLD_y), And(P_Player(WGOLD_p, FV_pName_0, WGOLD_y, FV_HS_0), (FV_HS_0 < L_v_1500_numeric_5_0_)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_y_2], And(D_numeric_5_0_(predicted_p_1), D_varchar_3_(predicted_y_2), And(P_Player(predicted_p_1, FV_pName_0, predicted_y_2, FV_HS_0), (FV_HS_0 < L_v_1500_numeric_5_0_))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_y):  And(D_numeric_5_0_(WPREDICTED_p), D_varchar_3_(WPREDICTED_y), And(P_Player(WPREDICTED_p, FV_pName_0, WPREDICTED_y, FV_HS_0), (FV_HS_0 < L_v_1500_numeric_5_0_)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1500' at numeric(5,0) -> L_v_1500_numeric_5_0_ = RealVal('1500')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 737 lines, 27470 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_914.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_HS_0), FV_HS_0 > -100000, FV_HS_0 < 100000)
+      [1] Length(FV_pName_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_y
+      claim: And(And(And(IsInt(WGOLD_p), WGOLD_p > -100000, WGOLD_p < 100000), Length(WGOLD_y) <= 3, And(Player(WGOLD_p, FV_pName_0, WGOLD_y, FV_HS_0), 1500 > FV_HS_0)), Not(Exists([predicted_p_1, predicted_y_2], And(And(IsInt(predicted_p_1), predicted_p_1 > -100000, predicted_p_1 < 100000), Length(predicted_y_2) <= 3, And(Player(predicted_p_1, FV_pName_0, predicted_y_2, FV_HS_0), 1500 > FV_HS_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_y
+      claim: And(And(And(IsInt(WPREDICTED_p), WPREDICTED_p > -100000, WPREDICTED_p < 100000), Length(WPREDICTED_y) <= 3, And(Player(WPREDICTED_p, FV_pName_0, WPREDICTED_y, FV_HS_0), 1500 > FV_HS_0)), Not(Exists([gold_p_1, gold_y_2], And(And(IsInt(gold_p_1), gold_p_1 > -100000, gold_p_1 < 100000), Length(gold_y_2) <= 3, And(Player(gold_p_1, FV_pName_0, gold_y_2, FV_HS_0), 1500 > FV_HS_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

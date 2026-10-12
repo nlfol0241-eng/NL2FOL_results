@@ -1,0 +1,76 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1402.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1402.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2336 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of editors of age either 24 or 25.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = real -> Float32()
+        Editor_ID = int -> IntSort()
+        Name = text -> StringSort()
+      symbols:
+        editor(Editor_ID, Name, Age)
+        constant 24 : Age
+        constant 25 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Editor_ID ∃a : Age ( (editor(e,n,a)) ∧ ((a = 24) ∨ (a = 25)) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Editor_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a EQ:= NUM:24 RPAR:) OR:∨ LPAR:( IDENT:a EQ:= NUM:25 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Editor_ID
+            EXISTS a:Age
+              AND
+                PRED editor(e, n, a)
+                OR
+                  EQ  a = 24
+                  EQ  a = 25
+      Predicted FOL: ∃x : Editor_ID ∃y : Name (editor(x, y, 24) ∨ editor(x, y, 25))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Editor_ID EXISTS:∃ IDENT:y COLON:: IDENT:Name LPAR:( IDENT:editor LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, NUM:24 RPAR:) OR:∨ IDENT:editor LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, NUM:25 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Editor_ID
+            EXISTS y:Name
+              OR
+                PRED editor(x, y, 24)
+                PRED editor(x, y, 25)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global real -> Float32()
+        e : local Editor_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+      Predicted FOL:
+        x : local Editor_ID, global int -> IntSort()
+        y : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5221 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1402.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

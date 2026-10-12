@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_888.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_888.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2522 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the name of artworks whose type is not "Program Talent Show".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Artwork_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Type = text -> StringSort()
+      symbols:
+        artwork(Artwork_ID, Type, Name)
+        constant Program Talent Show : Type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Artwork_ID ∃t : Type ( (artwork(a,t,n)) ∧ (t <> 'Program Talent Show') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Artwork_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type LPAR:( LPAR:( IDENT:artwork LPAR:( IDENT:a COMMA:, IDENT:t COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t NEQ:<> LIT:Program Talent Show RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Artwork_ID
+            EXISTS t:Type
+              AND
+                PRED artwork(a, t, n)
+                NEQ  t != 'Program Talent Show'
+      Predicted FOL: ∃i : Artwork_ID ∃t : Type (artwork(i, t, n) ∧ t ≠ 'Program Talent Show')
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Artwork_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type LPAR:( IDENT:artwork LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:n RPAR:) AND:∧ IDENT:t NEQ:≠ LIT:Program Talent Show RPAR:) EOF
+        AST:
+          EXISTS i:Artwork_ID
+            EXISTS t:Type
+              AND
+                PRED artwork(i, t, n)
+                NEQ  t != 'Program Talent Show'
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artwork_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        t : local Type, global text -> StringSort()
+      Predicted FOL:
+        i : local Artwork_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        t : local Type, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_t_2], And(P_artwork(gold_a_1, gold_t_2, FV_Name_0), (gold_t_2 != L_Program_Talent_Show)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_t):  And(P_artwork(WGOLD_a, WGOLD_t, FV_Name_0), (WGOLD_t != L_Program_Talent_Show))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_t_2], And(P_artwork(predicted_i_1, predicted_t_2, FV_Name_0), (predicted_t_2 != L_Program_Talent_Show)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_t):  And(P_artwork(WPREDICTED_i, WPREDICTED_t, FV_Name_0), (WPREDICTED_t != L_Program_Talent_Show))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Program Talent Show' at text -> L_Program_Talent_Show = StringVal('Program Talent Show')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 722 lines, 26554 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_888.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_t
+      claim: And(And(artwork(WGOLD_a, WGOLD_t, FV_Name_0), WGOLD_t != "Program Talent Show"), Not(Exists([predicted_i_1, predicted_t_2], And(artwork(predicted_i_1, predicted_t_2, FV_Name_0), predicted_t_2 != "Program Talent Show"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_t
+      claim: And(And(artwork(WPREDICTED_i, WPREDICTED_t, FV_Name_0), WPREDICTED_t != "Program Talent Show"), Not(Exists([gold_a_1, gold_t_2], And(artwork(gold_a_1, gold_t_2, FV_Name_0), gold_t_2 != "Program Talent Show"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

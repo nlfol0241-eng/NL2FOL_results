@@ -1,0 +1,126 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3492.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3492.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3751 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of the students who are not involved in any activity
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = text -> StringSort()
+        LName = text -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        actid = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+        stuid = integer -> IntSort()
+      symbols:
+        Participates_in(stuid, actid)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃f : Fname ∃m : Major ∃l : LName ∃s1 : Sex ∃c : city_code ∃a : Age ∃a1 : Advisor( Student(s,l,f,a,s1,m,a1,c) )) ∧ (¬(∃a2 : actid( Participates_in(s,a2) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a2 COLON:: IDENT:actid LPAR:( IDENT:Participates_in LPAR:( IDENT:s COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS f:Fname
+              EXISTS m:Major
+                EXISTS l:LName
+                  EXISTS s1:Sex
+                    EXISTS c:city_code
+                      EXISTS a:Age
+                        EXISTS a1:Advisor
+                          PRED Student(s, l, f, a, s1, m, a1, c)
+            NOT
+              EXISTS a2:actid
+                PRED Participates_in(s, a2)
+      Predicted FOL: ∃d1 : LName ∃d2 : Fname ∃d3 : Age ∃d4 : Sex ∃d5 : Major ∃d6 : Advisor ∃d7 : city_code ( Student(x, d1, d2, d3, d4, d5, d6, d7) ∧ ¬∃a : actid ( Participates_in(x, a) ) )
+        tokens: EXISTS:∃ IDENT:d1 COLON:: IDENT:LName EXISTS:∃ IDENT:d2 COLON:: IDENT:Fname EXISTS:∃ IDENT:d3 COLON:: IDENT:Age EXISTS:∃ IDENT:d4 COLON:: IDENT:Sex EXISTS:∃ IDENT:d5 COLON:: IDENT:Major EXISTS:∃ IDENT:d6 COLON:: IDENT:Advisor EXISTS:∃ IDENT:d7 COLON:: IDENT:city_code LPAR:( IDENT:Student LPAR:( IDENT:x COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:d5 COMMA:, IDENT:d6 COMMA:, IDENT:d7 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:a COLON:: IDENT:actid LPAR:( IDENT:Participates_in LPAR:( IDENT:x COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d1:LName
+            EXISTS d2:Fname
+              EXISTS d3:Age
+                EXISTS d4:Sex
+                  EXISTS d5:Major
+                    EXISTS d6:Advisor
+                      EXISTS d7:city_code
+                        AND
+                          PRED Student(x, d1, d2, d3, d4, d5, d6, d7)
+                          NOT
+                            EXISTS a:actid
+                              PRED Participates_in(x, a)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_StuID_0 : StuID   Gold s <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        a2 : local actid, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global text -> StringSort()
+        l : local LName, global text -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        a : local actid, global integer -> IntSort()
+        d1 : local LName, global text -> StringSort()
+        d2 : local Fname, global text -> StringSort()
+        d3 : local Age, global integer -> IntSort()
+        d4 : local Sex, global varchar(1) -> StringSort()
+        d5 : local Major, global integer -> IntSort()
+        d6 : local Advisor, global integer -> IntSort()
+        d7 : local city_code, global varchar(3) -> StringSort()
+        x : local StuID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_f_1, gold_m_2, gold_l_3, gold_s1_4, gold_c_5, gold_a_6, gold_a1_7], And(D_varchar_1_(gold_s1_4), D_varchar_3_(gold_c_5), P_Student(FV_StuID_0, gold_l_3, gold_f_1, gold_a_6, gold_s1_4, gold_m_2, gold_a1_7, gold_c_5))), Not(Exists([gold_a2_8], P_Participates_in(FV_StuID_0, gold_a2_8))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d1_1, predicted_d2_2, predicted_d3_3, predicted_d4_4, predicted_d5_5, predicted_d6_6, predicted_d7_7], And(D_varchar_1_(predicted_d4_4), D_varchar_3_(predicted_d7_7), And(P_Student(FV_StuID_0, predicted_d1_1, predicted_d2_2, predicted_d3_3, predicted_d4_4, predicted_d5_5, predicted_d6_6, predicted_d7_7), Not(Exists([predicted_a_8], P_Participates_in(FV_StuID_0, predicted_a_8))))))
+      predicted_skolem (witnesses WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4, WPREDICTED_d5, WPREDICTED_d6, WPREDICTED_d7):  And(D_varchar_1_(WPREDICTED_d4), D_varchar_3_(WPREDICTED_d7), And(P_Student(FV_StuID_0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4, WPREDICTED_d5, WPREDICTED_d6, WPREDICTED_d7), Not(Exists([predictedsk_a_1], P_Participates_in(FV_StuID_0, predictedsk_a_1)))))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 763 lines, 29492 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3492.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_f_1, gold_m_2, gold_l_3, gold_s1_4, gold_c_5, gold_a_6, gold_a1_7], And(Length(gold_s1_4) <= 1, Length(gold_c_5) <= 3, Student(FV_StuID_0, gold_l_3, gold_f_1, gold_a_6, gold_s1_4, gold_m_2, gold_a1_7, gold_c_5))), Not(Exists(gold_a2_8, Participates_in(FV_StuID_0, gold_a2_8)))), Not(Exists([predicted_d1_1, predicted_d2_2, predicted_d3_3, predicted_d4_4, predicted_d5_5, predicted_d6_6, predicted_d7_7], And(Length(predicted_d4_4) <= 1, Length(predicted_d7_7) <= 3, And(Student(FV_StuID_0, predicted_d1_1, predicted_d2_2, predicted_d3_3, predicted_d4_4, predicted_d5_5, predicted_d6_6, predicted_d7_7), Not(Exists(predicted_a_8, Participates_in(FV_StuID_0, predicted_a_8))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4, WPREDICTED_d5, WPREDICTED_d6, WPREDICTED_d7
+      claim: And(And(Length(WPREDICTED_d4) <= 1, Length(WPREDICTED_d7) <= 3, And(Student(FV_StuID_0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4, WPREDICTED_d5, WPREDICTED_d6, WPREDICTED_d7), Not(Exists(predictedsk_a_1, Participates_in(FV_StuID_0, predictedsk_a_1))))), Not(And(Exists([gold_f_1, gold_m_2, gold_l_3, gold_s1_4, gold_c_5, gold_a_6, gold_a1_7], And(Length(gold_s1_4) <= 1, Length(gold_c_5) <= 3, Student(FV_StuID_0, gold_l_3, gold_f_1, gold_a_6, gold_s1_4, gold_m_2, gold_a1_7, gold_c_5))), Not(Exists(gold_a2_8, Participates_in(FV_StuID_0, gold_a2_8))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

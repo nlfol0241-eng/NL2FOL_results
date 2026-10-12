@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_490.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_490.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3172 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the product, chromosome and porphyria related to the enzymes which take effect at the location 'Cytosol'?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Chromosome = text -> StringSort()
+        Location = text -> StringSort()
+        OMIM = int -> IntSort()
+        Porphyria = text -> StringSort()
+        Product = text -> StringSort()
+        id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        enzyme(id, name, Location, Product, Chromosome, OMIM, Porphyria)
+        constant Cytosol : Location
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃n : name ∃l : Location ∃o : OMIM ( (enzyme(i,n,l,p,c,o,p1)) ∧ (l = 'Cytosol') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:o COLON:: IDENT:OMIM LPAR:( LPAR:( IDENT:enzyme LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:o COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:Cytosol RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS n:name
+              EXISTS l:Location
+                EXISTS o:OMIM
+                  AND
+                    PRED enzyme(i, n, l, p, c, o, p1)
+                    EQ  l = 'Cytosol'
+      Predicted FOL: ∃eId:id ∃eName:name ∃eLoc:Location ∃eOMIM:OMIM ( enzyme(eId, eName, eLoc, Product, Chromosome, eOMIM, Porphyria) ∧ eLoc = 'Cytosol' )
+        tokens: EXISTS:∃ IDENT:eId COLON:: IDENT:id EXISTS:∃ IDENT:eName COLON:: IDENT:name EXISTS:∃ IDENT:eLoc COLON:: IDENT:Location EXISTS:∃ IDENT:eOMIM COLON:: IDENT:OMIM LPAR:( IDENT:enzyme LPAR:( IDENT:eId COMMA:, IDENT:eName COMMA:, IDENT:eLoc COMMA:, IDENT:Product COMMA:, IDENT:Chromosome COMMA:, IDENT:eOMIM COMMA:, IDENT:Porphyria RPAR:) AND:∧ IDENT:eLoc EQ:= LIT:Cytosol RPAR:) EOF
+        AST:
+          EXISTS eId:id
+            EXISTS eName:name
+              EXISTS eLoc:Location
+                EXISTS eOMIM:OMIM
+                  AND
+                    PRED enzyme(eId, eName, eLoc, Product, Chromosome, eOMIM, Porphyria)
+                    EQ  eLoc = 'Cytosol'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Chromosome_0 : Chromosome   Gold c <-> Predicted Chromosome
+      FV_Porphyria_0 : Porphyria   Gold p1 <-> Predicted Porphyria
+      FV_Product_0 : Product   Gold p <-> Predicted Product
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Chromosome, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        o : local OMIM, global int -> IntSort()
+        p : local Product, global text -> StringSort()
+        p1 : local Porphyria, global text -> StringSort()
+      Predicted FOL:
+        Chromosome : local Chromosome, global text -> StringSort()
+        Porphyria : local Porphyria, global text -> StringSort()
+        Product : local Product, global text -> StringSort()
+        eId : local id, global int -> IntSort()
+        eLoc : local Location, global text -> StringSort()
+        eName : local name, global text -> StringSort()
+        eOMIM : local OMIM, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_n_2, gold_l_3, gold_o_4], And(P_enzyme(gold_i_1, gold_n_2, gold_l_3, FV_Product_0, FV_Chromosome_0, gold_o_4, FV_Porphyria_0), (gold_l_3 == L_Cytosol)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_n, WGOLD_l, WGOLD_o):  And(P_enzyme(WGOLD_i, WGOLD_n, WGOLD_l, FV_Product_0, FV_Chromosome_0, WGOLD_o, FV_Porphyria_0), (WGOLD_l == L_Cytosol))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_eId_1, predicted_eName_2, predicted_eLoc_3, predicted_eOMIM_4], And(P_enzyme(predicted_eId_1, predicted_eName_2, predicted_eLoc_3, FV_Product_0, FV_Chromosome_0, predicted_eOMIM_4, FV_Porphyria_0), (predicted_eLoc_3 == L_Cytosol)))
+      predicted_skolem (witnesses WPREDICTED_eId, WPREDICTED_eName, WPREDICTED_eLoc, WPREDICTED_eOMIM):  And(P_enzyme(WPREDICTED_eId, WPREDICTED_eName, WPREDICTED_eLoc, FV_Product_0, FV_Chromosome_0, WPREDICTED_eOMIM, FV_Porphyria_0), (WPREDICTED_eLoc == L_Cytosol))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Cytosol' at text -> L_Cytosol = StringVal('Cytosol')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 746 lines, 28356 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_490.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_n, WGOLD_l, WGOLD_o
+      claim: And(And(enzyme(WGOLD_i, WGOLD_n, WGOLD_l, FV_Product_0, FV_Chromosome_0, WGOLD_o, FV_Porphyria_0), WGOLD_l == "Cytosol"), Not(Exists([predicted_eId_1, predicted_eName_2, predicted_eLoc_3, predicted_eOMIM_4], And(enzyme(predicted_eId_1, predicted_eName_2, predicted_eLoc_3, FV_Product_0, FV_Chromosome_0, predicted_eOMIM_4, FV_Porphyria_0), predicted_eLoc_3 == "Cytosol"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_eId, WPREDICTED_eName, WPREDICTED_eLoc, WPREDICTED_eOMIM
+      claim: And(And(enzyme(WPREDICTED_eId, WPREDICTED_eName, WPREDICTED_eLoc, FV_Product_0, FV_Chromosome_0, WPREDICTED_eOMIM, FV_Porphyria_0), WPREDICTED_eLoc == "Cytosol"), Not(Exists([gold_i_1, gold_n_2, gold_l_3, gold_o_4], And(enzyme(gold_i_1, gold_n_2, gold_l_3, FV_Product_0, FV_Chromosome_0, gold_o_4, FV_Porphyria_0), gold_l_3 == "Cytosol"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

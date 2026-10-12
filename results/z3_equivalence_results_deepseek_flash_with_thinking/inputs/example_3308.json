@@ -1,0 +1,93 @@
+{
+  "NL": "List the authors who do not have submission to any workshop.",
+  "Vocabulary": {
+    "Predicates": [
+      "submission",
+      "Acceptance"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "submission": [
+        "Submission_ID",
+        "Scores",
+        "Author",
+        "College"
+      ],
+      "Acceptance": [
+        "Submission_ID",
+        "Workshop_ID",
+        "Result"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( workshop(a0, a1, a2, a3) ∧ workshop(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b0'∀b1'∀b2'∀b3'( submission(b0, b1, b2, b3) ∧ submission(b0', b1', b2', b3') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( Acceptance(c0, c1, c2) ∧ Acceptance(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( Acceptance(c0, c1, c2) → ∃a0∃a1∃a2∃a3 ( workshop(a0, a1, a2, a3) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( Acceptance(c0, c1, c2) → ∃b0∃b1∃b2∃b3 ( submission(b0, b1, b2, b3) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "submission": {
+        "A": "submission",
+        "A0": "Submission_ID",
+        "A1": "Scores",
+        "A2": "Author",
+        "A3": "College"
+      },
+      "Acceptance": {
+        "B": "Acceptance",
+        "B0": "Submission_ID",
+        "B1": "Workshop_ID",
+        "B2": "Result"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃s1 : Scores ∃c : College ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (¬(∃s2 : Submission_ID( ((submission(s,s1,a,c)) ∧ (∃r : Result ∃w : Workshop_ID( Acceptance(s2,w,r) ))) ∧ (s = s2) ))) )",
+    "free vars": "a : Author"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A2]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "Processed_RA": "<P>[A2]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "RC": "[E]?A1,?A3,?A0( (A(?A0,?A1,?A2,?A3)) & (~([E]?B0( ((A(?A0,?A1,?A2,?A3)) & ([E]?B2,?B1( B(?B0,?B1,?B2) ))) & (?A0 = ?B0) ))) )",
+    "string": "∃A1 ∃A3 ∃A0( (A(A0,A1,A2,A3)) ∧ (¬(∃B0( ((A(A0,A1,A2,A3)) ∧ (∃B2 ∃B1( B(B0,B1,B2) ))) ∧ (A0 = B0) ))) )",
+    "free variables": "A2",
+    "db_id": "workshop_paper",
+    "processed_sql": "SELECT Author FROM submission WHERE Submission_ID NOT IN (SELECT Submission_ID FROM acceptance)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "submission": {
+      "sortaxiom0": "Submission_ID = int",
+      "sortaxiom1": "Scores = real",
+      "sortaxiom2": "Author = text",
+      "sortaxiom3": "College = text"
+    },
+    "Acceptance": {
+      "sortaxiom0": "Submission_ID = int",
+      "sortaxiom1": "Workshop_ID = int",
+      "sortaxiom2": "Result = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Author FROM submission WHERE Submission_ID NOT IN (SELECT Submission_ID FROM acceptance)"
+  },
+  "id": 3308,
+  "Predicted FOL": {
+    "string": "∃s : Submission_ID ∃sc : Scores ∃c : College submission(s, sc, a, c) ∧ ¬∃s' : Submission_ID ∃sc' : Scores ∃c' : College ∃w : Workshop_ID ∃r : Result (submission(s', sc', a, c') ∧ Acceptance(s', w, r))",
+    "free vars": "a : Author"
+  }
+}

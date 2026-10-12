@@ -1,0 +1,131 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1228.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1228.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4215 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of conductors as well as the corresonding orchestras that they have conducted?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 10 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Conductor_ID = int -> IntSort()
+        Major_Record_Format = text -> StringSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Orchestra = text -> StringSort()
+        Orchestra_ID = int -> IntSort()
+        Record_Company = text -> StringSort()
+        Year_of_Founded = real -> Float32()
+        Year_of_Work = int -> IntSort()
+      symbols:
+        conductor(Conductor_ID, Name, Age, Nationality, Year_of_Work)
+        orchestra(Orchestra_ID, Orchestra, Conductor_ID, Record_Company, Year_of_Founded, Major_Record_Format)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Conductor_ID ∃a : Age ∃n1 : Nationality ∃y : Year_of_Work ∃o : Orchestra_ID ∃c1 : Conductor_ID ∃r : Record_Company ∃y1 : Year_of_Founded ∃m : Major_Record_Format ( ((conductor(c,n,a,n1,y)) ∧ (orchestra(o,o1,c1,r,y1,m))) ∧ (c = c1) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Conductor_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:y COLON:: IDENT:Year_of_Work EXISTS:∃ IDENT:o COLON:: IDENT:Orchestra_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Conductor_ID EXISTS:∃ IDENT:r COLON:: IDENT:Record_Company EXISTS:∃ IDENT:y1 COLON:: IDENT:Year_of_Founded EXISTS:∃ IDENT:m COLON:: IDENT:Major_Record_Format LPAR:( LPAR:( LPAR:( IDENT:conductor LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:n1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:orchestra LPAR:( IDENT:o COMMA:, IDENT:o1 COMMA:, IDENT:c1 COMMA:, IDENT:r COMMA:, IDENT:y1 COMMA:, IDENT:m RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Conductor_ID
+            EXISTS a:Age
+              EXISTS n1:Nationality
+                EXISTS y:Year_of_Work
+                  EXISTS o:Orchestra_ID
+                    EXISTS c1:Conductor_ID
+                      EXISTS r:Record_Company
+                        EXISTS y1:Year_of_Founded
+                          EXISTS m:Major_Record_Format
+                            AND
+                              AND
+                                PRED conductor(c, n, a, n1, y)
+                                PRED orchestra(o, o1, c1, r, y1, m)
+                              EQ  c = c1
+      Predicted FOL: ∃c : Conductor_ID ∃a : Age ∃n : Nationality ∃w : Year_of_Work ∃i : Orchestra_ID ∃r : Record_Company ∃y : Year_of_Founded ∃f : Major_Record_Format (conductor(c, name, a, n, w) ∧ orchestra(i, orch, c, r, y, f))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Conductor_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:n COLON:: IDENT:Nationality EXISTS:∃ IDENT:w COLON:: IDENT:Year_of_Work EXISTS:∃ IDENT:i COLON:: IDENT:Orchestra_ID EXISTS:∃ IDENT:r COLON:: IDENT:Record_Company EXISTS:∃ IDENT:y COLON:: IDENT:Year_of_Founded EXISTS:∃ IDENT:f COLON:: IDENT:Major_Record_Format LPAR:( IDENT:conductor LPAR:( IDENT:c COMMA:, IDENT:name COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:w RPAR:) AND:∧ IDENT:orchestra LPAR:( IDENT:i COMMA:, IDENT:orch COMMA:, IDENT:c COMMA:, IDENT:r COMMA:, IDENT:y COMMA:, IDENT:f RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Conductor_ID
+            EXISTS a:Age
+              EXISTS n:Nationality
+                EXISTS w:Year_of_Work
+                  EXISTS i:Orchestra_ID
+                    EXISTS r:Record_Company
+                      EXISTS y:Year_of_Founded
+                        EXISTS f:Major_Record_Format
+                          AND
+                            PRED conductor(c, name, a, n, w)
+                            PRED orchestra(i, orch, c, r, y, f)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+      FV_Orchestra_0 : Orchestra   Gold o1 <-> Predicted orch
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        c : local Conductor_ID, global int -> IntSort()
+        c1 : local Conductor_ID, global int -> IntSort()
+        m : local Major_Record_Format, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        o : local Orchestra_ID, global int -> IntSort()
+        o1 : local Orchestra, global text -> StringSort()
+        r : local Record_Company, global text -> StringSort()
+        y : local Year_of_Work, global int -> IntSort()
+        y1 : local Year_of_Founded, global real -> Float32()
+      Predicted FOL:
+        a : local Age, global int -> IntSort()
+        c : local Conductor_ID, global int -> IntSort()
+        f : local Major_Record_Format, global text -> StringSort()
+        i : local Orchestra_ID, global int -> IntSort()
+        n : local Nationality, global text -> StringSort()
+        name : local Name, global text -> StringSort()
+        orch : local Orchestra, global text -> StringSort()
+        r : local Record_Company, global text -> StringSort()
+        w : local Year_of_Work, global int -> IntSort()
+        y : local Year_of_Founded, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_a_2, gold_n1_3, gold_y_4, gold_o_5, gold_c1_6, gold_r_7, gold_y1_8, gold_m_9], And(D_real(gold_y1_8), And(And(P_conductor(gold_c_1, FV_Name_0, gold_a_2, gold_n1_3, gold_y_4), P_orchestra(gold_o_5, FV_Orchestra_0, gold_c1_6, gold_r_7, gold_y1_8, gold_m_9)), (gold_c_1 == gold_c1_6))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_a, WGOLD_n1, WGOLD_y, WGOLD_o, WGOLD_c1, WGOLD_r, WGOLD_y1, WGOLD_m):  And(D_real(WGOLD_y1), And(And(P_conductor(WGOLD_c, FV_Name_0, WGOLD_a, WGOLD_n1, WGOLD_y), P_orchestra(WGOLD_o, FV_Orchestra_0, WGOLD_c1, WGOLD_r, WGOLD_y1, WGOLD_m)), (WGOLD_c == WGOLD_c1)))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_a_2, predicted_n_3, predicted_w_4, predicted_i_5, predicted_r_6, predicted_y_7, predicted_f_8], And(D_real(predicted_y_7), And(P_conductor(predicted_c_1, FV_Name_0, predicted_a_2, predicted_n_3, predicted_w_4), P_orchestra(predicted_i_5, FV_Orchestra_0, predicted_c_1, predicted_r_6, predicted_y_7, predicted_f_8))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_a, WPREDICTED_n, WPREDICTED_w, WPREDICTED_i, WPREDICTED_r, WPREDICTED_y, WPREDICTED_f):  And(D_real(WPREDICTED_y), And(P_conductor(WPREDICTED_c, FV_Name_0, WPREDICTED_a, WPREDICTED_n, WPREDICTED_w), P_orchestra(WPREDICTED_i, FV_Orchestra_0, WPREDICTED_c, WPREDICTED_r, WPREDICTED_y, WPREDICTED_f)))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 781 lines, 31263 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1228.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_a, WGOLD_n1, WGOLD_y, WGOLD_o, WGOLD_c1, WGOLD_r, WGOLD_y1, WGOLD_m
+      claim: And(And(And(Not(fpIsNaN(WGOLD_y1)), Not(And(fpIsZero(WGOLD_y1), fpIsNegative(WGOLD_y1)))), And(And(conductor(WGOLD_c, FV_Name_0, WGOLD_a, WGOLD_n1, WGOLD_y), orchestra(WGOLD_o, FV_Orchestra_0, WGOLD_c1, WGOLD_r, WGOLD_y1, WGOLD_m)), WGOLD_c == WGOLD_c1)), Not(Exists([predicted_c_1, predicted_a_2, predicted_n_3, predicted_w_4, predicted_i_5, predicted_r_6, predicted_y_7, predicted_f_8], And(And(Not(fpIsNaN(predicted_y_7)), Not(And(fpIsZero(predicted_y_7), fpIsNegative(predicted_y_7)))), And(conductor(predicted_c_1, FV_Name_0, predicted_a_2, predicted_n_3, predicted_w_4), orchestra(predicted_i_5, FV_Orchestra_0, predicted_c_1, predicted_r_6, predicted_y_7, predicted_f_8))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_a, WPREDICTED_n, WPREDICTED_w, WPREDICTED_i, WPREDICTED_r, WPREDICTED_y, WPREDICTED_f
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_y)), Not(And(fpIsZero(WPREDICTED_y), fpIsNegative(WPREDICTED_y)))), And(conductor(WPREDICTED_c, FV_Name_0, WPREDICTED_a, WPREDICTED_n, WPREDICTED_w), orchestra(WPREDICTED_i, FV_Orchestra_0, WPREDICTED_c, WPREDICTED_r, WPREDICTED_y, WPREDICTED_f))), Not(Exists([gold_c_1, gold_a_2, gold_n1_3, gold_y_4, gold_o_5, gold_c1_6, gold_r_7, gold_y1_8, gold_m_9], And(And(Not(fpIsNaN(gold_y1_8)), Not(And(fpIsZero(gold_y1_8), fpIsNegative(gold_y1_8)))), And(And(conductor(gold_c_1, FV_Name_0, gold_a_2, gold_n1_3, gold_y_4), orchestra(gold_o_5, FV_Orchestra_0, gold_c1_6, gold_r_7, gold_y1_8, gold_m_9)), gold_c_1 == gold_c1_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

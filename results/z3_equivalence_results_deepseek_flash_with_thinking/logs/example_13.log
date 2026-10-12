@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_13.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_13.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2771 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give the airport code and airport name corresonding to the city Anthony.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        AirportCode = text -> StringSort()
+        AirportName = text -> StringSort()
+        City = text -> StringSort()
+        Country = text -> StringSort()
+        CountryAbbrev = text -> StringSort()
+      symbols:
+        airports(City, AirportCode, AirportName, Country, CountryAbbrev)
+        constant Anthony : City
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : City ∃c1 : Country ∃r : CountryAbbrev ( (airports(c,p,n,c1,r)) ∧ (c = 'Anthony') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:c1 COLON:: IDENT:Country EXISTS:∃ IDENT:r COLON:: IDENT:CountryAbbrev LPAR:( LPAR:( IDENT:airports LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:n COMMA:, IDENT:c1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Anthony RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:City
+            EXISTS c1:Country
+              EXISTS r:CountryAbbrev
+                AND
+                  PRED airports(c, p, n, c1, r)
+                  EQ  c = 'Anthony'
+      Predicted FOL: ∃ country : Country ∃ abbrev : CountryAbbrev airports('Anthony', code, name, country, abbrev)
+        tokens: EXISTS:∃ IDENT:country COLON:: IDENT:Country EXISTS:∃ IDENT:abbrev COLON:: IDENT:CountryAbbrev IDENT:airports LPAR:( LIT:Anthony COMMA:, IDENT:code COMMA:, IDENT:name COMMA:, IDENT:country COMMA:, IDENT:abbrev RPAR:) EOF
+        AST:
+          EXISTS country:Country
+            EXISTS abbrev:CountryAbbrev
+              PRED airports('Anthony', code, name, country, abbrev)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_AirportCode_0 : AirportCode   Gold p <-> Predicted code
+      FV_AirportName_0 : AirportName   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local City, global text -> StringSort()
+        c1 : local Country, global text -> StringSort()
+        n : local AirportName, global text -> StringSort()
+        p : local AirportCode, global text -> StringSort()
+        r : local CountryAbbrev, global text -> StringSort()
+      Predicted FOL:
+        abbrev : local CountryAbbrev, global text -> StringSort()
+        code : local AirportCode, global text -> StringSort()
+        country : local Country, global text -> StringSort()
+        name : local AirportName, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_r_3], And(P_airports(gold_c_1, FV_AirportCode_0, FV_AirportName_0, gold_c1_2, gold_r_3), (gold_c_1 == L_Anthony)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_r):  And(P_airports(WGOLD_c, FV_AirportCode_0, FV_AirportName_0, WGOLD_c1, WGOLD_r), (WGOLD_c == L_Anthony))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_country_1, predicted_abbrev_2], P_airports(L_Anthony, FV_AirportCode_0, FV_AirportName_0, predicted_country_1, predicted_abbrev_2))
+      predicted_skolem (witnesses WPREDICTED_country, WPREDICTED_abbrev):  P_airports(L_Anthony, FV_AirportCode_0, FV_AirportName_0, WPREDICTED_country, WPREDICTED_abbrev)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Anthony' at text -> L_Anthony = StringVal('Anthony')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 729 lines, 27334 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_13.py
+   [G8] took 0.029 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_r
+      claim: And(And(airports(WGOLD_c, FV_AirportCode_0, FV_AirportName_0, WGOLD_c1, WGOLD_r), WGOLD_c == "Anthony"), Not(Exists([predicted_country_1, predicted_abbrev_2], airports("Anthony", FV_AirportCode_0, FV_AirportName_0, predicted_country_1, predicted_abbrev_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_country, WPREDICTED_abbrev
+      claim: And(airports("Anthony", FV_AirportCode_0, FV_AirportName_0, WPREDICTED_country, WPREDICTED_abbrev), Not(Exists([gold_c_1, gold_c1_2, gold_r_3], And(airports(gold_c_1, FV_AirportCode_0, FV_AirportName_0, gold_c1_2, gold_r_3), gold_c_1 == "Anthony"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

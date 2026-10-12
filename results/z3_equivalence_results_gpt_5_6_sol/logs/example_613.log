@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_613.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_613.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4313 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the mail date of the document with id 7?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+      local sorts:
+        document_id = integer -> IntSort()
+        mailed_to_address_id = integer -> IntSort()
+        mailing_date = datetime -> IntSort()
+      symbols:
+        Documents_Mailed(document_id, mailed_to_address_id, mailing_date)
+        constant 7 : document_id
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : document_id ∃m : mailed_to_address_id ( (Documents_Mailed(d,m,m1)) ∧ (d = 7) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_id EXISTS:∃ IDENT:m COLON:: IDENT:mailed_to_address_id LPAR:( LPAR:( IDENT:Documents_Mailed LPAR:( IDENT:d COMMA:, IDENT:m COMMA:, IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= NUM:7 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:document_id
+            EXISTS m:mailed_to_address_id
+              AND
+                PRED Documents_Mailed(d, m, m1)
+                EQ  d = 7
+      Predicted FOL: ∃a : mailed_to_address_id Documents_Mailed(7, a, m)
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:mailed_to_address_id IDENT:Documents_Mailed LPAR:( NUM:7 COMMA:, IDENT:a COMMA:, IDENT:m RPAR:) EOF
+        AST:
+          EXISTS a:mailed_to_address_id
+            PRED Documents_Mailed(7, a, m)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_mailing_date_0 : mailing_date   Gold m1 <-> Predicted m
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local document_id, global integer -> IntSort()
+        m : local mailed_to_address_id, global integer -> IntSort()
+        m1 : local mailing_date, global datetime -> IntSort()
+      Predicted FOL:
+        a : local mailed_to_address_id, global integer -> IntSort()
+        m : local mailing_date, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_m_2], And(P_Documents_Mailed(gold_d_1, gold_m_2, FV_mailing_date_0), (gold_d_1 == L_v_7_integer)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_m):  And(P_Documents_Mailed(WGOLD_d, WGOLD_m, FV_mailing_date_0), (WGOLD_d == L_v_7_integer))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1], P_Documents_Mailed(L_v_7_integer, predicted_a_1, FV_mailing_date_0))
+      predicted_skolem (witnesses WPREDICTED_a):  P_Documents_Mailed(L_v_7_integer, WPREDICTED_a, FV_mailing_date_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '7' at integer -> L_v_7_integer = IntVal(7)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 721 lines, 26634 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_613.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_m
+      claim: And(And(Documents_Mailed(WGOLD_d, WGOLD_m, FV_mailing_date_0), 7 == WGOLD_d), Not(Exists(predicted_a_1, Documents_Mailed(7, predicted_a_1, FV_mailing_date_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a
+      claim: And(Documents_Mailed(7, WPREDICTED_a, FV_mailing_date_0), Not(Exists([gold_d_1, gold_m_2], And(Documents_Mailed(gold_d_1, gold_m_2, FV_mailing_date_0), 7 == gold_d_1))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

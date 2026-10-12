@@ -1,0 +1,63 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_300.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_300.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3999 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List all user ids with name Michelle
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        name = text -> StringSort()
+        uid = int -> IntSort()
+        user_id = text -> StringSort()
+      symbols:
+        user(uid, user_id, name)
+        constant Michelle : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃n : name ( (user(u,u1,n)) ∧ (n = 'Michelle') )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( IDENT:user LPAR:( IDENT:u COMMA:, IDENT:u1 COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Michelle RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS n:name
+              AND
+                PRED user(u, u1, n)
+                EQ  n = 'Michelle'
+      Predicted FOL: ∃x : user_id (user(x, x, 'Michelle'))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:user_id LPAR:( IDENT:user LPAR:( IDENT:x COMMA:, IDENT:x COMMA:, LIT:Michelle RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:user_id
+            PRED user(x, x, 'Michelle')
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (u1 : user_id) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'x' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'x' used at incompatible global sorts text and int

@@ -1,0 +1,200 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2521.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3523 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who are the friends of Alice that are doctors?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        age = integer -> IntSort()
+        city = text -> StringSort()
+        friend = varchar(20) -> StringSort()
+        gender = text -> StringSort()
+        job = text -> StringSort()
+        name = varchar(20) -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        Person(name, age, city, gender, job)
+        PersonFriend(name, friend, year)
+        constant Alice : name
+        constant doctor : job
+        constant male : gender
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃a : age ∃c : city ∃g : gender ∃j : job ∃n1 : name ∃y : year ( (((Person(n,a,c,g,j)) ∧ (PersonFriend(n1,f,y))) ∧ (n = f)) ∧ (((n1 = 'Alice') ∧ (g = 'male')) ∧ (j = 'doctor')) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:a COLON:: IDENT:age EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:PersonFriend LPAR:( IDENT:n1 COMMA:, IDENT:f COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:n1 EQ:= LIT:Alice RPAR:) AND:∧ LPAR:( IDENT:g EQ:= LIT:male RPAR:) RPAR:) AND:∧ LPAR:( IDENT:j EQ:= LIT:doctor RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS a:age
+              EXISTS c:city
+                EXISTS g:gender
+                  EXISTS j:job
+                    EXISTS n1:name
+                      EXISTS y:year
+                        AND
+                          AND
+                            AND
+                              PRED Person(n, a, c, g, j)
+                              PRED PersonFriend(n1, f, y)
+                            EQ  n = f
+                          AND
+                            AND
+                              EQ  n1 = 'Alice'
+                              EQ  g = 'male'
+                            EQ  j = 'doctor'
+      Predicted FOL: ∃a_age:age ∃a_city:city ∃a_gender:gender ∃a_job:job (Person(Alice,a_age,a_city,a_gender,a_job) ∧ ∃y:year PersonFriend(Alice,x,y) ∧ ∃x_age:age ∃x_city:city ∃x_gender:gender (Person(x,x_age,x_city,x_gender,doctor)))
+        tokens: EXISTS:∃ IDENT:a_age COLON:: IDENT:age EXISTS:∃ IDENT:a_city COLON:: IDENT:city EXISTS:∃ IDENT:a_gender COLON:: IDENT:gender EXISTS:∃ IDENT:a_job COLON:: IDENT:job LPAR:( IDENT:Person LPAR:( IDENT:Alice COMMA:, IDENT:a_age COMMA:, IDENT:a_city COMMA:, IDENT:a_gender COMMA:, IDENT:a_job RPAR:) AND:∧ EXISTS:∃ IDENT:y COLON:: IDENT:year IDENT:PersonFriend LPAR:( IDENT:Alice COMMA:, IDENT:x COMMA:, IDENT:y RPAR:) AND:∧ EXISTS:∃ IDENT:x_age COLON:: IDENT:age EXISTS:∃ IDENT:x_city COLON:: IDENT:city EXISTS:∃ IDENT:x_gender COLON:: IDENT:gender LPAR:( IDENT:Person LPAR:( IDENT:x COMMA:, IDENT:x_age COMMA:, IDENT:x_city COMMA:, IDENT:x_gender COMMA:, IDENT:doctor RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a_age:age
+            EXISTS a_city:city
+              EXISTS a_gender:gender
+                EXISTS a_job:job
+                  AND
+                    PRED Person(Alice<const>, a_age, a_city, a_gender, a_job)
+                    EXISTS y:year
+                      AND
+                        PRED PersonFriend(Alice<const>, x, y)
+                        EXISTS x_age:age
+                          EXISTS x_city:city
+                            EXISTS x_gender:gender
+                              PRED Person(x, x_age, x_city, x_gender, doctor<const>)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_friend_0 : friend   Gold f <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        f : local friend, global varchar(20) -> StringSort()
+        g : local gender, global text -> StringSort()
+        j : local job, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        n1 : local name, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        a_age : local age, global integer -> IntSort()
+        a_city : local city, global text -> StringSort()
+        a_gender : local gender, global text -> StringSort()
+        a_job : local job, global text -> StringSort()
+        x : local friend, global varchar(20) -> StringSort()
+        x_age : local age, global integer -> IntSort()
+        x_city : local city, global text -> StringSort()
+        x_gender : local gender, global text -> StringSort()
+        y : local year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5, gold_n1_6, gold_y_7], And(D_varchar_20_(gold_n_1), D_varchar_20_(gold_n1_6), And(And(And(P_Person(gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5), P_PersonFriend(gold_n1_6, FV_friend_0, gold_y_7)), (gold_n_1 == FV_friend_0)), And(And((gold_n1_6 == L_Alice), (gold_g_4 == L_male)), (gold_j_5 == L_doctor)))))
+      gold_skolem (witnesses WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_n1, WGOLD_y):  And(D_varchar_20_(WGOLD_n), D_varchar_20_(WGOLD_n1), And(And(And(P_Person(WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), P_PersonFriend(WGOLD_n1, FV_friend_0, WGOLD_y)), (WGOLD_n == FV_friend_0)), And(And((WGOLD_n1 == L_Alice), (WGOLD_g == L_male)), (WGOLD_j == L_doctor))))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_age_1, predicted_a_city_2, predicted_a_gender_3, predicted_a_job_4], And(And(P_Person(L_Alice, predicted_a_age_1, predicted_a_city_2, predicted_a_gender_3, predicted_a_job_4), D_varchar_20_(L_Alice)), Exists([predicted_y_5], And(And(P_PersonFriend(L_Alice, FV_friend_0, predicted_y_5), D_varchar_20_(L_Alice)), Exists([predicted_x_age_6, predicted_x_city_7, predicted_x_gender_8], P_Person(FV_friend_0, predicted_x_age_6, predicted_x_city_7, predicted_x_gender_8, L_doctor))))))
+      predicted_skolem (witnesses WPREDICTED_a_age, WPREDICTED_a_city, WPREDICTED_a_gender, WPREDICTED_a_job):  And(And(P_Person(L_Alice, WPREDICTED_a_age, WPREDICTED_a_city, WPREDICTED_a_gender, WPREDICTED_a_job), D_varchar_20_(L_Alice)), Exists([predictedsk_y_1], And(And(P_PersonFriend(L_Alice, FV_friend_0, predictedsk_y_1), D_varchar_20_(L_Alice)), Exists([predictedsk_x_age_2, predictedsk_x_city_3, predictedsk_x_gender_4], P_Person(FV_friend_0, predictedsk_x_age_2, predictedsk_x_city_3, predictedsk_x_gender_4, L_doctor)))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 3 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Alice' at varchar(20) -> L_Alice = StringVal('Alice')
+      literal 'doctor' at text -> L_doctor = StringVal('doctor')
+      literal 'male' at text -> L_male = StringVal('male')
+   0 sort axiom(s), 3 literal(s), 0 order(s) needing a definition; 770 lines, 30671 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_friend_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_n1, WGOLD_y
+      claim: And(And(Length(WGOLD_n) <= 20, Length(WGOLD_n1) <= 20, And(And(And(Person(WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), PersonFriend(WGOLD_n1, FV_friend_0, WGOLD_y)), WGOLD_n == FV_friend_0), And(And(WGOLD_n1 == "Alice", WGOLD_g == "male"), WGOLD_j == "doctor"))), Not(Exists([predicted_a_age_1, predicted_a_city_2, predicted_a_gender_3, predicted_a_job_4], And(And(Person("Alice", predicted_a_age_1, predicted_a_city_2, predicted_a_gender_3, predicted_a_job_4), Length("Alice") <= 20), Exists(predicted_y_5, And(And(PersonFriend("Alice", FV_friend_0, predicted_y_5), Length("Alice") <= 20), Exists([predicted_x_age_6, predicted_x_city_7, predicted_x_gender_8], Person(FV_friend_0, predicted_x_age_6, predicted_x_city_7, predicted_x_gender_8, "doctor"))))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.010 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 12 relation tuple(s) listed, 23 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          n : name = ''
+          a : age = 2
+          c : city = 'male'
+          g : gender = 'male'
+          j : job = 'doctor'
+          n1 : name = 'Alice'
+          y : year = 3
+        free (answer) variables:
+          FV_friend_0 : friend = ''
+        literals / constants:
+          Alice : name = 'Alice'
+          doctor : job = 'doctor'
+          male : gender = 'male'
+        relations (each value tagged with the local sort of its position):
+          Person(name, age, city, gender, job):
+            Person(name='', age=1, city='male', gender='male', job='male')
+            Person(name='', age=2, city='male', gender='male', job='doctor')
+            Person(name='', age=3, city='male', gender='male', job='B')
+            Person(name='', age=4, city='male', gender='male', job='B')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          PersonFriend(name, friend, year):
+            PersonFriend(name='', friend='', year=1)
+            PersonFriend(name='', friend='', year=2)
+            PersonFriend(name='', friend='', year=3)
+            PersonFriend(name='', friend='Alice', year=0)
+            PersonFriend(name='', friend='B', year=0)
+            PersonFriend(name='Alice', friend='', year=3)
+            PersonFriend(name='B', friend='C', year=4)
+            PersonFriend(name='C', friend='', year=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          age    : {1, 2, 3, 4}
+          city   : {'male'}
+          friend : {'', 'Alice', 'B', 'C'}
+          gender : {'male'}
+          job    : {'B', 'doctor', 'male'}
+          name   : {'', 'Alice', 'B', 'C'}
+          year   : {0, 1, 2, 3, 4}
+        values shared across local sorts (joins):
+          1 : age, year
+          2 : age, year
+          3 : age, year
+          4 : age, year
+          'male' : city, gender, job
+          '' : friend, name
+          'Alice' : friend, name
+          'B' : friend, name
+          'C' : friend, name
+   [R2] took 0.092 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a_age, WPREDICTED_a_city, WPREDICTED_a_gender, WPREDICTED_a_job
+      claim: And(And(And(Person("Alice", WPREDICTED_a_age, WPREDICTED_a_city, WPREDICTED_a_gender, WPREDICTED_a_job), Length("Alice") <= 20), Exists(predictedsk_y_1, And(And(PersonFriend("Alice", FV_friend_0, predictedsk_y_1), Length("Alice") <= 20), Exists([predictedsk_x_age_2, predictedsk_x_city_3, predictedsk_x_gender_4], Person(FV_friend_0, predictedsk_x_age_2, predictedsk_x_city_3, predictedsk_x_gender_4, "doctor"))))), Not(Exists([gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5, gold_n1_6, gold_y_7], And(Length(gold_n_1) <= 20, Length(gold_n1_6) <= 20, And(And(And(Person(gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5), PersonFriend(gold_n1_6, FV_friend_0, gold_y_7)), gold_n_1 == FV_friend_0), And(And(gold_n1_6 == "Alice", gold_g_4 == "male"), gold_j_5 == "doctor"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.007 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py", line 718, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py", line 749, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py", line 700, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py", line 598, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py", line 522, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py", line 402, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2521.py", line 402, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

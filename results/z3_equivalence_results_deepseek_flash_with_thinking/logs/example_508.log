@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_508.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_508.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3660 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the draft pick numbers and draft classes of players whose positions are defenders.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        College = text -> StringSort()
+        Country = int -> IntSort()
+        Draft_Class = text -> StringSort()
+        Draft_Pick_Number = int -> IntSort()
+        Player = text -> StringSort()
+        Position = text -> StringSort()
+        Season = real -> Float32()
+        Team = int -> IntSort()
+      symbols:
+        match_season(Season, Player, Position, Country, Team, Draft_Pick_Number, Draft_Class, College)
+        constant Defender : Position
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Season ∃p : Player ∃p1 : Position ∃c : Country ∃t : Team ∃c1 : College ( (match_season(s,p,p1,c,t,d,d1,c1)) ∧ (p1 = 'Defender') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Season EXISTS:∃ IDENT:p COLON:: IDENT:Player EXISTS:∃ IDENT:p1 COLON:: IDENT:Position EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:c1 COLON:: IDENT:College LPAR:( LPAR:( IDENT:match_season LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:Defender RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Season
+            EXISTS p:Player
+              EXISTS p1:Position
+                EXISTS c:Country
+                  EXISTS t:Team
+                    EXISTS c1:College
+                      AND
+                        PRED match_season(s, p, p1, c, t, d, d1, c1)
+                        EQ  p1 = 'Defender'
+      Predicted FOL: ∃s:Season ∃p:Player ∃pos:Position ∃c:Country ∃t:Team ∃col:College (match_season(s, p, pos, c, t, dp, dc, col) ∧ pos = 'Defender')
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Season EXISTS:∃ IDENT:p COLON:: IDENT:Player EXISTS:∃ IDENT:pos COLON:: IDENT:Position EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:col COLON:: IDENT:College LPAR:( IDENT:match_season LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:pos COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:dp COMMA:, IDENT:dc COMMA:, IDENT:col RPAR:) AND:∧ IDENT:pos EQ:= LIT:Defender RPAR:) EOF
+        AST:
+          EXISTS s:Season
+            EXISTS p:Player
+              EXISTS pos:Position
+                EXISTS c:Country
+                  EXISTS t:Team
+                    EXISTS col:College
+                      AND
+                        PRED match_season(s, p, pos, c, t, dp, dc, col)
+                        EQ  pos = 'Defender'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Draft_Class_0 : Draft_Class   Gold d1 <-> Predicted dc
+      FV_Draft_Pick_Number_0 : Draft_Pick_Number   Gold d <-> Predicted dp
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global int -> IntSort()
+        c1 : local College, global text -> StringSort()
+        d : local Draft_Pick_Number, global int -> IntSort()
+        d1 : local Draft_Class, global text -> StringSort()
+        p : local Player, global text -> StringSort()
+        p1 : local Position, global text -> StringSort()
+        s : local Season, global real -> Float32()
+        t : local Team, global int -> IntSort()
+      Predicted FOL:
+        c : local Country, global int -> IntSort()
+        col : local College, global text -> StringSort()
+        dc : local Draft_Class, global text -> StringSort()
+        dp : local Draft_Pick_Number, global int -> IntSort()
+        p : local Player, global text -> StringSort()
+        pos : local Position, global text -> StringSort()
+        s : local Season, global real -> Float32()
+        t : local Team, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_p_2, gold_p1_3, gold_c_4, gold_t_5, gold_c1_6], And(D_real(gold_s_1), And(P_match_season(gold_s_1, gold_p_2, gold_p1_3, gold_c_4, gold_t_5, FV_Draft_Pick_Number_0, FV_Draft_Class_0, gold_c1_6), (gold_p1_3 == L_Defender))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_p, WGOLD_p1, WGOLD_c, WGOLD_t, WGOLD_c1):  And(D_real(WGOLD_s), And(P_match_season(WGOLD_s, WGOLD_p, WGOLD_p1, WGOLD_c, WGOLD_t, FV_Draft_Pick_Number_0, FV_Draft_Class_0, WGOLD_c1), (WGOLD_p1 == L_Defender)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_p_2, predicted_pos_3, predicted_c_4, predicted_t_5, predicted_col_6], And(D_real(predicted_s_1), And(P_match_season(predicted_s_1, predicted_p_2, predicted_pos_3, predicted_c_4, predicted_t_5, FV_Draft_Pick_Number_0, FV_Draft_Class_0, predicted_col_6), (predicted_pos_3 == L_Defender))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_p, WPREDICTED_pos, WPREDICTED_c, WPREDICTED_t, WPREDICTED_col):  And(D_real(WPREDICTED_s), And(P_match_season(WPREDICTED_s, WPREDICTED_p, WPREDICTED_pos, WPREDICTED_c, WPREDICTED_t, FV_Draft_Pick_Number_0, FV_Draft_Class_0, WPREDICTED_col), (WPREDICTED_pos == L_Defender)))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Defender' at text -> L_Defender = StringVal('Defender')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 761 lines, 29545 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_508.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_p, WGOLD_p1, WGOLD_c, WGOLD_t, WGOLD_c1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(match_season(WGOLD_s, WGOLD_p, WGOLD_p1, WGOLD_c, WGOLD_t, FV_Draft_Pick_Number_0, FV_Draft_Class_0, WGOLD_c1), WGOLD_p1 == "Defender")), Not(Exists([predicted_s_1, predicted_p_2, predicted_pos_3, predicted_c_4, predicted_t_5, predicted_col_6], And(And(Not(fpIsNaN(predicted_s_1)), Not(And(fpIsZero(predicted_s_1), fpIsNegative(predicted_s_1)))), And(match_season(predicted_s_1, predicted_p_2, predicted_pos_3, predicted_c_4, predicted_t_5, FV_Draft_Pick_Number_0, FV_Draft_Class_0, predicted_col_6), predicted_pos_3 == "Defender")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_p, WPREDICTED_pos, WPREDICTED_c, WPREDICTED_t, WPREDICTED_col
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_s)), Not(And(fpIsZero(WPREDICTED_s), fpIsNegative(WPREDICTED_s)))), And(match_season(WPREDICTED_s, WPREDICTED_p, WPREDICTED_pos, WPREDICTED_c, WPREDICTED_t, FV_Draft_Pick_Number_0, FV_Draft_Class_0, WPREDICTED_col), WPREDICTED_pos == "Defender")), Not(Exists([gold_s_1, gold_p_2, gold_p1_3, gold_c_4, gold_t_5, gold_c1_6], And(And(Not(fpIsNaN(gold_s_1)), Not(And(fpIsZero(gold_s_1), fpIsNegative(gold_s_1)))), And(match_season(gold_s_1, gold_p_2, gold_p1_3, gold_c_4, gold_t_5, FV_Draft_Pick_Number_0, FV_Draft_Class_0, gold_c1_6), gold_p1_3 == "Defender")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

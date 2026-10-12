@@ -1,0 +1,56 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_106.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_106.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2150 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the ID of the high schooler named Kyle.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        ID = int -> IntSort()
+        grade = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Highschooler(ID, name, grade)
+        constant Kyle : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃g : grade ( (Highschooler(i,n,g)) ∧ (n = 'Kyle') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:g COLON:: IDENT:grade LPAR:( LPAR:( IDENT:Highschooler LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Kyle RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS g:grade
+              AND
+                PRED Highschooler(i, n, g)
+                EQ  n = 'Kyle'
+      Predicted FOL: ∃x : ID (Highschooler(x, 'Kyle', y) ∧ ∀z : grade (Highschooler(x, 'Kyle', z) → z = y))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:ID LPAR:( IDENT:Highschooler LPAR:( IDENT:x COMMA:, LIT:Kyle COMMA:, IDENT:y RPAR:) AND:∧ FORALL:∀ IDENT:z COLON:: IDENT:grade LPAR:( IDENT:Highschooler LPAR:( IDENT:x COMMA:, LIT:Kyle COMMA:, IDENT:z RPAR:) IMPL:→ IDENT:z EQ:= IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:ID
+            AND
+              PRED Highschooler(x, 'Kyle', y)
+              FORALL z:grade
+                IMPLIES
+                  PRED Highschooler(x, 'Kyle', z)
+                  EQ  z = y
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['ID'] vs Predicted ['grade']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['ID'] vs Predicted ['grade']

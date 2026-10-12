@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1419.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1419.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6398 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of the artist who made the album "Balls to the Wall".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(120) -> StringSort()   [domain Length(x) <= 120; length <= 120]
+        varchar(160) -> StringSort()   [domain Length(x) <= 160; length <= 160]
+        integer -> IntSort()
+      local sorts:
+        AlbumId = integer -> IntSort()
+        ArtistId = integer -> IntSort()
+        Name = varchar(120) -> StringSort()
+        Title = varchar(160) -> StringSort()
+      symbols:
+        Album(AlbumId, Title, ArtistId)
+        Artist(ArtistId, Name)
+        constant Balls to the Wall : Title
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : AlbumId ∃t : Title ∃a1 : ArtistId ∃a2 : ArtistId ( (((Album(a,t,a1)) ∧ (Artist(a2,n))) ∧ (a1 = a2)) ∧ (t = 'Balls to the Wall') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:AlbumId EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:a1 COLON:: IDENT:ArtistId EXISTS:∃ IDENT:a2 COLON:: IDENT:ArtistId LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Album LPAR:( IDENT:a COMMA:, IDENT:t COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Artist LPAR:( IDENT:a2 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Balls to the Wall RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:AlbumId
+            EXISTS t:Title
+              EXISTS a1:ArtistId
+                EXISTS a2:ArtistId
+                  AND
+                    AND
+                      AND
+                        PRED Album(a, t, a1)
+                        PRED Artist(a2, n)
+                      EQ  a1 = a2
+                    EQ  t = 'Balls to the Wall'
+      Predicted FOL: ∃a : AlbumId ∃r : ArtistId (Album(a, 'Balls to the Wall', r) ∧ Artist(r, n))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:AlbumId EXISTS:∃ IDENT:r COLON:: IDENT:ArtistId LPAR:( IDENT:Album LPAR:( IDENT:a COMMA:, LIT:Balls to the Wall COMMA:, IDENT:r RPAR:) AND:∧ IDENT:Artist LPAR:( IDENT:r COMMA:, IDENT:n RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:AlbumId
+            EXISTS r:ArtistId
+              AND
+                PRED Album(a, 'Balls to the Wall', r)
+                PRED Artist(r, n)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local AlbumId, global integer -> IntSort()
+        a1 : local ArtistId, global integer -> IntSort()
+        a2 : local ArtistId, global integer -> IntSort()
+        n : local Name, global varchar(120) -> StringSort()
+        t : local Title, global varchar(160) -> StringSort()
+      Predicted FOL:
+        a : local AlbumId, global integer -> IntSort()
+        n : local Name, global varchar(120) -> StringSort()
+        r : local ArtistId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_t_2, gold_a1_3, gold_a2_4], And(D_varchar_160_(gold_t_2), And(And(And(P_Album(gold_a_1, gold_t_2, gold_a1_3), P_Artist(gold_a2_4, FV_Name_0)), (gold_a1_3 == gold_a2_4)), (gold_t_2 == L_Balls_to_the_Wall))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_t, WGOLD_a1, WGOLD_a2):  And(D_varchar_160_(WGOLD_t), And(And(And(P_Album(WGOLD_a, WGOLD_t, WGOLD_a1), P_Artist(WGOLD_a2, FV_Name_0)), (WGOLD_a1 == WGOLD_a2)), (WGOLD_t == L_Balls_to_the_Wall)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_r_2], And(And(P_Album(predicted_a_1, L_Balls_to_the_Wall, predicted_r_2), D_varchar_160_(L_Balls_to_the_Wall)), P_Artist(predicted_r_2, FV_Name_0)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_r):  And(And(P_Album(WPREDICTED_a, L_Balls_to_the_Wall, WPREDICTED_r), D_varchar_160_(L_Balls_to_the_Wall)), P_Artist(WPREDICTED_r, FV_Name_0))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Balls to the Wall' at varchar(160) -> L_Balls_to_the_Wall = StringVal('Balls to the Wall')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 740 lines, 27837 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1419.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 120
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_t, WGOLD_a1, WGOLD_a2
+      claim: And(And(Length(WGOLD_t) <= 160, And(And(And(Album(WGOLD_a, WGOLD_t, WGOLD_a1), Artist(WGOLD_a2, FV_Name_0)), WGOLD_a1 == WGOLD_a2), WGOLD_t == "Balls to the Wall")), Not(Exists([predicted_a_1, predicted_r_2], And(And(Album(predicted_a_1, "Balls to the Wall", predicted_r_2), Length("Balls to the Wall") <= 160), Artist(predicted_r_2, FV_Name_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_r
+      claim: And(And(And(Album(WPREDICTED_a, "Balls to the Wall", WPREDICTED_r), Length("Balls to the Wall") <= 160), Artist(WPREDICTED_r, FV_Name_0)), Not(Exists([gold_a_1, gold_t_2, gold_a1_3, gold_a2_4], And(Length(gold_t_2) <= 160, And(And(And(Album(gold_a_1, gold_t_2, gold_a1_3), Artist(gold_a2_4, FV_Name_0)), gold_a1_3 == gold_a2_4), gold_t_2 == "Balls to the Wall")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

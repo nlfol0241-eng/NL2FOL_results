@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2186.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2186.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6576 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me all the papers, which contain the keyword " Natural Language " .
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 10 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        abstract = text -> StringSort()
+        cid = text -> StringSort()
+        citation_num = int -> IntSort()
+        jid = int -> IntSort()
+        keyword = text -> StringSort()
+        kid = int -> IntSort()
+        pid = int -> IntSort()
+        reference_num = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        keyword(keyword, kid)
+        publication(abstract, cid, citation_num, jid, pid, reference_num, title, year)
+        publication_keyword(pid, kid)
+        constant Natural Language : keyword
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : pid ∃k : kid ∃k1 : keyword ∃k2 : kid ∃a : abstract ∃c : cid ∃c1 : citation_num ∃j : jid ∃p1 : pid ∃r : reference_num ∃y : year ( (((((publication_keyword(p,k)) ∧ (keyword(k1,k2))) ∧ (k = k2)) ∧ (publication(a,c,c1,j,p1,r,t,y))) ∧ (p1 = p)) ∧ (k1 = 'Natural Language') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:pid EXISTS:∃ IDENT:k COLON:: IDENT:kid EXISTS:∃ IDENT:k1 COLON:: IDENT:keyword EXISTS:∃ IDENT:k2 COLON:: IDENT:kid EXISTS:∃ IDENT:a COLON:: IDENT:abstract EXISTS:∃ IDENT:c COLON:: IDENT:cid EXISTS:∃ IDENT:c1 COLON:: IDENT:citation_num EXISTS:∃ IDENT:j COLON:: IDENT:jid EXISTS:∃ IDENT:p1 COLON:: IDENT:pid EXISTS:∃ IDENT:r COLON:: IDENT:reference_num EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:publication_keyword LPAR:( IDENT:p COMMA:, IDENT:k RPAR:) RPAR:) AND:∧ LPAR:( IDENT:keyword LPAR:( IDENT:k1 COMMA:, IDENT:k2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k EQ:= IDENT:k2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:publication LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:j COMMA:, IDENT:p1 COMMA:, IDENT:r COMMA:, IDENT:t COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k1 EQ:= LIT:Natural Language RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:pid
+            EXISTS k:kid
+              EXISTS k1:keyword
+                EXISTS k2:kid
+                  EXISTS a:abstract
+                    EXISTS c:cid
+                      EXISTS c1:citation_num
+                        EXISTS j:jid
+                          EXISTS p1:pid
+                            EXISTS r:reference_num
+                              EXISTS y:year
+                                AND
+                                  AND
+                                    AND
+                                      AND
+                                        AND
+                                          PRED publication_keyword(p, k)
+                                          PRED keyword(k1, k2)
+                                        EQ  k = k2
+                                      PRED publication(a, c, c1, j, p1, r, t, y)
+                                    EQ  p1 = p
+                                  EQ  k1 = 'Natural Language'
+      Predicted FOL: ∃k : keyword (keyword(k, 'Natural Language') ∧ ∀p : pid (publication_keyword(p, k) → publication(p, _, _, _, _, _, _, _)))
+        tokens: EXISTS:∃ IDENT:k COLON:: IDENT:keyword LPAR:( IDENT:keyword LPAR:( IDENT:k COMMA:, LIT:Natural Language RPAR:) AND:∧ FORALL:∀ IDENT:p COLON:: IDENT:pid LPAR:( IDENT:publication_keyword LPAR:( IDENT:p COMMA:, IDENT:k RPAR:) IMPL:→ IDENT:publication LPAR:( IDENT:p COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS k:keyword
+            AND
+              PRED keyword(k, 'Natural Language')
+              FORALL p:pid
+                IMPLIES
+                  PRED publication_keyword(p, k)
+                  PRED publication(p, _, _, _, _, _, _, _)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) _ occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'k' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 139, in infer
+    infer(node[1], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'k' used at incompatible global sorts text and int

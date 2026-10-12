@@ -1,0 +1,87 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1183.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1183.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3619 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are flight numbers of flights arriving at City "Aberdeen"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        AirportCode = text -> StringSort()
+        AirportName = text -> StringSort()
+        City = text -> StringSort()
+        Country = text -> StringSort()
+        CountryAbbrev = text -> StringSort()
+        DestAirport = text -> StringSort()
+        FlightNo = integer -> IntSort()
+        SourceAirport = text -> StringSort()
+        a_uid = integer -> IntSort()
+      symbols:
+        airports(City, AirportCode, AirportName, Country, CountryAbbrev)
+        flights(a_uid, FlightNo, SourceAirport, DestAirport)
+        constant Aberdeen : City
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : a_uid ∃s : SourceAirport ∃d : DestAirport ∃c : City ∃p : AirportCode ∃n : AirportName ∃c1 : Country ∃r : CountryAbbrev ( (((flights(a,f,s,d)) ∧ (airports(c,p,n,c1,r))) ∧ (d = p)) ∧ (c = 'Aberdeen') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:a_uid EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:d COLON:: IDENT:DestAirport EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:p COLON:: IDENT:AirportCode EXISTS:∃ IDENT:n COLON:: IDENT:AirportName EXISTS:∃ IDENT:c1 COLON:: IDENT:Country EXISTS:∃ IDENT:r COLON:: IDENT:CountryAbbrev LPAR:( LPAR:( LPAR:( LPAR:( IDENT:flights LPAR:( IDENT:a COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:airports LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:n COMMA:, IDENT:c1 COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Aberdeen RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:a_uid
+            EXISTS s:SourceAirport
+              EXISTS d:DestAirport
+                EXISTS c:City
+                  EXISTS p:AirportCode
+                    EXISTS n:AirportName
+                      EXISTS c1:Country
+                        EXISTS r:CountryAbbrev
+                          AND
+                            AND
+                              AND
+                                PRED flights(a, f, s, d)
+                                PRED airports(c, p, n, c1, r)
+                              EQ  d = p
+                            EQ  c = 'Aberdeen'
+      Predicted FOL: ∃f : FlightNo ∃s : SourceAirport ∃d : DestAirport (flights(f, s, d, 'Aberdeen'))
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:FlightNo EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:d COLON:: IDENT:DestAirport LPAR:( IDENT:flights LPAR:( IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, LIT:Aberdeen RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:FlightNo
+            EXISTS s:SourceAirport
+              EXISTS d:DestAirport
+                PRED flights(f, s, d, 'Aberdeen')
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) f, s, d do not occur free in the formula
+   MISMATCH: Gold has 1 free variable(s) (f : FlightNo) but Predicted has 3 (f : FlightNo, s : SourceAirport, d : DestAirport): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 's' used at incompatible global sorts text and integer
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 's' used at incompatible global sorts text and integer

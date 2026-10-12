@@ -1,0 +1,143 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2479.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2479.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8985 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which physicians are trained in procedures that are more expensive than 5000?
+   [G1] took 0.003 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        CertificationDate = datetime -> IntSort()
+        CertificationExpires = datetime -> IntSort()
+        Code = integer -> IntSort()
+        Cost = real -> Float32()
+        EmployeeID = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        SSN = integer -> IntSort()
+        Treatment = integer -> IntSort()
+      symbols:
+        Physician(EmployeeID, Name, Position, SSN)
+        Procedures(Code, Name, Cost)
+        Trained_In(Physician, Treatment, CertificationDate, CertificationExpires)
+        constant 5000 : Cost
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : EmployeeID ∃p : Position ∃s : SSN ∃p1 : Physician ∃t : Treatment ∃c : CertificationDate ∃c1 : CertificationExpires ∃c2 : Code ∃n1 : Name ∃c3 : Cost ( (((((Physician(e,n,p,s)) ∧ (Trained_In(p1,t,c,c1))) ∧ (e = p1)) ∧ (Procedures(c2,n1,c3))) ∧ (c2 = t)) ∧ (c3 > 5000) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:p1 COLON:: IDENT:Physician EXISTS:∃ IDENT:t COLON:: IDENT:Treatment EXISTS:∃ IDENT:c COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:c1 COLON:: IDENT:CertificationExpires EXISTS:∃ IDENT:c2 COLON:: IDENT:Code EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:c3 COLON:: IDENT:Cost LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Trained_In LPAR:( IDENT:p1 COMMA:, IDENT:t COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Procedures LPAR:( IDENT:c2 COMMA:, IDENT:n1 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c2 EQ:= IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c3 GT:> NUM:5000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:EmployeeID
+            EXISTS p:Position
+              EXISTS s:SSN
+                EXISTS p1:Physician
+                  EXISTS t:Treatment
+                    EXISTS c:CertificationDate
+                      EXISTS c1:CertificationExpires
+                        EXISTS c2:Code
+                          EXISTS n1:Name
+                            EXISTS c3:Cost
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      AND
+                                        PRED Physician(e, n, p, s)
+                                        PRED Trained_In(p1, t, c, c1)
+                                      EQ  e = p1
+                                    PRED Procedures(c2, n1, c3)
+                                  EQ  c2 = t
+                                CMP  c3 > 5000
+      Predicted FOL: ∃employeeID : EmployeeID ∃position : Position ∃ssn : SSN ∃treatment : Treatment ∃certificationDate : CertificationDate ∃certificationExpires : CertificationExpires ∃procedureName : Name ∃cost : Cost (Physician(employeeID, physicianName, position, ssn) ∧ Trained_In(employeeID, treatment, certificationDate, certificationExpires) ∧ Procedures(treatment, procedureName, cost) ∧ cost > 5000)
+        tokens: EXISTS:∃ IDENT:employeeID COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:position COLON:: IDENT:Position EXISTS:∃ IDENT:ssn COLON:: IDENT:SSN EXISTS:∃ IDENT:treatment COLON:: IDENT:Treatment EXISTS:∃ IDENT:certificationDate COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:certificationExpires COLON:: IDENT:CertificationExpires EXISTS:∃ IDENT:procedureName COLON:: IDENT:Name EXISTS:∃ IDENT:cost COLON:: IDENT:Cost LPAR:( IDENT:Physician LPAR:( IDENT:employeeID COMMA:, IDENT:physicianName COMMA:, IDENT:position COMMA:, IDENT:ssn RPAR:) AND:∧ IDENT:Trained_In LPAR:( IDENT:employeeID COMMA:, IDENT:treatment COMMA:, IDENT:certificationDate COMMA:, IDENT:certificationExpires RPAR:) AND:∧ IDENT:Procedures LPAR:( IDENT:treatment COMMA:, IDENT:procedureName COMMA:, IDENT:cost RPAR:) AND:∧ IDENT:cost GT:> NUM:5000 RPAR:) EOF
+        AST:
+          EXISTS employeeID:EmployeeID
+            EXISTS position:Position
+              EXISTS ssn:SSN
+                EXISTS treatment:Treatment
+                  EXISTS certificationDate:CertificationDate
+                    EXISTS certificationExpires:CertificationExpires
+                      EXISTS procedureName:Name
+                        EXISTS cost:Cost
+                          AND
+                            PRED Physician(employeeID, physicianName, position, ssn)
+                            PRED Trained_In(employeeID, treatment, certificationDate, certificationExpires)
+                            PRED Procedures(treatment, procedureName, cost)
+                            CMP  cost > 5000
+   [G3] took 0.015 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted physicianName
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CertificationDate, global datetime -> IntSort()
+        c1 : local CertificationExpires, global datetime -> IntSort()
+        c2 : local Code, global integer -> IntSort()
+        c3 : local Cost, global real -> Float32()
+        e : local EmployeeID, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        n1 : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        p1 : local Physician, global integer -> IntSort()
+        s : local SSN, global integer -> IntSort()
+        t : local Treatment, global integer -> IntSort()
+      Predicted FOL:
+        certificationDate : local CertificationDate, global datetime -> IntSort()
+        certificationExpires : local CertificationExpires, global datetime -> IntSort()
+        cost : local Cost, global real -> Float32()
+        employeeID : local EmployeeID, global integer -> IntSort()
+        physicianName : local Name, global varchar(30) -> StringSort()
+        position : local Position, global varchar(30) -> StringSort()
+        procedureName : local Name, global varchar(30) -> StringSort()
+        ssn : local SSN, global integer -> IntSort()
+        treatment : local Treatment, global integer -> IntSort()
+   [G5] took 0.003 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_p_2, gold_s_3, gold_p1_4, gold_t_5, gold_c_6, gold_c1_7, gold_c2_8, gold_n1_9, gold_c3_10], And(D_varchar_30_(gold_p_2), D_varchar_30_(gold_n1_9), D_real(gold_c3_10), And(And(And(And(And(P_Physician(gold_e_1, FV_Name_0, gold_p_2, gold_s_3), P_Trained_In(gold_p1_4, gold_t_5, gold_c_6, gold_c1_7)), (gold_e_1 == gold_p1_4)), P_Procedures(gold_c2_8, gold_n1_9, gold_c3_10)), (gold_c2_8 == gold_t_5)), (gold_c3_10 > L_v_5000_real))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_p, WGOLD_s, WGOLD_p1, WGOLD_t, WGOLD_c, WGOLD_c1, WGOLD_c2, WGOLD_n1, WGOLD_c3):  And(D_varchar_30_(WGOLD_p), D_varchar_30_(WGOLD_n1), D_real(WGOLD_c3), And(And(And(And(And(P_Physician(WGOLD_e, FV_Name_0, WGOLD_p, WGOLD_s), P_Trained_In(WGOLD_p1, WGOLD_t, WGOLD_c, WGOLD_c1)), (WGOLD_e == WGOLD_p1)), P_Procedures(WGOLD_c2, WGOLD_n1, WGOLD_c3)), (WGOLD_c2 == WGOLD_t)), (WGOLD_c3 > L_v_5000_real)))
+   Gold: 10 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_employeeID_1, predicted_position_2, predicted_ssn_3, predicted_treatment_4, predicted_certificationDate_5, predicted_certificationExpires_6, predicted_procedureName_7, predicted_cost_8], And(D_varchar_30_(predicted_position_2), D_varchar_30_(predicted_procedureName_7), D_real(predicted_cost_8), And(P_Physician(predicted_employeeID_1, FV_Name_0, predicted_position_2, predicted_ssn_3), P_Trained_In(predicted_employeeID_1, predicted_treatment_4, predicted_certificationDate_5, predicted_certificationExpires_6), P_Procedures(predicted_treatment_4, predicted_procedureName_7, predicted_cost_8), (predicted_cost_8 > L_v_5000_real))))
+      predicted_skolem (witnesses WPREDICTED_employeeID, WPREDICTED_position, WPREDICTED_ssn, WPREDICTED_treatment, WPREDICTED_certificationDate, WPREDICTED_certificationExpires, WPREDICTED_procedureName, WPREDICTED_cost):  And(D_varchar_30_(WPREDICTED_position), D_varchar_30_(WPREDICTED_procedureName), D_real(WPREDICTED_cost), And(P_Physician(WPREDICTED_employeeID, FV_Name_0, WPREDICTED_position, WPREDICTED_ssn), P_Trained_In(WPREDICTED_employeeID, WPREDICTED_treatment, WPREDICTED_certificationDate, WPREDICTED_certificationExpires), P_Procedures(WPREDICTED_treatment, WPREDICTED_procedureName, WPREDICTED_cost), (WPREDICTED_cost > L_v_5000_real)))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.004 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '5000' at real -> L_v_5000_real = FPVal(5000.0, Float32())
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 796 lines, 33268 bytes
+   [G7] took 0.003 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2479.py
+   [G8] took 0.017 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 30
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_p, WGOLD_s, WGOLD_p1, WGOLD_t, WGOLD_c, WGOLD_c1, WGOLD_c2, WGOLD_n1, WGOLD_c3
+      claim: And(And(Length(WGOLD_p) <= 30, Length(WGOLD_n1) <= 30, And(Not(fpIsNaN(WGOLD_c3)), Not(And(fpIsZero(WGOLD_c3), fpIsNegative(WGOLD_c3)))), And(And(And(And(And(Physician(WGOLD_e, FV_Name_0, WGOLD_p, WGOLD_s), Trained_In(WGOLD_p1, WGOLD_t, WGOLD_c, WGOLD_c1)), WGOLD_e == WGOLD_p1), Procedures(WGOLD_c2, WGOLD_n1, WGOLD_c3)), WGOLD_c2 == WGOLD_t), 1.220703125*(2**12) < WGOLD_c3)), Not(Exists([predicted_employeeID_1, predicted_position_2, predicted_ssn_3, predicted_treatment_4, predicted_certificationDate_5, predicted_certificationExpires_6, predicted_procedureName_7, predicted_cost_8], And(Length(predicted_position_2) <= 30, Length(predicted_procedureName_7) <= 30, And(Not(fpIsNaN(predicted_cost_8)), Not(And(fpIsZero(predicted_cost_8), fpIsNegative(predicted_cost_8)))), And(Physician(predicted_employeeID_1, FV_Name_0, predicted_position_2, predicted_ssn_3), Trained_In(predicted_employeeID_1, predicted_treatment_4, predicted_certificationDate_5, predicted_certificationExpires_6), Procedures(predicted_treatment_4, predicted_procedureName_7, predicted_cost_8), 1.220703125*(2**12) < predicted_cost_8)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.021 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.075 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_employeeID, WPREDICTED_position, WPREDICTED_ssn, WPREDICTED_treatment, WPREDICTED_certificationDate, WPREDICTED_certificationExpires, WPREDICTED_procedureName, WPREDICTED_cost
+      claim: And(And(Length(WPREDICTED_position) <= 30, Length(WPREDICTED_procedureName) <= 30, And(Not(fpIsNaN(WPREDICTED_cost)), Not(And(fpIsZero(WPREDICTED_cost), fpIsNegative(WPREDICTED_cost)))), And(Physician(WPREDICTED_employeeID, FV_Name_0, WPREDICTED_position, WPREDICTED_ssn), Trained_In(WPREDICTED_employeeID, WPREDICTED_treatment, WPREDICTED_certificationDate, WPREDICTED_certificationExpires), Procedures(WPREDICTED_treatment, WPREDICTED_procedureName, WPREDICTED_cost), 1.220703125*(2**12) < WPREDICTED_cost)), Not(Exists([gold_e_1, gold_p_2, gold_s_3, gold_p1_4, gold_t_5, gold_c_6, gold_c1_7, gold_c2_8, gold_n1_9, gold_c3_10], And(Length(gold_p_2) <= 30, Length(gold_n1_9) <= 30, And(Not(fpIsNaN(gold_c3_10)), Not(And(fpIsZero(gold_c3_10), fpIsNegative(gold_c3_10)))), And(And(And(And(And(Physician(gold_e_1, FV_Name_0, gold_p_2, gold_s_3), Trained_In(gold_p1_4, gold_t_5, gold_c_6, gold_c1_7)), gold_e_1 == gold_p1_4), Procedures(gold_c2_8, gold_n1_9, gold_c3_10)), gold_c2_8 == gold_t_5), 1.220703125*(2**12) < gold_c3_10)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.015 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.072 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

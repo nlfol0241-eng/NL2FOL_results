@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1222.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1222.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3648 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the create dates, states, and phone numbers of the votes that were for the contestant named 'Tabatha Gehling'?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        timestamp -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+      local sorts:
+        contestant_name = varchar(50) -> StringSort()
+        contestant_number = integer -> IntSort()
+        created = timestamp -> IntSort()
+        phone_number = integer -> IntSort()
+        state = varchar(2) -> StringSort()
+        vote_id = integer -> IntSort()
+      symbols:
+        CONTESTANTS(contestant_number, contestant_name)
+        VOTES(vote_id, phone_number, state, contestant_number, created)
+        constant Tabatha Gehling : contestant_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : contestant_number ∃c1 : contestant_name ∃v : vote_id ∃c2 : contestant_number ( (((CONTESTANTS(c,c1)) ∧ (VOTES(v,p,s,c2,c3))) ∧ (c = c2)) ∧ (c1 = 'Tabatha Gehling') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:contestant_number EXISTS:∃ IDENT:c1 COLON:: IDENT:contestant_name EXISTS:∃ IDENT:v COLON:: IDENT:vote_id EXISTS:∃ IDENT:c2 COLON:: IDENT:contestant_number LPAR:( LPAR:( LPAR:( LPAR:( IDENT:CONTESTANTS LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:VOTES LPAR:( IDENT:v COMMA:, IDENT:p COMMA:, IDENT:s COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Tabatha Gehling RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:contestant_number
+            EXISTS c1:contestant_name
+              EXISTS v:vote_id
+                EXISTS c2:contestant_number
+                  AND
+                    AND
+                      AND
+                        PRED CONTESTANTS(c, c1)
+                        PRED VOTES(v, p, s, c2, c3)
+                      EQ  c = c2
+                    EQ  c1 = 'Tabatha Gehling'
+      Predicted FOL: ∃v : vote_id ∃n : contestant_number (VOTES(v, p, s, n, d) ∧ CONTESTANTS(n, 'Tabatha Gehling'))
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:vote_id EXISTS:∃ IDENT:n COLON:: IDENT:contestant_number LPAR:( IDENT:VOTES LPAR:( IDENT:v COMMA:, IDENT:p COMMA:, IDENT:s COMMA:, IDENT:n COMMA:, IDENT:d RPAR:) AND:∧ IDENT:CONTESTANTS LPAR:( IDENT:n COMMA:, LIT:Tabatha Gehling RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v:vote_id
+            EXISTS n:contestant_number
+              AND
+                PRED VOTES(v, p, s, n, d)
+                PRED CONTESTANTS(n, 'Tabatha Gehling')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_created_0 : created   Gold c3 <-> Predicted d
+      FV_phone_number_0 : phone_number   Gold p <-> Predicted p
+      FV_state_0 : state   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local contestant_number, global integer -> IntSort()
+        c1 : local contestant_name, global varchar(50) -> StringSort()
+        c2 : local contestant_number, global integer -> IntSort()
+        c3 : local created, global timestamp -> IntSort()
+        p : local phone_number, global integer -> IntSort()
+        s : local state, global varchar(2) -> StringSort()
+        v : local vote_id, global integer -> IntSort()
+      Predicted FOL:
+        d : local created, global timestamp -> IntSort()
+        n : local contestant_number, global integer -> IntSort()
+        p : local phone_number, global integer -> IntSort()
+        s : local state, global varchar(2) -> StringSort()
+        v : local vote_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_v_3, gold_c2_4], And(D_varchar_50_(gold_c1_2), And(And(And(P_CONTESTANTS(gold_c_1, gold_c1_2), P_VOTES(gold_v_3, FV_phone_number_0, FV_state_0, gold_c2_4, FV_created_0)), (gold_c_1 == gold_c2_4)), (gold_c1_2 == L_Tabatha_Gehling))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_v, WGOLD_c2):  And(D_varchar_50_(WGOLD_c1), And(And(And(P_CONTESTANTS(WGOLD_c, WGOLD_c1), P_VOTES(WGOLD_v, FV_phone_number_0, FV_state_0, WGOLD_c2, FV_created_0)), (WGOLD_c == WGOLD_c2)), (WGOLD_c1 == L_Tabatha_Gehling)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_v_1, predicted_n_2], And(P_VOTES(predicted_v_1, FV_phone_number_0, FV_state_0, predicted_n_2, FV_created_0), And(P_CONTESTANTS(predicted_n_2, L_Tabatha_Gehling), D_varchar_50_(L_Tabatha_Gehling))))
+      predicted_skolem (witnesses WPREDICTED_v, WPREDICTED_n):  And(P_VOTES(WPREDICTED_v, FV_phone_number_0, FV_state_0, WPREDICTED_n, FV_created_0), And(P_CONTESTANTS(WPREDICTED_n, L_Tabatha_Gehling), D_varchar_50_(L_Tabatha_Gehling)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Tabatha Gehling' at varchar(50) -> L_Tabatha_Gehling = StringVal('Tabatha Gehling')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 752 lines, 28951 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1222.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_state_0) <= 2
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_v, WGOLD_c2
+      claim: And(And(Length(WGOLD_c1) <= 50, And(And(And(CONTESTANTS(WGOLD_c, WGOLD_c1), VOTES(WGOLD_v, FV_phone_number_0, FV_state_0, WGOLD_c2, FV_created_0)), WGOLD_c == WGOLD_c2), WGOLD_c1 == "Tabatha Gehling")), Not(Exists([predicted_v_1, predicted_n_2], And(VOTES(predicted_v_1, FV_phone_number_0, FV_state_0, predicted_n_2, FV_created_0), And(CONTESTANTS(predicted_n_2, "Tabatha Gehling"), Length("Tabatha Gehling") <= 50)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_v, WPREDICTED_n
+      claim: And(And(VOTES(WPREDICTED_v, FV_phone_number_0, FV_state_0, WPREDICTED_n, FV_created_0), And(CONTESTANTS(WPREDICTED_n, "Tabatha Gehling"), Length("Tabatha Gehling") <= 50)), Not(Exists([gold_c_1, gold_c1_2, gold_v_3, gold_c2_4], And(Length(gold_c1_2) <= 50, And(And(And(CONTESTANTS(gold_c_1, gold_c1_2), VOTES(gold_v_3, FV_phone_number_0, FV_state_0, gold_c2_4, FV_created_0)), gold_c_1 == gold_c2_4), gold_c1_2 == "Tabatha Gehling")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

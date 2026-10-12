@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1578.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1578.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3534 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What campuses are located in Los Angeles county and opened after 1950?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        County = text -> StringSort()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        constant 1950 : Year
+        constant Los Angeles : County
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Id ∃l : Location ∃c1 : County ∃y : Year ( (Campuses(i,c,l,c1,y)) ∧ ((c1 = 'Los Angeles') ∧ (y > 1950)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c1 COLON:: IDENT:County EXISTS:∃ IDENT:y COLON:: IDENT:Year LPAR:( LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:c1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c1 EQ:= LIT:Los Angeles RPAR:) AND:∧ LPAR:( IDENT:y GT:> NUM:1950 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS l:Location
+              EXISTS c1:County
+                EXISTS y:Year
+                  AND
+                    PRED Campuses(i, c, l, c1, y)
+                    AND
+                      EQ  c1 = 'Los Angeles'
+                      CMP  y > 1950
+      Predicted FOL: ∃i : Id ∃l : Location ∃y : Year (Campuses(i, x, l, 'Los Angeles', y) ∧ y > 1950)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:y COLON:: IDENT:Year LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:x COMMA:, IDENT:l COMMA:, LIT:Los Angeles COMMA:, IDENT:y RPAR:) AND:∧ IDENT:y GT:> NUM:1950 RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS l:Location
+              EXISTS y:Year
+                AND
+                  PRED Campuses(i, x, l, 'Los Angeles', y)
+                  CMP  y > 1950
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_campus_0 : campus   Gold c <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local campus, global text -> StringSort()
+        c1 : local County, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+      Predicted FOL:
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        x : local campus, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_l_2, gold_c1_3, gold_y_4], And(P_Campuses(gold_i_1, FV_campus_0, gold_l_2, gold_c1_3, gold_y_4), And((gold_c1_3 == L_Los_Angeles), (gold_y_4 > L_v_1950_integer))))
+      gold_skolem (witnesses WGOLD_i, WGOLD_l, WGOLD_c1, WGOLD_y):  And(P_Campuses(WGOLD_i, FV_campus_0, WGOLD_l, WGOLD_c1, WGOLD_y), And((WGOLD_c1 == L_Los_Angeles), (WGOLD_y > L_v_1950_integer)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_l_2, predicted_y_3], And(P_Campuses(predicted_i_1, FV_campus_0, predicted_l_2, L_Los_Angeles, predicted_y_3), (predicted_y_3 > L_v_1950_integer)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_l, WPREDICTED_y):  And(P_Campuses(WPREDICTED_i, FV_campus_0, WPREDICTED_l, L_Los_Angeles, WPREDICTED_y), (WPREDICTED_y > L_v_1950_integer))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Los Angeles' at text -> L_Los_Angeles = StringVal('Los Angeles')
+      literal '1950' at integer -> L_v_1950_integer = IntVal(1950)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 737 lines, 27543 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1578.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_l, WGOLD_c1, WGOLD_y
+      claim: And(And(Campuses(WGOLD_i, FV_campus_0, WGOLD_l, WGOLD_c1, WGOLD_y), And(WGOLD_c1 == "Los Angeles", 1950 < WGOLD_y)), Not(Exists([predicted_i_1, predicted_l_2, predicted_y_3], And(Campuses(predicted_i_1, FV_campus_0, predicted_l_2, "Los Angeles", predicted_y_3), 1950 < predicted_y_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_l, WPREDICTED_y
+      claim: And(And(Campuses(WPREDICTED_i, FV_campus_0, WPREDICTED_l, "Los Angeles", WPREDICTED_y), 1950 < WPREDICTED_y), Not(Exists([gold_i_1, gold_l_2, gold_c1_3, gold_y_4], And(Campuses(gold_i_1, FV_campus_0, gold_l_2, gold_c1_3, gold_y_4), And(gold_c1_3 == "Los Angeles", 1950 < gold_y_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,92 @@
+{
+  "NL": "List the date, theme and sales of the journal which did not have any of the listed editors serving on committee.",
+  "Vocabulary": {
+    "Predicates": [
+      "journal",
+      "journal_committee"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "journal": [
+        "Journal_ID",
+        "Date",
+        "Theme",
+        "Sales"
+      ],
+      "journal_committee": [
+        "Editor_ID",
+        "Journal_ID",
+        "Work_Type"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( journal(a0, a1, a2, a3) ∧ journal(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b0'∀b1'∀b2'( editor(b0, b1, b2) ∧ editor(b0', b1', b2') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( journal_committee(c0, c1, c2) ∧ journal_committee(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( journal_committee(c0, c1, c2) → ∃a0∃a1∃a2∃a3 ( journal(a0, a1, a2, a3) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( journal_committee(c0, c1, c2) → ∃b0∃b1∃b2 ( editor(b0, b1, b2) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "journal": {
+        "A": "journal",
+        "A0": "Journal_ID",
+        "A1": "Date",
+        "A2": "Theme",
+        "A3": "Sales"
+      },
+      "journal_committee": {
+        "B": "journal_committee",
+        "B0": "Editor_ID",
+        "B1": "Journal_ID",
+        "B2": "Work_Type"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "(∃j : Journal_ID( journal(j,d,t,s) )) ∧ (¬(∃e : Editor_ID ∃w : Work_Type ∃j1 : Journal_ID ∃j : Journal_ID( ((journal(j,d,t,s)) ∧ (journal_committee(e,j1,w))) ∧ (j = j1) )))",
+    "free vars": "d : Date, t : Theme, s : Sales"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A1,A2,A3](A))<D>(<P>[A1,A2,A3](<S>[A0 = B1]((A)<X>(B))))",
+    "Processed_RA": "(<P>[A1,A2,A3](A))<D>(<P>[A1,A2,A3](<S>[A0 = B1]((A)<X>(B))))",
+    "RC": "([E]?A0( A(?A0,?A1,?A2,?A3) )) & (~([E]?B0,?B2,?B1,?A0( ((A(?A0,?A1,?A2,?A3)) & (B(?B0,?B1,?B2))) & (?A0 = ?B1) )))",
+    "string": "(∃A0( A(A0,A1,A2,A3) )) ∧ (¬(∃B0 ∃B2 ∃B1 ∃A0( ((A(A0,A1,A2,A3)) ∧ (B(B0,B1,B2))) ∧ (A0 = B1) )))",
+    "free variables": "A1, A2, A3",
+    "db_id": "journal_committee",
+    "processed_sql": "SELECT \"date\" ,  theme ,  sales FROM journal EXCEPT SELECT T1.\"date\" ,  T1.theme ,  T1.sales FROM journal AS T1 JOIN journal_committee AS T2 ON T1.journal_ID  =  T2.journal_ID"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "journal": {
+      "sortaxiom0": "Journal_ID = int",
+      "sortaxiom1": "Date = text",
+      "sortaxiom2": "Theme = text",
+      "sortaxiom3": "Sales = int"
+    },
+    "journal_committee": {
+      "sortaxiom0": "Editor_ID = int",
+      "sortaxiom1": "Journal_ID = int",
+      "sortaxiom2": "Work_Type = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT date ,  theme ,  sales FROM journal EXCEPT SELECT T1.date ,  T1.theme ,  T1.sales FROM journal AS T1 JOIN journal_committee AS T2 ON T1.journal_ID  =  T2.journal_ID"
+  },
+  "id": 3537,
+  "Predicted FOL": {
+    "string": "∃j : Journal_ID (journal(j, d, t, s) ∧ ¬∃e : Editor_ID ∃w : Work_Type journal_committee(e, j, w))",
+    "free vars": "d : Date, t : Theme, s : Sales"
+  }
+}

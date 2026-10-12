@@ -1,0 +1,71 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_380.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_380.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3622 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the attribute data type for the attribute named "Green".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        attribute_data_type = varchar(10) -> StringSort()
+        attribute_id = integer -> IntSort()
+        attribute_name = varchar(30) -> StringSort()
+      symbols:
+        Attribute_Definitions(attribute_id, attribute_name, attribute_data_type)
+        constant Green : attribute_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : attribute_id ∃a1 : attribute_name ( (Attribute_Definitions(a,a1,a2)) ∧ (a1 = 'Green') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:attribute_id EXISTS:∃ IDENT:a1 COLON:: IDENT:attribute_name LPAR:( LPAR:( IDENT:Attribute_Definitions LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:Green RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:attribute_id
+            EXISTS a1:attribute_name
+              AND
+                PRED Attribute_Definitions(a, a1, a2)
+                EQ  a1 = 'Green'
+      Predicted FOL: ∃x : attribute_id ∃y : attribute_data_type (Attribute_Definitions(x, 'Green', y))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:attribute_id EXISTS:∃ IDENT:y COLON:: IDENT:attribute_data_type LPAR:( IDENT:Attribute_Definitions LPAR:( IDENT:x COMMA:, LIT:Green COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:attribute_id
+            EXISTS y:attribute_data_type
+              PRED Attribute_Definitions(x, 'Green', y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (a2 : attribute_data_type) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local attribute_id, global integer -> IntSort()
+        a1 : local attribute_name, global varchar(30) -> StringSort()
+        a2 : local attribute_data_type, global varchar(10) -> StringSort()
+      Predicted FOL:
+        x : local attribute_id, global integer -> IntSort()
+        y : local attribute_data_type, global varchar(10) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5305 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_380.py
+   [G8] took 0.018 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (a2 : attribute_data_type) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3190.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3190.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3169 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the nations that have both hosts older than 45 and hosts younger than 35.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Host_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+      symbols:
+        host(Host_ID, Name, Nationality, Age)
+        constant 35 : Age
+        constant 45 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃n : Name ∃a : Age ∃h : Host_ID( (host(h,n,n1,a)) ∧ (a > 45) )) ∧ (¬((∃n : Name ∃a : Age ∃h : Host_ID( (host(h,n,n1,a)) ∧ (a > 45) )) ∧ (¬(∃n : Name ∃a : Age ∃h : Host_ID( (host(h,n,n1,a)) ∧ (a < 35) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Host_ID LPAR:( LPAR:( IDENT:host LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:45 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Host_ID LPAR:( LPAR:( IDENT:host LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:45 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Host_ID LPAR:( LPAR:( IDENT:host LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a LT:< NUM:35 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS n:Name
+              EXISTS a:Age
+                EXISTS h:Host_ID
+                  AND
+                    PRED host(h, n, n1, a)
+                    CMP  a > 45
+            NOT
+              AND
+                EXISTS n:Name
+                  EXISTS a:Age
+                    EXISTS h:Host_ID
+                      AND
+                        PRED host(h, n, n1, a)
+                        CMP  a > 45
+                NOT
+                  EXISTS n:Name
+                    EXISTS a:Age
+                      EXISTS h:Host_ID
+                        AND
+                          PRED host(h, n, n1, a)
+                          CMP  a < 35
+      Predicted FOL: ∃n:Nationality ( (∃h1:Host_ID ∃nm1:Name ∃a1:Age ( host(h1, nm1, n, a1) ∧ a1 = 45 )) ∧ (∃h2:Host_ID ∃nm2:Name ∃a2:Age ( host(h2, nm2, n, a2) ∧ a2 = 35 )) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Nationality LPAR:( LPAR:( EXISTS:∃ IDENT:h1 COLON:: IDENT:Host_ID EXISTS:∃ IDENT:nm1 COLON:: IDENT:Name EXISTS:∃ IDENT:a1 COLON:: IDENT:Age LPAR:( IDENT:host LPAR:( IDENT:h1 COMMA:, IDENT:nm1 COMMA:, IDENT:n COMMA:, IDENT:a1 RPAR:) AND:∧ IDENT:a1 EQ:= NUM:45 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:h2 COLON:: IDENT:Host_ID EXISTS:∃ IDENT:nm2 COLON:: IDENT:Name EXISTS:∃ IDENT:a2 COLON:: IDENT:Age LPAR:( IDENT:host LPAR:( IDENT:h2 COMMA:, IDENT:nm2 COMMA:, IDENT:n COMMA:, IDENT:a2 RPAR:) AND:∧ IDENT:a2 EQ:= NUM:35 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Nationality
+            AND
+              EXISTS h1:Host_ID
+                EXISTS nm1:Name
+                  EXISTS a1:Age
+                    AND
+                      PRED host(h1, nm1, n, a1)
+                      EQ  a1 = 45
+              EXISTS h2:Host_ID
+                EXISTS nm2:Name
+                  EXISTS a2:Age
+                    AND
+                      PRED host(h2, nm2, n, a2)
+                      EQ  a2 = 35
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : Nationality) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        h : local Host_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+      Predicted FOL:
+        a1 : local Age, global text -> StringSort()
+        a2 : local Age, global text -> StringSort()
+        h1 : local Host_ID, global int -> IntSort()
+        h2 : local Host_ID, global int -> IntSort()
+        n : local Nationality, global text -> StringSort()
+        nm1 : local Name, global text -> StringSort()
+        nm2 : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5533 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3190.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : Nationality) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

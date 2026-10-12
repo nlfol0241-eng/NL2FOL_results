@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_646.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_646.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 1987 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the id of the reviewer named Daniel Lewis?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        name = text -> StringSort()
+        rID = int -> IntSort()
+      symbols:
+        Reviewer(rID, name)
+        constant Daniel Lewis : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ( (Reviewer(r,n)) ∧ (n = 'Daniel Lewis') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( IDENT:Reviewer LPAR:( IDENT:r COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Daniel Lewis RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            AND
+              PRED Reviewer(r, n)
+              EQ  n = 'Daniel Lewis'
+      Predicted FOL: Reviewer(x, 'Daniel Lewis')
+        tokens: IDENT:Reviewer LPAR:( IDENT:x COMMA:, LIT:Daniel Lewis RPAR:) EOF
+        AST:
+          PRED Reviewer(x, 'Daniel Lewis')
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_rID_0 : rID   Gold r <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 3 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local name, global text -> StringSort()
+        r : local rID, global int -> IntSort()
+      Predicted FOL:
+        x : local rID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1], And(P_Reviewer(FV_rID_0, gold_n_1), (gold_n_1 == L_Daniel_Lewis)))
+      gold_skolem (witnesses WGOLD_n):  And(P_Reviewer(FV_rID_0, WGOLD_n), (WGOLD_n == L_Daniel_Lewis))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  P_Reviewer(FV_rID_0, L_Daniel_Lewis)
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Daniel Lewis' at text -> L_Daniel_Lewis = StringVal('Daniel Lewis')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 710 lines, 25447 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_646.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_n
+      claim: And(And(Reviewer(FV_rID_0, WGOLD_n), WGOLD_n == "Daniel Lewis"), Not(Reviewer(FV_rID_0, "Daniel Lewis")))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Reviewer(FV_rID_0, "Daniel Lewis"), Not(Exists(gold_n_1, And(Reviewer(FV_rID_0, gold_n_1), gold_n_1 == "Daniel Lewis"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.002 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,86 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3461.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3461.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5297 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which organizations are not a parent organization of others? List the organization id.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        organization_details = varchar(255) -> StringSort()
+        organization_id = integer -> IntSort()
+        parent_organization_id = integer -> IntSort()
+      symbols:
+        Organizations(organization_id, parent_organization_id, organization_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃o1 : organization_details ∃p : parent_organization_id( Organizations(x,p,o1) )) ∧ (¬(∃o1 : organization_details ∃o : organization_id( Organizations(o,x,o1) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:o1 COLON:: IDENT:organization_details EXISTS:∃ IDENT:p COLON:: IDENT:parent_organization_id LPAR:( IDENT:Organizations LPAR:( IDENT:x COMMA:, IDENT:p COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:o1 COLON:: IDENT:organization_details EXISTS:∃ IDENT:o COLON:: IDENT:organization_id LPAR:( IDENT:Organizations LPAR:( IDENT:o COMMA:, IDENT:x COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS o1:organization_details
+              EXISTS p:parent_organization_id
+                PRED Organizations(x, p, o1)
+            NOT
+              EXISTS o1:organization_details
+                EXISTS o:organization_id
+                  PRED Organizations(o, x, o1)
+      Predicted FOL: ∃x : organization_id ∃y : parent_organization_id ∃z : organization_details ( Organizations(x, y, z) ∧ ¬∃x' : organization_id ∃y' : parent_organization_id ∃z' : organization_details ( Organizations(x', y', z') ∧ y' = x ) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:organization_id EXISTS:∃ IDENT:y COLON:: IDENT:parent_organization_id EXISTS:∃ IDENT:z COLON:: IDENT:organization_details LPAR:( IDENT:Organizations LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:x' COLON:: IDENT:organization_id EXISTS:∃ IDENT:y' COLON:: IDENT:parent_organization_id EXISTS:∃ IDENT:z' COLON:: IDENT:organization_details LPAR:( IDENT:Organizations LPAR:( IDENT:x' COMMA:, IDENT:y' COMMA:, IDENT:z' RPAR:) AND:∧ IDENT:y' EQ:= IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:organization_id
+            EXISTS y:parent_organization_id
+              EXISTS z:organization_details
+                AND
+                  PRED Organizations(x, y, z)
+                  NOT
+                    EXISTS x':organization_id
+                      EXISTS y':parent_organization_id
+                        EXISTS z':organization_details
+                          AND
+                            PRED Organizations(x', y', z')
+                            EQ  y' = x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (x : organization_id) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        o : local organization_id, global integer -> IntSort()
+        o1 : local organization_details, global varchar(255) -> StringSort()
+        p : local parent_organization_id, global integer -> IntSort()
+        x : local organization_id, global integer -> IntSort()
+      Predicted FOL:
+        x : local organization_id, global integer -> IntSort()
+        x' : local organization_id, global integer -> IntSort()
+        y : local parent_organization_id, global integer -> IntSort()
+        y' : local parent_organization_id, global integer -> IntSort()
+        z : local organization_details, global varchar(255) -> StringSort()
+        z' : local organization_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5547 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3461.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (x : organization_id) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

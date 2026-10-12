@@ -1,0 +1,105 @@
+{
+  "NL": "Find the names of programs that are never broadcasted in the morning.",
+  "Vocabulary": {
+    "Predicates": [
+      "program",
+      "broadcast"
+    ],
+    "Functions": [],
+    "Constants": [
+      "Morning"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "program": [
+        "Program_ID",
+        "Name",
+        "Origin",
+        "Launch",
+        "Owner"
+      ],
+      "broadcast": [
+        "Channel_ID",
+        "Program_ID",
+        "Time_of_day"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "Morning": "Time_of_day"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a0'∀a1'∀a2'∀a3'∀a4'( program(a0, a1, a2, a3, a4) ∧ program(a0', a1', a2', a3', a4') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( channel(b0, b1, b2, b3, b4) ∧ channel(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( broadcast(c0, c1, c2) ∧ broadcast(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀d0∀d1∀d2∀d3∀d0'∀d1'∀d2'∀d3'( broadcast_share(d0, d1, d2, d3) ∧ broadcast_share(d0', d1', d2', d3') ∧ d0 = d0' ∧ d1 = d1' ) → ( d2 = d2' ∧ d3 = d3' )",
+    "axiom5": "∀c0∀c1∀c2 ( broadcast(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4 ( program(a0, a1, a2, a3, a4) ∧ a0 = c1 ) )",
+    "axiom6": "∀c0∀c1∀c2 ( broadcast(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4 ( channel(b0, b1, b2, b3, b4) ∧ b0 = c0 ) )",
+    "axiom7": "∀d0∀d1∀d2∀d3 ( broadcast_share(d0, d1, d2, d3) → ∃a0∃a1∃a2∃a3∃a4 ( program(a0, a1, a2, a3, a4) ∧ a0 = d1 ) )",
+    "axiom8": "∀d0∀d1∀d2∀d3 ( broadcast_share(d0, d1, d2, d3) → ∃b0∃b1∃b2∃b3∃b4 ( channel(b0, b1, b2, b3, b4) ∧ b0 = d0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "program": {
+        "A": "program",
+        "A0": "Program_ID",
+        "A1": "Name",
+        "A2": "Origin",
+        "A3": "Launch",
+        "A4": "Owner"
+      },
+      "broadcast": {
+        "B": "broadcast",
+        "B0": "Channel_ID",
+        "B1": "Program_ID",
+        "B2": "Time_of_day"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "Morning"
+    }
+  },
+  "Gold FOL": {
+    "string": "(∃o : Origin ∃o1 : Owner ∃l : Launch ∃p : Program_ID( program(p,n,o,l,o1) )) ∧ (¬(∃c : Channel_ID ∃o : Origin ∃t : Time_of_day ∃o1 : Owner ∃l : Launch ∃p1 : Program_ID ∃p : Program_ID( (((program(p,n,o,l,o1)) ∧ (broadcast(c,p1,t))) ∧ (p = p1)) ∧ (t = 'Morning') )))",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A1](A))<D>(<P>[A1](<S>[B2 = 'Morning':VARCHAR(65536)](<S>[A0 = B1]((A)<X>(B)))))",
+    "Processed_RA": "(<P>[A1](A))<D>(<P>[A1](<S>[B2 = 'Morning'](<S>[A0 = B1]((A)<X>(B)))))",
+    "RC": "([E]?A2,?A4,?A3,?A0( A(?A0,?A1,?A2,?A3,?A4) )) & (~([E]?B0,?A2,?B2,?A4,?A3,?B1,?A0( (((A(?A0,?A1,?A2,?A3,?A4)) & (B(?B0,?B1,?B2))) & (?A0 = ?B1)) & (?B2 = Morning) )))",
+    "string": "(∃A2 ∃A4 ∃A3 ∃A0( A(A0,A1,A2,A3,A4) )) ∧ (¬(∃B0 ∃A2 ∃B2 ∃A4 ∃A3 ∃B1 ∃A0( (((A(A0,A1,A2,A3,A4)) ∧ (B(B0,B1,B2))) ∧ (A0 = B1)) ∧ (B2 = 'Morning') )))",
+    "free variables": "A1",
+    "db_id": "program_share",
+    "processed_sql": "SELECT name FROM program EXCEPT SELECT t1.name FROM program AS t1 JOIN broadcast AS t2 ON t1.program_id  =  t2.program_id WHERE t2.Time_of_day  =  'Morning'"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "program": {
+      "sortaxiom0": "Program_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Origin = text",
+      "sortaxiom3": "Launch = real",
+      "sortaxiom4": "Owner = text"
+    },
+    "broadcast": {
+      "sortaxiom0": "Channel_ID = int",
+      "sortaxiom1": "Program_ID = int",
+      "sortaxiom2": "Time_of_day = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT name FROM program EXCEPT SELECT t1.name FROM program AS t1 JOIN broadcast AS t2 ON t1.program_id  =  t2.program_id WHERE t2.Time_of_day  =  \"Morning\""
+  },
+  "id": 3609,
+  "Predicted FOL": {
+    "string": "∃p : Program_ID ∃o : Origin ∃l : Launch ∃w : Owner (program(p, n, o, l, w) ∧ ¬∃c : Channel_ID broadcast(c, p, 'Morning'))",
+    "free vars": "n : Name"
+  }
+}

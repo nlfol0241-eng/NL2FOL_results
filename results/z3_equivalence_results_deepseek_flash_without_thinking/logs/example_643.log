@@ -1,0 +1,79 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_643.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_643.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2161 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who is the director of movie Avatar?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        constant Avatar : title
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mID ∃t : title ∃y : year ( (Movie(m,t,y,d)) ∧ (t = 'Avatar') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Avatar RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mID
+            EXISTS t:title
+              EXISTS y:year
+                AND
+                  PRED Movie(m, t, y, d)
+                  EQ  t = 'Avatar'
+      Predicted FOL: ∃x : mID ∃y : title ∃z : year ∃w : director (Movie(x, y, z, w) ∧ y = 'Avatar')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:mID EXISTS:∃ IDENT:y COLON:: IDENT:title EXISTS:∃ IDENT:z COLON:: IDENT:year EXISTS:∃ IDENT:w COLON:: IDENT:director LPAR:( IDENT:Movie LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w RPAR:) AND:∧ IDENT:y EQ:= LIT:Avatar RPAR:) EOF
+        AST:
+          EXISTS x:mID
+            EXISTS y:title
+              EXISTS z:year
+                EXISTS w:director
+                  AND
+                    PRED Movie(x, y, z, w)
+                    EQ  y = 'Avatar'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d : director) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        w : local director, global text -> StringSort()
+        x : local mID, global int -> IntSort()
+        y : local title, global text -> StringSort()
+        z : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5236 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_643.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d : director) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

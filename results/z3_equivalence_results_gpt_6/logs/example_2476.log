@@ -1,0 +1,360 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2476.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2476.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9395 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of all patients who have an undergoing treatment and are staying in room 111.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 16 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        Address = varchar(30) -> StringSort()
+        AssistingNurse = integer -> IntSort()
+        DateUndergoes = datetime -> IntSort()
+        InsuranceID = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        PCP = integer -> IntSort()
+        Patient = integer -> IntSort()
+        Phone = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Procedures = integer -> IntSort()
+        Room = integer -> IntSort()
+        SSN = integer -> IntSort()
+        Stay = integer -> IntSort()
+        StayEnd = datetime -> IntSort()
+        StayID = integer -> IntSort()
+        StayStart = datetime -> IntSort()
+      symbols:
+        Patient(SSN, Name, Address, Phone, InsuranceID, PCP)
+        Stay(StayID, Patient, Room, StayStart, StayEnd)
+        Undergoes(Patient, Procedures, Stay, DateUndergoes, Physician, AssistingNurse)
+        constant 111 : Room
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Patient ∃p1 : Procedures ∃s : Stay ∃d : DateUndergoes ∃p2 : Physician ∃a : AssistingNurse ∃s1 : SSN ∃a1 : Address ∃p3 : Phone ∃i : InsuranceID ∃p4 : PCP ∃s2 : StayID ∃p5 : Patient ∃r : Room ∃s3 : StayStart ∃s4 : StayEnd ( (((((Undergoes(p,p1,s,d,p2,a)) ∧ (Patient(s1,n,a1,p3,i,p4))) ∧ (p = s1)) ∧ (Stay(s2,p5,r,s3,s4))) ∧ (s = s2)) ∧ (r = 111) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Patient EXISTS:∃ IDENT:p1 COLON:: IDENT:Procedures EXISTS:∃ IDENT:s COLON:: IDENT:Stay EXISTS:∃ IDENT:d COLON:: IDENT:DateUndergoes EXISTS:∃ IDENT:p2 COLON:: IDENT:Physician EXISTS:∃ IDENT:a COLON:: IDENT:AssistingNurse EXISTS:∃ IDENT:s1 COLON:: IDENT:SSN EXISTS:∃ IDENT:a1 COLON:: IDENT:Address EXISTS:∃ IDENT:p3 COLON:: IDENT:Phone EXISTS:∃ IDENT:i COLON:: IDENT:InsuranceID EXISTS:∃ IDENT:p4 COLON:: IDENT:PCP EXISTS:∃ IDENT:s2 COLON:: IDENT:StayID EXISTS:∃ IDENT:p5 COLON:: IDENT:Patient EXISTS:∃ IDENT:r COLON:: IDENT:Room EXISTS:∃ IDENT:s3 COLON:: IDENT:StayStart EXISTS:∃ IDENT:s4 COLON:: IDENT:StayEnd LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Undergoes LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:p2 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Patient LPAR:( IDENT:s1 COMMA:, IDENT:n COMMA:, IDENT:a1 COMMA:, IDENT:p3 COMMA:, IDENT:i COMMA:, IDENT:p4 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Stay LPAR:( IDENT:s2 COMMA:, IDENT:p5 COMMA:, IDENT:r COMMA:, IDENT:s3 COMMA:, IDENT:s4 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= NUM:111 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Patient
+            EXISTS p1:Procedures
+              EXISTS s:Stay
+                EXISTS d:DateUndergoes
+                  EXISTS p2:Physician
+                    EXISTS a:AssistingNurse
+                      EXISTS s1:SSN
+                        EXISTS a1:Address
+                          EXISTS p3:Phone
+                            EXISTS i:InsuranceID
+                              EXISTS p4:PCP
+                                EXISTS s2:StayID
+                                  EXISTS p5:Patient
+                                    EXISTS r:Room
+                                      EXISTS s3:StayStart
+                                        EXISTS s4:StayEnd
+                                          AND
+                                            AND
+                                              AND
+                                                AND
+                                                  AND
+                                                    PRED Undergoes(p, p1, s, d, p2, a)
+                                                    PRED Patient(s1, n, a1, p3, i, p4)
+                                                  EQ  p = s1
+                                                PRED Stay(s2, p5, r, s3, s4)
+                                              EQ  s = s2
+                                            EQ  r = 111
+      Predicted FOL: ∃p : SSN ∃a : Address ∃ph : Phone ∃i : InsuranceID ∃c : PCP ∃pr : Procedures ∃s : Stay ∃d : DateUndergoes ∃v : Physician ∃n : AssistingNurse ∃b : StayStart ∃e : StayEnd (Patient(p, name, a, ph, i, c) ∧ Undergoes(p, pr, s, d, v, n) ∧ Stay(s, p, 111, b, e))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:SSN EXISTS:∃ IDENT:a COLON:: IDENT:Address EXISTS:∃ IDENT:ph COLON:: IDENT:Phone EXISTS:∃ IDENT:i COLON:: IDENT:InsuranceID EXISTS:∃ IDENT:c COLON:: IDENT:PCP EXISTS:∃ IDENT:pr COLON:: IDENT:Procedures EXISTS:∃ IDENT:s COLON:: IDENT:Stay EXISTS:∃ IDENT:d COLON:: IDENT:DateUndergoes EXISTS:∃ IDENT:v COLON:: IDENT:Physician EXISTS:∃ IDENT:n COLON:: IDENT:AssistingNurse EXISTS:∃ IDENT:b COLON:: IDENT:StayStart EXISTS:∃ IDENT:e COLON:: IDENT:StayEnd LPAR:( IDENT:Patient LPAR:( IDENT:p COMMA:, IDENT:name COMMA:, IDENT:a COMMA:, IDENT:ph COMMA:, IDENT:i COMMA:, IDENT:c RPAR:) AND:∧ IDENT:Undergoes LPAR:( IDENT:p COMMA:, IDENT:pr COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:v COMMA:, IDENT:n RPAR:) AND:∧ IDENT:Stay LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, NUM:111 COMMA:, IDENT:b COMMA:, IDENT:e RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:SSN
+            EXISTS a:Address
+              EXISTS ph:Phone
+                EXISTS i:InsuranceID
+                  EXISTS c:PCP
+                    EXISTS pr:Procedures
+                      EXISTS s:Stay
+                        EXISTS d:DateUndergoes
+                          EXISTS v:Physician
+                            EXISTS n:AssistingNurse
+                              EXISTS b:StayStart
+                                EXISTS e:StayEnd
+                                  AND
+                                    PRED Patient(p, name, a, ph, i, c)
+                                    PRED Undergoes(p, pr, s, d, v, n)
+                                    PRED Stay(s, p, 111, b, e)
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 30 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local AssistingNurse, global integer -> IntSort()
+        a1 : local Address, global varchar(30) -> StringSort()
+        d : local DateUndergoes, global datetime -> IntSort()
+        i : local InsuranceID, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Patient, global integer -> IntSort()
+        p1 : local Procedures, global integer -> IntSort()
+        p2 : local Physician, global integer -> IntSort()
+        p3 : local Phone, global varchar(30) -> StringSort()
+        p4 : local PCP, global integer -> IntSort()
+        p5 : local Patient, global integer -> IntSort()
+        r : local Room, global integer -> IntSort()
+        s : local Stay, global integer -> IntSort()
+        s1 : local SSN, global integer -> IntSort()
+        s2 : local StayID, global integer -> IntSort()
+        s3 : local StayStart, global datetime -> IntSort()
+        s4 : local StayEnd, global datetime -> IntSort()
+      Predicted FOL:
+        a : local Address, global varchar(30) -> StringSort()
+        b : local StayStart, global datetime -> IntSort()
+        c : local PCP, global integer -> IntSort()
+        d : local DateUndergoes, global datetime -> IntSort()
+        e : local StayEnd, global datetime -> IntSort()
+        i : local InsuranceID, global integer -> IntSort()
+        n : local AssistingNurse, global integer -> IntSort()
+        name : local Name, global varchar(30) -> StringSort()
+        p : local SSN, global integer -> IntSort()
+        ph : local Phone, global varchar(30) -> StringSort()
+        pr : local Procedures, global integer -> IntSort()
+        s : local Stay, global integer -> IntSort()
+        v : local Physician, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6, gold_s1_7, gold_a1_8, gold_p3_9, gold_i_10, gold_p4_11, gold_s2_12, gold_p5_13, gold_r_14, gold_s3_15, gold_s4_16], And(D_varchar_30_(gold_a1_8), D_varchar_30_(gold_p3_9), And(And(And(And(And(P_Undergoes(gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6), P_Patient(gold_s1_7, FV_Name_0, gold_a1_8, gold_p3_9, gold_i_10, gold_p4_11)), (gold_p_1 == gold_s1_7)), P_Stay(gold_s2_12, gold_p5_13, gold_r_14, gold_s3_15, gold_s4_16)), (gold_s_3 == gold_s2_12)), (gold_r_14 == L_v_111_integer))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a, WGOLD_s1, WGOLD_a1, WGOLD_p3, WGOLD_i, WGOLD_p4, WGOLD_s2, WGOLD_p5, WGOLD_r, WGOLD_s3, WGOLD_s4):  And(D_varchar_30_(WGOLD_a1), D_varchar_30_(WGOLD_p3), And(And(And(And(And(P_Undergoes(WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a), P_Patient(WGOLD_s1, FV_Name_0, WGOLD_a1, WGOLD_p3, WGOLD_i, WGOLD_p4)), (WGOLD_p == WGOLD_s1)), P_Stay(WGOLD_s2, WGOLD_p5, WGOLD_r, WGOLD_s3, WGOLD_s4)), (WGOLD_s == WGOLD_s2)), (WGOLD_r == L_v_111_integer)))
+   Gold: 16 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_a_2, predicted_ph_3, predicted_i_4, predicted_c_5, predicted_pr_6, predicted_s_7, predicted_d_8, predicted_v_9, predicted_n_10, predicted_b_11, predicted_e_12], And(D_varchar_30_(predicted_a_2), D_varchar_30_(predicted_ph_3), And(P_Patient(predicted_p_1, FV_Name_0, predicted_a_2, predicted_ph_3, predicted_i_4, predicted_c_5), P_Undergoes(predicted_p_1, predicted_pr_6, predicted_s_7, predicted_d_8, predicted_v_9, predicted_n_10), P_Stay(predicted_s_7, predicted_p_1, L_v_111_integer, predicted_b_11, predicted_e_12))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_a, WPREDICTED_ph, WPREDICTED_i, WPREDICTED_c, WPREDICTED_pr, WPREDICTED_s, WPREDICTED_d, WPREDICTED_v, WPREDICTED_n, WPREDICTED_b, WPREDICTED_e):  And(D_varchar_30_(WPREDICTED_a), D_varchar_30_(WPREDICTED_ph), And(P_Patient(WPREDICTED_p, FV_Name_0, WPREDICTED_a, WPREDICTED_ph, WPREDICTED_i, WPREDICTED_c), P_Undergoes(WPREDICTED_p, WPREDICTED_pr, WPREDICTED_s, WPREDICTED_d, WPREDICTED_v, WPREDICTED_n), P_Stay(WPREDICTED_s, WPREDICTED_p, L_v_111_integer, WPREDICTED_b, WPREDICTED_e)))
+   Predicted: 12 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '111' at integer -> L_v_111_integer = IntVal(111)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 834 lines, 34760 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2476.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 30
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a, WGOLD_s1, WGOLD_a1, WGOLD_p3, WGOLD_i, WGOLD_p4, WGOLD_s2, WGOLD_p5, WGOLD_r, WGOLD_s3, WGOLD_s4
+      claim: And(And(Length(WGOLD_a1) <= 30, Length(WGOLD_p3) <= 30, And(And(And(And(And(Undergoes(WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a), Patient(WGOLD_s1, FV_Name_0, WGOLD_a1, WGOLD_p3, WGOLD_i, WGOLD_p4)), WGOLD_p == WGOLD_s1), Stay(WGOLD_s2, WGOLD_p5, WGOLD_r, WGOLD_s3, WGOLD_s4)), WGOLD_s == WGOLD_s2), 111 == WGOLD_r)), Not(Exists([predicted_p_1, predicted_a_2, predicted_ph_3, predicted_i_4, predicted_c_5, predicted_pr_6, predicted_s_7, predicted_d_8, predicted_v_9, predicted_n_10, predicted_b_11, predicted_e_12], And(Length(predicted_a_2) <= 30, Length(predicted_ph_3) <= 30, And(Patient(predicted_p_1, FV_Name_0, predicted_a_2, predicted_ph_3, predicted_i_4, predicted_c_5), Undergoes(predicted_p_1, predicted_pr_6, predicted_s_7, predicted_d_8, predicted_v_9, predicted_n_10), Stay(predicted_s_7, predicted_p_1, 111, predicted_b_11, predicted_e_12))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.011 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 124 relation tuple(s) listed, 133 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          p : Patient = 2
+          p1 : Procedures = 3
+          s : Stay = 4
+          d : DateUndergoes = 1970-01-01 00:00:05
+          p2 : Physician = 6
+          a : AssistingNurse = 7
+          s1 : SSN = 2
+          a1 : Address = ''
+          p3 : Phone = ''
+          i : InsuranceID = 8
+          p4 : PCP = 9
+          s2 : StayID = 4
+          p5 : Patient = 10
+          r : Room = 111
+          s3 : StayStart = 1970-01-01 00:00:11
+          s4 : StayEnd = 1970-01-01 00:00:12
+        free (answer) variables:
+          FV_Name_0 : Name = ''
+        literals / constants:
+          111 : Room = 111
+        relations (each value tagged with the local sort of its position):
+          Patient(SSN, Name, Address, Phone, InsuranceID, PCP):
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=2)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=3)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=4)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=5)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=6)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=7)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=8)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=11)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=111)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=0, PCP=112)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=2, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=3, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=4, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=5, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=6, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=7, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=10, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=11, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=111, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='', InsuranceID=112, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='A', InsuranceID=0, PCP=0)
+            Patient(SSN=0, Name='', Address='', Phone='B', InsuranceID=0, PCP=0)
+            Patient(SSN=0, Name='', Address='A', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=0, Name='', Address='C', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=0, Name='B', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=0, Name='C', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=2, Name='', Address='', Phone='', InsuranceID=8, PCP=9)
+            Patient(SSN=3, Name='A', Address='B', Phone='C', InsuranceID=9, PCP=10)
+            Patient(SSN=4, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=5, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=6, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=7, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=8, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=9, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=10, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=11, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=111, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            Patient(SSN=112, Name='', Address='', Phone='', InsuranceID=0, PCP=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Stay(StayID, Patient, Room, StayStart, StayEnd):
+            Stay(StayID=0, Patient=0, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=2, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=3, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=4, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=5, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=6, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=7, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=8, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=9, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=10, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=0, Room=11, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=2, Room=112, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:05)
+            Stay(StayID=0, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:11)
+            Stay(StayID=0, Patient=3, Room=111, StayStart=1970-01-01 00:00:05, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=3, Room=111, StayStart=1970-01-01 00:00:12, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=4, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=5, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=6, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=7, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=8, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=9, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=111, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=0, Patient=112, Room=0, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=2, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=3, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=4, Patient=10, Room=111, StayStart=1970-01-01 00:00:11, StayEnd=1970-01-01 00:00:12)
+            Stay(StayID=4, Patient=11, Room=112, StayStart=1970-01-01 00:00:11, StayEnd=1970-01-01 00:00:12)
+            Stay(StayID=5, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=6, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=7, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=8, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=9, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=10, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=11, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=111, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            Stay(StayID=112, Patient=3, Room=111, StayStart=1970-01-01 00:00:00, StayEnd=1970-01-01 00:00:00)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Undergoes(Patient, Procedures, Stay, DateUndergoes, Physician, AssistingNurse):
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=2)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=3)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=4)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=5)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=6)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=8)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=9)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=10)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=11)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=111)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=112)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=2, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=3, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=4, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=5, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=7, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=8, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=9, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=10, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=11, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=111, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=112, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:11, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=0, DateUndergoes=1970-01-01 00:00:12, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=2, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=3, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=6, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=7, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=8, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=9, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=10, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=11, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=111, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=0, Stay=112, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=2, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=3, Stay=4, DateUndergoes=1970-01-01 00:00:05, Physician=6, AssistingNurse=7)
+            Undergoes(Patient=2, Procedures=3, Stay=5, DateUndergoes=1970-01-01 00:00:05, Physician=6, AssistingNurse=7)
+            Undergoes(Patient=2, Procedures=4, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=5, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=6, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=7, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=8, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=9, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=10, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=11, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=111, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            Undergoes(Patient=2, Procedures=112, Stay=0, DateUndergoes=1970-01-01 00:00:00, Physician=0, AssistingNurse=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Address        : {'', 'A', 'B', 'C'}
+          AssistingNurse : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          DateUndergoes  : {1970-01-01 00:00:00, 1970-01-01 00:00:05, 1970-01-01 00:00:11, 1970-01-01 00:00:12}
+          InsuranceID    : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          Name           : {'', 'A', 'B', 'C'}
+          PCP            : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          Patient        : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          Phone          : {'', 'A', 'B', 'C'}
+          Physician      : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          Procedures     : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          Room           : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          SSN            : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          Stay           : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          StayEnd        : {1970-01-01 00:00:00, 1970-01-01 00:00:05, 1970-01-01 00:00:11, 1970-01-01 00:00:12}
+          StayID         : {0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 111, 112}
+          StayStart      : {1970-01-01 00:00:00, 1970-01-01 00:00:05, 1970-01-01 00:00:11, 1970-01-01 00:00:12}
+        values shared across local sorts (joins):
+          0 : DateUndergoes, StayEnd, StayStart
+          11 : DateUndergoes, StayEnd, StayStart
+          12 : DateUndergoes, StayEnd, StayStart
+          5 : DateUndergoes, StayEnd, StayStart
+          0 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          10 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          11 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          111 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          112 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          2 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          3 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          4 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          5 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          6 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          7 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          8 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          9 : AssistingNurse, InsuranceID, PCP, Patient, Physician, Procedures, Room, SSN, Stay, StayID
+          '' : Address, Name, Phone
+          'A' : Address, Name, Phone
+          'B' : Address, Name, Phone
+          'C' : Address, Name, Phone
+   [R2] took 1.483 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_a, WPREDICTED_ph, WPREDICTED_i, WPREDICTED_c, WPREDICTED_pr, WPREDICTED_s, WPREDICTED_d, WPREDICTED_v, WPREDICTED_n, WPREDICTED_b, WPREDICTED_e
+      claim: And(And(Length(WPREDICTED_a) <= 30, Length(WPREDICTED_ph) <= 30, And(Patient(WPREDICTED_p, FV_Name_0, WPREDICTED_a, WPREDICTED_ph, WPREDICTED_i, WPREDICTED_c), Undergoes(WPREDICTED_p, WPREDICTED_pr, WPREDICTED_s, WPREDICTED_d, WPREDICTED_v, WPREDICTED_n), Stay(WPREDICTED_s, WPREDICTED_p, 111, WPREDICTED_b, WPREDICTED_e))), Not(Exists([gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6, gold_s1_7, gold_a1_8, gold_p3_9, gold_i_10, gold_p4_11, gold_s2_12, gold_p5_13, gold_r_14, gold_s3_15, gold_s4_16], And(Length(gold_a1_8) <= 30, Length(gold_p3_9) <= 30, And(And(And(And(And(Undergoes(gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6), Patient(gold_s1_7, FV_Name_0, gold_a1_8, gold_p3_9, gold_i_10, gold_p4_11)), gold_p_1 == gold_s1_7), Stay(gold_s2_12, gold_p5_13, gold_r_14, gold_s3_15, gold_s4_16)), gold_s_3 == gold_s2_12), 111 == gold_r_14)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

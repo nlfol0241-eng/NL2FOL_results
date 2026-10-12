@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_779.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_779.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3863 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Tell me the the claim date and settlement date for each settlement case.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        integer -> IntSort()
+      local sorts:
+        Amount_Claimed = integer -> IntSort()
+        Amount_Settled = integer -> IntSort()
+        Claim_ID = integer -> IntSort()
+        Customer_Policy_ID = integer -> IntSort()
+        Date_Claim_Made = date -> IntSort()
+        Date_Claim_Settled = date -> IntSort()
+        Settlement_ID = integer -> IntSort()
+      symbols:
+        Settlements(Settlement_ID, Claim_ID, Date_Claim_Made, Date_Claim_Settled, Amount_Claimed, Amount_Settled, Customer_Policy_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Settlement_ID ∃c : Claim_ID ∃a : Amount_Claimed ∃a1 : Amount_Settled ∃c1 : Customer_Policy_ID ( Settlements(s,c,d,d1,a,a1,c1) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Settlement_ID EXISTS:∃ IDENT:c COLON:: IDENT:Claim_ID EXISTS:∃ IDENT:a COLON:: IDENT:Amount_Claimed EXISTS:∃ IDENT:a1 COLON:: IDENT:Amount_Settled EXISTS:∃ IDENT:c1 COLON:: IDENT:Customer_Policy_ID LPAR:( IDENT:Settlements LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Settlement_ID
+            EXISTS c:Claim_ID
+              EXISTS a:Amount_Claimed
+                EXISTS a1:Amount_Settled
+                  EXISTS c1:Customer_Policy_ID
+                    PRED Settlements(s, c, d, d1, a, a1, c1)
+      Predicted FOL: ∀s:Settlement_ID ∀c:Claim_ID ∀dc:Date_Claim_Made ∀ds:Date_Claim_Settled ∀ac:Amount_Claimed ∀as:Amount_Settled ∀cp:Customer_Policy_ID ( Settlements(s, c, dc, ds, ac, as, cp) → ∃dc2:Date_Claim_Made ∃ds2:Date_Claim_Settled ( dc2 = dc ∧ ds2 = ds ) )
+        tokens: FORALL:∀ IDENT:s COLON:: IDENT:Settlement_ID FORALL:∀ IDENT:c COLON:: IDENT:Claim_ID FORALL:∀ IDENT:dc COLON:: IDENT:Date_Claim_Made FORALL:∀ IDENT:ds COLON:: IDENT:Date_Claim_Settled FORALL:∀ IDENT:ac COLON:: IDENT:Amount_Claimed FORALL:∀ IDENT:as COLON:: IDENT:Amount_Settled FORALL:∀ IDENT:cp COLON:: IDENT:Customer_Policy_ID LPAR:( IDENT:Settlements LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:dc COMMA:, IDENT:ds COMMA:, IDENT:ac COMMA:, IDENT:as COMMA:, IDENT:cp RPAR:) IMPL:→ EXISTS:∃ IDENT:dc2 COLON:: IDENT:Date_Claim_Made EXISTS:∃ IDENT:ds2 COLON:: IDENT:Date_Claim_Settled LPAR:( IDENT:dc2 EQ:= IDENT:dc AND:∧ IDENT:ds2 EQ:= IDENT:ds RPAR:) RPAR:) EOF
+        AST:
+          FORALL s:Settlement_ID
+            FORALL c:Claim_ID
+              FORALL dc:Date_Claim_Made
+                FORALL ds:Date_Claim_Settled
+                  FORALL ac:Amount_Claimed
+                    FORALL as:Amount_Settled
+                      FORALL cp:Customer_Policy_ID
+                        IMPLIES
+                          PRED Settlements(s, c, dc, ds, ac, as, cp)
+                          EXISTS dc2:Date_Claim_Made
+                            EXISTS ds2:Date_Claim_Settled
+                              AND
+                                EQ  dc2 = dc
+                                EQ  ds2 = ds
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (d : Date_Claim_Made, d1 : Date_Claim_Settled) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Amount_Claimed, global integer -> IntSort()
+        a1 : local Amount_Settled, global integer -> IntSort()
+        c : local Claim_ID, global integer -> IntSort()
+        c1 : local Customer_Policy_ID, global integer -> IntSort()
+        d : local Date_Claim_Made, global date -> IntSort()
+        d1 : local Date_Claim_Settled, global date -> IntSort()
+        s : local Settlement_ID, global integer -> IntSort()
+      Predicted FOL:
+        ac : local Amount_Claimed, global integer -> IntSort()
+        as : local Amount_Settled, global integer -> IntSort()
+        c : local Claim_ID, global integer -> IntSort()
+        cp : local Customer_Policy_ID, global integer -> IntSort()
+        dc : local Date_Claim_Made, global date -> IntSort()
+        dc2 : local Date_Claim_Made, global date -> IntSort()
+        ds : local Date_Claim_Settled, global date -> IntSort()
+        ds2 : local Date_Claim_Settled, global date -> IntSort()
+        s : local Settlement_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5582 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_779.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (d : Date_Claim_Made, d1 : Date_Claim_Settled) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

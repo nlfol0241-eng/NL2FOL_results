@@ -1,0 +1,135 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3456.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3456.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6733 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which employees do not destroy any document? Find their employee ids.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 11 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Actual_Destruction_Date = datetime -> IntSort()
+        Date_of_Birth = datetime -> IntSort()
+        Destroyed_by_Employee_ID = integer -> IntSort()
+        Destruction_Authorised_by_Employee_ID = integer -> IntSort()
+        Document_ID = integer -> IntSort()
+        Employee_ID = integer -> IntSort()
+        Employee_Name = varchar(255) -> StringSort()
+        Gender_MFU = char(1) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Planned_Destruction_Date = datetime -> IntSort()
+        Role_Code = char(15) -> StringSort()
+      symbols:
+        Documents_to_be_Destroyed(Document_ID, Destruction_Authorised_by_Employee_ID, Destroyed_by_Employee_ID, Planned_Destruction_Date, Actual_Destruction_Date, Other_Details)
+        Employees(Employee_ID, Role_Code, Employee_Name, Gender_MFU, Date_of_Birth, Other_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃e1 : Employee_Name ∃o : Other_Details ∃r : Role_Code ∃d : Date_of_Birth ∃g : Gender_MFU( Employees(e,r,e1,g,d,o) )) ∧ (¬(∃d1 : Document_ID ∃p : Planned_Destruction_Date ∃o1 : Other_Details ∃d2 : Destruction_Authorised_by_Employee_ID ∃a : Actual_Destruction_Date( Documents_to_be_Destroyed(d1,d2,e,p,a,o1) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:e1 COLON:: IDENT:Employee_Name EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details EXISTS:∃ IDENT:r COLON:: IDENT:Role_Code EXISTS:∃ IDENT:d COLON:: IDENT:Date_of_Birth EXISTS:∃ IDENT:g COLON:: IDENT:Gender_MFU LPAR:( IDENT:Employees LPAR:( IDENT:e COMMA:, IDENT:r COMMA:, IDENT:e1 COMMA:, IDENT:g COMMA:, IDENT:d COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:d1 COLON:: IDENT:Document_ID EXISTS:∃ IDENT:p COLON:: IDENT:Planned_Destruction_Date EXISTS:∃ IDENT:o1 COLON:: IDENT:Other_Details EXISTS:∃ IDENT:d2 COLON:: IDENT:Destruction_Authorised_by_Employee_ID EXISTS:∃ IDENT:a COLON:: IDENT:Actual_Destruction_Date LPAR:( IDENT:Documents_to_be_Destroyed LPAR:( IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:e COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS e1:Employee_Name
+              EXISTS o:Other_Details
+                EXISTS r:Role_Code
+                  EXISTS d:Date_of_Birth
+                    EXISTS g:Gender_MFU
+                      PRED Employees(e, r, e1, g, d, o)
+            NOT
+              EXISTS d1:Document_ID
+                EXISTS p:Planned_Destruction_Date
+                  EXISTS o1:Other_Details
+                    EXISTS d2:Destruction_Authorised_by_Employee_ID
+                      EXISTS a:Actual_Destruction_Date
+                        PRED Documents_to_be_Destroyed(d1, d2, e, p, a, o1)
+      Predicted FOL: (∃r : Role_Code ∃n : Employee_Name ∃g : Gender_MFU ∃b : Date_of_Birth ∃o : Other_Details (Employees(e, r, n, g, b, o))) ∧ ¬(∃d : Document_ID ∃a : Destruction_Authorised_by_Employee_ID ∃p : Planned_Destruction_Date ∃t : Actual_Destruction_Date ∃q : Other_Details (Documents_to_be_Destroyed(d, a, e, p, t, q)))
+        tokens: LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:Role_Code EXISTS:∃ IDENT:n COLON:: IDENT:Employee_Name EXISTS:∃ IDENT:g COLON:: IDENT:Gender_MFU EXISTS:∃ IDENT:b COLON:: IDENT:Date_of_Birth EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( IDENT:Employees LPAR:( IDENT:e COMMA:, IDENT:r COMMA:, IDENT:n COMMA:, IDENT:g COMMA:, IDENT:b COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ NOT:¬ LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:a COLON:: IDENT:Destruction_Authorised_by_Employee_ID EXISTS:∃ IDENT:p COLON:: IDENT:Planned_Destruction_Date EXISTS:∃ IDENT:t COLON:: IDENT:Actual_Destruction_Date EXISTS:∃ IDENT:q COLON:: IDENT:Other_Details LPAR:( IDENT:Documents_to_be_Destroyed LPAR:( IDENT:d COMMA:, IDENT:a COMMA:, IDENT:e COMMA:, IDENT:p COMMA:, IDENT:t COMMA:, IDENT:q RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS r:Role_Code
+              EXISTS n:Employee_Name
+                EXISTS g:Gender_MFU
+                  EXISTS b:Date_of_Birth
+                    EXISTS o:Other_Details
+                      PRED Employees(e, r, n, g, b, o)
+            NOT
+              EXISTS d:Document_ID
+                EXISTS a:Destruction_Authorised_by_Employee_ID
+                  EXISTS p:Planned_Destruction_Date
+                    EXISTS t:Actual_Destruction_Date
+                      EXISTS q:Other_Details
+                        PRED Documents_to_be_Destroyed(d, a, e, p, t, q)
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Employee_ID_0 : Employee_ID   Gold e <-> Predicted e
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 22 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Actual_Destruction_Date, global datetime -> IntSort()
+        d : local Date_of_Birth, global datetime -> IntSort()
+        d1 : local Document_ID, global integer -> IntSort()
+        d2 : local Destruction_Authorised_by_Employee_ID, global integer -> IntSort()
+        e : local Employee_ID, global integer -> IntSort()
+        e1 : local Employee_Name, global varchar(255) -> StringSort()
+        g : local Gender_MFU, global char(1) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        o1 : local Other_Details, global varchar(255) -> StringSort()
+        p : local Planned_Destruction_Date, global datetime -> IntSort()
+        r : local Role_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        a : local Destruction_Authorised_by_Employee_ID, global integer -> IntSort()
+        b : local Date_of_Birth, global datetime -> IntSort()
+        d : local Document_ID, global integer -> IntSort()
+        e : local Employee_ID, global integer -> IntSort()
+        g : local Gender_MFU, global char(1) -> StringSort()
+        n : local Employee_Name, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Planned_Destruction_Date, global datetime -> IntSort()
+        q : local Other_Details, global varchar(255) -> StringSort()
+        r : local Role_Code, global char(15) -> StringSort()
+        t : local Actual_Destruction_Date, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_e1_1, gold_o_2, gold_r_3, gold_d_4, gold_g_5], And(D_varchar_255_(gold_e1_1), D_varchar_255_(gold_o_2), D_char_15_(gold_r_3), D_char_1_(gold_g_5), P_Employees(FV_Employee_ID_0, gold_r_3, gold_e1_1, gold_g_5, gold_d_4, gold_o_2))), Not(Exists([gold_d1_6, gold_p_7, gold_o1_8, gold_d2_9, gold_a_10], And(D_varchar_255_(gold_o1_8), P_Documents_to_be_Destroyed(gold_d1_6, gold_d2_9, FV_Employee_ID_0, gold_p_7, gold_a_10, gold_o1_8)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(Exists([predicted_r_1, predicted_n_2, predicted_g_3, predicted_b_4, predicted_o_5], And(D_char_15_(predicted_r_1), D_varchar_255_(predicted_n_2), D_char_1_(predicted_g_3), D_varchar_255_(predicted_o_5), P_Employees(FV_Employee_ID_0, predicted_r_1, predicted_n_2, predicted_g_3, predicted_b_4, predicted_o_5))), Not(Exists([predicted_d_6, predicted_a_7, predicted_p_8, predicted_t_9, predicted_q_10], And(D_varchar_255_(predicted_q_10), P_Documents_to_be_Destroyed(predicted_d_6, predicted_a_7, FV_Employee_ID_0, predicted_p_8, predicted_t_9, predicted_q_10)))))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 762 lines, 30527 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3456.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_e1_1, gold_o_2, gold_r_3, gold_d_4, gold_g_5], And(Length(gold_e1_1) <= 255, Length(gold_o_2) <= 255, Length(gold_r_3) <= 15, Length(gold_g_5) <= 1, Employees(FV_Employee_ID_0, gold_r_3, gold_e1_1, gold_g_5, gold_d_4, gold_o_2))), Not(Exists([gold_d1_6, gold_p_7, gold_o1_8, gold_d2_9, gold_a_10], And(Length(gold_o1_8) <= 255, Documents_to_be_Destroyed(gold_d1_6, gold_d2_9, FV_Employee_ID_0, gold_p_7, gold_a_10, gold_o1_8))))), Not(And(Exists([predicted_r_1, predicted_n_2, predicted_g_3, predicted_b_4, predicted_o_5], And(Length(predicted_r_1) <= 15, Length(predicted_n_2) <= 255, Length(predicted_g_3) <= 1, Length(predicted_o_5) <= 255, Employees(FV_Employee_ID_0, predicted_r_1, predicted_n_2, predicted_g_3, predicted_b_4, predicted_o_5))), Not(Exists([predicted_d_6, predicted_a_7, predicted_p_8, predicted_t_9, predicted_q_10], And(Length(predicted_q_10) <= 255, Documents_to_be_Destroyed(predicted_d_6, predicted_a_7, FV_Employee_ID_0, predicted_p_8, predicted_t_9, predicted_q_10)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.024 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([predicted_r_1, predicted_n_2, predicted_g_3, predicted_b_4, predicted_o_5], And(Length(predicted_r_1) <= 15, Length(predicted_n_2) <= 255, Length(predicted_g_3) <= 1, Length(predicted_o_5) <= 255, Employees(FV_Employee_ID_0, predicted_r_1, predicted_n_2, predicted_g_3, predicted_b_4, predicted_o_5))), Not(Exists([predicted_d_6, predicted_a_7, predicted_p_8, predicted_t_9, predicted_q_10], And(Length(predicted_q_10) <= 255, Documents_to_be_Destroyed(predicted_d_6, predicted_a_7, FV_Employee_ID_0, predicted_p_8, predicted_t_9, predicted_q_10))))), Not(And(Exists([gold_e1_1, gold_o_2, gold_r_3, gold_d_4, gold_g_5], And(Length(gold_e1_1) <= 255, Length(gold_o_2) <= 255, Length(gold_r_3) <= 15, Length(gold_g_5) <= 1, Employees(FV_Employee_ID_0, gold_r_3, gold_e1_1, gold_g_5, gold_d_4, gold_o_2))), Not(Exists([gold_d1_6, gold_p_7, gold_o1_8, gold_d2_9, gold_a_10], And(Length(gold_o1_8) <= 255, Documents_to_be_Destroyed(gold_d1_6, gold_d2_9, FV_Employee_ID_0, gold_p_7, gold_a_10, gold_o1_8)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

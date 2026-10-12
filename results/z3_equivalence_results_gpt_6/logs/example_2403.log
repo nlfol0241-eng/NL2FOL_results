@@ -1,0 +1,223 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2403.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2403.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5736 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the renting arrears tax ids related to the customer master index whose detail is not 'Schmidt, Kertzmann and Lubowitz'?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        cmi_cross_ref_id = integer -> IntSort()
+        cmi_details = varchar(255) -> StringSort()
+        council_tax_id = integer -> IntSort()
+        master_customer_id = integer -> IntSort()
+        source_system_code = char(15) -> StringSort()
+      symbols:
+        CMI_Cross_References(cmi_cross_ref_id, master_customer_id, source_system_code)
+        Customer_Master_Index(master_customer_id, cmi_details)
+        Rent_Arrears(council_tax_id, cmi_cross_ref_id)
+        constant Schmidt , Kertzmann and Lubowitz : cmi_details
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c1 : cmi_cross_ref_id ∃c2 : cmi_cross_ref_id ∃m : master_customer_id ∃s : source_system_code ∃m1 : master_customer_id ∃c3 : cmi_details ( (((((Rent_Arrears(c,c1)) ∧ (CMI_Cross_References(c2,m,s))) ∧ (c1 = c2)) ∧ (Customer_Master_Index(m1,c3))) ∧ (m1 = m)) ∧ (c3 <> 'Schmidt ,  Kertzmann and Lubowitz') )
+        tokens: EXISTS:∃ IDENT:c1 COLON:: IDENT:cmi_cross_ref_id EXISTS:∃ IDENT:c2 COLON:: IDENT:cmi_cross_ref_id EXISTS:∃ IDENT:m COLON:: IDENT:master_customer_id EXISTS:∃ IDENT:s COLON:: IDENT:source_system_code EXISTS:∃ IDENT:m1 COLON:: IDENT:master_customer_id EXISTS:∃ IDENT:c3 COLON:: IDENT:cmi_details LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Rent_Arrears LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:CMI_Cross_References LPAR:( IDENT:c2 COMMA:, IDENT:m COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Customer_Master_Index LPAR:( IDENT:m1 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m1 EQ:= IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c3 NEQ:<> LIT:Schmidt ,  Kertzmann and Lubowitz RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c1:cmi_cross_ref_id
+            EXISTS c2:cmi_cross_ref_id
+              EXISTS m:master_customer_id
+                EXISTS s:source_system_code
+                  EXISTS m1:master_customer_id
+                    EXISTS c3:cmi_details
+                      AND
+                        AND
+                          AND
+                            AND
+                              AND
+                                PRED Rent_Arrears(c, c1)
+                                PRED CMI_Cross_References(c2, m, s)
+                              EQ  c1 = c2
+                            PRED Customer_Master_Index(m1, c3)
+                          EQ  m1 = m
+                        NEQ  c3 != 'Schmidt ,  Kertzmann and Lubowitz'
+      Predicted FOL: ∃r : cmi_cross_ref_id ∃m : master_customer_id ∃s : source_system_code ∃d : cmi_details (Rent_Arrears(t, r) ∧ CMI_Cross_References(r, m, s) ∧ Customer_Master_Index(m, d) ∧ d ≠ 'Schmidt , Kertzmann and Lubowitz')
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:cmi_cross_ref_id EXISTS:∃ IDENT:m COLON:: IDENT:master_customer_id EXISTS:∃ IDENT:s COLON:: IDENT:source_system_code EXISTS:∃ IDENT:d COLON:: IDENT:cmi_details LPAR:( IDENT:Rent_Arrears LPAR:( IDENT:t COMMA:, IDENT:r RPAR:) AND:∧ IDENT:CMI_Cross_References LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s RPAR:) AND:∧ IDENT:Customer_Master_Index LPAR:( IDENT:m COMMA:, IDENT:d RPAR:) AND:∧ IDENT:d NEQ:≠ LIT:Schmidt , Kertzmann and Lubowitz RPAR:) EOF
+        AST:
+          EXISTS r:cmi_cross_ref_id
+            EXISTS m:master_customer_id
+              EXISTS s:source_system_code
+                EXISTS d:cmi_details
+                  AND
+                    PRED Rent_Arrears(t, r)
+                    PRED CMI_Cross_References(r, m, s)
+                    PRED Customer_Master_Index(m, d)
+                    NEQ  d != 'Schmidt , Kertzmann and Lubowitz'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_council_tax_id_0 : council_tax_id   Gold c <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local council_tax_id, global integer -> IntSort()
+        c1 : local cmi_cross_ref_id, global integer -> IntSort()
+        c2 : local cmi_cross_ref_id, global integer -> IntSort()
+        c3 : local cmi_details, global varchar(255) -> StringSort()
+        m : local master_customer_id, global integer -> IntSort()
+        m1 : local master_customer_id, global integer -> IntSort()
+        s : local source_system_code, global char(15) -> StringSort()
+      Predicted FOL:
+        d : local cmi_details, global varchar(255) -> StringSort()
+        m : local master_customer_id, global integer -> IntSort()
+        r : local cmi_cross_ref_id, global integer -> IntSort()
+        s : local source_system_code, global char(15) -> StringSort()
+        t : local council_tax_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c1_1, gold_c2_2, gold_m_3, gold_s_4, gold_m1_5, gold_c3_6], And(D_char_15_(gold_s_4), D_varchar_255_(gold_c3_6), And(And(And(And(And(P_Rent_Arrears(FV_council_tax_id_0, gold_c1_1), P_CMI_Cross_References(gold_c2_2, gold_m_3, gold_s_4)), (gold_c1_1 == gold_c2_2)), P_Customer_Master_Index(gold_m1_5, gold_c3_6)), (gold_m1_5 == gold_m_3)), (gold_c3_6 != L_Schmidt____Kertzmann_and_Lubowitz))))
+      gold_skolem (witnesses WGOLD_c1, WGOLD_c2, WGOLD_m, WGOLD_s, WGOLD_m1, WGOLD_c3):  And(D_char_15_(WGOLD_s), D_varchar_255_(WGOLD_c3), And(And(And(And(And(P_Rent_Arrears(FV_council_tax_id_0, WGOLD_c1), P_CMI_Cross_References(WGOLD_c2, WGOLD_m, WGOLD_s)), (WGOLD_c1 == WGOLD_c2)), P_Customer_Master_Index(WGOLD_m1, WGOLD_c3)), (WGOLD_m1 == WGOLD_m)), (WGOLD_c3 != L_Schmidt____Kertzmann_and_Lubowitz)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_m_2, predicted_s_3, predicted_d_4], And(D_char_15_(predicted_s_3), D_varchar_255_(predicted_d_4), And(P_Rent_Arrears(FV_council_tax_id_0, predicted_r_1), P_CMI_Cross_References(predicted_r_1, predicted_m_2, predicted_s_3), P_Customer_Master_Index(predicted_m_2, predicted_d_4), (predicted_d_4 != L_Schmidt___Kertzmann_and_Lubowitz))))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_m, WPREDICTED_s, WPREDICTED_d):  And(D_char_15_(WPREDICTED_s), D_varchar_255_(WPREDICTED_d), And(P_Rent_Arrears(FV_council_tax_id_0, WPREDICTED_r), P_CMI_Cross_References(WPREDICTED_r, WPREDICTED_m, WPREDICTED_s), P_Customer_Master_Index(WPREDICTED_m, WPREDICTED_d), (WPREDICTED_d != L_Schmidt___Kertzmann_and_Lubowitz)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Schmidt , Kertzmann and Lubowitz' at varchar(255) -> L_Schmidt___Kertzmann_and_Lubowitz = StringVal('Schmidt , Kertzmann and Lubowitz')
+      literal 'Schmidt ,  Kertzmann and Lubowitz' at varchar(255) -> L_Schmidt____Kertzmann_and_Lubowitz = StringVal('Schmidt ,  Kertzmann and Lubowitz')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 758 lines, 30802 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2403.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c1, WGOLD_c2, WGOLD_m, WGOLD_s, WGOLD_m1, WGOLD_c3
+      claim: And(And(Length(WGOLD_s) <= 15, Length(WGOLD_c3) <= 255, And(And(And(And(And(Rent_Arrears(FV_council_tax_id_0, WGOLD_c1), CMI_Cross_References(WGOLD_c2, WGOLD_m, WGOLD_s)), WGOLD_c1 == WGOLD_c2), Customer_Master_Index(WGOLD_m1, WGOLD_c3)), WGOLD_m1 == WGOLD_m), WGOLD_c3 != "Schmidt , Kertzmann and Lubowitz")), Not(Exists([predicted_r_1, predicted_m_2, predicted_s_3, predicted_d_4], And(Length(predicted_s_3) <= 15, Length(predicted_d_4) <= 255, And(Rent_Arrears(FV_council_tax_id_0, predicted_r_1), CMI_Cross_References(predicted_r_1, predicted_m_2, predicted_s_3), Customer_Master_Index(predicted_m_2, predicted_d_4), predicted_d_4 != "Schmidt , Kertzmann and Lubowitz")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.183 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 19 relation tuple(s) listed, 17 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          c1 : cmi_cross_ref_id = 34
+          c2 : cmi_cross_ref_id = 34
+          m : master_customer_id = 35
+          s : source_system_code = ''
+          m1 : master_customer_id = 35
+          c3 : cmi_details = 'Schmidt , Kertzmann and Lubowitz'
+        free (answer) variables:
+          FV_council_tax_id_0 : council_tax_id = 33
+        literals / constants:
+          Schmidt , Kertzmann and Lubowitz : cmi_details = 'Schmidt , Kertzmann and Lubowitz'
+          Schmidt ,  Kertzmann and Lubowitz : varchar(255) = 'Schmidt ,  Kertzmann and Lubowitz'
+        relations (each value tagged with the local sort of its position):
+          CMI_Cross_References(cmi_cross_ref_id, master_customer_id, source_system_code):
+            CMI_Cross_References(cmi_cross_ref_id=0, master_customer_id=33, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=0, master_customer_id=34, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=33, master_customer_id=0, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=34, master_customer_id=35, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=35, master_customer_id=36, source_system_code='A')
+            CMI_Cross_References(cmi_cross_ref_id=36, master_customer_id=0, source_system_code='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Customer_Master_Index(master_customer_id, cmi_details):
+            Customer_Master_Index(master_customer_id=0, cmi_details='Schmidt , Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=33, cmi_details='Schmidt , Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=34, cmi_details='Schmidt , Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=35, cmi_details='Schmidt , Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=36, cmi_details='Schmidt , Kertzmann and Lubowitz')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Rent_Arrears(council_tax_id, cmi_cross_ref_id):
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=0)
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=33)
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=35)
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=36)
+            Rent_Arrears(council_tax_id=33, cmi_cross_ref_id=34)
+            Rent_Arrears(council_tax_id=34, cmi_cross_ref_id=34)
+            Rent_Arrears(council_tax_id=35, cmi_cross_ref_id=0)
+            Rent_Arrears(council_tax_id=36, cmi_cross_ref_id=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          cmi_cross_ref_id   : {0, 33, 34, 35, 36}
+          cmi_details        : {'Schmidt , Kertzmann and Lubowitz'}
+          council_tax_id     : {0, 33, 34, 35, 36}
+          master_customer_id : {0, 33, 34, 35, 36}
+          source_system_code : {'', 'A'}
+        values shared across local sorts (joins):
+          0 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          33 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          34 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          35 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          36 : cmi_cross_ref_id, council_tax_id, master_customer_id
+   [R2] took 0.292 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_m, WPREDICTED_s, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_s) <= 15, Length(WPREDICTED_d) <= 255, And(Rent_Arrears(FV_council_tax_id_0, WPREDICTED_r), CMI_Cross_References(WPREDICTED_r, WPREDICTED_m, WPREDICTED_s), Customer_Master_Index(WPREDICTED_m, WPREDICTED_d), WPREDICTED_d != "Schmidt , Kertzmann and Lubowitz")), Not(Exists([gold_c1_1, gold_c2_2, gold_m_3, gold_s_4, gold_m1_5, gold_c3_6], And(Length(gold_s_4) <= 15, Length(gold_c3_6) <= 255, And(And(And(And(And(Rent_Arrears(FV_council_tax_id_0, gold_c1_1), CMI_Cross_References(gold_c2_2, gold_m_3, gold_s_4)), gold_c1_1 == gold_c2_2), Customer_Master_Index(gold_m1_5, gold_c3_6)), gold_m1_5 == gold_m_3), gold_c3_6 != "Schmidt , Kertzmann and Lubowitz")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.300 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 19 relation tuple(s) listed, 17 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          r : cmi_cross_ref_id = 35
+          m : master_customer_id = 36
+          s : source_system_code = 'z'
+          d : cmi_details = 'Schmidt ,  Kertzmann and Lubowitz'
+        free (answer) variables:
+          FV_council_tax_id_0 : council_tax_id = 34
+        literals / constants:
+          Schmidt , Kertzmann and Lubowitz : cmi_details = 'Schmidt , Kertzmann and Lubowitz'
+          Schmidt ,  Kertzmann and Lubowitz : varchar(255) = 'Schmidt ,  Kertzmann and Lubowitz'
+        relations (each value tagged with the local sort of its position):
+          CMI_Cross_References(cmi_cross_ref_id, master_customer_id, source_system_code):
+            CMI_Cross_References(cmi_cross_ref_id=0, master_customer_id=34, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=0, master_customer_id=35, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=34, master_customer_id=0, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=35, master_customer_id=36, source_system_code='z')
+            CMI_Cross_References(cmi_cross_ref_id=36, master_customer_id=37, source_system_code='')
+            CMI_Cross_References(cmi_cross_ref_id=37, master_customer_id=0, source_system_code='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Customer_Master_Index(master_customer_id, cmi_details):
+            Customer_Master_Index(master_customer_id=0, cmi_details='Schmidt ,  Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=34, cmi_details='Schmidt ,  Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=35, cmi_details='Schmidt ,  Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=36, cmi_details='Schmidt ,  Kertzmann and Lubowitz')
+            Customer_Master_Index(master_customer_id=37, cmi_details='Schmidt ,  Kertzmann and Lubowitz')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Rent_Arrears(council_tax_id, cmi_cross_ref_id):
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=0)
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=34)
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=36)
+            Rent_Arrears(council_tax_id=0, cmi_cross_ref_id=37)
+            Rent_Arrears(council_tax_id=34, cmi_cross_ref_id=35)
+            Rent_Arrears(council_tax_id=35, cmi_cross_ref_id=35)
+            Rent_Arrears(council_tax_id=36, cmi_cross_ref_id=0)
+            Rent_Arrears(council_tax_id=37, cmi_cross_ref_id=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          cmi_cross_ref_id   : {0, 34, 35, 36, 37}
+          cmi_details        : {'Schmidt ,  Kertzmann and Lubowitz'}
+          council_tax_id     : {0, 34, 35, 36, 37}
+          master_customer_id : {0, 34, 35, 36, 37}
+          source_system_code : {'', 'z'}
+        values shared across local sorts (joins):
+          0 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          34 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          35 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          36 : cmi_cross_ref_id, council_tax_id, master_customer_id
+          37 : cmi_cross_ref_id, council_tax_id, master_customer_id
+   [R3] took 0.446 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

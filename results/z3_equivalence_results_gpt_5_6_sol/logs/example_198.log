@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_198.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_198.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3421 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what state is springfield in
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        city_name = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        city(city_name, population, country_name, state_name)
+        constant springfield : city_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : city_name ∃p : population ∃c1 : country_name ( (city(c,p,c1,s)) ∧ (c = 'springfield') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:city_name EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c1 COLON:: IDENT:country_name LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:springfield RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:city_name
+            EXISTS p:population
+              EXISTS c1:country_name
+                AND
+                  PRED city(c, p, c1, s)
+                  EQ  c = 'springfield'
+      Predicted FOL: ∃p:population ∃c:country_name city('springfield', p, c, s)
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c COLON:: IDENT:country_name IDENT:city LPAR:( LIT:springfield COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) EOF
+        AST:
+          EXISTS p:population
+            EXISTS c:country_name
+              PRED city('springfield', p, c, s)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_state_name_0 : state_name   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local city_name, global text -> StringSort()
+        c1 : local country_name, global varchar(3) -> StringSort()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        c : local country_name, global varchar(3) -> StringSort()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_p_2, gold_c1_3], And(D_varchar_3_(gold_c1_3), And(P_city(gold_c_1, gold_p_2, gold_c1_3, FV_state_name_0), (gold_c_1 == L_springfield))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_p, WGOLD_c1):  And(D_varchar_3_(WGOLD_c1), And(P_city(WGOLD_c, WGOLD_p, WGOLD_c1, FV_state_name_0), (WGOLD_c == L_springfield)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_c_2], And(D_varchar_3_(predicted_c_2), P_city(L_springfield, predicted_p_1, predicted_c_2, FV_state_name_0)))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_c):  And(D_varchar_3_(WPREDICTED_c), P_city(L_springfield, WPREDICTED_p, WPREDICTED_c, FV_state_name_0))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'springfield' at text -> L_springfield = StringVal('springfield')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 730 lines, 27174 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_198.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_p, WGOLD_c1
+      claim: And(And(Length(WGOLD_c1) <= 3, And(city(WGOLD_c, WGOLD_p, WGOLD_c1, FV_state_name_0), WGOLD_c == "springfield")), Not(Exists([predicted_p_1, predicted_c_2], And(Length(predicted_c_2) <= 3, city("springfield", predicted_p_1, predicted_c_2, FV_state_name_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_c
+      claim: And(And(Length(WPREDICTED_c) <= 3, city("springfield", WPREDICTED_p, WPREDICTED_c, FV_state_name_0)), Not(Exists([gold_c_1, gold_p_2, gold_c1_3], And(Length(gold_c1_3) <= 3, And(city(gold_c_1, gold_p_2, gold_c1_3, FV_state_name_0), gold_c_1 == "springfield")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

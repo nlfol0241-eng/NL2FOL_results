@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1556.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1556.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3183 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the event details of the services that have the type code 'Marriage'?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Event_Details = varchar(255) -> StringSort()
+        Event_ID = integer -> IntSort()
+        Service_ID = integer -> IntSort()
+        Service_Type_Code = char(15) -> StringSort()
+      symbols:
+        Events(Event_ID, Service_ID, Event_Details)
+        Services(Service_ID, Service_Type_Code)
+        constant Marriage : Service_Type_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Event_ID ∃s : Service_ID ∃s1 : Service_ID ∃s2 : Service_Type_Code ( (((Events(e,s,e1)) ∧ (Services(s1,s2))) ∧ (s = s1)) ∧ (s2 = 'Marriage') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Event_ID EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Service_ID EXISTS:∃ IDENT:s2 COLON:: IDENT:Service_Type_Code LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Events LPAR:( IDENT:e COMMA:, IDENT:s COMMA:, IDENT:e1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Services LPAR:( IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s2 EQ:= LIT:Marriage RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Event_ID
+            EXISTS s:Service_ID
+              EXISTS s1:Service_ID
+                EXISTS s2:Service_Type_Code
+                  AND
+                    AND
+                      AND
+                        PRED Events(e, s, e1)
+                        PRED Services(s1, s2)
+                      EQ  s = s1
+                    EQ  s2 = 'Marriage'
+      Predicted FOL: ∃e : Event_ID ∃s : Service_ID (Events(e, s, x) ∧ Services(s, 'Marriage'))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Event_ID EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID LPAR:( IDENT:Events LPAR:( IDENT:e COMMA:, IDENT:s COMMA:, IDENT:x RPAR:) AND:∧ IDENT:Services LPAR:( IDENT:s COMMA:, LIT:Marriage RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Event_ID
+            EXISTS s:Service_ID
+              AND
+                PRED Events(e, s, x)
+                PRED Services(s, 'Marriage')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Event_Details_0 : Event_Details   Gold e1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local Event_ID, global integer -> IntSort()
+        e1 : local Event_Details, global varchar(255) -> StringSort()
+        s : local Service_ID, global integer -> IntSort()
+        s1 : local Service_ID, global integer -> IntSort()
+        s2 : local Service_Type_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        e : local Event_ID, global integer -> IntSort()
+        s : local Service_ID, global integer -> IntSort()
+        x : local Event_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_s_2, gold_s1_3, gold_s2_4], And(D_char_15_(gold_s2_4), And(And(And(P_Events(gold_e_1, gold_s_2, FV_Event_Details_0), P_Services(gold_s1_3, gold_s2_4)), (gold_s_2 == gold_s1_3)), (gold_s2_4 == L_Marriage))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_s, WGOLD_s1, WGOLD_s2):  And(D_char_15_(WGOLD_s2), And(And(And(P_Events(WGOLD_e, WGOLD_s, FV_Event_Details_0), P_Services(WGOLD_s1, WGOLD_s2)), (WGOLD_s == WGOLD_s1)), (WGOLD_s2 == L_Marriage)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_s_2], And(P_Events(predicted_e_1, predicted_s_2, FV_Event_Details_0), And(P_Services(predicted_s_2, L_Marriage), D_char_15_(L_Marriage))))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_s):  And(P_Events(WPREDICTED_e, WPREDICTED_s, FV_Event_Details_0), And(P_Services(WPREDICTED_s, L_Marriage), D_char_15_(L_Marriage)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Marriage' at char(15) -> L_Marriage = StringVal('Marriage')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 740 lines, 28039 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1556.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Event_Details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_s, WGOLD_s1, WGOLD_s2
+      claim: And(And(Length(WGOLD_s2) <= 15, And(And(And(Events(WGOLD_e, WGOLD_s, FV_Event_Details_0), Services(WGOLD_s1, WGOLD_s2)), WGOLD_s == WGOLD_s1), WGOLD_s2 == "Marriage")), Not(Exists([predicted_e_1, predicted_s_2], And(Events(predicted_e_1, predicted_s_2, FV_Event_Details_0), And(Services(predicted_s_2, "Marriage"), Length("Marriage") <= 15)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_s
+      claim: And(And(Events(WPREDICTED_e, WPREDICTED_s, FV_Event_Details_0), And(Services(WPREDICTED_s, "Marriage"), Length("Marriage") <= 15)), Not(Exists([gold_e_1, gold_s_2, gold_s1_3, gold_s2_4], And(Length(gold_s2_4) <= 15, And(And(And(Events(gold_e_1, gold_s_2, FV_Event_Details_0), Services(gold_s1_3, gold_s2_4)), gold_s_2 == gold_s1_3), gold_s2_4 == "Marriage")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

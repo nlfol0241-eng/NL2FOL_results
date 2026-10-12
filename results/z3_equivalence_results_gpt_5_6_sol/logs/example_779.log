@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_779.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_779.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3836 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Tell me the the claim date and settlement date for each settlement case.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        integer -> IntSort()
+      local sorts:
+        Amount_Claimed = integer -> IntSort()
+        Amount_Settled = integer -> IntSort()
+        Claim_ID = integer -> IntSort()
+        Customer_Policy_ID = integer -> IntSort()
+        Date_Claim_Made = date -> IntSort()
+        Date_Claim_Settled = date -> IntSort()
+        Settlement_ID = integer -> IntSort()
+      symbols:
+        Settlements(Settlement_ID, Claim_ID, Date_Claim_Made, Date_Claim_Settled, Amount_Claimed, Amount_Settled, Customer_Policy_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Settlement_ID ∃c : Claim_ID ∃a : Amount_Claimed ∃a1 : Amount_Settled ∃c1 : Customer_Policy_ID ( Settlements(s,c,d,d1,a,a1,c1) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Settlement_ID EXISTS:∃ IDENT:c COLON:: IDENT:Claim_ID EXISTS:∃ IDENT:a COLON:: IDENT:Amount_Claimed EXISTS:∃ IDENT:a1 COLON:: IDENT:Amount_Settled EXISTS:∃ IDENT:c1 COLON:: IDENT:Customer_Policy_ID LPAR:( IDENT:Settlements LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Settlement_ID
+            EXISTS c:Claim_ID
+              EXISTS a:Amount_Claimed
+                EXISTS a1:Amount_Settled
+                  EXISTS c1:Customer_Policy_ID
+                    PRED Settlements(s, c, d, d1, a, a1, c1)
+      Predicted FOL: ∃s : Settlement_ID ∃c : Claim_ID ∃a : Amount_Claimed ∃p : Amount_Settled ∃i : Customer_Policy_ID Settlements(s, c, claim_date, settlement_date, a, p, i)
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Settlement_ID EXISTS:∃ IDENT:c COLON:: IDENT:Claim_ID EXISTS:∃ IDENT:a COLON:: IDENT:Amount_Claimed EXISTS:∃ IDENT:p COLON:: IDENT:Amount_Settled EXISTS:∃ IDENT:i COLON:: IDENT:Customer_Policy_ID IDENT:Settlements LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:claim_date COMMA:, IDENT:settlement_date COMMA:, IDENT:a COMMA:, IDENT:p COMMA:, IDENT:i RPAR:) EOF
+        AST:
+          EXISTS s:Settlement_ID
+            EXISTS c:Claim_ID
+              EXISTS a:Amount_Claimed
+                EXISTS p:Amount_Settled
+                  EXISTS i:Customer_Policy_ID
+                    PRED Settlements(s, c, claim_date, settlement_date, a, p, i)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Date_Claim_Made_0 : Date_Claim_Made   Gold d <-> Predicted claim_date
+      FV_Date_Claim_Settled_0 : Date_Claim_Settled   Gold d1 <-> Predicted settlement_date
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Amount_Claimed, global integer -> IntSort()
+        a1 : local Amount_Settled, global integer -> IntSort()
+        c : local Claim_ID, global integer -> IntSort()
+        c1 : local Customer_Policy_ID, global integer -> IntSort()
+        d : local Date_Claim_Made, global date -> IntSort()
+        d1 : local Date_Claim_Settled, global date -> IntSort()
+        s : local Settlement_ID, global integer -> IntSort()
+      Predicted FOL:
+        a : local Amount_Claimed, global integer -> IntSort()
+        c : local Claim_ID, global integer -> IntSort()
+        claim_date : local Date_Claim_Made, global date -> IntSort()
+        i : local Customer_Policy_ID, global integer -> IntSort()
+        p : local Amount_Settled, global integer -> IntSort()
+        s : local Settlement_ID, global integer -> IntSort()
+        settlement_date : local Date_Claim_Settled, global date -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_c_2, gold_a_3, gold_a1_4, gold_c1_5], P_Settlements(gold_s_1, gold_c_2, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, gold_a_3, gold_a1_4, gold_c1_5))
+      gold_skolem (witnesses WGOLD_s, WGOLD_c, WGOLD_a, WGOLD_a1, WGOLD_c1):  P_Settlements(WGOLD_s, WGOLD_c, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, WGOLD_a, WGOLD_a1, WGOLD_c1)
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_c_2, predicted_a_3, predicted_p_4, predicted_i_5], P_Settlements(predicted_s_1, predicted_c_2, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, predicted_a_3, predicted_p_4, predicted_i_5))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_c, WPREDICTED_a, WPREDICTED_p, WPREDICTED_i):  P_Settlements(WPREDICTED_s, WPREDICTED_c, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, WPREDICTED_a, WPREDICTED_p, WPREDICTED_i)
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 751 lines, 29073 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_779.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_c, WGOLD_a, WGOLD_a1, WGOLD_c1
+      claim: And(Settlements(WGOLD_s, WGOLD_c, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, WGOLD_a, WGOLD_a1, WGOLD_c1), Not(Exists([predicted_s_1, predicted_c_2, predicted_a_3, predicted_p_4, predicted_i_5], Settlements(predicted_s_1, predicted_c_2, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, predicted_a_3, predicted_p_4, predicted_i_5))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_c, WPREDICTED_a, WPREDICTED_p, WPREDICTED_i
+      claim: And(Settlements(WPREDICTED_s, WPREDICTED_c, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, WPREDICTED_a, WPREDICTED_p, WPREDICTED_i), Not(Exists([gold_s_1, gold_c_2, gold_a_3, gold_a1_4, gold_c1_5], Settlements(gold_s_1, gold_c_2, FV_Date_Claim_Made_0, FV_Date_Claim_Settled_0, gold_a_3, gold_a1_4, gold_c1_5))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_462.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_462.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2135 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are distinct locations where tracks are located?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        Seating = real -> Float32()
+        Track_ID = text -> StringSort()
+        Year_Opened = real -> Float32()
+      symbols:
+        track(Track_ID, Name, Location, Seating, Year_Opened)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : Track_ID ∃n : Name ∃s : Seating ∃y : Year_Opened ( track(t,n,l,s,y) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Track_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:s COLON:: IDENT:Seating EXISTS:∃ IDENT:y COLON:: IDENT:Year_Opened LPAR:( IDENT:track LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Track_ID
+            EXISTS n:Name
+              EXISTS s:Seating
+                EXISTS y:Year_Opened
+                  PRED track(t, n, l, s, y)
+      Predicted FOL: ∃i : Track_ID ∃n : Name ∃s : Seating ∃y : Year_Opened (track(i, n, l, s, y))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Track_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:s COLON:: IDENT:Seating EXISTS:∃ IDENT:y COLON:: IDENT:Year_Opened LPAR:( IDENT:track LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Track_ID
+            EXISTS n:Name
+              EXISTS s:Seating
+                EXISTS y:Year_Opened
+                  PRED track(i, n, l, s, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Location_0 : Location   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        s : local Seating, global real -> Float32()
+        t : local Track_ID, global text -> StringSort()
+        y : local Year_Opened, global real -> Float32()
+      Predicted FOL:
+        i : local Track_ID, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        s : local Seating, global real -> Float32()
+        y : local Year_Opened, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_n_2, gold_s_3, gold_y_4], And(D_real(gold_s_3), D_real(gold_y_4), P_track(gold_t_1, gold_n_2, FV_Location_0, gold_s_3, gold_y_4)))
+      gold_skolem (witnesses WGOLD_t, WGOLD_n, WGOLD_s, WGOLD_y):  And(D_real(WGOLD_s), D_real(WGOLD_y), P_track(WGOLD_t, WGOLD_n, FV_Location_0, WGOLD_s, WGOLD_y))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_n_2, predicted_s_3, predicted_y_4], And(D_real(predicted_s_3), D_real(predicted_y_4), P_track(predicted_i_1, predicted_n_2, FV_Location_0, predicted_s_3, predicted_y_4)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_n, WPREDICTED_s, WPREDICTED_y):  And(D_real(WPREDICTED_s), D_real(WPREDICTED_y), P_track(WPREDICTED_i, WPREDICTED_n, FV_Location_0, WPREDICTED_s, WPREDICTED_y))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 737 lines, 27654 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_462.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_n, WGOLD_s, WGOLD_y
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(Not(fpIsNaN(WGOLD_y)), Not(And(fpIsZero(WGOLD_y), fpIsNegative(WGOLD_y)))), track(WGOLD_t, WGOLD_n, FV_Location_0, WGOLD_s, WGOLD_y)), Not(Exists([predicted_i_1, predicted_n_2, predicted_s_3, predicted_y_4], And(And(Not(fpIsNaN(predicted_s_3)), Not(And(fpIsZero(predicted_s_3), fpIsNegative(predicted_s_3)))), And(Not(fpIsNaN(predicted_y_4)), Not(And(fpIsZero(predicted_y_4), fpIsNegative(predicted_y_4)))), track(predicted_i_1, predicted_n_2, FV_Location_0, predicted_s_3, predicted_y_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_n, WPREDICTED_s, WPREDICTED_y
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_s)), Not(And(fpIsZero(WPREDICTED_s), fpIsNegative(WPREDICTED_s)))), And(Not(fpIsNaN(WPREDICTED_y)), Not(And(fpIsZero(WPREDICTED_y), fpIsNegative(WPREDICTED_y)))), track(WPREDICTED_i, WPREDICTED_n, FV_Location_0, WPREDICTED_s, WPREDICTED_y)), Not(Exists([gold_t_1, gold_n_2, gold_s_3, gold_y_4], And(And(Not(fpIsNaN(gold_s_3)), Not(And(fpIsZero(gold_s_3), fpIsNegative(gold_s_3)))), And(Not(fpIsNaN(gold_y_4)), Not(And(fpIsZero(gold_y_4), fpIsNegative(gold_y_4)))), track(gold_t_1, gold_n_2, FV_Location_0, gold_s_3, gold_y_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

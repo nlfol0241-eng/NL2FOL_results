@@ -1,0 +1,230 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1433.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1433.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3561 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the schools that were either founded before 1850 or are public?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Affiliation = text -> StringSort()
+        Enrollment = real -> Float32()
+        Founded = real -> Float32()
+        Location = text -> StringSort()
+        Nickname = text -> StringSort()
+        Primary_conference = text -> StringSort()
+        School = text -> StringSort()
+        School_ID = int -> IntSort()
+      symbols:
+        university(School_ID, School, Location, Founded, Affiliation, Enrollment, Nickname, Primary_conference)
+        constant 1850 : Founded
+        constant Public : Affiliation
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : School_ID ∃l : Location ∃f : Founded ∃a : Affiliation ∃e : Enrollment ∃n : Nickname ∃p : Primary_conference ( (university(s,s1,l,f,a,e,n,p)) ∧ ((f > 1850) ∨ (a = 'Public')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:School_ID EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:a COLON:: IDENT:Affiliation EXISTS:∃ IDENT:e COLON:: IDENT:Enrollment EXISTS:∃ IDENT:n COLON:: IDENT:Nickname EXISTS:∃ IDENT:p COLON:: IDENT:Primary_conference LPAR:( LPAR:( IDENT:university LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f GT:> NUM:1850 RPAR:) OR:∨ LPAR:( IDENT:a EQ:= LIT:Public RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:School_ID
+            EXISTS l:Location
+              EXISTS f:Founded
+                EXISTS a:Affiliation
+                  EXISTS e:Enrollment
+                    EXISTS n:Nickname
+                      EXISTS p:Primary_conference
+                        AND
+                          PRED university(s, s1, l, f, a, e, n, p)
+                          OR
+                            CMP  f > 1850
+                            EQ  a = 'Public'
+      Predicted FOL: ∃i : School_ID ∃l : Location ∃f : Founded ∃a : Affiliation ∃e : Enrollment ∃n : Nickname ∃c : Primary_conference (university(i, s, l, f, a, e, n, c) ∧ (f < 1850 ∨ a = 'Public'))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:School_ID EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:a COLON:: IDENT:Affiliation EXISTS:∃ IDENT:e COLON:: IDENT:Enrollment EXISTS:∃ IDENT:n COLON:: IDENT:Nickname EXISTS:∃ IDENT:c COLON:: IDENT:Primary_conference LPAR:( IDENT:university LPAR:( IDENT:i COMMA:, IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:e COMMA:, IDENT:n COMMA:, IDENT:c RPAR:) AND:∧ LPAR:( IDENT:f LT:< NUM:1850 OR:∨ IDENT:a EQ:= LIT:Public RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:School_ID
+            EXISTS l:Location
+              EXISTS f:Founded
+                EXISTS a:Affiliation
+                  EXISTS e:Enrollment
+                    EXISTS n:Nickname
+                      EXISTS c:Primary_conference
+                        AND
+                          PRED university(i, s, l, f, a, e, n, c)
+                          OR
+                            CMP  f < 1850
+                            EQ  a = 'Public'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_School_0 : School   Gold s1 <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Affiliation, global text -> StringSort()
+        e : local Enrollment, global real -> Float32()
+        f : local Founded, global real -> Float32()
+        l : local Location, global text -> StringSort()
+        n : local Nickname, global text -> StringSort()
+        p : local Primary_conference, global text -> StringSort()
+        s : local School_ID, global int -> IntSort()
+        s1 : local School, global text -> StringSort()
+      Predicted FOL:
+        a : local Affiliation, global text -> StringSort()
+        c : local Primary_conference, global text -> StringSort()
+        e : local Enrollment, global real -> Float32()
+        f : local Founded, global real -> Float32()
+        i : local School_ID, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        n : local Nickname, global text -> StringSort()
+        s : local School, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_l_2, gold_f_3, gold_a_4, gold_e_5, gold_n_6, gold_p_7], And(D_real(gold_f_3), D_real(gold_e_5), And(P_university(gold_s_1, FV_School_0, gold_l_2, gold_f_3, gold_a_4, gold_e_5, gold_n_6, gold_p_7), Or((gold_f_3 > L_v_1850_real), (gold_a_4 == L_Public)))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_l, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p):  And(D_real(WGOLD_f), D_real(WGOLD_e), And(P_university(WGOLD_s, FV_School_0, WGOLD_l, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p), Or((WGOLD_f > L_v_1850_real), (WGOLD_a == L_Public))))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_l_2, predicted_f_3, predicted_a_4, predicted_e_5, predicted_n_6, predicted_c_7], And(D_real(predicted_f_3), D_real(predicted_e_5), And(P_university(predicted_i_1, FV_School_0, predicted_l_2, predicted_f_3, predicted_a_4, predicted_e_5, predicted_n_6, predicted_c_7), Or((predicted_f_3 < L_v_1850_real), (predicted_a_4 == L_Public)))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_l, WPREDICTED_f, WPREDICTED_a, WPREDICTED_e, WPREDICTED_n, WPREDICTED_c):  And(D_real(WPREDICTED_f), D_real(WPREDICTED_e), And(P_university(WPREDICTED_i, FV_School_0, WPREDICTED_l, WPREDICTED_f, WPREDICTED_a, WPREDICTED_e, WPREDICTED_n, WPREDICTED_c), Or((WPREDICTED_f < L_v_1850_real), (WPREDICTED_a == L_Public))))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Public' at text -> L_Public = StringVal('Public')
+      literal '1850' at real -> L_v_1850_real = FPVal(1850.0, Float32())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 767 lines, 30148 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1433.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_l, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p
+      claim: And(And(And(Not(fpIsNaN(WGOLD_f)), Not(And(fpIsZero(WGOLD_f), fpIsNegative(WGOLD_f)))), And(Not(fpIsNaN(WGOLD_e)), Not(And(fpIsZero(WGOLD_e), fpIsNegative(WGOLD_e)))), And(university(WGOLD_s, FV_School_0, WGOLD_l, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p), Or(1.806640625*(2**10) < WGOLD_f, WGOLD_a == "Public"))), Not(Exists([predicted_i_1, predicted_l_2, predicted_f_3, predicted_a_4, predicted_e_5, predicted_n_6, predicted_c_7], And(And(Not(fpIsNaN(predicted_f_3)), Not(And(fpIsZero(predicted_f_3), fpIsNegative(predicted_f_3)))), And(Not(fpIsNaN(predicted_e_5)), Not(And(fpIsZero(predicted_e_5), fpIsNegative(predicted_e_5)))), And(university(predicted_i_1, FV_School_0, predicted_l_2, predicted_f_3, predicted_a_4, predicted_e_5, predicted_n_6, predicted_c_7), Or(1.806640625*(2**10) > predicted_f_3, predicted_a_4 == "Public"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.014 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 19 relation tuple(s) listed, 29 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          s : School_ID = 2
+          l : Location = ''
+          f : Founded = 1.0756759045356766e+21
+          a : Affiliation = ''
+          e : Enrollment = 1.1754988349773733e-38
+          n : Nickname = ''
+          p : Primary_conference = ''
+        free (answer) variables:
+          FV_School_0 : School = ''
+        literals / constants:
+          Public : Affiliation = 'Public'
+          1850 : Founded = 1850.0
+        relations (each value tagged with the local sort of its position):
+          university(School_ID, School, Location, Founded, Affiliation, Enrollment, Nickname, Primary_conference):
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='!0!')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='!1!')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='A')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='Public')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='!0!', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='!2!', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='A', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='Public', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1850.0, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.0756759045356766e+21, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='!0!', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='!1!', Enrollment=2.350988981904268e-38, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='!2!', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='!1!', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='!2!', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='A', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='')
+            university(School_ID=1, School='', Location='Public', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.175494490952134e-38, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=1.0756759045356766e+21, Affiliation='', Enrollment=1.1754988349773733e-38, Nickname='', Primary_conference='')
+            university(School_ID=3, School='', Location='!0!', Founded=1.0756759045356766e+21, Affiliation='A', Enrollment=1.175494490952134e-38, Nickname='!1!', Primary_conference='!2!')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Affiliation        : {'', '!0!', '!1!', '!2!', 'A'}
+          Enrollment         : {1.175494490952134e-38, 1.1754988349773733e-38, 2.350988981904268e-38, 1850.0, 1.0756759045356766e+21}
+          Founded            : {1.0756759045356766e+21}
+          Location           : {'', '!0!', '!1!', '!2!', 'A', 'Public'}
+          Nickname           : {'', '!0!', '!1!', '!2!', 'A', 'Public'}
+          Primary_conference : {'', '!0!', '!1!', '!2!', 'A', 'Public'}
+          School             : {''}
+          School_ID          : {1, 2, 3}
+        values shared across local sorts (joins):
+          1.0756759045356766e+21 : Enrollment, Founded
+          '!0!' : Affiliation, Location, Nickname, Primary_conference
+          '!1!' : Affiliation, Location, Nickname, Primary_conference
+          '!2!' : Affiliation, Location, Nickname, Primary_conference
+          '' : Affiliation, Location, Nickname, Primary_conference, School
+          'A' : Affiliation, Location, Nickname, Primary_conference
+          'Public' : Location, Nickname, Primary_conference
+   [R2] took 0.208 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_l, WPREDICTED_f, WPREDICTED_a, WPREDICTED_e, WPREDICTED_n, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_f)), Not(And(fpIsZero(WPREDICTED_f), fpIsNegative(WPREDICTED_f)))), And(Not(fpIsNaN(WPREDICTED_e)), Not(And(fpIsZero(WPREDICTED_e), fpIsNegative(WPREDICTED_e)))), And(university(WPREDICTED_i, FV_School_0, WPREDICTED_l, WPREDICTED_f, WPREDICTED_a, WPREDICTED_e, WPREDICTED_n, WPREDICTED_c), Or(1.806640625*(2**10) > WPREDICTED_f, WPREDICTED_a == "Public"))), Not(Exists([gold_s_1, gold_l_2, gold_f_3, gold_a_4, gold_e_5, gold_n_6, gold_p_7], And(And(Not(fpIsNaN(gold_f_3)), Not(And(fpIsZero(gold_f_3), fpIsNegative(gold_f_3)))), And(Not(fpIsNaN(gold_e_5)), Not(And(fpIsZero(gold_e_5), fpIsNegative(gold_e_5)))), And(university(gold_s_1, FV_School_0, gold_l_2, gold_f_3, gold_a_4, gold_e_5, gold_n_6, gold_p_7), Or(1.806640625*(2**10) < gold_f_3, gold_a_4 == "Public"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.113 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 17 relation tuple(s) listed, 76 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          i : School_ID = 2
+          l : Location = ''
+          f : Founded = 6.658101497423649e-40
+          a : Affiliation = ''
+          e : Enrollment = 1.505367453021792e-36
+          n : Nickname = ''
+          c : Primary_conference = ''
+        free (answer) variables:
+          FV_School_0 : School = ''
+        literals / constants:
+          Public : Affiliation = 'Public'
+          1850 : Founded = 1850.0
+        relations (each value tagged with the local sort of its position):
+          university(School_ID, School, Location, Founded, Affiliation, Enrollment, Nickname, Primary_conference):
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='!1!')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='A')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='B')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='Public')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='!0!', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='A', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='B', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='Public', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='!0!', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='!1!', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='', Founded=6.658101497423649e-40, Affiliation='B', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='!0!', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='!1!', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='A', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            university(School_ID=2, School='', Location='B', Founded=6.658101497423649e-40, Affiliation='A', Enrollment=1.505367453021792e-36, Nickname='!1!', Primary_conference='!0!')
+            university(School_ID=2, School='', Location='Public', Founded=6.658101497423649e-40, Affiliation='', Enrollment=1.505367453021792e-36, Nickname='', Primary_conference='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Affiliation        : {'', '!0!', '!1!', 'A', 'B'}
+          Enrollment         : {1.505367453021792e-36}
+          Founded            : {6.658101497423649e-40}
+          Location           : {'', '!0!', '!1!', 'A', 'B', 'Public'}
+          Nickname           : {'', '!0!', '!1!', 'A', 'B', 'Public'}
+          Primary_conference : {'', '!0!', '!1!', 'A', 'B', 'Public'}
+          School             : {''}
+          School_ID          : {2}
+        values shared across local sorts (joins):
+          '!0!' : Affiliation, Location, Nickname, Primary_conference
+          '!1!' : Affiliation, Location, Nickname, Primary_conference
+          '' : Affiliation, Location, Nickname, Primary_conference, School
+          'A' : Affiliation, Location, Nickname, Primary_conference
+          'B' : Affiliation, Location, Nickname, Primary_conference
+          'Public' : Location, Nickname, Primary_conference
+   [R3] took 0.548 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

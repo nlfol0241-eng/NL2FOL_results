@@ -1,0 +1,128 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1592.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2782 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the reviewers who have rated a movie more than 3 stars before?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        mID = int -> IntSort()
+        name = text -> StringSort()
+        rID = int -> IntSort()
+        ratingDate = date -> IntSort()
+        stars = int -> IntSort()
+      symbols:
+        Rating(rID, mID, stars, ratingDate)
+        Reviewer(rID, name)
+        constant 3 : stars
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : rID ∃m : mID ∃s : stars ∃r1 : ratingDate ∃r2 : rID ( (((Rating(r,m,s,r1)) ∧ (Reviewer(r2,n))) ∧ (r = r2)) ∧ (s > 3) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:rID EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate EXISTS:∃ IDENT:r2 COLON:: IDENT:rID LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Reviewer LPAR:( IDENT:r2 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s GT:> NUM:3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:rID
+            EXISTS m:mID
+              EXISTS s:stars
+                EXISTS r1:ratingDate
+                  EXISTS r2:rID
+                    AND
+                      AND
+                        AND
+                          PRED Rating(r, m, s, r1)
+                          PRED Reviewer(r2, n)
+                        EQ  r = r2
+                      CMP  s > 3
+      Predicted FOL: ∃rID : rID ∃name : name (Reviewer(rID, name) ∧ ∃mID : mID ∃stars : stars ∃ratingDate : date (Rating(rID, mID, stars, ratingDate) ∧ stars > 3))
+        tokens: EXISTS:∃ IDENT:rID COLON:: IDENT:rID EXISTS:∃ IDENT:name COLON:: IDENT:name LPAR:( IDENT:Reviewer LPAR:( IDENT:rID COMMA:, IDENT:name RPAR:) AND:∧ EXISTS:∃ IDENT:mID COLON:: IDENT:mID EXISTS:∃ IDENT:stars COLON:: IDENT:stars EXISTS:∃ IDENT:ratingDate COLON:: IDENT:date LPAR:( IDENT:Rating LPAR:( IDENT:rID COMMA:, IDENT:mID COMMA:, IDENT:stars COMMA:, IDENT:ratingDate RPAR:) AND:∧ IDENT:stars GT:> NUM:3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS rID:rID
+            EXISTS name:name
+              AND
+                PRED Reviewer(rID, name)
+                EXISTS mID:mID
+                  EXISTS stars:stars
+                    EXISTS ratingDate:date
+                      AND
+                        PRED Rating(rID, mID, stars, ratingDate)
+                        CMP  stars > 3
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) name do not occur free in the formula
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local mID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        r : local rID, global int -> IntSort()
+        r1 : local ratingDate, global date -> IntSort()
+        r2 : local rID, global int -> IntSort()
+        s : local stars, global int -> IntSort()
+      Predicted FOL:
+        mID : local mID, global int -> IntSort()
+        name : local name, global text -> StringSort()
+        rID : local rID, global int -> IntSort()
+        ratingDate : local date, global date -> IntSort()
+        stars : local stars, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_m_2, gold_s_3, gold_r1_4, gold_r2_5], And(And(And(P_Rating(gold_r_1, gold_m_2, gold_s_3, gold_r1_4), P_Reviewer(gold_r2_5, FV_name_0)), (gold_r_1 == gold_r2_5)), (gold_s_3 > L_v_3_int)))
+      gold_skolem (witnesses WGOLD_r, WGOLD_m, WGOLD_s, WGOLD_r1, WGOLD_r2):  And(And(And(P_Rating(WGOLD_r, WGOLD_m, WGOLD_s, WGOLD_r1), P_Reviewer(WGOLD_r2, FV_name_0)), (WGOLD_r == WGOLD_r2)), (WGOLD_s > L_v_3_int))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_rID_1, predicted_name_2], And(P_Reviewer(predicted_rID_1, predicted_name_2), Exists([predicted_mID_3, predicted_stars_4, predicted_ratingDate_5], And(P_Rating(predicted_rID_1, predicted_mID_3, predicted_stars_4, predicted_ratingDate_5), (predicted_stars_4 > L_v_3_int)))))
+      predicted_skolem (witnesses WPREDICTED_rID, WPREDICTED_name):  And(P_Reviewer(WPREDICTED_rID, WPREDICTED_name), Exists([predictedsk_mID_1, predictedsk_stars_2, predictedsk_ratingDate_3], And(P_Rating(WPREDICTED_rID, predictedsk_mID_1, predictedsk_stars_2, predictedsk_ratingDate_3), (predictedsk_stars_2 > L_v_3_int))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '3' at int -> L_v_3_int = IntVal(3)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 748 lines, 28411 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_m, WGOLD_s, WGOLD_r1, WGOLD_r2
+      claim: And(And(And(And(Rating(WGOLD_r, WGOLD_m, WGOLD_s, WGOLD_r1), Reviewer(WGOLD_r2, FV_name_0)), WGOLD_r == WGOLD_r2), 3 < WGOLD_s), Not(Exists([predicted_rID_1, predicted_name_2], And(Reviewer(predicted_rID_1, predicted_name_2), Exists([predicted_mID_3, predicted_stars_4, predicted_ratingDate_5], And(Rating(predicted_rID_1, predicted_mID_3, predicted_stars_4, predicted_ratingDate_5), 3 < predicted_stars_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.021 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_rID, WPREDICTED_name
+      claim: And(And(Reviewer(WPREDICTED_rID, WPREDICTED_name), Exists([predictedsk_mID_1, predictedsk_stars_2, predictedsk_ratingDate_3], And(Rating(WPREDICTED_rID, predictedsk_mID_1, predictedsk_stars_2, predictedsk_ratingDate_3), 3 < predictedsk_stars_2))), Not(Exists([gold_r_1, gold_m_2, gold_s_3, gold_r1_4, gold_r2_5], And(And(And(Rating(gold_r_1, gold_m_2, gold_s_3, gold_r1_4), Reviewer(gold_r2_5, FV_name_0)), gold_r_1 == gold_r2_5), 3 < gold_s_3))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py", line 696, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py", line 727, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py", line 678, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py", line 576, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py", line 500, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py", line 380, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1592.py", line 380, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

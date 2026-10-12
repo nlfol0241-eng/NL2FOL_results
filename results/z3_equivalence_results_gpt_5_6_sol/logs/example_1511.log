@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1511.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1511.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5842 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the invoice dates, order ids, and order details for all invoices?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        customer_id = integer -> IntSort()
+        date_order_placed = datetime -> IntSort()
+        invoice_date = datetime -> IntSort()
+        invoice_number = integer -> IntSort()
+        order_details = varchar(255) -> StringSort()
+        order_id = integer -> IntSort()
+      symbols:
+        Invoices(invoice_number, order_id, invoice_date)
+        Orders(order_id, customer_id, date_order_placed, order_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : invoice_number ∃o1 : order_id ∃c : customer_id ∃d : date_order_placed ( ((Invoices(i,o,i1)) ∧ (Orders(o1,c,d,o2))) ∧ (o = o1) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:invoice_number EXISTS:∃ IDENT:o1 COLON:: IDENT:order_id EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:d COLON:: IDENT:date_order_placed LPAR:( LPAR:( LPAR:( IDENT:Invoices LPAR:( IDENT:i COMMA:, IDENT:o COMMA:, IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Orders LPAR:( IDENT:o1 COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:o2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= IDENT:o1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:invoice_number
+            EXISTS o1:order_id
+              EXISTS c:customer_id
+                EXISTS d:date_order_placed
+                  AND
+                    AND
+                      PRED Invoices(i, o, i1)
+                      PRED Orders(o1, c, d, o2)
+                    EQ  o = o1
+      Predicted FOL: ∃invoice_number : invoice_number ∃customer_id : customer_id ∃date_order_placed : date_order_placed (Invoices(invoice_number, order_id, invoice_date) ∧ Orders(order_id, customer_id, date_order_placed, order_details))
+        tokens: EXISTS:∃ IDENT:invoice_number COLON:: IDENT:invoice_number EXISTS:∃ IDENT:customer_id COLON:: IDENT:customer_id EXISTS:∃ IDENT:date_order_placed COLON:: IDENT:date_order_placed LPAR:( IDENT:Invoices LPAR:( IDENT:invoice_number COMMA:, IDENT:order_id COMMA:, IDENT:invoice_date RPAR:) AND:∧ IDENT:Orders LPAR:( IDENT:order_id COMMA:, IDENT:customer_id COMMA:, IDENT:date_order_placed COMMA:, IDENT:order_details RPAR:) RPAR:) EOF
+        AST:
+          EXISTS invoice_number:invoice_number
+            EXISTS customer_id:customer_id
+              EXISTS date_order_placed:date_order_placed
+                AND
+                  PRED Invoices(invoice_number, order_id, invoice_date)
+                  PRED Orders(order_id, customer_id, date_order_placed, order_details)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_invoice_date_0 : invoice_date   Gold i1 <-> Predicted invoice_date
+      FV_order_details_0 : order_details   Gold o2 <-> Predicted order_details
+      FV_order_id_0 : order_id   Gold o <-> Predicted order_id
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local customer_id, global integer -> IntSort()
+        d : local date_order_placed, global datetime -> IntSort()
+        i : local invoice_number, global integer -> IntSort()
+        i1 : local invoice_date, global datetime -> IntSort()
+        o : local order_id, global integer -> IntSort()
+        o1 : local order_id, global integer -> IntSort()
+        o2 : local order_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        customer_id : local customer_id, global integer -> IntSort()
+        date_order_placed : local date_order_placed, global datetime -> IntSort()
+        invoice_date : local invoice_date, global datetime -> IntSort()
+        invoice_number : local invoice_number, global integer -> IntSort()
+        order_details : local order_details, global varchar(255) -> StringSort()
+        order_id : local order_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_o1_2, gold_c_3, gold_d_4], And(And(P_Invoices(gold_i_1, FV_order_id_0, FV_invoice_date_0), P_Orders(gold_o1_2, gold_c_3, gold_d_4, FV_order_details_0)), (FV_order_id_0 == gold_o1_2)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_o1, WGOLD_c, WGOLD_d):  And(And(P_Invoices(WGOLD_i, FV_order_id_0, FV_invoice_date_0), P_Orders(WGOLD_o1, WGOLD_c, WGOLD_d, FV_order_details_0)), (FV_order_id_0 == WGOLD_o1))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_invoice_number_1, predicted_customer_id_2, predicted_date_order_placed_3], And(P_Invoices(predicted_invoice_number_1, FV_order_id_0, FV_invoice_date_0), P_Orders(FV_order_id_0, predicted_customer_id_2, predicted_date_order_placed_3, FV_order_details_0)))
+      predicted_skolem (witnesses WPREDICTED_invoice_number, WPREDICTED_customer_id, WPREDICTED_date_order_placed):  And(P_Invoices(WPREDICTED_invoice_number, FV_order_id_0, FV_invoice_date_0), P_Orders(FV_order_id_0, WPREDICTED_customer_id, WPREDICTED_date_order_placed, FV_order_details_0))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 749 lines, 29277 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1511.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_order_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_o1, WGOLD_c, WGOLD_d
+      claim: And(And(And(Invoices(WGOLD_i, FV_order_id_0, FV_invoice_date_0), Orders(WGOLD_o1, WGOLD_c, WGOLD_d, FV_order_details_0)), FV_order_id_0 == WGOLD_o1), Not(Exists([predicted_invoice_number_1, predicted_customer_id_2, predicted_date_order_placed_3], And(Invoices(predicted_invoice_number_1, FV_order_id_0, FV_invoice_date_0), Orders(FV_order_id_0, predicted_customer_id_2, predicted_date_order_placed_3, FV_order_details_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_invoice_number, WPREDICTED_customer_id, WPREDICTED_date_order_placed
+      claim: And(And(Invoices(WPREDICTED_invoice_number, FV_order_id_0, FV_invoice_date_0), Orders(FV_order_id_0, WPREDICTED_customer_id, WPREDICTED_date_order_placed, FV_order_details_0)), Not(Exists([gold_i_1, gold_o1_2, gold_c_3, gold_d_4], And(And(Invoices(gold_i_1, FV_order_id_0, FV_invoice_date_0), Orders(gold_o1_2, gold_c_3, gold_d_4, FV_order_details_0)), FV_order_id_0 == gold_o1_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,112 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1428.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1428.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4190 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct name, location and products of the enzymes which has any 'inhibitor' interaction?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 10 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Chromosome = text -> StringSort()
+        Location = text -> StringSort()
+        OMIM = int -> IntSort()
+        Porphyria = text -> StringSort()
+        Product = text -> StringSort()
+        enzyme_id = int -> IntSort()
+        id = int -> IntSort()
+        interaction_type = text -> StringSort()
+        medicine_id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        enzyme(id, name, Location, Product, Chromosome, OMIM, Porphyria)
+        medicine_enzyme_interaction(enzyme_id, medicine_id, interaction_type)
+        constant inhibitor : interaction_type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃c : Chromosome ∃o : OMIM ∃p1 : Porphyria ∃e : enzyme_id ∃m : medicine_id ∃i1 : interaction_type ( (((enzyme(i,n,l,p,c,o,p1)) ∧ (medicine_enzyme_interaction(e,m,i1))) ∧ (e = i)) ∧ (i1 = 'inhibitor') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:c COLON:: IDENT:Chromosome EXISTS:∃ IDENT:o COLON:: IDENT:OMIM EXISTS:∃ IDENT:p1 COLON:: IDENT:Porphyria EXISTS:∃ IDENT:e COLON:: IDENT:enzyme_id EXISTS:∃ IDENT:m COLON:: IDENT:medicine_id EXISTS:∃ IDENT:i1 COLON:: IDENT:interaction_type LPAR:( LPAR:( LPAR:( LPAR:( IDENT:enzyme LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:o COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:medicine_enzyme_interaction LPAR:( IDENT:e COMMA:, IDENT:m COMMA:, IDENT:i1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i1 EQ:= LIT:inhibitor RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS c:Chromosome
+              EXISTS o:OMIM
+                EXISTS p1:Porphyria
+                  EXISTS e:enzyme_id
+                    EXISTS m:medicine_id
+                      EXISTS i1:interaction_type
+                        AND
+                          AND
+                            AND
+                              PRED enzyme(i, n, l, p, c, o, p1)
+                              PRED medicine_enzyme_interaction(e, m, i1)
+                            EQ  e = i
+                          EQ  i1 = 'inhibitor'
+      Predicted FOL: ∃e_id : int ∃e_name : text ∃e_loc : text ∃e_prod : text ∃e_chr : text ∃e_omim : int ∃e_por : text (enzyme(e_id, e_name, e_loc, e_prod, e_chr, e_omim, e_por) ∧ ∃m_id : int ∃i_type : text (medicine_enzyme_interaction(e_id, m_id, i_type) ∧ i_type = 'inhibitor'))
+        tokens: EXISTS:∃ IDENT:e_id COLON:: IDENT:int EXISTS:∃ IDENT:e_name COLON:: IDENT:text EXISTS:∃ IDENT:e_loc COLON:: IDENT:text EXISTS:∃ IDENT:e_prod COLON:: IDENT:text EXISTS:∃ IDENT:e_chr COLON:: IDENT:text EXISTS:∃ IDENT:e_omim COLON:: IDENT:int EXISTS:∃ IDENT:e_por COLON:: IDENT:text LPAR:( IDENT:enzyme LPAR:( IDENT:e_id COMMA:, IDENT:e_name COMMA:, IDENT:e_loc COMMA:, IDENT:e_prod COMMA:, IDENT:e_chr COMMA:, IDENT:e_omim COMMA:, IDENT:e_por RPAR:) AND:∧ EXISTS:∃ IDENT:m_id COLON:: IDENT:int EXISTS:∃ IDENT:i_type COLON:: IDENT:text LPAR:( IDENT:medicine_enzyme_interaction LPAR:( IDENT:e_id COMMA:, IDENT:m_id COMMA:, IDENT:i_type RPAR:) AND:∧ IDENT:i_type EQ:= LIT:inhibitor RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e_id:int
+            EXISTS e_name:text
+              EXISTS e_loc:text
+                EXISTS e_prod:text
+                  EXISTS e_chr:text
+                    EXISTS e_omim:int
+                      EXISTS e_por:text
+                        AND
+                          PRED enzyme(e_id, e_name, e_loc, e_prod, e_chr, e_omim, e_por)
+                          EXISTS m_id:int
+                            EXISTS i_type:text
+                              AND
+                                PRED medicine_enzyme_interaction(e_id, m_id, i_type)
+                                EQ  i_type = 'inhibitor'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (n : name, l : Location, p : Product) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Chromosome, global text -> StringSort()
+        e : local enzyme_id, global int -> IntSort()
+        i : local id, global int -> IntSort()
+        i1 : local interaction_type, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        m : local medicine_id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        o : local OMIM, global int -> IntSort()
+        p : local Product, global text -> StringSort()
+        p1 : local Porphyria, global text -> StringSort()
+      Predicted FOL:
+        e_chr : local text, global text -> StringSort()
+        e_id : local int, global int -> IntSort()
+        e_loc : local text, global text -> StringSort()
+        e_name : local text, global text -> StringSort()
+        e_omim : local int, global int -> IntSort()
+        e_por : local text, global text -> StringSort()
+        e_prod : local text, global text -> StringSort()
+        i_type : local text, global text -> StringSort()
+        m_id : local int, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5695 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1428.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (n : name, l : Location, p : Product) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

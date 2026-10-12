@@ -1,0 +1,117 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2896.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2896.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3162 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of colleges in LA that have more than 15,000 students and of colleges in AZ with less than 13,000 students?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 6 constants, 0 warnings
+      global sorts:
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        cName = varchar(20) -> StringSort()
+        enr = numeric(5,0) -> RealSort()
+        state = varchar(2) -> StringSort()
+      symbols:
+        College(cName, state, enr)
+        constant 13000 : enr
+        constant 15000 : enr
+        constant AZ : state
+        constant LA : state
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃e : enr ∃s : state( (College(c,s,e)) ∧ ((e < 13000) ∧ (s = 'AZ')) )) ∨ (∃e : enr ∃s : state( (College(c,s,e)) ∧ ((e > 15000) ∧ (s = 'LA')) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:enr EXISTS:∃ IDENT:s COLON:: IDENT:state LPAR:( LPAR:( IDENT:College LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:e LT:< NUM:13000 RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:AZ RPAR:) RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:enr EXISTS:∃ IDENT:s COLON:: IDENT:state LPAR:( LPAR:( IDENT:College LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:e GT:> NUM:15000 RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:LA RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS e:enr
+              EXISTS s:state
+                AND
+                  PRED College(c, s, e)
+                  AND
+                    CMP  e < 13000
+                    EQ  s = 'AZ'
+            EXISTS e:enr
+              EXISTS s:state
+                AND
+                  PRED College(c, s, e)
+                  AND
+                    CMP  e > 15000
+                    EQ  s = 'LA'
+      Predicted FOL: (∃s : state ∃e : enr (College(x, s, e) ∧ s = 'LA' ∧ e > 15000)) ∨ (∃s : state ∃e : enr (College(x, s, e) ∧ s = 'AZ' ∧ e < 13000))
+        tokens: LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:state EXISTS:∃ IDENT:e COLON:: IDENT:enr LPAR:( IDENT:College LPAR:( IDENT:x COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) AND:∧ IDENT:s EQ:= LIT:LA AND:∧ IDENT:e GT:> NUM:15000 RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:state EXISTS:∃ IDENT:e COLON:: IDENT:enr LPAR:( IDENT:College LPAR:( IDENT:x COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) AND:∧ IDENT:s EQ:= LIT:AZ AND:∧ IDENT:e LT:< NUM:13000 RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS s:state
+              EXISTS e:enr
+                AND
+                  PRED College(x, s, e)
+                  EQ  s = 'LA'
+                  CMP  e > 15000
+            EXISTS s:state
+              EXISTS e:enr
+                AND
+                  PRED College(x, s, e)
+                  EQ  s = 'AZ'
+                  CMP  e < 13000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_cName_0 : cName   Gold c <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        e : local enr, global numeric(5,0) -> RealSort()
+        s : local state, global varchar(2) -> StringSort()
+      Predicted FOL:
+        e : local enr, global numeric(5,0) -> RealSort()
+        s : local state, global varchar(2) -> StringSort()
+        x : local cName, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_e_1, gold_s_2], And(D_numeric_5_0_(gold_e_1), D_varchar_2_(gold_s_2), And(P_College(FV_cName_0, gold_s_2, gold_e_1), And((gold_e_1 < L_v_13000_numeric_5_0_), (gold_s_2 == L_AZ))))), Exists([gold_e_3, gold_s_4], And(D_numeric_5_0_(gold_e_3), D_varchar_2_(gold_s_4), And(P_College(FV_cName_0, gold_s_4, gold_e_3), And((gold_e_3 > L_v_15000_numeric_5_0_), (gold_s_4 == L_LA))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Or(Exists([predicted_s_1, predicted_e_2], And(D_varchar_2_(predicted_s_1), D_numeric_5_0_(predicted_e_2), And(P_College(FV_cName_0, predicted_s_1, predicted_e_2), (predicted_s_1 == L_LA), (predicted_e_2 > L_v_15000_numeric_5_0_)))), Exists([predicted_s_3, predicted_e_4], And(D_varchar_2_(predicted_s_3), D_numeric_5_0_(predicted_e_4), And(P_College(FV_cName_0, predicted_s_3, predicted_e_4), (predicted_s_3 == L_AZ), (predicted_e_4 < L_v_13000_numeric_5_0_)))))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 4 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'AZ' at varchar(2) -> L_AZ = StringVal('AZ')
+      literal 'LA' at varchar(2) -> L_LA = StringVal('LA')
+      literal '13000' at numeric(5,0) -> L_v_13000_numeric_5_0_ = RealVal('13000')
+      literal '15000' at numeric(5,0) -> L_v_15000_numeric_5_0_ = RealVal('15000')
+   0 sort axiom(s), 4 literal(s), 0 order(s) needing a definition; 732 lines, 27559 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2896.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_cName_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([gold_e_1, gold_s_2], And(And(IsInt(gold_e_1), gold_e_1 > -100000, gold_e_1 < 100000), Length(gold_s_2) <= 2, And(College(FV_cName_0, gold_s_2, gold_e_1), And(13000 > gold_e_1, gold_s_2 == "AZ")))), Exists([gold_e_3, gold_s_4], And(And(IsInt(gold_e_3), gold_e_3 > -100000, gold_e_3 < 100000), Length(gold_s_4) <= 2, And(College(FV_cName_0, gold_s_4, gold_e_3), And(15000 < gold_e_3, gold_s_4 == "LA"))))), Not(Or(Exists([predicted_s_1, predicted_e_2], And(Length(predicted_s_1) <= 2, And(IsInt(predicted_e_2), predicted_e_2 > -100000, predicted_e_2 < 100000), And(College(FV_cName_0, predicted_s_1, predicted_e_2), predicted_s_1 == "LA", 15000 < predicted_e_2))), Exists([predicted_s_3, predicted_e_4], And(Length(predicted_s_3) <= 2, And(IsInt(predicted_e_4), predicted_e_4 > -100000, predicted_e_4 < 100000), And(College(FV_cName_0, predicted_s_3, predicted_e_4), predicted_s_3 == "AZ", 13000 > predicted_e_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([predicted_s_1, predicted_e_2], And(Length(predicted_s_1) <= 2, And(IsInt(predicted_e_2), predicted_e_2 > -100000, predicted_e_2 < 100000), And(College(FV_cName_0, predicted_s_1, predicted_e_2), predicted_s_1 == "LA", 15000 < predicted_e_2))), Exists([predicted_s_3, predicted_e_4], And(Length(predicted_s_3) <= 2, And(IsInt(predicted_e_4), predicted_e_4 > -100000, predicted_e_4 < 100000), And(College(FV_cName_0, predicted_s_3, predicted_e_4), predicted_s_3 == "AZ", 13000 > predicted_e_4)))), Not(Or(Exists([gold_e_1, gold_s_2], And(And(IsInt(gold_e_1), gold_e_1 > -100000, gold_e_1 < 100000), Length(gold_s_2) <= 2, And(College(FV_cName_0, gold_s_2, gold_e_1), And(13000 > gold_e_1, gold_s_2 == "AZ")))), Exists([gold_e_3, gold_s_4], And(And(IsInt(gold_e_3), gold_e_3 > -100000, gold_e_3 < 100000), Length(gold_s_4) <= 2, And(College(FV_cName_0, gold_s_4, gold_e_3), And(15000 < gold_e_3, gold_s_4 == "LA")))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

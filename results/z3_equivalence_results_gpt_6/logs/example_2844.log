@@ -1,0 +1,128 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2844.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2844.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4137 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which papers did the author "Olin Shivers" write? Give me the paper titles.
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        authID = integer -> IntSort()
+        authOrder = integer -> IntSort()
+        fname = text -> StringSort()
+        instID = integer -> IntSort()
+        lname = text -> StringSort()
+        paperID = integer -> IntSort()
+        title = text -> StringSort()
+      symbols:
+        Authors(authID, lname, fname)
+        Authorship(authID, instID, paperID, authOrder)
+        Papers(paperID, title)
+        constant Olin : fname
+        constant Shivers : lname
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : authID ∃l : lname ∃f : fname ∃a1 : authID ∃i : instID ∃p : paperID ∃a2 : authOrder ∃p1 : paperID ( (((((Authors(a,l,f)) ∧ (Authorship(a1,i,p,a2))) ∧ (a = a1)) ∧ (Papers(p1,t))) ∧ (p = p1)) ∧ ((f = 'Olin') ∧ (l = 'Shivers')) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:authID EXISTS:∃ IDENT:l COLON:: IDENT:lname EXISTS:∃ IDENT:f COLON:: IDENT:fname EXISTS:∃ IDENT:a1 COLON:: IDENT:authID EXISTS:∃ IDENT:i COLON:: IDENT:instID EXISTS:∃ IDENT:p COLON:: IDENT:paperID EXISTS:∃ IDENT:a2 COLON:: IDENT:authOrder EXISTS:∃ IDENT:p1 COLON:: IDENT:paperID LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Authors LPAR:( IDENT:a COMMA:, IDENT:l COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Authorship LPAR:( IDENT:a1 COMMA:, IDENT:i COMMA:, IDENT:p COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Papers LPAR:( IDENT:p1 COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f EQ:= LIT:Olin RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:Shivers RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:authID
+            EXISTS l:lname
+              EXISTS f:fname
+                EXISTS a1:authID
+                  EXISTS i:instID
+                    EXISTS p:paperID
+                      EXISTS a2:authOrder
+                        EXISTS p1:paperID
+                          AND
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    PRED Authors(a, l, f)
+                                    PRED Authorship(a1, i, p, a2)
+                                  EQ  a = a1
+                                PRED Papers(p1, t)
+                              EQ  p = p1
+                            AND
+                              EQ  f = 'Olin'
+                              EQ  l = 'Shivers'
+      Predicted FOL: ∃a : authID ∃i : instID ∃p : paperID ∃o : authOrder (Authors(a, 'Shivers', 'Olin') ∧ Authorship(a, i, p, o) ∧ Papers(p, t))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:authID EXISTS:∃ IDENT:i COLON:: IDENT:instID EXISTS:∃ IDENT:p COLON:: IDENT:paperID EXISTS:∃ IDENT:o COLON:: IDENT:authOrder LPAR:( IDENT:Authors LPAR:( IDENT:a COMMA:, LIT:Shivers COMMA:, LIT:Olin RPAR:) AND:∧ IDENT:Authorship LPAR:( IDENT:a COMMA:, IDENT:i COMMA:, IDENT:p COMMA:, IDENT:o RPAR:) AND:∧ IDENT:Papers LPAR:( IDENT:p COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:authID
+            EXISTS i:instID
+              EXISTS p:paperID
+                EXISTS o:authOrder
+                  AND
+                    PRED Authors(a, 'Shivers', 'Olin')
+                    PRED Authorship(a, i, p, o)
+                    PRED Papers(p, t)
+   [G3] took 0.005 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted t
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local authID, global integer -> IntSort()
+        a1 : local authID, global integer -> IntSort()
+        a2 : local authOrder, global integer -> IntSort()
+        f : local fname, global text -> StringSort()
+        i : local instID, global integer -> IntSort()
+        l : local lname, global text -> StringSort()
+        p : local paperID, global integer -> IntSort()
+        p1 : local paperID, global integer -> IntSort()
+        t : local title, global text -> StringSort()
+      Predicted FOL:
+        a : local authID, global integer -> IntSort()
+        i : local instID, global integer -> IntSort()
+        o : local authOrder, global integer -> IntSort()
+        p : local paperID, global integer -> IntSort()
+        t : local title, global text -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_l_2, gold_f_3, gold_a1_4, gold_i_5, gold_p_6, gold_a2_7, gold_p1_8], And(And(And(And(And(P_Authors(gold_a_1, gold_l_2, gold_f_3), P_Authorship(gold_a1_4, gold_i_5, gold_p_6, gold_a2_7)), (gold_a_1 == gold_a1_4)), P_Papers(gold_p1_8, FV_title_0)), (gold_p_6 == gold_p1_8)), And((gold_f_3 == L_Olin), (gold_l_2 == L_Shivers))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_l, WGOLD_f, WGOLD_a1, WGOLD_i, WGOLD_p, WGOLD_a2, WGOLD_p1):  And(And(And(And(And(P_Authors(WGOLD_a, WGOLD_l, WGOLD_f), P_Authorship(WGOLD_a1, WGOLD_i, WGOLD_p, WGOLD_a2)), (WGOLD_a == WGOLD_a1)), P_Papers(WGOLD_p1, FV_title_0)), (WGOLD_p == WGOLD_p1)), And((WGOLD_f == L_Olin), (WGOLD_l == L_Shivers)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_i_2, predicted_p_3, predicted_o_4], And(P_Authors(predicted_a_1, L_Shivers, L_Olin), P_Authorship(predicted_a_1, predicted_i_2, predicted_p_3, predicted_o_4), P_Papers(predicted_p_3, FV_title_0)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_i, WPREDICTED_p, WPREDICTED_o):  And(P_Authors(WPREDICTED_a, L_Shivers, L_Olin), P_Authorship(WPREDICTED_a, WPREDICTED_i, WPREDICTED_p, WPREDICTED_o), P_Papers(WPREDICTED_p, FV_title_0))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Olin' at text -> L_Olin = StringVal('Olin')
+      literal 'Shivers' at text -> L_Shivers = StringVal('Shivers')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 762 lines, 29401 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2844.py
+   [G8] took 0.010 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_l, WGOLD_f, WGOLD_a1, WGOLD_i, WGOLD_p, WGOLD_a2, WGOLD_p1
+      claim: And(And(And(And(And(And(Authors(WGOLD_a, WGOLD_l, WGOLD_f), Authorship(WGOLD_a1, WGOLD_i, WGOLD_p, WGOLD_a2)), WGOLD_a == WGOLD_a1), Papers(WGOLD_p1, FV_title_0)), WGOLD_p == WGOLD_p1), And(WGOLD_f == "Olin", WGOLD_l == "Shivers")), Not(Exists([predicted_a_1, predicted_i_2, predicted_p_3, predicted_o_4], And(Authors(predicted_a_1, "Shivers", "Olin"), Authorship(predicted_a_1, predicted_i_2, predicted_p_3, predicted_o_4), Papers(predicted_p_3, FV_title_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.016 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.043 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_i, WPREDICTED_p, WPREDICTED_o
+      claim: And(And(Authors(WPREDICTED_a, "Shivers", "Olin"), Authorship(WPREDICTED_a, WPREDICTED_i, WPREDICTED_p, WPREDICTED_o), Papers(WPREDICTED_p, FV_title_0)), Not(Exists([gold_a_1, gold_l_2, gold_f_3, gold_a1_4, gold_i_5, gold_p_6, gold_a2_7, gold_p1_8], And(And(And(And(And(Authors(gold_a_1, gold_l_2, gold_f_3), Authorship(gold_a1_4, gold_i_5, gold_p_6, gold_a2_7)), gold_a_1 == gold_a1_4), Papers(gold_p1_8, FV_title_0)), gold_p_6 == gold_p1_8), And(gold_f_3 == "Olin", gold_l_2 == "Shivers")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.014 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.036 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

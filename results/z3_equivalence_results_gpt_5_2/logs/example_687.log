@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_687.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_687.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5512 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the ids of orders whose status is 'Success'.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+      local sorts:
+        actual_order_date = datetime -> IntSort()
+        actual_order_id = integer -> IntSort()
+        order_status_code = varchar(10) -> StringSort()
+        regular_order_id = integer -> IntSort()
+      symbols:
+        Actual_Orders(actual_order_id, order_status_code, regular_order_id, actual_order_date)
+        constant Success : order_status_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : order_status_code ∃r : regular_order_id ∃a1 : actual_order_date ( (Actual_Orders(a,o,r,a1)) ∧ (o = 'Success') )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:order_status_code EXISTS:∃ IDENT:r COLON:: IDENT:regular_order_id EXISTS:∃ IDENT:a1 COLON:: IDENT:actual_order_date LPAR:( LPAR:( IDENT:Actual_Orders LPAR:( IDENT:a COMMA:, IDENT:o COMMA:, IDENT:r COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= LIT:Success RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:order_status_code
+            EXISTS r:regular_order_id
+              EXISTS a1:actual_order_date
+                AND
+                  PRED Actual_Orders(a, o, r, a1)
+                  EQ  o = 'Success'
+      Predicted FOL: ∃s:order_status_code ∃r:regular_order_id ∃d:actual_order_date (Actual_Orders(x, s, r, d) ∧ s = Success)
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:order_status_code EXISTS:∃ IDENT:r COLON:: IDENT:regular_order_id EXISTS:∃ IDENT:d COLON:: IDENT:actual_order_date LPAR:( IDENT:Actual_Orders LPAR:( IDENT:x COMMA:, IDENT:s COMMA:, IDENT:r COMMA:, IDENT:d RPAR:) AND:∧ IDENT:s EQ:= IDENT:Success RPAR:) EOF
+        AST:
+          EXISTS s:order_status_code
+            EXISTS r:regular_order_id
+              EXISTS d:actual_order_date
+                AND
+                  PRED Actual_Orders(x, s, r, d)
+                  EQ  s = Success<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_actual_order_id_0 : actual_order_id   Gold a <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local actual_order_id, global integer -> IntSort()
+        a1 : local actual_order_date, global datetime -> IntSort()
+        o : local order_status_code, global varchar(10) -> StringSort()
+        r : local regular_order_id, global integer -> IntSort()
+      Predicted FOL:
+        d : local actual_order_date, global datetime -> IntSort()
+        r : local regular_order_id, global integer -> IntSort()
+        s : local order_status_code, global varchar(10) -> StringSort()
+        x : local actual_order_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_o_1, gold_r_2, gold_a1_3], And(D_varchar_10_(gold_o_1), And(P_Actual_Orders(FV_actual_order_id_0, gold_o_1, gold_r_2, gold_a1_3), (gold_o_1 == L_Success))))
+      gold_skolem (witnesses WGOLD_o, WGOLD_r, WGOLD_a1):  And(D_varchar_10_(WGOLD_o), And(P_Actual_Orders(FV_actual_order_id_0, WGOLD_o, WGOLD_r, WGOLD_a1), (WGOLD_o == L_Success)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_r_2, predicted_d_3], And(D_varchar_10_(predicted_s_1), And(P_Actual_Orders(FV_actual_order_id_0, predicted_s_1, predicted_r_2, predicted_d_3), (predicted_s_1 == L_Success))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_r, WPREDICTED_d):  And(D_varchar_10_(WPREDICTED_s), And(P_Actual_Orders(FV_actual_order_id_0, WPREDICTED_s, WPREDICTED_r, WPREDICTED_d), (WPREDICTED_s == L_Success)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Success' at varchar(10) -> L_Success = StringVal('Success')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 735 lines, 28006 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_687.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_o, WGOLD_r, WGOLD_a1
+      claim: And(And(Length(WGOLD_o) <= 10, And(Actual_Orders(FV_actual_order_id_0, WGOLD_o, WGOLD_r, WGOLD_a1), WGOLD_o == "Success")), Not(Exists([predicted_s_1, predicted_r_2, predicted_d_3], And(Length(predicted_s_1) <= 10, And(Actual_Orders(FV_actual_order_id_0, predicted_s_1, predicted_r_2, predicted_d_3), predicted_s_1 == "Success")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_r, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_s) <= 10, And(Actual_Orders(FV_actual_order_id_0, WPREDICTED_s, WPREDICTED_r, WPREDICTED_d), WPREDICTED_s == "Success")), Not(Exists([gold_o_1, gold_r_2, gold_a1_3], And(Length(gold_o_1) <= 10, And(Actual_Orders(FV_actual_order_id_0, gold_o_1, gold_r_2, gold_a1_3), gold_o_1 == "Success")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

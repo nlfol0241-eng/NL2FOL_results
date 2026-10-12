@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_607.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_607.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4554 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the shipping agent code of shipping agent UPS?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        shipping_agent_code = char(15) -> StringSort()
+        shipping_agent_description = varchar(255) -> StringSort()
+        shipping_agent_name = varchar(255) -> StringSort()
+      symbols:
+        Ref_Shipping_Agents(shipping_agent_code, shipping_agent_name, shipping_agent_description)
+        constant UPS : shipping_agent_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s1 : shipping_agent_name ∃s2 : shipping_agent_description ( (Ref_Shipping_Agents(s,s1,s2)) ∧ (s1 = 'UPS') )
+        tokens: EXISTS:∃ IDENT:s1 COLON:: IDENT:shipping_agent_name EXISTS:∃ IDENT:s2 COLON:: IDENT:shipping_agent_description LPAR:( LPAR:( IDENT:Ref_Shipping_Agents LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:UPS RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s1:shipping_agent_name
+            EXISTS s2:shipping_agent_description
+              AND
+                PRED Ref_Shipping_Agents(s, s1, s2)
+                EQ  s1 = 'UPS'
+      Predicted FOL: ∃d : shipping_agent_description (Ref_Shipping_Agents(c, 'UPS', d))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:shipping_agent_description LPAR:( IDENT:Ref_Shipping_Agents LPAR:( IDENT:c COMMA:, LIT:UPS COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:shipping_agent_description
+            PRED Ref_Shipping_Agents(c, 'UPS', d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_shipping_agent_code_0 : shipping_agent_code   Gold s <-> Predicted c
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        s : local shipping_agent_code, global char(15) -> StringSort()
+        s1 : local shipping_agent_name, global varchar(255) -> StringSort()
+        s2 : local shipping_agent_description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        c : local shipping_agent_code, global char(15) -> StringSort()
+        d : local shipping_agent_description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s1_1, gold_s2_2], And(D_varchar_255_(gold_s1_1), D_varchar_255_(gold_s2_2), And(P_Ref_Shipping_Agents(FV_shipping_agent_code_0, gold_s1_1, gold_s2_2), (gold_s1_1 == L_UPS))))
+      gold_skolem (witnesses WGOLD_s1, WGOLD_s2):  And(D_varchar_255_(WGOLD_s1), D_varchar_255_(WGOLD_s2), And(P_Ref_Shipping_Agents(FV_shipping_agent_code_0, WGOLD_s1, WGOLD_s2), (WGOLD_s1 == L_UPS)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1], And(D_varchar_255_(predicted_d_1), And(P_Ref_Shipping_Agents(FV_shipping_agent_code_0, L_UPS, predicted_d_1), D_varchar_255_(L_UPS))))
+      predicted_skolem (witnesses WPREDICTED_d):  And(D_varchar_255_(WPREDICTED_d), And(P_Ref_Shipping_Agents(FV_shipping_agent_code_0, L_UPS, WPREDICTED_d), D_varchar_255_(L_UPS)))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'UPS' at varchar(255) -> L_UPS = StringVal('UPS')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 724 lines, 27402 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_607.py
+   [G8] took 0.006 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_shipping_agent_code_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s1, WGOLD_s2
+      claim: And(And(Length(WGOLD_s1) <= 255, Length(WGOLD_s2) <= 255, And(Ref_Shipping_Agents(FV_shipping_agent_code_0, WGOLD_s1, WGOLD_s2), WGOLD_s1 == "UPS")), Not(Exists(predicted_d_1, And(Length(predicted_d_1) <= 255, And(Ref_Shipping_Agents(FV_shipping_agent_code_0, "UPS", predicted_d_1), Length("UPS") <= 255)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_d) <= 255, And(Ref_Shipping_Agents(FV_shipping_agent_code_0, "UPS", WPREDICTED_d), Length("UPS") <= 255)), Not(Exists([gold_s1_1, gold_s2_2], And(Length(gold_s1_1) <= 255, Length(gold_s2_2) <= 255, And(Ref_Shipping_Agents(FV_shipping_agent_code_0, gold_s1_1, gold_s2_2), gold_s1_1 == "UPS")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

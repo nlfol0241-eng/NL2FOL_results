@@ -1,0 +1,82 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_406.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_406.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 1936 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the different allergy types?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 2 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        Allergy = varchar(20) -> StringSort()
+        AllergyType = varchar(20) -> StringSort()
+      symbols:
+        Allergy_Type(Allergy, AllergyType)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Allergy ( Allergy_Type(a,a1) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Allergy LPAR:( IDENT:Allergy_Type LPAR:( IDENT:a COMMA:, IDENT:a1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Allergy
+            PRED Allergy_Type(a, a1)
+      Predicted FOL: ∃a:Allergy (Allergy_Type(a, t))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Allergy LPAR:( IDENT:Allergy_Type LPAR:( IDENT:a COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Allergy
+            PRED Allergy_Type(a, t)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_AllergyType_0 : AllergyType   Gold a1 <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Allergy, global varchar(20) -> StringSort()
+        a1 : local AllergyType, global varchar(20) -> StringSort()
+      Predicted FOL:
+        a : local Allergy, global varchar(20) -> StringSort()
+        t : local AllergyType, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1], And(D_varchar_20_(gold_a_1), P_Allergy_Type(gold_a_1, FV_AllergyType_0)))
+      gold_skolem (witnesses WGOLD_a):  And(D_varchar_20_(WGOLD_a), P_Allergy_Type(WGOLD_a, FV_AllergyType_0))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1], And(D_varchar_20_(predicted_a_1), P_Allergy_Type(predicted_a_1, FV_AllergyType_0)))
+      predicted_skolem (witnesses WPREDICTED_a):  And(D_varchar_20_(WPREDICTED_a), P_Allergy_Type(WPREDICTED_a, FV_AllergyType_0))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 712 lines, 26048 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_406.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_AllergyType_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a
+      claim: And(And(Length(WGOLD_a) <= 20, Allergy_Type(WGOLD_a, FV_AllergyType_0)), Not(Exists(predicted_a_1, And(Length(predicted_a_1) <= 20, Allergy_Type(predicted_a_1, FV_AllergyType_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a
+      claim: And(And(Length(WPREDICTED_a) <= 20, Allergy_Type(WPREDICTED_a, FV_AllergyType_0)), Not(Exists(gold_a_1, And(Length(gold_a_1) <= 20, Allergy_Type(gold_a_1, FV_AllergyType_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

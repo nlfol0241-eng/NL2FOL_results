@@ -1,0 +1,108 @@
+{
+  "NL": "What are the title and director of the films without any schedule?",
+  "Vocabulary": {
+    "Predicates": [
+      "film",
+      "schedule"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "film": [
+        "Film_ID",
+        "Rank_in_series",
+        "Number_in_season",
+        "Title",
+        "Directed_by",
+        "Original_air_date",
+        "Production_code"
+      ],
+      "schedule": [
+        "Cinema_ID",
+        "Film_ID",
+        "Date",
+        "Show_times_per_day",
+        "Price"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a6∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'∀a6'( film(a0, a1, a2, a3, a4, a5, a6) ∧ film(a0', a1', a2', a3', a4', a5', a6') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' ∧ a6 = a6' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( cinema(b0, b1, b2, b3, b4) ∧ cinema(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c3∀c4∀c0'∀c1'∀c2'∀c3'∀c4'( schedule(c0, c1, c2, c3, c4) ∧ schedule(c0', c1', c2', c3', c4') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' ∧ c3 = c3' ∧ c4 = c4' )",
+    "axiom4": "∀c0∀c1∀c2∀c3∀c4 ( schedule(c0, c1, c2, c3, c4) → ∃b0∃b1∃b2∃b3∃b4 ( cinema(b0, b1, b2, b3, b4) ∧ b0 = c0 ) )",
+    "axiom5": "∀c0∀c1∀c2∀c3∀c4 ( schedule(c0, c1, c2, c3, c4) → ∃a0∃a1∃a2∃a3∃a4∃a5∃a6 ( film(a0, a1, a2, a3, a4, a5, a6) ∧ a0 = c1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "film": {
+        "A": "film",
+        "A0": "Film_ID",
+        "A1": "Rank_in_series",
+        "A2": "Number_in_season",
+        "A3": "Title",
+        "A4": "Directed_by",
+        "A5": "Original_air_date",
+        "A6": "Production_code"
+      },
+      "schedule": {
+        "B": "schedule",
+        "B0": "Cinema_ID",
+        "B1": "Film_ID",
+        "B2": "Date",
+        "B3": "Show_times_per_day",
+        "B4": "Price"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃n : Number_in_season ∃o : Original_air_date ∃r : Rank_in_series ∃f : Film_ID ∃p : Production_code( (film(f,r,n,t,d,o,p)) ∧ (¬(∃f1 : Film_ID( ((film(f,r,n,t,d,o,p)) ∧ (∃c : Cinema_ID ∃s : Show_times_per_day ∃d1 : Date ∃p1 : Price( schedule(c,f1,d1,s,p1) ))) ∧ (f = f1) ))) )",
+    "free vars": "t : Title, d : Directed_by"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A3,A4]((<P>[A0,A1,A2,A3,A4,A5,A6](A))<D>(<P>[A0,A1,A2,A3,A4,A5,A6](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A3,A4]((<P>[A0,A1,A2,A3,A4,A5,A6](A))<D>(<P>[A0,A1,A2,A3,A4,A5,A6](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A2,?A5,?A1,?A0,?A6( (A(?A0,?A1,?A2,?A3,?A4,?A5,?A6)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3,?A4,?A5,?A6)) & ([E]?B0,?B3,?B2,?B4( B(?B0,?B1,?B2,?B3,?B4) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A2 ∃A5 ∃A1 ∃A0 ∃A6( (A(A0,A1,A2,A3,A4,A5,A6)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3,A4,A5,A6)) ∧ (∃B0 ∃B3 ∃B2 ∃B4( B(B0,B1,B2,B3,B4) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A3, A4",
+    "db_id": "cinema",
+    "processed_sql": "SELECT title ,  directed_by FROM film WHERE film_id NOT IN (SELECT film_id FROM schedule)"
+  },
+  "Global Sorts": [
+    "int",
+    "float",
+    "text"
+  ],
+  "Sort Axioms": {
+    "film": {
+      "sortaxiom0": "Film_ID = int",
+      "sortaxiom1": "Rank_in_series = int",
+      "sortaxiom2": "Number_in_season = int",
+      "sortaxiom3": "Title = text",
+      "sortaxiom4": "Directed_by = text",
+      "sortaxiom5": "Original_air_date = text",
+      "sortaxiom6": "Production_code = text"
+    },
+    "schedule": {
+      "sortaxiom0": "Cinema_ID = int",
+      "sortaxiom1": "Film_ID = int",
+      "sortaxiom2": "Date = text",
+      "sortaxiom3": "Show_times_per_day = int",
+      "sortaxiom4": "Price = float"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT title ,  directed_by FROM film WHERE film_id NOT IN (SELECT film_id FROM schedule)"
+  },
+  "id": 3159,
+  "Predicted FOL": {
+    "string": "∃ f : Film_ID ∃ r : Rank_in_series ∃ n : Number_in_season ∃ oa : Original_air_date ∃ pc : Production_code ( film(f, r, n, t, d, oa, pc) ∧ ¬∃ c : Cinema_ID ∃ sf : Film_ID ∃ dt : Date ∃ st : Show_times_per_day ∃ pr : Price ( schedule(c, sf, dt, st, pr) ∧ sf = f ) )",
+    "free vars": "t:Title, d:Directed_by"
+  }
+}

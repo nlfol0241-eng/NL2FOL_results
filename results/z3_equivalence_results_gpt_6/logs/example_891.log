@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_891.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_891.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3583 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the distinct premise types?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        premise_details = varchar(255) -> StringSort()
+        premise_id = integer -> IntSort()
+        premises_type = varchar(15) -> StringSort()
+      symbols:
+        Premises(premise_id, premises_type, premise_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : premise_id ∃p2 : premise_details ( Premises(p,p1,p2) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:premise_id EXISTS:∃ IDENT:p2 COLON:: IDENT:premise_details LPAR:( IDENT:Premises LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:premise_id
+            EXISTS p2:premise_details
+              PRED Premises(p, p1, p2)
+      Predicted FOL: ∃i : premise_id ∃d : premise_details (Premises(i, t, d))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:premise_id EXISTS:∃ IDENT:d COLON:: IDENT:premise_details LPAR:( IDENT:Premises LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:premise_id
+            EXISTS d:premise_details
+              PRED Premises(i, t, d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_premises_type_0 : premises_type   Gold p1 <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local premise_id, global integer -> IntSort()
+        p1 : local premises_type, global varchar(15) -> StringSort()
+        p2 : local premise_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        d : local premise_details, global varchar(255) -> StringSort()
+        i : local premise_id, global integer -> IntSort()
+        t : local premises_type, global varchar(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p2_2], And(D_varchar_255_(gold_p2_2), P_Premises(gold_p_1, FV_premises_type_0, gold_p2_2)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p2):  And(D_varchar_255_(WGOLD_p2), P_Premises(WGOLD_p, FV_premises_type_0, WGOLD_p2))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_d_2], And(D_varchar_255_(predicted_d_2), P_Premises(predicted_i_1, FV_premises_type_0, predicted_d_2)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_d):  And(D_varchar_255_(WPREDICTED_d), P_Premises(WPREDICTED_i, FV_premises_type_0, WPREDICTED_d))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 727 lines, 26953 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_891.py
+   [G8] took 0.006 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_premises_type_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p2
+      claim: And(And(Length(WGOLD_p2) <= 255, Premises(WGOLD_p, FV_premises_type_0, WGOLD_p2)), Not(Exists([predicted_i_1, predicted_d_2], And(Length(predicted_d_2) <= 255, Premises(predicted_i_1, FV_premises_type_0, predicted_d_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_d) <= 255, Premises(WPREDICTED_i, FV_premises_type_0, WPREDICTED_d)), Not(Exists([gold_p_1, gold_p2_2], And(Length(gold_p2_2) <= 255, Premises(gold_p_1, FV_premises_type_0, gold_p2_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

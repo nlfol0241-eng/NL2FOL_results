@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3191 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are  the different countries with singers above age 20?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        bool -> BoolSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Country = text -> StringSort()
+        Is_male = bool -> BoolSort()
+        Name = text -> StringSort()
+        Singer_ID = text -> StringSort()
+        Song_Name = text -> StringSort()
+        Song_release_year = text -> StringSort()
+      symbols:
+        singer(Singer_ID, Name, Country, Song_Name, Song_release_year, Age, Is_male)
+        constant 20 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Singer_ID ∃n : Name ∃s1 : Song_Name ∃s2 : Song_release_year ∃a : Age ∃i : Is_male ( (singer(s,n,c,s1,s2,a,i)) ∧ (a > 20) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:s1 COLON:: IDENT:Song_Name EXISTS:∃ IDENT:s2 COLON:: IDENT:Song_release_year EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:i COLON:: IDENT:Is_male LPAR:( LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:s1 COMMA:, IDENT:s2 COMMA:, IDENT:a COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:20 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Singer_ID
+            EXISTS n:Name
+              EXISTS s1:Song_Name
+                EXISTS s2:Song_release_year
+                  EXISTS a:Age
+                    EXISTS i:Is_male
+                      AND
+                        PRED singer(s, n, c, s1, s2, a, i)
+                        CMP  a > 20
+      Predicted FOL: ∃s : Singer_ID ∃n : Name ∃c : Country ∃sn : Song_Name ∃sry : Song_release_year ∃a : Age ∃im : Is_male (singer(s, n, c, sn, sry, a, im) ∧ a > 20)
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:sn COLON:: IDENT:Song_Name EXISTS:∃ IDENT:sry COLON:: IDENT:Song_release_year EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:im COLON:: IDENT:Is_male LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:sn COMMA:, IDENT:sry COMMA:, IDENT:a COMMA:, IDENT:im RPAR:) AND:∧ IDENT:a GT:> NUM:20 RPAR:) EOF
+        AST:
+          EXISTS s:Singer_ID
+            EXISTS n:Name
+              EXISTS c:Country
+                EXISTS sn:Song_Name
+                  EXISTS sry:Song_release_year
+                    EXISTS a:Age
+                      EXISTS im:Is_male
+                        AND
+                          PRED singer(s, n, c, sn, sry, a, im)
+                          CMP  a > 20
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : Country) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        c : local Country, global text -> StringSort()
+        i : local Is_male, global bool -> BoolSort()
+        n : local Name, global text -> StringSort()
+        s : local Singer_ID, global text -> StringSort()
+        s1 : local Song_Name, global text -> StringSort()
+        s2 : local Song_release_year, global text -> StringSort()
+      Predicted FOL:
+        a : local Age, global int -> IntSort()
+        c : local Country, global text -> StringSort()
+        im : local Is_male, global bool -> BoolSort()
+        n : local Name, global text -> StringSort()
+        s : local Singer_ID, global text -> StringSort()
+        sn : local Song_Name, global text -> StringSort()
+        sry : local Song_release_year, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5396 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : Country) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

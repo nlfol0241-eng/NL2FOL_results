@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3347.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3347.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3544 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the country codes for countries that do not speak English?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        char(30) -> StringSort()   [domain Length(x) <= 30; length <= 30 (blank padding not modelled)]
+        float(4, 1) -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        char(3) -> StringSort()   [domain Length(x) <= 3; length <= 3 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        CountryCode = char(3) -> StringSort()
+        IsOfficial = text -> StringSort()
+        Language = char(30) -> StringSort()
+        Percentage = float(4, 1) -> Float32()
+      symbols:
+        countrylanguage(CountryCode, Language, IsOfficial, Percentage)
+        constant English : Language
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃i : IsOfficial ∃l : Language ∃p : Percentage( countrylanguage(c,l,i,p) )) ∧ (¬(∃i : IsOfficial ∃l : Language ∃p : Percentage( (countrylanguage(c,l,i,p)) ∧ (l = 'English') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:IsOfficial EXISTS:∃ IDENT:l COLON:: IDENT:Language EXISTS:∃ IDENT:p COLON:: IDENT:Percentage LPAR:( IDENT:countrylanguage LPAR:( IDENT:c COMMA:, IDENT:l COMMA:, IDENT:i COMMA:, IDENT:p RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:IsOfficial EXISTS:∃ IDENT:l COLON:: IDENT:Language EXISTS:∃ IDENT:p COLON:: IDENT:Percentage LPAR:( LPAR:( IDENT:countrylanguage LPAR:( IDENT:c COMMA:, IDENT:l COMMA:, IDENT:i COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:English RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS i:IsOfficial
+              EXISTS l:Language
+                EXISTS p:Percentage
+                  PRED countrylanguage(c, l, i, p)
+            NOT
+              EXISTS i:IsOfficial
+                EXISTS l:Language
+                  EXISTS p:Percentage
+                    AND
+                      PRED countrylanguage(c, l, i, p)
+                      EQ  l = 'English'
+      Predicted FOL: ∃x : CountryCode ( countrylanguage(x, 'English', y, z) ∧ ¬∃w : Language (countrylanguage(x, w, v, u) ∧ w = 'English') )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:CountryCode LPAR:( IDENT:countrylanguage LPAR:( IDENT:x COMMA:, LIT:English COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:w COLON:: IDENT:Language LPAR:( IDENT:countrylanguage LPAR:( IDENT:x COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, IDENT:u RPAR:) AND:∧ IDENT:w EQ:= LIT:English RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:CountryCode
+            AND
+              PRED countrylanguage(x, 'English', y, z)
+              NOT
+                EXISTS w:Language
+                  AND
+                    PRED countrylanguage(x, w, v, u)
+                    EQ  w = 'English'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) y, z, v, u occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (c : CountryCode) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CountryCode, global char(3) -> StringSort()
+        i : local IsOfficial, global text -> StringSort()
+        l : local Language, global char(30) -> StringSort()
+        p : local Percentage, global float(4, 1) -> Float32()
+      Predicted FOL:
+        u : local Percentage, global float(4, 1) -> Float32()
+        v : local IsOfficial, global text -> StringSort()
+        w : local Language, global char(30) -> StringSort()
+        x : local CountryCode, global char(3) -> StringSort()
+        y : local IsOfficial, global text -> StringSort()
+        z : local Percentage, global float(4, 1) -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5538 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3347.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : CountryCode) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) y, z, v, u occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

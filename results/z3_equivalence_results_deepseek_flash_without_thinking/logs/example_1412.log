@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1412.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1412.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3194 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and dates of races, and the names of the tracks where they are held?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Class = text -> StringSort()
+        Date = text -> StringSort()
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        Race_ID = int -> IntSort()
+        Seating = real -> Float32()
+        Track_ID = text -> StringSort()
+        Year_Opened = real -> Float32()
+      symbols:
+        race(Race_ID, Name, Class, Date, Track_ID)
+        track(Track_ID, Name, Location, Seating, Year_Opened)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Race_ID ∃c : Class ∃t : Track_ID ∃t1 : Track_ID ∃l : Location ∃s : Seating ∃y : Year_Opened ( ((race(r,n,c,d,t)) ∧ (track(t1,n1,l,s,y))) ∧ (t = t1) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Race_ID EXISTS:∃ IDENT:c COLON:: IDENT:Class EXISTS:∃ IDENT:t COLON:: IDENT:Track_ID EXISTS:∃ IDENT:t1 COLON:: IDENT:Track_ID EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:s COLON:: IDENT:Seating EXISTS:∃ IDENT:y COLON:: IDENT:Year_Opened LPAR:( LPAR:( LPAR:( IDENT:race LPAR:( IDENT:r COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:track LPAR:( IDENT:t1 COMMA:, IDENT:n1 COMMA:, IDENT:l COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Race_ID
+            EXISTS c:Class
+              EXISTS t:Track_ID
+                EXISTS t1:Track_ID
+                  EXISTS l:Location
+                    EXISTS s:Seating
+                      EXISTS y:Year_Opened
+                        AND
+                          AND
+                            PRED race(r, n, c, d, t)
+                            PRED track(t1, n1, l, s, y)
+                          EQ  t = t1
+      Predicted FOL: ∃r0 : Race_ID ∃r1 : Name ∃r2 : Class ∃r3 : Date ∃r4 : Track_ID ∃t0 : Track_ID ∃t1 : Name ∃t2 : Location ∃t3 : Seating ∃t4 : Year_Opened (race(r0, r1, r2, r3, r4) ∧ track(t0, t1, t2, t3, t4) ∧ t0 = r4)
+        tokens: EXISTS:∃ IDENT:r0 COLON:: IDENT:Race_ID EXISTS:∃ IDENT:r1 COLON:: IDENT:Name EXISTS:∃ IDENT:r2 COLON:: IDENT:Class EXISTS:∃ IDENT:r3 COLON:: IDENT:Date EXISTS:∃ IDENT:r4 COLON:: IDENT:Track_ID EXISTS:∃ IDENT:t0 COLON:: IDENT:Track_ID EXISTS:∃ IDENT:t1 COLON:: IDENT:Name EXISTS:∃ IDENT:t2 COLON:: IDENT:Location EXISTS:∃ IDENT:t3 COLON:: IDENT:Seating EXISTS:∃ IDENT:t4 COLON:: IDENT:Year_Opened LPAR:( IDENT:race LPAR:( IDENT:r0 COMMA:, IDENT:r1 COMMA:, IDENT:r2 COMMA:, IDENT:r3 COMMA:, IDENT:r4 RPAR:) AND:∧ IDENT:track LPAR:( IDENT:t0 COMMA:, IDENT:t1 COMMA:, IDENT:t2 COMMA:, IDENT:t3 COMMA:, IDENT:t4 RPAR:) AND:∧ IDENT:t0 EQ:= IDENT:r4 RPAR:) EOF
+        AST:
+          EXISTS r0:Race_ID
+            EXISTS r1:Name
+              EXISTS r2:Class
+                EXISTS r3:Date
+                  EXISTS r4:Track_ID
+                    EXISTS t0:Track_ID
+                      EXISTS t1:Name
+                        EXISTS t2:Location
+                          EXISTS t3:Seating
+                            EXISTS t4:Year_Opened
+                              AND
+                                PRED race(r0, r1, r2, r3, r4)
+                                PRED track(t0, t1, t2, t3, t4)
+                                EQ  t0 = r4
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (n : Name, d : Date, n1 : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Class, global text -> StringSort()
+        d : local Date, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Name, global text -> StringSort()
+        r : local Race_ID, global int -> IntSort()
+        s : local Seating, global real -> Float32()
+        t : local Track_ID, global text -> StringSort()
+        t1 : local Track_ID, global text -> StringSort()
+        y : local Year_Opened, global real -> Float32()
+      Predicted FOL:
+        r0 : local Race_ID, global int -> IntSort()
+        r1 : local Name, global text -> StringSort()
+        r2 : local Class, global text -> StringSort()
+        r3 : local Date, global text -> StringSort()
+        r4 : local Track_ID, global text -> StringSort()
+        t0 : local Track_ID, global text -> StringSort()
+        t1 : local Name, global text -> StringSort()
+        t2 : local Location, global text -> StringSort()
+        t3 : local Seating, global real -> Float32()
+        t4 : local Year_Opened, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5554 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1412.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (n : Name, d : Date, n1 : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

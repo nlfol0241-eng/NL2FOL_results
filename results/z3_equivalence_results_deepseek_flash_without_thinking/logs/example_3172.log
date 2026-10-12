@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3172.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3172.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3834 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of technicians who have not been assigned to repair machines.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Machine_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Starting_Year = real -> Float32()
+        Team = text -> StringSort()
+        repair_ID = int -> IntSort()
+        technician_id = real -> Float32()
+      symbols:
+        repair_assignment(technician_id, repair_ID, Machine_ID)
+        technician(technician_id, Name, Team, Starting_Year, Age)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t1 : Team ∃a : Age ∃s : Starting_Year ∃t : technician_id( (technician(t,n,t1,s,a)) ∧ (¬(∃t2 : technician_id( ((technician(t,n,t1,s,a)) ∧ (∃m : Machine_ID ∃r : repair_ID( repair_assignment(t2,r,m) ))) ∧ (t = t2) ))) )
+        tokens: EXISTS:∃ IDENT:t1 COLON:: IDENT:Team EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:s COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:t COLON:: IDENT:technician_id LPAR:( LPAR:( IDENT:technician LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:t2 COLON:: IDENT:technician_id LPAR:( LPAR:( LPAR:( IDENT:technician LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:m COLON:: IDENT:Machine_ID EXISTS:∃ IDENT:r COLON:: IDENT:repair_ID LPAR:( IDENT:repair_assignment LPAR:( IDENT:t2 COMMA:, IDENT:r COMMA:, IDENT:m RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t1:Team
+            EXISTS a:Age
+              EXISTS s:Starting_Year
+                EXISTS t:technician_id
+                  AND
+                    PRED technician(t, n, t1, s, a)
+                    NOT
+                      EXISTS t2:technician_id
+                        AND
+                          AND
+                            PRED technician(t, n, t1, s, a)
+                            EXISTS m:Machine_ID
+                              EXISTS r:repair_ID
+                                PRED repair_assignment(t2, r, m)
+                          EQ  t = t2
+      Predicted FOL: ∃x0 : technician_id ∃x1 : Name ∃x2 : Team ∃x3 : Starting_Year ∃x4 : Age (technician(x0, x1, x2, x3, x4) ∧ ¬∃y0 : technician_id ∃y1 : repair_ID ∃y2 : Machine_ID (repair_assignment(y0, y1, y2) ∧ y0 = x0))
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:technician_id EXISTS:∃ IDENT:x1 COLON:: IDENT:Name EXISTS:∃ IDENT:x2 COLON:: IDENT:Team EXISTS:∃ IDENT:x3 COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:x4 COLON:: IDENT:Age LPAR:( IDENT:technician LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:y0 COLON:: IDENT:technician_id EXISTS:∃ IDENT:y1 COLON:: IDENT:repair_ID EXISTS:∃ IDENT:y2 COLON:: IDENT:Machine_ID LPAR:( IDENT:repair_assignment LPAR:( IDENT:y0 COMMA:, IDENT:y1 COMMA:, IDENT:y2 RPAR:) AND:∧ IDENT:y0 EQ:= IDENT:x0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:technician_id
+            EXISTS x1:Name
+              EXISTS x2:Team
+                EXISTS x3:Starting_Year
+                  EXISTS x4:Age
+                    AND
+                      PRED technician(x0, x1, x2, x3, x4)
+                      NOT
+                        EXISTS y0:technician_id
+                          EXISTS y1:repair_ID
+                            EXISTS y2:Machine_ID
+                              AND
+                                PRED repair_assignment(y0, y1, y2)
+                                EQ  y0 = x0
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        m : local Machine_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        r : local repair_ID, global int -> IntSort()
+        s : local Starting_Year, global real -> Float32()
+        t : local technician_id, global real -> Float32()
+        t1 : local Team, global text -> StringSort()
+        t2 : local technician_id, global real -> Float32()
+      Predicted FOL:
+        x0 : local technician_id, global real -> Float32()
+        x1 : local Name, global text -> StringSort()
+        x2 : local Team, global text -> StringSort()
+        x3 : local Starting_Year, global real -> Float32()
+        x4 : local Age, global int -> IntSort()
+        y0 : local technician_id, global real -> Float32()
+        y1 : local repair_ID, global int -> IntSort()
+        y2 : local Machine_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5566 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3172.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

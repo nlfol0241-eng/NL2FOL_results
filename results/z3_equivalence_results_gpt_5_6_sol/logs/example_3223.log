@@ -1,0 +1,162 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3223.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3223.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6826 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is all the information about employees who have never had a job in the past?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   8 global sorts, 13 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        decimal(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        date -> IntSort()   [days since 1970-01-01]
+        decimal(8,2) -> RealSort()   [domain And(IsInt(x * 100), x > -1000000, x < 1000000); 8 digits, 2 after the point]
+        decimal(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+        varchar(25) -> StringSort()   [domain Length(x) <= 25; length <= 25]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        decimal(2,2) -> RealSort()   [domain And(IsInt(x * 100), x > -1, x < 1); 2 digits, 2 after the point]
+      local sorts:
+        COMMISSION_PCT = decimal(2,2) -> RealSort()
+        DEPARTMENT_ID = decimal(4,0) -> RealSort()
+        EMAIL = varchar(25) -> StringSort()
+        EMPLOYEE_ID = decimal(6,0) -> RealSort()
+        END_DATE = date -> IntSort()
+        FIRST_NAME = varchar(20) -> StringSort()
+        HIRE_DATE = date -> IntSort()
+        JOB_ID = varchar(10) -> StringSort()
+        LAST_NAME = varchar(25) -> StringSort()
+        MANAGER_ID = decimal(6,0) -> RealSort()
+        PHONE_NUMBER = varchar(20) -> StringSort()
+        SALARY = decimal(8,2) -> RealSort()
+        START_DATE = date -> IntSort()
+      symbols:
+        employees(EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE_NUMBER, HIRE_DATE, JOB_ID, SALARY, COMMISSION_PCT, MANAGER_ID, DEPARTMENT_ID)
+        job_history(EMPLOYEE_ID, START_DATE, END_DATE, JOB_ID, DEPARTMENT_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (employees(e,f,l,e1,p,h,j,s,c,m,d)) ∧ (¬(∃e2 : EMPLOYEE_ID( ((employees(e,f,l,e1,p,h,j,s,c,m,d)) ∧ (∃j1 : JOB_ID ∃e3 : END_DATE ∃s1 : START_DATE ∃d1 : DEPARTMENT_ID( job_history(e2,s1,e3,j1,d1) ))) ∧ (e = e2) )))
+        tokens: LPAR:( IDENT:employees LPAR:( IDENT:e COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:e1 COMMA:, IDENT:p COMMA:, IDENT:h COMMA:, IDENT:j COMMA:, IDENT:s COMMA:, IDENT:c COMMA:, IDENT:m COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e2 COLON:: IDENT:EMPLOYEE_ID LPAR:( LPAR:( LPAR:( IDENT:employees LPAR:( IDENT:e COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:e1 COMMA:, IDENT:p COMMA:, IDENT:h COMMA:, IDENT:j COMMA:, IDENT:s COMMA:, IDENT:c COMMA:, IDENT:m COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:j1 COLON:: IDENT:JOB_ID EXISTS:∃ IDENT:e3 COLON:: IDENT:END_DATE EXISTS:∃ IDENT:s1 COLON:: IDENT:START_DATE EXISTS:∃ IDENT:d1 COLON:: IDENT:DEPARTMENT_ID LPAR:( IDENT:job_history LPAR:( IDENT:e2 COMMA:, IDENT:s1 COMMA:, IDENT:e3 COMMA:, IDENT:j1 COMMA:, IDENT:d1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e2 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            PRED employees(e, f, l, e1, p, h, j, s, c, m, d)
+            NOT
+              EXISTS e2:EMPLOYEE_ID
+                AND
+                  AND
+                    PRED employees(e, f, l, e1, p, h, j, s, c, m, d)
+                    EXISTS j1:JOB_ID
+                      EXISTS e3:END_DATE
+                        EXISTS s1:START_DATE
+                          EXISTS d1:DEPARTMENT_ID
+                            PRED job_history(e2, s1, e3, j1, d1)
+                  EQ  e = e2
+      Predicted FOL: employees(employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id) ∧ ¬∃start_date : START_DATE ∃end_date : END_DATE ∃past_job_id : JOB_ID ∃past_department_id : DEPARTMENT_ID job_history(employee_id, start_date, end_date, past_job_id, past_department_id)
+        tokens: IDENT:employees LPAR:( IDENT:employee_id COMMA:, IDENT:first_name COMMA:, IDENT:last_name COMMA:, IDENT:email COMMA:, IDENT:phone_number COMMA:, IDENT:hire_date COMMA:, IDENT:job_id COMMA:, IDENT:salary COMMA:, IDENT:commission_pct COMMA:, IDENT:manager_id COMMA:, IDENT:department_id RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:start_date COLON:: IDENT:START_DATE EXISTS:∃ IDENT:end_date COLON:: IDENT:END_DATE EXISTS:∃ IDENT:past_job_id COLON:: IDENT:JOB_ID EXISTS:∃ IDENT:past_department_id COLON:: IDENT:DEPARTMENT_ID IDENT:job_history LPAR:( IDENT:employee_id COMMA:, IDENT:start_date COMMA:, IDENT:end_date COMMA:, IDENT:past_job_id COMMA:, IDENT:past_department_id RPAR:) EOF
+        AST:
+          AND
+            PRED employees(employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id)
+            NOT
+              EXISTS start_date:START_DATE
+                EXISTS end_date:END_DATE
+                  EXISTS past_job_id:JOB_ID
+                    EXISTS past_department_id:DEPARTMENT_ID
+                      PRED job_history(employee_id, start_date, end_date, past_job_id, past_department_id)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   11 shared answer variable(s)
+      FV_COMMISSION_PCT_0 : COMMISSION_PCT   Gold c <-> Predicted commission_pct
+      FV_DEPARTMENT_ID_0 : DEPARTMENT_ID   Gold d <-> Predicted department_id
+      FV_EMAIL_0 : EMAIL   Gold e1 <-> Predicted email
+      FV_EMPLOYEE_ID_0 : EMPLOYEE_ID   Gold e <-> Predicted employee_id
+      FV_FIRST_NAME_0 : FIRST_NAME   Gold f <-> Predicted first_name
+      FV_HIRE_DATE_0 : HIRE_DATE   Gold h <-> Predicted hire_date
+      FV_JOB_ID_0 : JOB_ID   Gold j <-> Predicted job_id
+      FV_LAST_NAME_0 : LAST_NAME   Gold l <-> Predicted last_name
+      FV_MANAGER_ID_0 : MANAGER_ID   Gold m <-> Predicted manager_id
+      FV_PHONE_NUMBER_0 : PHONE_NUMBER   Gold p <-> Predicted phone_number
+      FV_SALARY_0 : SALARY   Gold s <-> Predicted salary
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 31 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local COMMISSION_PCT, global decimal(2,2) -> RealSort()
+        d : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        d1 : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        e : local EMPLOYEE_ID, global decimal(6,0) -> RealSort()
+        e1 : local EMAIL, global varchar(25) -> StringSort()
+        e2 : local EMPLOYEE_ID, global decimal(6,0) -> RealSort()
+        e3 : local END_DATE, global date -> IntSort()
+        f : local FIRST_NAME, global varchar(20) -> StringSort()
+        h : local HIRE_DATE, global date -> IntSort()
+        j : local JOB_ID, global varchar(10) -> StringSort()
+        j1 : local JOB_ID, global varchar(10) -> StringSort()
+        l : local LAST_NAME, global varchar(25) -> StringSort()
+        m : local MANAGER_ID, global decimal(6,0) -> RealSort()
+        p : local PHONE_NUMBER, global varchar(20) -> StringSort()
+        s : local SALARY, global decimal(8,2) -> RealSort()
+        s1 : local START_DATE, global date -> IntSort()
+      Predicted FOL:
+        commission_pct : local COMMISSION_PCT, global decimal(2,2) -> RealSort()
+        department_id : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        email : local EMAIL, global varchar(25) -> StringSort()
+        employee_id : local EMPLOYEE_ID, global decimal(6,0) -> RealSort()
+        end_date : local END_DATE, global date -> IntSort()
+        first_name : local FIRST_NAME, global varchar(20) -> StringSort()
+        hire_date : local HIRE_DATE, global date -> IntSort()
+        job_id : local JOB_ID, global varchar(10) -> StringSort()
+        last_name : local LAST_NAME, global varchar(25) -> StringSort()
+        manager_id : local MANAGER_ID, global decimal(6,0) -> RealSort()
+        past_department_id : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        past_job_id : local JOB_ID, global varchar(10) -> StringSort()
+        phone_number : local PHONE_NUMBER, global varchar(20) -> StringSort()
+        salary : local SALARY, global decimal(8,2) -> RealSort()
+        start_date : local START_DATE, global date -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(P_employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Not(Exists([gold_e2_1], And(D_decimal_6_0_(gold_e2_1), And(And(P_employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Exists([gold_j1_2, gold_e3_3, gold_s1_4, gold_d1_5], And(D_varchar_10_(gold_j1_2), D_decimal_4_0_(gold_d1_5), P_job_history(gold_e2_1, gold_s1_4, gold_e3_3, gold_j1_2, gold_d1_5)))), (FV_EMPLOYEE_ID_0 == gold_e2_1))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Not(Exists([predicted_start_date_1, predicted_end_date_2, predicted_past_job_id_3, predicted_past_department_id_4], And(D_varchar_10_(predicted_past_job_id_3), D_decimal_4_0_(predicted_past_department_id_4), P_job_history(FV_EMPLOYEE_ID_0, predicted_start_date_1, predicted_end_date_2, predicted_past_job_id_3, predicted_past_department_id_4)))))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 803 lines, 32321 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3223.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   10 assertion(s): 0 sort axiom(s), 10 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_COMMISSION_PCT_0*100), FV_COMMISSION_PCT_0 > -1, FV_COMMISSION_PCT_0 < 1)
+      [1] And(IsInt(FV_DEPARTMENT_ID_0), FV_DEPARTMENT_ID_0 > -10000, FV_DEPARTMENT_ID_0 < 10000)
+      [2] Length(FV_EMAIL_0) <= 25
+      [3] And(IsInt(FV_EMPLOYEE_ID_0), FV_EMPLOYEE_ID_0 > -1000000, FV_EMPLOYEE_ID_0 < 1000000)
+      [4] Length(FV_FIRST_NAME_0) <= 20
+      [5] Length(FV_JOB_ID_0) <= 10
+      [6] Length(FV_LAST_NAME_0) <= 25
+      [7] And(IsInt(FV_MANAGER_ID_0), FV_MANAGER_ID_0 > -1000000, FV_MANAGER_ID_0 < 1000000)
+      [8] Length(FV_PHONE_NUMBER_0) <= 20
+      [9] And(IsInt(FV_SALARY_0*100), FV_SALARY_0 > -1000000, FV_SALARY_0 < 1000000)
+   [R1] took 0.007 s
+== [R2] check gold |= predicted
+   solver: 10 background assertion(s) + claim; witnesses -
+      claim: And(And(employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Not(Exists(gold_e2_1, And(And(IsInt(gold_e2_1), gold_e2_1 > -1000000, gold_e2_1 < 1000000), And(And(employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Exists([gold_j1_2, gold_e3_3, gold_s1_4, gold_d1_5], And(Length(gold_j1_2) <= 10, And(IsInt(gold_d1_5), gold_d1_5 > -10000, gold_d1_5 < 10000), job_history(gold_e2_1, gold_s1_4, gold_e3_3, gold_j1_2, gold_d1_5)))), FV_EMPLOYEE_ID_0 == gold_e2_1))))), Not(And(employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Not(Exists([predicted_start_date_1, predicted_end_date_2, predicted_past_job_id_3, predicted_past_department_id_4], And(Length(predicted_past_job_id_3) <= 10, And(IsInt(predicted_past_department_id_4), predicted_past_department_id_4 > -10000, predicted_past_department_id_4 < 10000), job_history(FV_EMPLOYEE_ID_0, predicted_start_date_1, predicted_end_date_2, predicted_past_job_id_3, predicted_past_department_id_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.018 s
+== [R3] check predicted |= gold
+   solver: 10 background assertion(s) + claim; witnesses -
+      claim: And(And(employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Not(Exists([predicted_start_date_1, predicted_end_date_2, predicted_past_job_id_3, predicted_past_department_id_4], And(Length(predicted_past_job_id_3) <= 10, And(IsInt(predicted_past_department_id_4), predicted_past_department_id_4 > -10000, predicted_past_department_id_4 < 10000), job_history(FV_EMPLOYEE_ID_0, predicted_start_date_1, predicted_end_date_2, predicted_past_job_id_3, predicted_past_department_id_4))))), Not(And(employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Not(Exists(gold_e2_1, And(And(IsInt(gold_e2_1), gold_e2_1 > -1000000, gold_e2_1 < 1000000), And(And(employees(FV_EMPLOYEE_ID_0, FV_FIRST_NAME_0, FV_LAST_NAME_0, FV_EMAIL_0, FV_PHONE_NUMBER_0, FV_HIRE_DATE_0, FV_JOB_ID_0, FV_SALARY_0, FV_COMMISSION_PCT_0, FV_MANAGER_ID_0, FV_DEPARTMENT_ID_0), Exists([gold_j1_2, gold_e3_3, gold_s1_4, gold_d1_5], And(Length(gold_j1_2) <= 10, And(IsInt(gold_d1_5), gold_d1_5 > -10000, gold_d1_5 < 10000), job_history(gold_e2_1, gold_s1_4, gold_e3_3, gold_j1_2, gold_d1_5)))), FV_EMPLOYEE_ID_0 == gold_e2_1)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.015 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

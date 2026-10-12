@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_266.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_266.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3483 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: which state is mount whitney in
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        country_name = varchar(3) -> StringSort()
+        mountain_altitude = integer -> IntSort()
+        mountain_name = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        mountain(mountain_name, mountain_altitude, country_name, state_name)
+        constant whitney : mountain_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mountain_name ∃m1 : mountain_altitude ∃c : country_name ( (mountain(m,m1,c,s)) ∧ (m = 'whitney') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mountain_name EXISTS:∃ IDENT:m1 COLON:: IDENT:mountain_altitude EXISTS:∃ IDENT:c COLON:: IDENT:country_name LPAR:( LPAR:( IDENT:mountain LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= LIT:whitney RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mountain_name
+            EXISTS m1:mountain_altitude
+              EXISTS c:country_name
+                AND
+                  PRED mountain(m, m1, c, s)
+                  EQ  m = 'whitney'
+      Predicted FOL: ∃a : mountain_altitude ∃c : country_name mountain('whitney', a, c, s)
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:mountain_altitude EXISTS:∃ IDENT:c COLON:: IDENT:country_name IDENT:mountain LPAR:( LIT:whitney COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) EOF
+        AST:
+          EXISTS a:mountain_altitude
+            EXISTS c:country_name
+              PRED mountain('whitney', a, c, s)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_state_name_0 : state_name   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local country_name, global varchar(3) -> StringSort()
+        m : local mountain_name, global text -> StringSort()
+        m1 : local mountain_altitude, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        a : local mountain_altitude, global integer -> IntSort()
+        c : local country_name, global varchar(3) -> StringSort()
+        s : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_m1_2, gold_c_3], And(D_varchar_3_(gold_c_3), And(P_mountain(gold_m_1, gold_m1_2, gold_c_3, FV_state_name_0), (gold_m_1 == L_whitney))))
+      gold_skolem (witnesses WGOLD_m, WGOLD_m1, WGOLD_c):  And(D_varchar_3_(WGOLD_c), And(P_mountain(WGOLD_m, WGOLD_m1, WGOLD_c, FV_state_name_0), (WGOLD_m == L_whitney)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_c_2], And(D_varchar_3_(predicted_c_2), P_mountain(L_whitney, predicted_a_1, predicted_c_2, FV_state_name_0)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_c):  And(D_varchar_3_(WPREDICTED_c), P_mountain(L_whitney, WPREDICTED_a, WPREDICTED_c, FV_state_name_0))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'whitney' at text -> L_whitney = StringVal('whitney')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 730 lines, 27303 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_266.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_m1, WGOLD_c
+      claim: And(And(Length(WGOLD_c) <= 3, And(mountain(WGOLD_m, WGOLD_m1, WGOLD_c, FV_state_name_0), WGOLD_m == "whitney")), Not(Exists([predicted_a_1, predicted_c_2], And(Length(predicted_c_2) <= 3, mountain("whitney", predicted_a_1, predicted_c_2, FV_state_name_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_c
+      claim: And(And(Length(WPREDICTED_c) <= 3, mountain("whitney", WPREDICTED_a, WPREDICTED_c, FV_state_name_0)), Not(Exists([gold_m_1, gold_m1_2, gold_c_3], And(Length(gold_c_3) <= 3, And(mountain(gold_m_1, gold_m1_2, gold_c_3, FV_state_name_0), gold_m_1 == "whitney")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

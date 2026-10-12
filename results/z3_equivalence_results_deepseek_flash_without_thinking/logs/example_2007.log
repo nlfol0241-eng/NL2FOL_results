@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2007.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2007.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3895 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of all distinct wines that are made of red color grape.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 13 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Appelation = text -> StringSort()
+        Cases = integer -> IntSort()
+        Color = text -> StringSort()
+        Drink = text -> StringSort()
+        Grape = text -> StringSort()
+        ID = integer -> IntSort()
+        Name = text -> StringSort()
+        No = integer -> IntSort()
+        Price = integer -> IntSort()
+        Score = integer -> IntSort()
+        State = text -> StringSort()
+        Winery = text -> StringSort()
+        Year = integer -> IntSort()
+      symbols:
+        grapes(ID, Grape, Color)
+        wine(No, Grape, Winery, Appelation, State, Name, Year, Price, Score, Cases, Drink)
+        constant Red : Color
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃g : Grape ∃c : Color ∃n : No ∃g1 : Grape ∃d : Drink ∃w : Winery ∃a : Appelation ∃s : State ∃y : Year ∃p : Price ∃s1 : Score ∃c1 : Cases ( (((grapes(i,g,c)) ∧ (wine(n,g1,w,a,s,n1,y,p,s1,c1,d))) ∧ (g = g1)) ∧ (c = 'Red') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:g COLON:: IDENT:Grape EXISTS:∃ IDENT:c COLON:: IDENT:Color EXISTS:∃ IDENT:n COLON:: IDENT:No EXISTS:∃ IDENT:g1 COLON:: IDENT:Grape EXISTS:∃ IDENT:d COLON:: IDENT:Drink EXISTS:∃ IDENT:w COLON:: IDENT:Winery EXISTS:∃ IDENT:a COLON:: IDENT:Appelation EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:p COLON:: IDENT:Price EXISTS:∃ IDENT:s1 COLON:: IDENT:Score EXISTS:∃ IDENT:c1 COLON:: IDENT:Cases LPAR:( LPAR:( LPAR:( LPAR:( IDENT:grapes LPAR:( IDENT:i COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:wine LPAR:( IDENT:n COMMA:, IDENT:g1 COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:n1 COMMA:, IDENT:y COMMA:, IDENT:p COMMA:, IDENT:s1 COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:g EQ:= IDENT:g1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Red RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS g:Grape
+              EXISTS c:Color
+                EXISTS n:No
+                  EXISTS g1:Grape
+                    EXISTS d:Drink
+                      EXISTS w:Winery
+                        EXISTS a:Appelation
+                          EXISTS s:State
+                            EXISTS y:Year
+                              EXISTS p:Price
+                                EXISTS s1:Score
+                                  EXISTS c1:Cases
+                                    AND
+                                      AND
+                                        AND
+                                          PRED grapes(i, g, c)
+                                          PRED wine(n, g1, w, a, s, n1, y, p, s1, c1, d)
+                                        EQ  g = g1
+                                      EQ  c = 'Red'
+      Predicted FOL: ∃g : Grape ( wine(n, g, w, a, s, name, y, p, sc, ca, d) ∧ grapes(i, g, 'Red') )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:Grape LPAR:( IDENT:wine LPAR:( IDENT:n COMMA:, IDENT:g COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:name COMMA:, IDENT:y COMMA:, IDENT:p COMMA:, IDENT:sc COMMA:, IDENT:ca COMMA:, IDENT:d RPAR:) AND:∧ IDENT:grapes LPAR:( IDENT:i COMMA:, IDENT:g COMMA:, LIT:Red RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:Grape
+            AND
+              PRED wine(n, g, w, a, s, name, y, p, sc, ca, d)
+              PRED grapes(i, g, 'Red')
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) i occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n1 : Name) but Predicted has 10 (n : No, w : Winery, a : Appelation, s : State, name : Name, y : Year, p : Price, sc : Score, ca : Cases, d : Drink): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 26 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Appelation, global text -> StringSort()
+        c : local Color, global text -> StringSort()
+        c1 : local Cases, global integer -> IntSort()
+        d : local Drink, global text -> StringSort()
+        g : local Grape, global text -> StringSort()
+        g1 : local Grape, global text -> StringSort()
+        i : local ID, global integer -> IntSort()
+        n : local No, global integer -> IntSort()
+        n1 : local Name, global text -> StringSort()
+        p : local Price, global integer -> IntSort()
+        s : local State, global text -> StringSort()
+        s1 : local Score, global integer -> IntSort()
+        w : local Winery, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+      Predicted FOL:
+        a : local Appelation, global text -> StringSort()
+        ca : local Cases, global integer -> IntSort()
+        d : local Drink, global text -> StringSort()
+        g : local Grape, global text -> StringSort()
+        i : local ID, global integer -> IntSort()
+        n : local No, global integer -> IntSort()
+        name : local Name, global text -> StringSort()
+        p : local Price, global integer -> IntSort()
+        s : local State, global text -> StringSort()
+        sc : local Score, global integer -> IntSort()
+        w : local Winery, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5764 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2007.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : Name) but Predicted has 10 (n : No, w : Winery, a : Appelation, s : State, name : Name, y : Year, p : Price, sc : Score, ca : Cases, d : Drink): their answers have different arities
+   WARNING: Predicted FOL: variable(s) i occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

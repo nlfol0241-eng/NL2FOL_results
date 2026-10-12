@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1698.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1698.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3377 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all male British artists?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar2(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        artist_name = varchar2(50) -> StringSort()
+        country = varchar2(20) -> StringSort()
+        gender = varchar2(20) -> StringSort()
+        preferred_genre = varchar2(20) -> StringSort()
+      symbols:
+        artist(artist_name, country, gender, preferred_genre)
+        constant Male : gender
+        constant UK : country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : country ∃g : gender ∃p : preferred_genre ( (artist(a,c,g,p)) ∧ ((c = 'UK') ∧ (g = 'Male')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:p COLON:: IDENT:preferred_genre LPAR:( LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:UK RPAR:) AND:∧ LPAR:( IDENT:g EQ:= LIT:Male RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:country
+            EXISTS g:gender
+              EXISTS p:preferred_genre
+                AND
+                  PRED artist(a, c, g, p)
+                  AND
+                    EQ  c = 'UK'
+                    EQ  g = 'Male'
+      Predicted FOL: ∃g : preferred_genre artist(x, 'UK', 'Male', g)
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:preferred_genre IDENT:artist LPAR:( IDENT:x COMMA:, LIT:UK COMMA:, LIT:Male COMMA:, IDENT:g RPAR:) EOF
+        AST:
+          EXISTS g:preferred_genre
+            PRED artist(x, 'UK', 'Male', g)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_artist_name_0 : artist_name   Gold a <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        c : local country, global varchar2(20) -> StringSort()
+        g : local gender, global varchar2(20) -> StringSort()
+        p : local preferred_genre, global varchar2(20) -> StringSort()
+      Predicted FOL:
+        g : local preferred_genre, global varchar2(20) -> StringSort()
+        x : local artist_name, global varchar2(50) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_g_2, gold_p_3], And(D_varchar2_20_(gold_c_1), D_varchar2_20_(gold_g_2), D_varchar2_20_(gold_p_3), And(P_artist(FV_artist_name_0, gold_c_1, gold_g_2, gold_p_3), And((gold_c_1 == L_UK), (gold_g_2 == L_Male)))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_g, WGOLD_p):  And(D_varchar2_20_(WGOLD_c), D_varchar2_20_(WGOLD_g), D_varchar2_20_(WGOLD_p), And(P_artist(FV_artist_name_0, WGOLD_c, WGOLD_g, WGOLD_p), And((WGOLD_c == L_UK), (WGOLD_g == L_Male))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_g_1], And(D_varchar2_20_(predicted_g_1), And(P_artist(FV_artist_name_0, L_UK, L_Male, predicted_g_1), D_varchar2_20_(L_UK), D_varchar2_20_(L_Male))))
+      predicted_skolem (witnesses WPREDICTED_g):  And(D_varchar2_20_(WPREDICTED_g), And(P_artist(FV_artist_name_0, L_UK, L_Male, WPREDICTED_g), D_varchar2_20_(L_UK), D_varchar2_20_(L_Male)))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Male' at varchar2(20) -> L_Male = StringVal('Male')
+      literal 'UK' at varchar2(20) -> L_UK = StringVal('UK')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 731 lines, 27455 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1698.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_artist_name_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_g, WGOLD_p
+      claim: And(And(Length(WGOLD_c) <= 20, Length(WGOLD_g) <= 20, Length(WGOLD_p) <= 20, And(artist(FV_artist_name_0, WGOLD_c, WGOLD_g, WGOLD_p), And(WGOLD_c == "UK", WGOLD_g == "Male"))), Not(Exists(predicted_g_1, And(Length(predicted_g_1) <= 20, And(artist(FV_artist_name_0, "UK", "Male", predicted_g_1), Length("UK") <= 20, Length("Male") <= 20)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_g
+      claim: And(And(Length(WPREDICTED_g) <= 20, And(artist(FV_artist_name_0, "UK", "Male", WPREDICTED_g), Length("UK") <= 20, Length("Male") <= 20)), Not(Exists([gold_c_1, gold_g_2, gold_p_3], And(Length(gold_c_1) <= 20, Length(gold_g_2) <= 20, Length(gold_p_3) <= 20, And(artist(FV_artist_name_0, gold_c_1, gold_g_2, gold_p_3), And(gold_c_1 == "UK", gold_g_2 == "Male"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.012 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

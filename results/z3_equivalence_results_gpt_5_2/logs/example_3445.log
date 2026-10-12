@@ -1,0 +1,136 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3445.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3445.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4746 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of the artists who have produced English songs but have never received rating higher than 8.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 9 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar2(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        date -> IntSort()   [days since 1970-01-01]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+        number(10) -> RealSort()   [domain And(IsInt(x), x > -10000000000, x < 10000000000); 10 digits, 0 after the point]
+      local sorts:
+        artist_name = varchar2(50) -> StringSort()
+        country = varchar2(20) -> StringSort()
+        f_id = number(10) -> RealSort()
+        genre_is = varchar2(20) -> StringSort()
+        languages = varchar2(20) -> StringSort()
+        rating = text -> StringSort()
+        releasedate = date -> IntSort()
+        resolution = number(10) -> RealSort()
+        song_name = varchar2(50) -> StringSort()
+      symbols:
+        song(song_name, artist_name, country, f_id, genre_is, rating, languages, releasedate, resolution)
+        constant 8 : rating
+        constant english : languages
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c : country ∃r : rating ∃r2 : resolution ∃g : genre_is ∃r1 : releasedate ∃f : f_id ∃s : song_name ∃l : languages( (song(s,a,c,f,g,r,l,r1,r2)) ∧ (l = 'english') )) ∧ (¬(∃c : country ∃r : rating ∃r2 : resolution ∃g : genre_is ∃r1 : releasedate ∃f : f_id ∃s : song_name ∃l : languages( (song(s,a,c,f,g,r,l,r1,r2)) ∧ (r > 8) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:r2 COLON:: IDENT:resolution EXISTS:∃ IDENT:g COLON:: IDENT:genre_is EXISTS:∃ IDENT:r1 COLON:: IDENT:releasedate EXISTS:∃ IDENT:f COLON:: IDENT:f_id EXISTS:∃ IDENT:s COLON:: IDENT:song_name EXISTS:∃ IDENT:l COLON:: IDENT:languages LPAR:( LPAR:( IDENT:song LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:r COMMA:, IDENT:l COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:english RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:r2 COLON:: IDENT:resolution EXISTS:∃ IDENT:g COLON:: IDENT:genre_is EXISTS:∃ IDENT:r1 COLON:: IDENT:releasedate EXISTS:∃ IDENT:f COLON:: IDENT:f_id EXISTS:∃ IDENT:s COLON:: IDENT:song_name EXISTS:∃ IDENT:l COLON:: IDENT:languages LPAR:( LPAR:( IDENT:song LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:r COMMA:, IDENT:l COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r GT:> NUM:8 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c:country
+              EXISTS r:rating
+                EXISTS r2:resolution
+                  EXISTS g:genre_is
+                    EXISTS r1:releasedate
+                      EXISTS f:f_id
+                        EXISTS s:song_name
+                          EXISTS l:languages
+                            AND
+                              PRED song(s, a, c, f, g, r, l, r1, r2)
+                              EQ  l = 'english'
+            NOT
+              EXISTS c:country
+                EXISTS r:rating
+                  EXISTS r2:resolution
+                    EXISTS g:genre_is
+                      EXISTS r1:releasedate
+                        EXISTS f:f_id
+                          EXISTS s:song_name
+                            EXISTS l:languages
+                              AND
+                                PRED song(s, a, c, f, g, r, l, r1, r2)
+                                CMP  r > 8
+      Predicted FOL: ∃a:artist_name ( (∃s:song_name ∃c:country ∃fid:f_id ∃g:genre_is ∃r:rating ∃d:releasedate ∃res:resolution ( song(s,a,c,fid,g,r,'english',d,res) )) ∧ ¬∃s2:song_name ∃c2:country ∃fid2:f_id ∃g2:genre_is ∃r2:rating ∃d2:releasedate ∃res2:resolution ( song(s2,a,c2,fid2,g2,r2,'english',d2,res2) ∧ 8 < r2 ) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:artist_name LPAR:( LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:song_name EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:fid COLON:: IDENT:f_id EXISTS:∃ IDENT:g COLON:: IDENT:genre_is EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:d COLON:: IDENT:releasedate EXISTS:∃ IDENT:res COLON:: IDENT:resolution LPAR:( IDENT:song LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:fid COMMA:, IDENT:g COMMA:, IDENT:r COMMA:, LIT:english COMMA:, IDENT:d COMMA:, IDENT:res RPAR:) RPAR:) RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:s2 COLON:: IDENT:song_name EXISTS:∃ IDENT:c2 COLON:: IDENT:country EXISTS:∃ IDENT:fid2 COLON:: IDENT:f_id EXISTS:∃ IDENT:g2 COLON:: IDENT:genre_is EXISTS:∃ IDENT:r2 COLON:: IDENT:rating EXISTS:∃ IDENT:d2 COLON:: IDENT:releasedate EXISTS:∃ IDENT:res2 COLON:: IDENT:resolution LPAR:( IDENT:song LPAR:( IDENT:s2 COMMA:, IDENT:a COMMA:, IDENT:c2 COMMA:, IDENT:fid2 COMMA:, IDENT:g2 COMMA:, IDENT:r2 COMMA:, LIT:english COMMA:, IDENT:d2 COMMA:, IDENT:res2 RPAR:) AND:∧ NUM:8 LT:< IDENT:r2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:artist_name
+            AND
+              EXISTS s:song_name
+                EXISTS c:country
+                  EXISTS fid:f_id
+                    EXISTS g:genre_is
+                      EXISTS r:rating
+                        EXISTS d:releasedate
+                          EXISTS res:resolution
+                            PRED song(s, a, c, fid, g, r, 'english', d, res)
+              NOT
+                EXISTS s2:song_name
+                  EXISTS c2:country
+                    EXISTS fid2:f_id
+                      EXISTS g2:genre_is
+                        EXISTS r2:rating
+                          EXISTS d2:releasedate
+                            EXISTS res2:resolution
+                              AND
+                                PRED song(s2, a, c2, fid2, g2, r2, 'english', d2, res2)
+                                CMP  8 < r2
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (a : artist_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 24 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        c : local country, global varchar2(20) -> StringSort()
+        f : local f_id, global number(10) -> RealSort()
+        g : local genre_is, global varchar2(20) -> StringSort()
+        l : local languages, global varchar2(20) -> StringSort()
+        r : local rating, global text -> StringSort()
+        r1 : local releasedate, global date -> IntSort()
+        r2 : local resolution, global number(10) -> RealSort()
+        s : local song_name, global varchar2(50) -> StringSort()
+      Predicted FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        c : local country, global varchar2(20) -> StringSort()
+        c2 : local country, global varchar2(20) -> StringSort()
+        d : local releasedate, global date -> IntSort()
+        d2 : local releasedate, global date -> IntSort()
+        fid : local f_id, global number(10) -> RealSort()
+        fid2 : local f_id, global number(10) -> RealSort()
+        g : local genre_is, global varchar2(20) -> StringSort()
+        g2 : local genre_is, global varchar2(20) -> StringSort()
+        r : local rating, global text -> StringSort()
+        r2 : local rating, global text -> StringSort()
+        res : local resolution, global number(10) -> RealSort()
+        res2 : local resolution, global number(10) -> RealSort()
+        s : local song_name, global varchar2(50) -> StringSort()
+        s2 : local song_name, global varchar2(50) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5850 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3445.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (a : artist_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

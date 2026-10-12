@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1091.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1091.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5112 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the payment method code and party phone of the party with the email 'enrico09@example.com'?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        integer -> IntSort()
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        party_email = varchar(80) -> StringSort()
+        party_id = integer -> IntSort()
+        party_phone = varchar(80) -> StringSort()
+        payment_method_code = varchar(15) -> StringSort()
+      symbols:
+        Parties(party_id, payment_method_code, party_phone, party_email)
+        constant enrico09@example.com : party_email
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : party_id ∃p3 : party_email ( (Parties(p,p1,p2,p3)) ∧ (p3 = 'enrico09@example.com') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:party_id EXISTS:∃ IDENT:p3 COLON:: IDENT:party_email LPAR:( LPAR:( IDENT:Parties LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p3 EQ:= LIT:enrico09@example.com RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:party_id
+            EXISTS p3:party_email
+              AND
+                PRED Parties(p, p1, p2, p3)
+                EQ  p3 = 'enrico09@example.com'
+      Predicted FOL: ∃p : party_id Parties(p, m, q, 'enrico09@example.com')
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:party_id IDENT:Parties LPAR:( IDENT:p COMMA:, IDENT:m COMMA:, IDENT:q COMMA:, LIT:enrico09@example.com RPAR:) EOF
+        AST:
+          EXISTS p:party_id
+            PRED Parties(p, m, q, 'enrico09@example.com')
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_party_phone_0 : party_phone   Gold p2 <-> Predicted q
+      FV_payment_method_code_0 : payment_method_code   Gold p1 <-> Predicted m
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local party_id, global integer -> IntSort()
+        p1 : local payment_method_code, global varchar(15) -> StringSort()
+        p2 : local party_phone, global varchar(80) -> StringSort()
+        p3 : local party_email, global varchar(80) -> StringSort()
+      Predicted FOL:
+        m : local payment_method_code, global varchar(15) -> StringSort()
+        p : local party_id, global integer -> IntSort()
+        q : local party_phone, global varchar(80) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p3_2], And(D_varchar_80_(gold_p3_2), And(P_Parties(gold_p_1, FV_payment_method_code_0, FV_party_phone_0, gold_p3_2), (gold_p3_2 == L_enrico09_example_com))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p3):  And(D_varchar_80_(WGOLD_p3), And(P_Parties(WGOLD_p, FV_payment_method_code_0, FV_party_phone_0, WGOLD_p3), (WGOLD_p3 == L_enrico09_example_com)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1], And(P_Parties(predicted_p_1, FV_payment_method_code_0, FV_party_phone_0, L_enrico09_example_com), D_varchar_80_(L_enrico09_example_com)))
+      predicted_skolem (witnesses WPREDICTED_p):  And(P_Parties(WPREDICTED_p, FV_payment_method_code_0, FV_party_phone_0, L_enrico09_example_com), D_varchar_80_(L_enrico09_example_com))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'enrico09@example.com' at varchar(80) -> L_enrico09_example_com = StringVal('enrico09@example.com')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 731 lines, 27486 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1091.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_party_phone_0) <= 80
+      [1] Length(FV_payment_method_code_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p3
+      claim: And(And(Length(WGOLD_p3) <= 80, And(Parties(WGOLD_p, FV_payment_method_code_0, FV_party_phone_0, WGOLD_p3), WGOLD_p3 == "enrico09@example.com")), Not(Exists(predicted_p_1, And(Parties(predicted_p_1, FV_payment_method_code_0, FV_party_phone_0, "enrico09@example.com"), Length("enrico09@example.com") <= 80))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_p
+      claim: And(And(Parties(WPREDICTED_p, FV_payment_method_code_0, FV_party_phone_0, "enrico09@example.com"), Length("enrico09@example.com") <= 80), Not(Exists([gold_p_1, gold_p3_2], And(Length(gold_p3_2) <= 80, And(Parties(gold_p_1, FV_payment_method_code_0, FV_party_phone_0, gold_p3_2), gold_p3_2 == "enrico09@example.com")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

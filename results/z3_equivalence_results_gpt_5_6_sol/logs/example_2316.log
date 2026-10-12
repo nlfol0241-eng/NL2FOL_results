@@ -1,0 +1,144 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2316.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2316.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6173 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the students who took classes in 2009 or 2010?
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   7 global sorts, 9 local sorts, 2 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+        numeric(3,0) -> RealSort()   [domain And(IsInt(x), x > -1000, x < 1000); 3 digits, 0 after the point]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        varchar(6) -> StringSort()   [domain Length(x) <= 6; length <= 6]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        numeric(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+      local sorts:
+        ID = varchar(5) -> StringSort()
+        course_id = varchar(8) -> StringSort()
+        dept_name = varchar(20) -> StringSort()
+        grade = varchar(2) -> StringSort()
+        name = varchar(20) -> StringSort()
+        sec_id = varchar(8) -> StringSort()
+        semester = varchar(6) -> StringSort()
+        tot_cred = numeric(3,0) -> RealSort()
+        year = numeric(4,0) -> RealSort()
+      symbols:
+        student(ID, name, dept_name, tot_cred)
+        takes(ID, course_id, sec_id, semester, year, grade)
+        constant 2009 : year
+        constant 2010 : year
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃d : dept_name ∃t : tot_cred ∃i1 : ID ∃c : course_id ∃s : sec_id ∃s1 : semester ∃y : year ∃g : grade ( (((student(i,n,d,t)) ∧ (takes(i1,c,s,s1,y,g))) ∧ (i = i1)) ∧ ((y = 2009) ∨ (y = 2010)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:t COLON:: IDENT:tot_cred EXISTS:∃ IDENT:i1 COLON:: IDENT:ID EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:s COLON:: IDENT:sec_id EXISTS:∃ IDENT:s1 COLON:: IDENT:semester EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:g COLON:: IDENT:grade LPAR:( LPAR:( LPAR:( LPAR:( IDENT:student LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:takes LPAR:( IDENT:i1 COMMA:, IDENT:c COMMA:, IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:y COMMA:, IDENT:g RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:y EQ:= NUM:2009 RPAR:) OR:∨ LPAR:( IDENT:y EQ:= NUM:2010 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS d:dept_name
+              EXISTS t:tot_cred
+                EXISTS i1:ID
+                  EXISTS c:course_id
+                    EXISTS s:sec_id
+                      EXISTS s1:semester
+                        EXISTS y:year
+                          EXISTS g:grade
+                            AND
+                              AND
+                                AND
+                                  PRED student(i, n, d, t)
+                                  PRED takes(i1, c, s, s1, y, g)
+                                EQ  i = i1
+                              OR
+                                EQ  y = 2009
+                                EQ  y = 2010
+      Predicted FOL: ∃i : ID ∃d : dept_name ∃tc : tot_cred (student(i, n, d, tc) ∧ ∃c : course_id ∃s : sec_id ∃sem : semester ∃y : year ∃g : grade (takes(i, c, s, sem, y, g) ∧ (y = 2009 ∨ y = 2010)))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:tc COLON:: IDENT:tot_cred LPAR:( IDENT:student LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:tc RPAR:) AND:∧ EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:s COLON:: IDENT:sec_id EXISTS:∃ IDENT:sem COLON:: IDENT:semester EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:g COLON:: IDENT:grade LPAR:( IDENT:takes LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:s COMMA:, IDENT:sem COMMA:, IDENT:y COMMA:, IDENT:g RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2009 OR:∨ IDENT:y EQ:= NUM:2010 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS d:dept_name
+              EXISTS tc:tot_cred
+                AND
+                  PRED student(i, n, d, tc)
+                  EXISTS c:course_id
+                    EXISTS s:sec_id
+                      EXISTS sem:semester
+                        EXISTS y:year
+                          EXISTS g:grade
+                            AND
+                              PRED takes(i, c, s, sem, y, g)
+                              OR
+                                EQ  y = 2009
+                                EQ  y = 2010
+   [G3] took 0.008 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global varchar(8) -> StringSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        g : local grade, global varchar(2) -> StringSort()
+        i : local ID, global varchar(5) -> StringSort()
+        i1 : local ID, global varchar(5) -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        s : local sec_id, global varchar(8) -> StringSort()
+        s1 : local semester, global varchar(6) -> StringSort()
+        t : local tot_cred, global numeric(3,0) -> RealSort()
+        y : local year, global numeric(4,0) -> RealSort()
+      Predicted FOL:
+        c : local course_id, global varchar(8) -> StringSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        g : local grade, global varchar(2) -> StringSort()
+        i : local ID, global varchar(5) -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        s : local sec_id, global varchar(8) -> StringSort()
+        sem : local semester, global varchar(6) -> StringSort()
+        tc : local tot_cred, global numeric(3,0) -> RealSort()
+        y : local year, global numeric(4,0) -> RealSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_d_2, gold_t_3, gold_i1_4, gold_c_5, gold_s_6, gold_s1_7, gold_y_8, gold_g_9], And(D_varchar_5_(gold_i_1), D_varchar_20_(gold_d_2), D_numeric_3_0_(gold_t_3), D_varchar_5_(gold_i1_4), D_varchar_8_(gold_c_5), D_varchar_8_(gold_s_6), D_varchar_6_(gold_s1_7), D_numeric_4_0_(gold_y_8), D_varchar_2_(gold_g_9), And(And(And(P_student(gold_i_1, FV_name_0, gold_d_2, gold_t_3), P_takes(gold_i1_4, gold_c_5, gold_s_6, gold_s1_7, gold_y_8, gold_g_9)), (gold_i_1 == gold_i1_4)), Or((gold_y_8 == L_v_2009_numeric_4_0_), (gold_y_8 == L_v_2010_numeric_4_0_)))))
+      gold_skolem (witnesses WGOLD_i, WGOLD_d, WGOLD_t, WGOLD_i1, WGOLD_c, WGOLD_s, WGOLD_s1, WGOLD_y, WGOLD_g):  And(D_varchar_5_(WGOLD_i), D_varchar_20_(WGOLD_d), D_numeric_3_0_(WGOLD_t), D_varchar_5_(WGOLD_i1), D_varchar_8_(WGOLD_c), D_varchar_8_(WGOLD_s), D_varchar_6_(WGOLD_s1), D_numeric_4_0_(WGOLD_y), D_varchar_2_(WGOLD_g), And(And(And(P_student(WGOLD_i, FV_name_0, WGOLD_d, WGOLD_t), P_takes(WGOLD_i1, WGOLD_c, WGOLD_s, WGOLD_s1, WGOLD_y, WGOLD_g)), (WGOLD_i == WGOLD_i1)), Or((WGOLD_y == L_v_2009_numeric_4_0_), (WGOLD_y == L_v_2010_numeric_4_0_))))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_d_2, predicted_tc_3], And(D_varchar_5_(predicted_i_1), D_varchar_20_(predicted_d_2), D_numeric_3_0_(predicted_tc_3), And(P_student(predicted_i_1, FV_name_0, predicted_d_2, predicted_tc_3), Exists([predicted_c_4, predicted_s_5, predicted_sem_6, predicted_y_7, predicted_g_8], And(D_varchar_8_(predicted_c_4), D_varchar_8_(predicted_s_5), D_varchar_6_(predicted_sem_6), D_numeric_4_0_(predicted_y_7), D_varchar_2_(predicted_g_8), And(P_takes(predicted_i_1, predicted_c_4, predicted_s_5, predicted_sem_6, predicted_y_7, predicted_g_8), Or((predicted_y_7 == L_v_2009_numeric_4_0_), (predicted_y_7 == L_v_2010_numeric_4_0_))))))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_tc):  And(D_varchar_5_(WPREDICTED_i), D_varchar_20_(WPREDICTED_d), D_numeric_3_0_(WPREDICTED_tc), And(P_student(WPREDICTED_i, FV_name_0, WPREDICTED_d, WPREDICTED_tc), Exists([predictedsk_c_1, predictedsk_s_2, predictedsk_sem_3, predictedsk_y_4, predictedsk_g_5], And(D_varchar_8_(predictedsk_c_1), D_varchar_8_(predictedsk_s_2), D_varchar_6_(predictedsk_sem_3), D_numeric_4_0_(predictedsk_y_4), D_varchar_2_(predictedsk_g_5), And(P_takes(WPREDICTED_i, predictedsk_c_1, predictedsk_s_2, predictedsk_sem_3, predictedsk_y_4, predictedsk_g_5), Or((predictedsk_y_4 == L_v_2009_numeric_4_0_), (predictedsk_y_4 == L_v_2010_numeric_4_0_)))))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.002 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2009' at numeric(4,0) -> L_v_2009_numeric_4_0_ = RealVal('2009')
+      literal '2010' at numeric(4,0) -> L_v_2010_numeric_4_0_ = RealVal('2010')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 803 lines, 32863 bytes
+   [G7] took 0.002 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2316.py
+   [G8] took 0.012 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_name_0) <= 20
+   [R1] took 0.004 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_d, WGOLD_t, WGOLD_i1, WGOLD_c, WGOLD_s, WGOLD_s1, WGOLD_y, WGOLD_g
+      claim: And(And(Length(WGOLD_i) <= 5, Length(WGOLD_d) <= 20, And(IsInt(WGOLD_t), WGOLD_t > -1000, WGOLD_t < 1000), Length(WGOLD_i1) <= 5, Length(WGOLD_c) <= 8, Length(WGOLD_s) <= 8, Length(WGOLD_s1) <= 6, And(IsInt(WGOLD_y), WGOLD_y > -10000, WGOLD_y < 10000), Length(WGOLD_g) <= 2, And(And(And(student(WGOLD_i, FV_name_0, WGOLD_d, WGOLD_t), takes(WGOLD_i1, WGOLD_c, WGOLD_s, WGOLD_s1, WGOLD_y, WGOLD_g)), WGOLD_i == WGOLD_i1), Or(2009 == WGOLD_y, 2010 == WGOLD_y))), Not(Exists([predicted_i_1, predicted_d_2, predicted_tc_3], And(Length(predicted_i_1) <= 5, Length(predicted_d_2) <= 20, And(IsInt(predicted_tc_3), predicted_tc_3 > -1000, predicted_tc_3 < 1000), And(student(predicted_i_1, FV_name_0, predicted_d_2, predicted_tc_3), Exists([predicted_c_4, predicted_s_5, predicted_sem_6, predicted_y_7, predicted_g_8], And(Length(predicted_c_4) <= 8, Length(predicted_s_5) <= 8, Length(predicted_sem_6) <= 6, And(IsInt(predicted_y_7), predicted_y_7 > -10000, predicted_y_7 < 10000), Length(predicted_g_8) <= 2, And(takes(predicted_i_1, predicted_c_4, predicted_s_5, predicted_sem_6, predicted_y_7, predicted_g_8), Or(2009 == predicted_y_7, 2010 == predicted_y_7)))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.020 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.097 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_tc
+      claim: And(And(Length(WPREDICTED_i) <= 5, Length(WPREDICTED_d) <= 20, And(IsInt(WPREDICTED_tc), WPREDICTED_tc > -1000, WPREDICTED_tc < 1000), And(student(WPREDICTED_i, FV_name_0, WPREDICTED_d, WPREDICTED_tc), Exists([predictedsk_c_1, predictedsk_s_2, predictedsk_sem_3, predictedsk_y_4, predictedsk_g_5], And(Length(predictedsk_c_1) <= 8, Length(predictedsk_s_2) <= 8, Length(predictedsk_sem_3) <= 6, And(IsInt(predictedsk_y_4), predictedsk_y_4 > -10000, predictedsk_y_4 < 10000), Length(predictedsk_g_5) <= 2, And(takes(WPREDICTED_i, predictedsk_c_1, predictedsk_s_2, predictedsk_sem_3, predictedsk_y_4, predictedsk_g_5), Or(2009 == predictedsk_y_4, 2010 == predictedsk_y_4)))))), Not(Exists([gold_i_1, gold_d_2, gold_t_3, gold_i1_4, gold_c_5, gold_s_6, gold_s1_7, gold_y_8, gold_g_9], And(Length(gold_i_1) <= 5, Length(gold_d_2) <= 20, And(IsInt(gold_t_3), gold_t_3 > -1000, gold_t_3 < 1000), Length(gold_i1_4) <= 5, Length(gold_c_5) <= 8, Length(gold_s_6) <= 8, Length(gold_s1_7) <= 6, And(IsInt(gold_y_8), gold_y_8 > -10000, gold_y_8 < 10000), Length(gold_g_9) <= 2, And(And(And(student(gold_i_1, FV_name_0, gold_d_2, gold_t_3), takes(gold_i1_4, gold_c_5, gold_s_6, gold_s1_7, gold_y_8, gold_g_9)), gold_i_1 == gold_i1_4), Or(2009 == gold_y_8, 2010 == gold_y_8))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.010 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.070 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

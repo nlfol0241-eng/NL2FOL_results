@@ -1,0 +1,127 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1155.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1155.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3896 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name, city, country, and altitude (or elevation) of the airports in the city of New York.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 9 local sorts, 1 predicates, 0 functions, 1 constants, 2 warnings
+   WARNING: global sort 'character varchar(4)' is not a Z3 built-in sort; it is declared as an uninterpreted sort
+   WARNING: global sort 'character varchar(3)' is not a Z3 built-in sort; it is declared as an uninterpreted sort
+      global sorts:
+        character varchar(4) -> U_character_varchar_4_   [not a Z3 built-in sort]
+        bigint -> IntSort()   [domain And(x >= -9223372036854775808, x <= 9223372036854775807); range [-9223372036854775808, 9223372036854775807]]
+        integer -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+        character varchar(3) -> U_character_varchar_3_   [not a Z3 built-in sort]
+      local sorts:
+        apid = integer -> IntSort()
+        city = text -> StringSort()
+        country = text -> StringSort()
+        elevation = bigint -> IntSort()
+        iata = character varchar(3) -> U_character_varchar_3_
+        icao = character varchar(4) -> U_character_varchar_4_
+        name = text -> StringSort()
+        x = real -> Float32()
+        y = real -> Float32()
+      symbols:
+        airports(apid, name, city, country, x, y, elevation, iata, icao)
+        constant New York : city
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apid ∃x : x ∃y : y ∃i : iata ∃i1 : icao ( (airports(a,n,c,c1,x,y,e,i,i1)) ∧ (c = 'New York') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apid EXISTS:∃ IDENT:x COLON:: IDENT:x EXISTS:∃ IDENT:y COLON:: IDENT:y EXISTS:∃ IDENT:i COLON:: IDENT:iata EXISTS:∃ IDENT:i1 COLON:: IDENT:icao LPAR:( LPAR:( IDENT:airports LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:x COMMA:, IDENT:y COMMA:, IDENT:e COMMA:, IDENT:i COMMA:, IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:New York RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apid
+            EXISTS x:x
+              EXISTS y:y
+                EXISTS i:iata
+                  EXISTS i1:icao
+                    AND
+                      PRED airports(a, n, c, c1, x, y, e, i, i1)
+                      EQ  c = 'New York'
+      Predicted FOL: ∃apid:apid ∃x:x ∃y:y ∃iata:iata ∃icao:icao (airports(apid, name, city, country, x, y, elevation, iata, icao) ∧ city = 'New York')
+        tokens: EXISTS:∃ IDENT:apid COLON:: IDENT:apid EXISTS:∃ IDENT:x COLON:: IDENT:x EXISTS:∃ IDENT:y COLON:: IDENT:y EXISTS:∃ IDENT:iata COLON:: IDENT:iata EXISTS:∃ IDENT:icao COLON:: IDENT:icao LPAR:( IDENT:airports LPAR:( IDENT:apid COMMA:, IDENT:name COMMA:, IDENT:city COMMA:, IDENT:country COMMA:, IDENT:x COMMA:, IDENT:y COMMA:, IDENT:elevation COMMA:, IDENT:iata COMMA:, IDENT:icao RPAR:) AND:∧ IDENT:city EQ:= LIT:New York RPAR:) EOF
+        AST:
+          EXISTS apid:apid
+            EXISTS x:x
+              EXISTS y:y
+                EXISTS iata:iata
+                  EXISTS icao:icao
+                    AND
+                      PRED airports(apid, name, city, country, x, y, elevation, iata, icao)
+                      EQ  city = 'New York'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   4 shared answer variable(s)
+      FV_city_0 : city   Gold c <-> Predicted city
+      FV_country_0 : country   Gold c1 <-> Predicted country
+      FV_elevation_0 : elevation   Gold e <-> Predicted elevation
+      FV_name_0 : name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apid, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        c1 : local country, global text -> StringSort()
+        e : local elevation, global bigint -> IntSort()
+        i : local iata, global character varchar(3) -> U_character_varchar_3_
+        i1 : local icao, global character varchar(4) -> U_character_varchar_4_
+        n : local name, global text -> StringSort()
+        x : local x, global real -> Float32()
+        y : local y, global real -> Float32()
+      Predicted FOL:
+        apid : local apid, global integer -> IntSort()
+        city : local city, global text -> StringSort()
+        country : local country, global text -> StringSort()
+        elevation : local elevation, global bigint -> IntSort()
+        iata : local iata, global character varchar(3) -> U_character_varchar_3_
+        icao : local icao, global character varchar(4) -> U_character_varchar_4_
+        name : local name, global text -> StringSort()
+        x : local x, global real -> Float32()
+        y : local y, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_x_2, gold_y_3, gold_i_4, gold_i1_5], And(D_real(gold_x_2), D_real(gold_y_3), And(P_airports(gold_a_1, FV_name_0, FV_city_0, FV_country_0, gold_x_2, gold_y_3, FV_elevation_0, gold_i_4, gold_i1_5), (FV_city_0 == L_New_York))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_x, WGOLD_y, WGOLD_i, WGOLD_i1):  And(D_real(WGOLD_x), D_real(WGOLD_y), And(P_airports(WGOLD_a, FV_name_0, FV_city_0, FV_country_0, WGOLD_x, WGOLD_y, FV_elevation_0, WGOLD_i, WGOLD_i1), (FV_city_0 == L_New_York)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_apid_1, predicted_x_2, predicted_y_3, predicted_iata_4, predicted_icao_5], And(D_real(predicted_x_2), D_real(predicted_y_3), And(P_airports(predicted_apid_1, FV_name_0, FV_city_0, FV_country_0, predicted_x_2, predicted_y_3, FV_elevation_0, predicted_iata_4, predicted_icao_5), (FV_city_0 == L_New_York))))
+      predicted_skolem (witnesses WPREDICTED_apid, WPREDICTED_x, WPREDICTED_y, WPREDICTED_iata, WPREDICTED_icao):  And(D_real(WPREDICTED_x), D_real(WPREDICTED_y), And(P_airports(WPREDICTED_apid, FV_name_0, FV_city_0, FV_country_0, WPREDICTED_x, WPREDICTED_y, FV_elevation_0, WPREDICTED_iata, WPREDICTED_icao), (FV_city_0 == L_New_York)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'New York' at text -> L_New_York = StringVal('New York')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 774 lines, 30290 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1155.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(FV_elevation_0 >= -9223372036854775808, FV_elevation_0 <= 9223372036854775807)
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_x, WGOLD_y, WGOLD_i, WGOLD_i1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_x)), Not(And(fpIsZero(WGOLD_x), fpIsNegative(WGOLD_x)))), And(Not(fpIsNaN(WGOLD_y)), Not(And(fpIsZero(WGOLD_y), fpIsNegative(WGOLD_y)))), And(airports(WGOLD_a, FV_name_0, FV_city_0, FV_country_0, WGOLD_x, WGOLD_y, FV_elevation_0, WGOLD_i, WGOLD_i1), FV_city_0 == "New York")), Not(Exists([predicted_apid_1, predicted_x_2, predicted_y_3, predicted_iata_4, predicted_icao_5], And(And(Not(fpIsNaN(predicted_x_2)), Not(And(fpIsZero(predicted_x_2), fpIsNegative(predicted_x_2)))), And(Not(fpIsNaN(predicted_y_3)), Not(And(fpIsZero(predicted_y_3), fpIsNegative(predicted_y_3)))), And(airports(predicted_apid_1, FV_name_0, FV_city_0, FV_country_0, predicted_x_2, predicted_y_3, FV_elevation_0, predicted_iata_4, predicted_icao_5), FV_city_0 == "New York")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_apid, WPREDICTED_x, WPREDICTED_y, WPREDICTED_iata, WPREDICTED_icao
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_x)), Not(And(fpIsZero(WPREDICTED_x), fpIsNegative(WPREDICTED_x)))), And(Not(fpIsNaN(WPREDICTED_y)), Not(And(fpIsZero(WPREDICTED_y), fpIsNegative(WPREDICTED_y)))), And(airports(WPREDICTED_apid, FV_name_0, FV_city_0, FV_country_0, WPREDICTED_x, WPREDICTED_y, FV_elevation_0, WPREDICTED_iata, WPREDICTED_icao), FV_city_0 == "New York")), Not(Exists([gold_a_1, gold_x_2, gold_y_3, gold_i_4, gold_i1_5], And(And(Not(fpIsNaN(gold_x_2)), Not(And(fpIsZero(gold_x_2), fpIsNegative(gold_x_2)))), And(Not(fpIsNaN(gold_y_3)), Not(And(fpIsZero(gold_y_3), fpIsNegative(gold_y_3)))), And(airports(gold_a_1, FV_name_0, FV_city_0, FV_country_0, gold_x_2, gold_y_3, FV_elevation_0, gold_i_4, gold_i1_5), FV_city_0 == "New York")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_830.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_830.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5019 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the code of the document type "Paper".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Document_Type_Code = char(15) -> StringSort()
+        Document_Type_Description = varchar(255) -> StringSort()
+        Document_Type_Name = varchar(255) -> StringSort()
+      symbols:
+        Ref_Document_Types(Document_Type_Code, Document_Type_Name, Document_Type_Description)
+        constant Paper : Document_Type_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d1 : Document_Type_Name ∃d2 : Document_Type_Description ( (Ref_Document_Types(d,d1,d2)) ∧ (d1 = 'Paper') )
+        tokens: EXISTS:∃ IDENT:d1 COLON:: IDENT:Document_Type_Name EXISTS:∃ IDENT:d2 COLON:: IDENT:Document_Type_Description LPAR:( LPAR:( IDENT:Ref_Document_Types LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:Paper RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d1:Document_Type_Name
+            EXISTS d2:Document_Type_Description
+              AND
+                PRED Ref_Document_Types(d, d1, d2)
+                EQ  d1 = 'Paper'
+      Predicted FOL: ∃c:Document_Type_Code ∃d:Document_Type_Description (Ref_Document_Types(c, Paper, d) ∧ code = c)
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:d COLON:: IDENT:Document_Type_Description LPAR:( IDENT:Ref_Document_Types LPAR:( IDENT:c COMMA:, IDENT:Paper COMMA:, IDENT:d RPAR:) AND:∧ IDENT:code EQ:= IDENT:c RPAR:) EOF
+        AST:
+          EXISTS c:Document_Type_Code
+            EXISTS d:Document_Type_Description
+              AND
+                PRED Ref_Document_Types(c, Paper<const>, d)
+                EQ  code = c
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Document_Type_Code_0 : Document_Type_Code   Gold d <-> Predicted code
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Document_Type_Code, global char(15) -> StringSort()
+        d1 : local Document_Type_Name, global varchar(255) -> StringSort()
+        d2 : local Document_Type_Description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        c : local Document_Type_Code, global char(15) -> StringSort()
+        code : local Document_Type_Code, global char(15) -> StringSort()
+        d : local Document_Type_Description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d1_1, gold_d2_2], And(D_varchar_255_(gold_d1_1), D_varchar_255_(gold_d2_2), And(P_Ref_Document_Types(FV_Document_Type_Code_0, gold_d1_1, gold_d2_2), (gold_d1_1 == L_Paper))))
+      gold_skolem (witnesses WGOLD_d1, WGOLD_d2):  And(D_varchar_255_(WGOLD_d1), D_varchar_255_(WGOLD_d2), And(P_Ref_Document_Types(FV_Document_Type_Code_0, WGOLD_d1, WGOLD_d2), (WGOLD_d1 == L_Paper)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_d_2], And(D_char_15_(predicted_c_1), D_varchar_255_(predicted_d_2), And(And(P_Ref_Document_Types(predicted_c_1, L_Paper, predicted_d_2), D_varchar_255_(L_Paper)), (FV_Document_Type_Code_0 == predicted_c_1))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_d):  And(D_char_15_(WPREDICTED_c), D_varchar_255_(WPREDICTED_d), And(And(P_Ref_Document_Types(WPREDICTED_c, L_Paper, WPREDICTED_d), D_varchar_255_(L_Paper)), (FV_Document_Type_Code_0 == WPREDICTED_c)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Paper' at varchar(255) -> L_Paper = StringVal('Paper')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 727 lines, 27780 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_830.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Document_Type_Code_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d1, WGOLD_d2
+      claim: And(And(Length(WGOLD_d1) <= 255, Length(WGOLD_d2) <= 255, And(Ref_Document_Types(FV_Document_Type_Code_0, WGOLD_d1, WGOLD_d2), WGOLD_d1 == "Paper")), Not(Exists([predicted_c_1, predicted_d_2], And(Length(predicted_c_1) <= 15, Length(predicted_d_2) <= 255, And(And(Ref_Document_Types(predicted_c_1, "Paper", predicted_d_2), Length("Paper") <= 255), FV_Document_Type_Code_0 == predicted_c_1)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.019 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_c) <= 15, Length(WPREDICTED_d) <= 255, And(And(Ref_Document_Types(WPREDICTED_c, "Paper", WPREDICTED_d), Length("Paper") <= 255), FV_Document_Type_Code_0 == WPREDICTED_c)), Not(Exists([gold_d1_1, gold_d2_2], And(Length(gold_d1_1) <= 255, Length(gold_d2_2) <= 255, And(Ref_Document_Types(FV_Document_Type_Code_0, gold_d1_1, gold_d2_2), gold_d1_1 == "Paper")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.010 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.019 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

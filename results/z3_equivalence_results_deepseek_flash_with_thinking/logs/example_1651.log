@@ -1,0 +1,133 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1651.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1651.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4100 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and cities of bank branches that offer loans for business?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        int -> IntSort()
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+      local sorts:
+        amount = int -> IntSort()
+        bname = varchar(20) -> StringSort()
+        branch_ID = text -> StringSort()
+        city = varchar(10) -> StringSort()
+        cust_ID = varchar(3) -> StringSort()
+        loan_ID = varchar(3) -> StringSort()
+        loan_type = varchar(15) -> StringSort()
+        no_of_customers = int -> IntSort()
+        state = varchar(20) -> StringSort()
+      symbols:
+        bank(branch_ID, bname, no_of_customers, city, state)
+        loan(loan_ID, loan_type, cust_ID, branch_ID, amount)
+        constant Business : loan_type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : branch_ID ∃n : no_of_customers ∃s : state ∃l : loan_ID ∃l1 : loan_type ∃c1 : cust_ID ∃b2 : branch_ID ∃a : amount ( (((bank(b,b1,n,c,s)) ∧ (loan(l,l1,c1,b2,a))) ∧ (b = b2)) ∧ (l1 = 'Business') )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:branch_ID EXISTS:∃ IDENT:n COLON:: IDENT:no_of_customers EXISTS:∃ IDENT:s COLON:: IDENT:state EXISTS:∃ IDENT:l COLON:: IDENT:loan_ID EXISTS:∃ IDENT:l1 COLON:: IDENT:loan_type EXISTS:∃ IDENT:c1 COLON:: IDENT:cust_ID EXISTS:∃ IDENT:b2 COLON:: IDENT:branch_ID EXISTS:∃ IDENT:a COLON:: IDENT:amount LPAR:( LPAR:( LPAR:( LPAR:( IDENT:bank LPAR:( IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:loan LPAR:( IDENT:l COMMA:, IDENT:l1 COMMA:, IDENT:c1 COMMA:, IDENT:b2 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:b2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l1 EQ:= LIT:Business RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:branch_ID
+            EXISTS n:no_of_customers
+              EXISTS s:state
+                EXISTS l:loan_ID
+                  EXISTS l1:loan_type
+                    EXISTS c1:cust_ID
+                      EXISTS b2:branch_ID
+                        EXISTS a:amount
+                          AND
+                            AND
+                              AND
+                                PRED bank(b, b1, n, c, s)
+                                PRED loan(l, l1, c1, b2, a)
+                              EQ  b = b2
+                            EQ  l1 = 'Business'
+      Predicted FOL: ∃bID : branch_ID ∃noc : no_of_customers ∃st : state ∃lID : loan_ID ∃cust : cust_ID ∃amt : amount (bank(bID, n, noc, c, st) ∧ loan(lID, Business, cust, bID, amt))
+        tokens: EXISTS:∃ IDENT:bID COLON:: IDENT:branch_ID EXISTS:∃ IDENT:noc COLON:: IDENT:no_of_customers EXISTS:∃ IDENT:st COLON:: IDENT:state EXISTS:∃ IDENT:lID COLON:: IDENT:loan_ID EXISTS:∃ IDENT:cust COLON:: IDENT:cust_ID EXISTS:∃ IDENT:amt COLON:: IDENT:amount LPAR:( IDENT:bank LPAR:( IDENT:bID COMMA:, IDENT:n COMMA:, IDENT:noc COMMA:, IDENT:c COMMA:, IDENT:st RPAR:) AND:∧ IDENT:loan LPAR:( IDENT:lID COMMA:, IDENT:Business COMMA:, IDENT:cust COMMA:, IDENT:bID COMMA:, IDENT:amt RPAR:) RPAR:) EOF
+        AST:
+          EXISTS bID:branch_ID
+            EXISTS noc:no_of_customers
+              EXISTS st:state
+                EXISTS lID:loan_ID
+                  EXISTS cust:cust_ID
+                    EXISTS amt:amount
+                      AND
+                        PRED bank(bID, n, noc, c, st)
+                        PRED loan(lID, Business<const>, cust, bID, amt)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_bname_0 : bname   Gold b1 <-> Predicted n
+      FV_city_0 : city   Gold c <-> Predicted c
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount, global int -> IntSort()
+        b : local branch_ID, global text -> StringSort()
+        b1 : local bname, global varchar(20) -> StringSort()
+        b2 : local branch_ID, global text -> StringSort()
+        c : local city, global varchar(10) -> StringSort()
+        c1 : local cust_ID, global varchar(3) -> StringSort()
+        l : local loan_ID, global varchar(3) -> StringSort()
+        l1 : local loan_type, global varchar(15) -> StringSort()
+        n : local no_of_customers, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+      Predicted FOL:
+        amt : local amount, global int -> IntSort()
+        bID : local branch_ID, global text -> StringSort()
+        c : local city, global varchar(10) -> StringSort()
+        cust : local cust_ID, global varchar(3) -> StringSort()
+        lID : local loan_ID, global varchar(3) -> StringSort()
+        n : local bname, global varchar(20) -> StringSort()
+        noc : local no_of_customers, global int -> IntSort()
+        st : local state, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_n_2, gold_s_3, gold_l_4, gold_l1_5, gold_c1_6, gold_b2_7, gold_a_8], And(D_varchar_20_(gold_s_3), D_varchar_3_(gold_l_4), D_varchar_15_(gold_l1_5), D_varchar_3_(gold_c1_6), And(And(And(P_bank(gold_b_1, FV_bname_0, gold_n_2, FV_city_0, gold_s_3), P_loan(gold_l_4, gold_l1_5, gold_c1_6, gold_b2_7, gold_a_8)), (gold_b_1 == gold_b2_7)), (gold_l1_5 == L_Business))))
+      gold_skolem (witnesses WGOLD_b, WGOLD_n, WGOLD_s, WGOLD_l, WGOLD_l1, WGOLD_c1, WGOLD_b2, WGOLD_a):  And(D_varchar_20_(WGOLD_s), D_varchar_3_(WGOLD_l), D_varchar_15_(WGOLD_l1), D_varchar_3_(WGOLD_c1), And(And(And(P_bank(WGOLD_b, FV_bname_0, WGOLD_n, FV_city_0, WGOLD_s), P_loan(WGOLD_l, WGOLD_l1, WGOLD_c1, WGOLD_b2, WGOLD_a)), (WGOLD_b == WGOLD_b2)), (WGOLD_l1 == L_Business)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_bID_1, predicted_noc_2, predicted_st_3, predicted_lID_4, predicted_cust_5, predicted_amt_6], And(D_varchar_20_(predicted_st_3), D_varchar_3_(predicted_lID_4), D_varchar_3_(predicted_cust_5), And(P_bank(predicted_bID_1, FV_bname_0, predicted_noc_2, FV_city_0, predicted_st_3), And(P_loan(predicted_lID_4, L_Business, predicted_cust_5, predicted_bID_1, predicted_amt_6), D_varchar_15_(L_Business)))))
+      predicted_skolem (witnesses WPREDICTED_bID, WPREDICTED_noc, WPREDICTED_st, WPREDICTED_lID, WPREDICTED_cust, WPREDICTED_amt):  And(D_varchar_20_(WPREDICTED_st), D_varchar_3_(WPREDICTED_lID), D_varchar_3_(WPREDICTED_cust), And(P_bank(WPREDICTED_bID, FV_bname_0, WPREDICTED_noc, FV_city_0, WPREDICTED_st), And(P_loan(WPREDICTED_lID, L_Business, WPREDICTED_cust, WPREDICTED_bID, WPREDICTED_amt), D_varchar_15_(L_Business))))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Business' at varchar(15) -> L_Business = StringVal('Business')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 789 lines, 31258 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1651.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_bname_0) <= 20
+      [1] Length(FV_city_0) <= 10
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_n, WGOLD_s, WGOLD_l, WGOLD_l1, WGOLD_c1, WGOLD_b2, WGOLD_a
+      claim: And(And(Length(WGOLD_s) <= 20, Length(WGOLD_l) <= 3, Length(WGOLD_l1) <= 15, Length(WGOLD_c1) <= 3, And(And(And(bank(WGOLD_b, FV_bname_0, WGOLD_n, FV_city_0, WGOLD_s), loan(WGOLD_l, WGOLD_l1, WGOLD_c1, WGOLD_b2, WGOLD_a)), WGOLD_b == WGOLD_b2), WGOLD_l1 == "Business")), Not(Exists([predicted_bID_1, predicted_noc_2, predicted_st_3, predicted_lID_4, predicted_cust_5, predicted_amt_6], And(Length(predicted_st_3) <= 20, Length(predicted_lID_4) <= 3, Length(predicted_cust_5) <= 3, And(bank(predicted_bID_1, FV_bname_0, predicted_noc_2, FV_city_0, predicted_st_3), And(loan(predicted_lID_4, "Business", predicted_cust_5, predicted_bID_1, predicted_amt_6), Length("Business") <= 15))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_bID, WPREDICTED_noc, WPREDICTED_st, WPREDICTED_lID, WPREDICTED_cust, WPREDICTED_amt
+      claim: And(And(Length(WPREDICTED_st) <= 20, Length(WPREDICTED_lID) <= 3, Length(WPREDICTED_cust) <= 3, And(bank(WPREDICTED_bID, FV_bname_0, WPREDICTED_noc, FV_city_0, WPREDICTED_st), And(loan(WPREDICTED_lID, "Business", WPREDICTED_cust, WPREDICTED_bID, WPREDICTED_amt), Length("Business") <= 15))), Not(Exists([gold_b_1, gold_n_2, gold_s_3, gold_l_4, gold_l1_5, gold_c1_6, gold_b2_7, gold_a_8], And(Length(gold_s_3) <= 20, Length(gold_l_4) <= 3, Length(gold_l1_5) <= 15, Length(gold_c1_6) <= 3, And(And(And(bank(gold_b_1, FV_bname_0, gold_n_2, FV_city_0, gold_s_3), loan(gold_l_4, gold_l1_5, gold_c1_6, gold_b2_7, gold_a_8)), gold_b_1 == gold_b2_7), gold_l1_5 == "Business")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

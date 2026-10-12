@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1121.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1121.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2508 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the area and county of all appelations.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Appelation = text -> StringSort()
+        Area = text -> StringSort()
+        County = text -> StringSort()
+        No = integer -> IntSort()
+        State = text -> StringSort()
+        isAVA = text -> StringSort()
+      symbols:
+        appellations(No, Appelation, County, State, Area, isAVA)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : No ∃a : Appelation ∃s : State ∃i : isAVA ( appellations(n,a,c,s,a1,i) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:No EXISTS:∃ IDENT:a COLON:: IDENT:Appelation EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:i COLON:: IDENT:isAVA LPAR:( IDENT:appellations LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:s COMMA:, IDENT:a1 COMMA:, IDENT:i RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:No
+            EXISTS a:Appelation
+              EXISTS s:State
+                EXISTS i:isAVA
+                  PRED appellations(n, a, c, s, a1, i)
+      Predicted FOL: ∃b0:No ∃b1:Appelation ∃b2:County ∃b3:State ∃b4:Area ∃b5:isAVA (appellations(b0,b1,b2,b3,b4,b5) ∧ area = b4 ∧ county = b2)
+        tokens: EXISTS:∃ IDENT:b0 COLON:: IDENT:No EXISTS:∃ IDENT:b1 COLON:: IDENT:Appelation EXISTS:∃ IDENT:b2 COLON:: IDENT:County EXISTS:∃ IDENT:b3 COLON:: IDENT:State EXISTS:∃ IDENT:b4 COLON:: IDENT:Area EXISTS:∃ IDENT:b5 COLON:: IDENT:isAVA LPAR:( IDENT:appellations LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:b3 COMMA:, IDENT:b4 COMMA:, IDENT:b5 RPAR:) AND:∧ IDENT:area EQ:= IDENT:b4 AND:∧ IDENT:county EQ:= IDENT:b2 RPAR:) EOF
+        AST:
+          EXISTS b0:No
+            EXISTS b1:Appelation
+              EXISTS b2:County
+                EXISTS b3:State
+                  EXISTS b4:Area
+                    EXISTS b5:isAVA
+                      AND
+                        PRED appellations(b0, b1, b2, b3, b4, b5)
+                        EQ  area = b4
+                        EQ  county = b2
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Area_0 : Area   Gold a1 <-> Predicted area
+      FV_County_0 : County   Gold c <-> Predicted county
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Appelation, global text -> StringSort()
+        a1 : local Area, global text -> StringSort()
+        c : local County, global text -> StringSort()
+        i : local isAVA, global text -> StringSort()
+        n : local No, global integer -> IntSort()
+        s : local State, global text -> StringSort()
+      Predicted FOL:
+        area : local Area, global text -> StringSort()
+        b0 : local No, global integer -> IntSort()
+        b1 : local Appelation, global text -> StringSort()
+        b2 : local County, global text -> StringSort()
+        b3 : local State, global text -> StringSort()
+        b4 : local Area, global text -> StringSort()
+        b5 : local isAVA, global text -> StringSort()
+        county : local County, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_a_2, gold_s_3, gold_i_4], P_appellations(gold_n_1, gold_a_2, FV_County_0, gold_s_3, FV_Area_0, gold_i_4))
+      gold_skolem (witnesses WGOLD_n, WGOLD_a, WGOLD_s, WGOLD_i):  P_appellations(WGOLD_n, WGOLD_a, FV_County_0, WGOLD_s, FV_Area_0, WGOLD_i)
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, predicted_b4_5, predicted_b5_6], And(P_appellations(predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, predicted_b4_5, predicted_b5_6), (FV_Area_0 == predicted_b4_5), (FV_County_0 == predicted_b2_3)))
+      predicted_skolem (witnesses WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, WPREDICTED_b4, WPREDICTED_b5):  And(P_appellations(WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, WPREDICTED_b4, WPREDICTED_b5), (FV_Area_0 == WPREDICTED_b4), (FV_County_0 == WPREDICTED_b2))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 746 lines, 28254 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1121.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_a, WGOLD_s, WGOLD_i
+      claim: And(appellations(WGOLD_n, WGOLD_a, FV_County_0, WGOLD_s, FV_Area_0, WGOLD_i), Not(Exists([predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, predicted_b4_5, predicted_b5_6], And(appellations(predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, predicted_b4_5, predicted_b5_6), FV_Area_0 == predicted_b4_5, FV_County_0 == predicted_b2_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, WPREDICTED_b4, WPREDICTED_b5
+      claim: And(And(appellations(WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, WPREDICTED_b4, WPREDICTED_b5), FV_Area_0 == WPREDICTED_b4, FV_County_0 == WPREDICTED_b2), Not(Exists([gold_n_1, gold_a_2, gold_s_3, gold_i_4], appellations(gold_n_1, gold_a_2, FV_County_0, gold_s_3, FV_Area_0, gold_i_4))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

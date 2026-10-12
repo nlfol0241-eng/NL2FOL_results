@@ -1,0 +1,53 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_8.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_8.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2619 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the abbreviation of Airline "JetBlue Airways"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Abbreviation = text -> StringSort()
+        Airline = text -> StringSort()
+        Country = text -> StringSort()
+        uid = integer -> IntSort()
+      symbols:
+        airlines(uid, Airline, Abbreviation, Country)
+        constant JetBlue Airways : Airline
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃a : Airline ∃c : Country ( (airlines(u,a,a1,c)) ∧ (a = 'JetBlue Airways') )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:a COLON:: IDENT:Airline EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( IDENT:airlines LPAR:( IDENT:u COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= LIT:JetBlue Airways RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS a:Airline
+              EXISTS c:Country
+                AND
+                  PRED airlines(u, a, a1, c)
+                  EQ  a = 'JetBlue Airways'
+      Predicted FOL: ∃x : Abbreviation (airlines(0, 'JetBlue Airways', x, y))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Abbreviation LPAR:( IDENT:airlines LPAR:( NUM:0 COMMA:, LIT:JetBlue Airways COMMA:, IDENT:x COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Abbreviation
+            PRED airlines(0, 'JetBlue Airways', x, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['Abbreviation'] vs Predicted ['Country']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['Abbreviation'] vs Predicted ['Country']

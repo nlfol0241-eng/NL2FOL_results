@@ -1,0 +1,124 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2828.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2828.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4583 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of the campuses that is in Northridge, Los Angeles or in San Francisco, San Francisco.
+   [G1] took 0.003 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        County = text -> StringSort()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        constant Los Angeles : County
+        constant Northridge : Location
+        constant San Francisco : Location
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃l : Location ∃y : Year ∃c1 : County ∃i : Id( (Campuses(i,c,l,c1,y)) ∧ ((l = 'Northridge') ∧ (c1 = 'Los Angeles')) )) ∨ (∃l : Location ∃y : Year ∃c1 : County ∃i : Id( (Campuses(i,c,l,c1,y)) ∧ ((l = 'San Francisco') ∧ (c1 = 'San Francisco')) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c1 COLON:: IDENT:County EXISTS:∃ IDENT:i COLON:: IDENT:Id LPAR:( LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:c1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:l EQ:= LIT:Northridge RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Los Angeles RPAR:) RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c1 COLON:: IDENT:County EXISTS:∃ IDENT:i COLON:: IDENT:Id LPAR:( LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:c1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:l EQ:= LIT:San Francisco RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:San Francisco RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS l:Location
+              EXISTS y:Year
+                EXISTS c1:County
+                  EXISTS i:Id
+                    AND
+                      PRED Campuses(i, c, l, c1, y)
+                      AND
+                        EQ  l = 'Northridge'
+                        EQ  c1 = 'Los Angeles'
+            EXISTS l:Location
+              EXISTS y:Year
+                EXISTS c1:County
+                  EXISTS i:Id
+                    AND
+                      PRED Campuses(i, c, l, c1, y)
+                      AND
+                        EQ  l = 'San Francisco'
+                        EQ  c1 = 'San Francisco'
+      Predicted FOL: ∃id : Id ∃location : Location ∃county : County ∃year : Year (Campuses(id, campus, location, county, year) ∧ ((location = 'Northridge' ∧ county = 'Los Angeles') ∨ (location = 'San Francisco' ∧ county = 'San Francisco')))
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Id EXISTS:∃ IDENT:location COLON:: IDENT:Location EXISTS:∃ IDENT:county COLON:: IDENT:County EXISTS:∃ IDENT:year COLON:: IDENT:Year LPAR:( IDENT:Campuses LPAR:( IDENT:id COMMA:, IDENT:campus COMMA:, IDENT:location COMMA:, IDENT:county COMMA:, IDENT:year RPAR:) AND:∧ LPAR:( LPAR:( IDENT:location EQ:= LIT:Northridge AND:∧ IDENT:county EQ:= LIT:Los Angeles RPAR:) OR:∨ LPAR:( IDENT:location EQ:= LIT:San Francisco AND:∧ IDENT:county EQ:= LIT:San Francisco RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:Id
+            EXISTS location:Location
+              EXISTS county:County
+                EXISTS year:Year
+                  AND
+                    PRED Campuses(id, campus, location, county, year)
+                    OR
+                      AND
+                        EQ  location = 'Northridge'
+                        EQ  county = 'Los Angeles'
+                      AND
+                        EQ  location = 'San Francisco'
+                        EQ  county = 'San Francisco'
+   [G3] took 0.009 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_campus_0 : campus   Gold c <-> Predicted campus
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local campus, global text -> StringSort()
+        c1 : local County, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+      Predicted FOL:
+        campus : local campus, global text -> StringSort()
+        county : local County, global text -> StringSort()
+        id : local Id, global integer -> IntSort()
+        location : local Location, global text -> StringSort()
+        year : local Year, global integer -> IntSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_l_1, gold_y_2, gold_c1_3, gold_i_4], And(P_Campuses(gold_i_4, FV_campus_0, gold_l_1, gold_c1_3, gold_y_2), And((gold_l_1 == L_Northridge), (gold_c1_3 == L_Los_Angeles)))), Exists([gold_l_5, gold_y_6, gold_c1_7, gold_i_8], And(P_Campuses(gold_i_8, FV_campus_0, gold_l_5, gold_c1_7, gold_y_6), And((gold_l_5 == L_San_Francisco), (gold_c1_7 == L_San_Francisco)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_location_2, predicted_county_3, predicted_year_4], And(P_Campuses(predicted_id_1, FV_campus_0, predicted_location_2, predicted_county_3, predicted_year_4), Or(And((predicted_location_2 == L_Northridge), (predicted_county_3 == L_Los_Angeles)), And((predicted_location_2 == L_San_Francisco), (predicted_county_3 == L_San_Francisco)))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_location, WPREDICTED_county, WPREDICTED_year):  And(P_Campuses(WPREDICTED_id, FV_campus_0, WPREDICTED_location, WPREDICTED_county, WPREDICTED_year), Or(And((WPREDICTED_location == L_Northridge), (WPREDICTED_county == L_Los_Angeles)), And((WPREDICTED_location == L_San_Francisco), (WPREDICTED_county == L_San_Francisco))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 3 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Los Angeles' at text -> L_Los_Angeles = StringVal('Los Angeles')
+      literal 'Northridge' at text -> L_Northridge = StringVal('Northridge')
+      literal 'San Francisco' at text -> L_San_Francisco = StringVal('San Francisco')
+   0 sort axiom(s), 3 literal(s), 0 order(s) needing a definition; 737 lines, 28456 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2828.py
+   [G8] took 0.011 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([gold_l_1, gold_y_2, gold_c1_3, gold_i_4], And(Campuses(gold_i_4, FV_campus_0, gold_l_1, gold_c1_3, gold_y_2), And(gold_l_1 == "Northridge", gold_c1_3 == "Los Angeles"))), Exists([gold_l_5, gold_y_6, gold_c1_7, gold_i_8], And(Campuses(gold_i_8, FV_campus_0, gold_l_5, gold_c1_7, gold_y_6), And(gold_l_5 == "San Francisco", gold_c1_7 == "San Francisco")))), Not(Exists([predicted_id_1, predicted_location_2, predicted_county_3, predicted_year_4], And(Campuses(predicted_id_1, FV_campus_0, predicted_location_2, predicted_county_3, predicted_year_4), Or(And(predicted_location_2 == "Northridge", predicted_county_3 == "Los Angeles"), And(predicted_location_2 == "San Francisco", predicted_county_3 == "San Francisco"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.023 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.060 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_location, WPREDICTED_county, WPREDICTED_year
+      claim: And(And(Campuses(WPREDICTED_id, FV_campus_0, WPREDICTED_location, WPREDICTED_county, WPREDICTED_year), Or(And(WPREDICTED_location == "Northridge", WPREDICTED_county == "Los Angeles"), And(WPREDICTED_location == "San Francisco", WPREDICTED_county == "San Francisco"))), Not(Or(Exists([gold_l_1, gold_y_2, gold_c1_3, gold_i_4], And(Campuses(gold_i_4, FV_campus_0, gold_l_1, gold_c1_3, gold_y_2), And(gold_l_1 == "Northridge", gold_c1_3 == "Los Angeles"))), Exists([gold_l_5, gold_y_6, gold_c1_7, gold_i_8], And(Campuses(gold_i_8, FV_campus_0, gold_l_5, gold_c1_7, gold_y_6), And(gold_l_5 == "San Francisco", gold_c1_7 == "San Francisco"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.017 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.044 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

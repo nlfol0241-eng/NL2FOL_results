@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_753.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_753.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3295 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the id of all the files in mp3 format?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar2(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        number(10) -> RealSort()   [domain And(IsInt(x), x > -10000000000, x < 10000000000); 10 digits, 0 after the point]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        artist_name = varchar2(50) -> StringSort()
+        duration = varchar2(20) -> StringSort()
+        f_id = number(10) -> RealSort()
+        file_size = varchar2(20) -> StringSort()
+        formats = varchar2(20) -> StringSort()
+      symbols:
+        files(f_id, artist_name, file_size, duration, formats)
+        constant mp3 : formats
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : artist_name ∃f1 : file_size ∃d : duration ∃f2 : formats ( (files(f,a,f1,d,f2)) ∧ (f2 = 'mp3') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:artist_name EXISTS:∃ IDENT:f1 COLON:: IDENT:file_size EXISTS:∃ IDENT:d COLON:: IDENT:duration EXISTS:∃ IDENT:f2 COLON:: IDENT:formats LPAR:( LPAR:( IDENT:files LPAR:( IDENT:f COMMA:, IDENT:a COMMA:, IDENT:f1 COMMA:, IDENT:d COMMA:, IDENT:f2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f2 EQ:= LIT:mp3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:artist_name
+            EXISTS f1:file_size
+              EXISTS d:duration
+                EXISTS f2:formats
+                  AND
+                    PRED files(f, a, f1, d, f2)
+                    EQ  f2 = 'mp3'
+      Predicted FOL: ∃a : artist_name ∃s : file_size ∃d : duration (files(i, a, s, d, 'mp3'))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:artist_name EXISTS:∃ IDENT:s COLON:: IDENT:file_size EXISTS:∃ IDENT:d COLON:: IDENT:duration LPAR:( IDENT:files LPAR:( IDENT:i COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, LIT:mp3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:artist_name
+            EXISTS s:file_size
+              EXISTS d:duration
+                PRED files(i, a, s, d, 'mp3')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_f_id_0 : f_id   Gold f <-> Predicted i
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        d : local duration, global varchar2(20) -> StringSort()
+        f : local f_id, global number(10) -> RealSort()
+        f1 : local file_size, global varchar2(20) -> StringSort()
+        f2 : local formats, global varchar2(20) -> StringSort()
+      Predicted FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        d : local duration, global varchar2(20) -> StringSort()
+        i : local f_id, global number(10) -> RealSort()
+        s : local file_size, global varchar2(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_f1_2, gold_d_3, gold_f2_4], And(D_varchar2_50_(gold_a_1), D_varchar2_20_(gold_f1_2), D_varchar2_20_(gold_d_3), D_varchar2_20_(gold_f2_4), And(P_files(FV_f_id_0, gold_a_1, gold_f1_2, gold_d_3, gold_f2_4), (gold_f2_4 == L_mp3))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_f1, WGOLD_d, WGOLD_f2):  And(D_varchar2_50_(WGOLD_a), D_varchar2_20_(WGOLD_f1), D_varchar2_20_(WGOLD_d), D_varchar2_20_(WGOLD_f2), And(P_files(FV_f_id_0, WGOLD_a, WGOLD_f1, WGOLD_d, WGOLD_f2), (WGOLD_f2 == L_mp3)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_s_2, predicted_d_3], And(D_varchar2_50_(predicted_a_1), D_varchar2_20_(predicted_s_2), D_varchar2_20_(predicted_d_3), And(P_files(FV_f_id_0, predicted_a_1, predicted_s_2, predicted_d_3, L_mp3), D_varchar2_20_(L_mp3))))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_s, WPREDICTED_d):  And(D_varchar2_50_(WPREDICTED_a), D_varchar2_20_(WPREDICTED_s), D_varchar2_20_(WPREDICTED_d), And(P_files(FV_f_id_0, WPREDICTED_a, WPREDICTED_s, WPREDICTED_d, L_mp3), D_varchar2_20_(L_mp3)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'mp3' at varchar2(20) -> L_mp3 = StringVal('mp3')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 745 lines, 28378 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_753.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_f_id_0), FV_f_id_0 > -10000000000, FV_f_id_0 < 10000000000)
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_f1, WGOLD_d, WGOLD_f2
+      claim: And(And(Length(WGOLD_a) <= 50, Length(WGOLD_f1) <= 20, Length(WGOLD_d) <= 20, Length(WGOLD_f2) <= 20, And(files(FV_f_id_0, WGOLD_a, WGOLD_f1, WGOLD_d, WGOLD_f2), WGOLD_f2 == "mp3")), Not(Exists([predicted_a_1, predicted_s_2, predicted_d_3], And(Length(predicted_a_1) <= 50, Length(predicted_s_2) <= 20, Length(predicted_d_3) <= 20, And(files(FV_f_id_0, predicted_a_1, predicted_s_2, predicted_d_3, "mp3"), Length("mp3") <= 20)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_s, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_a) <= 50, Length(WPREDICTED_s) <= 20, Length(WPREDICTED_d) <= 20, And(files(FV_f_id_0, WPREDICTED_a, WPREDICTED_s, WPREDICTED_d, "mp3"), Length("mp3") <= 20)), Not(Exists([gold_a_1, gold_f1_2, gold_d_3, gold_f2_4], And(Length(gold_a_1) <= 50, Length(gold_f1_2) <= 20, Length(gold_d_3) <= 20, Length(gold_f2_4) <= 20, And(files(FV_f_id_0, gold_a_1, gold_f1_2, gold_d_3, gold_f2_4), gold_f2_4 == "mp3")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

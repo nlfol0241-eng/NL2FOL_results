@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1602.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1602.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3263 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of modern rooms that have a base price lower than $160 and two beds.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 5 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        RoomId = text -> StringSort()
+        basePrice = integer -> IntSort()
+        bedType = text -> StringSort()
+        beds = integer -> IntSort()
+        decor = text -> StringSort()
+        maxOccupancy = integer -> IntSort()
+        roomName = text -> StringSort()
+      symbols:
+        Rooms(RoomId, roomName, beds, bedType, maxOccupancy, basePrice, decor)
+        constant 160 : basePrice
+        constant 2 : beds
+        constant modern : decor
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : RoomId ∃b : beds ∃b1 : bedType ∃m : maxOccupancy ∃b2 : basePrice ∃d : decor ( (Rooms(r,r1,b,b1,m,b2,d)) ∧ (((b2 < 160) ∧ (b = 2)) ∧ (d = 'modern')) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:RoomId EXISTS:∃ IDENT:b COLON:: IDENT:beds EXISTS:∃ IDENT:b1 COLON:: IDENT:bedType EXISTS:∃ IDENT:m COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:b2 COLON:: IDENT:basePrice EXISTS:∃ IDENT:d COLON:: IDENT:decor LPAR:( LPAR:( IDENT:Rooms LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:m COMMA:, IDENT:b2 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:b2 LT:< NUM:160 RPAR:) AND:∧ LPAR:( IDENT:b EQ:= NUM:2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:modern RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:RoomId
+            EXISTS b:beds
+              EXISTS b1:bedType
+                EXISTS m:maxOccupancy
+                  EXISTS b2:basePrice
+                    EXISTS d:decor
+                      AND
+                        PRED Rooms(r, r1, b, b1, m, b2, d)
+                        AND
+                          AND
+                            CMP  b2 < 160
+                            EQ  b = 2
+                          EQ  d = 'modern'
+      Predicted FOL: ∃x0 : RoomId ∃x1 : roomName ∃x2 : beds ∃x3 : bedType ∃x4 : maxOccupancy ∃x5 : basePrice ∃x6 : decor (Rooms(x0, x1, x2, x3, x4, x5, x6) ∧ x5 < 160 ∧ x2 = 2 ∧ x6 = 'modern')
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:RoomId EXISTS:∃ IDENT:x1 COLON:: IDENT:roomName EXISTS:∃ IDENT:x2 COLON:: IDENT:beds EXISTS:∃ IDENT:x3 COLON:: IDENT:bedType EXISTS:∃ IDENT:x4 COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:x5 COLON:: IDENT:basePrice EXISTS:∃ IDENT:x6 COLON:: IDENT:decor LPAR:( IDENT:Rooms LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 COMMA:, IDENT:x6 RPAR:) AND:∧ IDENT:x5 LT:< NUM:160 AND:∧ IDENT:x2 EQ:= NUM:2 AND:∧ IDENT:x6 EQ:= LIT:modern RPAR:) EOF
+        AST:
+          EXISTS x0:RoomId
+            EXISTS x1:roomName
+              EXISTS x2:beds
+                EXISTS x3:bedType
+                  EXISTS x4:maxOccupancy
+                    EXISTS x5:basePrice
+                      EXISTS x6:decor
+                        AND
+                          PRED Rooms(x0, x1, x2, x3, x4, x5, x6)
+                          CMP  x5 < 160
+                          EQ  x2 = 2
+                          EQ  x6 = 'modern'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (r1 : roomName) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local beds, global integer -> IntSort()
+        b1 : local bedType, global text -> StringSort()
+        b2 : local basePrice, global integer -> IntSort()
+        d : local decor, global text -> StringSort()
+        m : local maxOccupancy, global integer -> IntSort()
+        r : local RoomId, global text -> StringSort()
+        r1 : local roomName, global text -> StringSort()
+      Predicted FOL:
+        x0 : local RoomId, global text -> StringSort()
+        x1 : local roomName, global text -> StringSort()
+        x2 : local beds, global integer -> IntSort()
+        x3 : local bedType, global text -> StringSort()
+        x4 : local maxOccupancy, global integer -> IntSort()
+        x5 : local basePrice, global integer -> IntSort()
+        x6 : local decor, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5489 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1602.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (r1 : roomName) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1541.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1541.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3516 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who are the ministers who took office after 1961 or before 1959?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Left_office = text -> StringSort()
+        Minister = text -> StringSort()
+        Party_ID = text -> StringSort()
+        Party_name = text -> StringSort()
+        Region_ID = int -> IntSort()
+        Took_office = text -> StringSort()
+      symbols:
+        party(Party_ID, Minister, Took_office, Left_office, Region_ID, Party_name)
+        constant 1959 : Took_office
+        constant 1961 : Took_office
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Party_ID ∃t : Took_office ∃l : Left_office ∃r : Region_ID ∃p1 : Party_name ( (party(p,m,t,l,r,p1)) ∧ ((t > 1961) ∨ (t < 1959)) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:t COLON:: IDENT:Took_office EXISTS:∃ IDENT:l COLON:: IDENT:Left_office EXISTS:∃ IDENT:r COLON:: IDENT:Region_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Party_name LPAR:( LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:m COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:r COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:t GT:> NUM:1961 RPAR:) OR:∨ LPAR:( IDENT:t LT:< NUM:1959 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Party_ID
+            EXISTS t:Took_office
+              EXISTS l:Left_office
+                EXISTS r:Region_ID
+                  EXISTS p1:Party_name
+                    AND
+                      PRED party(p, m, t, l, r, p1)
+                      OR
+                        CMP  t > 1961
+                        CMP  t < 1959
+      Predicted FOL: ∃p : Party_ID ∃t : Took_office ∃l : Left_office ∃r : Region_ID ∃n : Party_name (party(p, m, t, l, r, n) ∧ (t > 1961 ∨ t < 1959))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:t COLON:: IDENT:Took_office EXISTS:∃ IDENT:l COLON:: IDENT:Left_office EXISTS:∃ IDENT:r COLON:: IDENT:Region_ID EXISTS:∃ IDENT:n COLON:: IDENT:Party_name LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:m COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:r COMMA:, IDENT:n RPAR:) AND:∧ LPAR:( IDENT:t GT:> NUM:1961 OR:∨ IDENT:t LT:< NUM:1959 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Party_ID
+            EXISTS t:Took_office
+              EXISTS l:Left_office
+                EXISTS r:Region_ID
+                  EXISTS n:Party_name
+                    AND
+                      PRED party(p, m, t, l, r, n)
+                      OR
+                        CMP  t > 1961
+                        CMP  t < 1959
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Minister_0 : Minister   Gold m <-> Predicted m
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Left_office, global text -> StringSort()
+        m : local Minister, global text -> StringSort()
+        p : local Party_ID, global text -> StringSort()
+        p1 : local Party_name, global text -> StringSort()
+        r : local Region_ID, global int -> IntSort()
+        t : local Took_office, global text -> StringSort()
+      Predicted FOL:
+        l : local Left_office, global text -> StringSort()
+        m : local Minister, global text -> StringSort()
+        n : local Party_name, global text -> StringSort()
+        p : local Party_ID, global text -> StringSort()
+        r : local Region_ID, global int -> IntSort()
+        t : local Took_office, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_t_2, gold_l_3, gold_r_4, gold_p1_5], And(P_party(gold_p_1, FV_Minister_0, gold_t_2, gold_l_3, gold_r_4, gold_p1_5), Or((gold_t_2 > L_v_1961), (gold_t_2 < L_v_1959))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1):  And(P_party(WGOLD_p, FV_Minister_0, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1), Or((WGOLD_t > L_v_1961), (WGOLD_t < L_v_1959)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_t_2, predicted_l_3, predicted_r_4, predicted_n_5], And(P_party(predicted_p_1, FV_Minister_0, predicted_t_2, predicted_l_3, predicted_r_4, predicted_n_5), Or((predicted_t_2 > L_v_1961), (predicted_t_2 < L_v_1959))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_t, WPREDICTED_l, WPREDICTED_r, WPREDICTED_n):  And(P_party(WPREDICTED_p, FV_Minister_0, WPREDICTED_t, WPREDICTED_l, WPREDICTED_r, WPREDICTED_n), Or((WPREDICTED_t > L_v_1961), (WPREDICTED_t < L_v_1959)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1959' at text -> L_v_1959 = StringVal('1959')
+      literal '1961' at text -> L_v_1961 = StringVal('1961')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 748 lines, 28540 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1541.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1
+      claim: And(And(party(WGOLD_p, FV_Minister_0, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1), Or(str.<("1961", WGOLD_t), str.<(WGOLD_t, "1959"))), Not(Exists([predicted_p_1, predicted_t_2, predicted_l_3, predicted_r_4, predicted_n_5], And(party(predicted_p_1, FV_Minister_0, predicted_t_2, predicted_l_3, predicted_r_4, predicted_n_5), Or(str.<("1961", predicted_t_2), str.<(predicted_t_2, "1959"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_t, WPREDICTED_l, WPREDICTED_r, WPREDICTED_n
+      claim: And(And(party(WPREDICTED_p, FV_Minister_0, WPREDICTED_t, WPREDICTED_l, WPREDICTED_r, WPREDICTED_n), Or(str.<("1961", WPREDICTED_t), str.<(WPREDICTED_t, "1959"))), Not(Exists([gold_p_1, gold_t_2, gold_l_3, gold_r_4, gold_p1_5], And(party(gold_p_1, FV_Minister_0, gold_t_2, gold_l_3, gold_r_4, gold_p1_5), Or(str.<("1961", gold_t_2), str.<(gold_t_2, "1959"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

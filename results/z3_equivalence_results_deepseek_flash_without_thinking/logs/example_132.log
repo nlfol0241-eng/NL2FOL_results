@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_132.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_132.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3714 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the population of california
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        state(state_name, population, area, country_name, capital, density)
+        constant california : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ∃a : area ∃c : country_name ∃c1 : capital ∃d : density ( (state(s,p,a,c,c1,d)) ∧ (s = 'california') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:c1 COLON:: IDENT:capital EXISTS:∃ IDENT:d COLON:: IDENT:density LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:california RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS a:area
+              EXISTS c:country_name
+                EXISTS c1:capital
+                  EXISTS d:density
+                    AND
+                      PRED state(s, p, a, c, c1, d)
+                      EQ  s = 'california'
+      Predicted FOL: ∃x_population : population (state('california', x_population, x_area, x_country_name, x_capital, x_density))
+        tokens: EXISTS:∃ IDENT:x_population COLON:: IDENT:population LPAR:( IDENT:state LPAR:( LIT:california COMMA:, IDENT:x_population COMMA:, IDENT:x_area COMMA:, IDENT:x_country_name COMMA:, IDENT:x_capital COMMA:, IDENT:x_density RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x_population:population
+            PRED state('california', x_population, x_area, x_country_name, x_capital, x_density)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) x_area, x_country_name, x_capital, x_density occur free in the formula but are not declared in 'free vars'
+   WARNING: Predicted FOL: declared free variable(s) x_population do not occur free in the formula
+   1 shared answer variable(s)
+      FV_population_0 : population   Gold p <-> Predicted x_population
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        x_area : local area, global double -> Float64()
+        x_capital : local capital, global text -> StringSort()
+        x_country_name : local country_name, global varchar(3) -> StringSort()
+        x_density : local density, global double -> Float64()
+        x_population : local population, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_a_2, gold_c_3, gold_c1_4, gold_d_5], And(D_double(gold_a_2), D_varchar_3_(gold_c_3), D_double(gold_d_5), And(P_state(gold_s_1, FV_population_0, gold_a_2, gold_c_3, gold_c1_4, gold_d_5), (gold_s_1 == L_california))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d):  And(D_double(WGOLD_a), D_varchar_3_(WGOLD_c), D_double(WGOLD_d), And(P_state(WGOLD_s, FV_population_0, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d), (WGOLD_s == L_california)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'x_area'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'x_area'

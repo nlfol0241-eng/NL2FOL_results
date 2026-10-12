@@ -1,0 +1,106 @@
+{
+  "NL": "List the names of representatives that have not participated in elections listed here.",
+  "Vocabulary": {
+    "Predicates": [
+      "representative",
+      "election"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "representative": [
+        "Representative_ID",
+        "Name",
+        "State",
+        "Party",
+        "Lifespan"
+      ],
+      "election": [
+        "Election_ID",
+        "Representative_ID",
+        "Date",
+        "Votes",
+        "Vote_Percent",
+        "Seats",
+        "Place"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a6∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'∀a6'( election(a0, a1, a2, a3, a4, a5, a6) ∧ election(a0', a1', a2', a3', a4', a5', a6') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' ∧ a6 = a6' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( representative(b0, b1, b2, b3, b4) ∧ representative(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀a0∀a1∀a2∀a3∀a4∀a5∀a6 ( election(a0, a1, a2, a3, a4, a5, a6) → ∃b0∃b1∃b2∃b3∃b4 ( representative(b0, b1, b2, b3, b4) ∧ b0 = a1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "representative": {
+        "A": "representative",
+        "A0": "Representative_ID",
+        "A1": "Name",
+        "A2": "State",
+        "A3": "Party",
+        "A4": "Lifespan"
+      },
+      "election": {
+        "B": "election",
+        "B0": "Election_ID",
+        "B1": "Representative_ID",
+        "B2": "Date",
+        "B3": "Votes",
+        "B4": "Vote_Percent",
+        "B5": "Seats",
+        "B6": "Place"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃s : State ∃l : Lifespan ∃p : Party ∃r : Representative_ID( (representative(r,n,s,p,l)) ∧ (¬(∃r1 : Representative_ID( ((representative(r,n,s,p,l)) ∧ (∃e : Election_ID ∃v : Votes ∃p1 : Place ∃d : Date ∃s1 : Seats ∃v1 : Vote_Percent( election(e,r1,d,v,v1,s1,p1) ))) ∧ (r = r1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A2,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3,?A4)) & ([E]?B0,?B3,?B6,?B2,?B5,?B4( B(?B0,?B1,?B2,?B3,?B4,?B5,?B6) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A2 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3,A4)) ∧ (∃B0 ∃B3 ∃B6 ∃B2 ∃B5 ∃B4( B(B0,B1,B2,B3,B4,B5,B6) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A1",
+    "db_id": "election_representative",
+    "processed_sql": "SELECT Name FROM representative WHERE Representative_ID NOT IN (SELECT Representative_ID FROM election)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "representative": {
+      "sortaxiom0": "Representative_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "State = text",
+      "sortaxiom3": "Party = text",
+      "sortaxiom4": "Lifespan = text"
+    },
+    "election": {
+      "sortaxiom0": "Election_ID = int",
+      "sortaxiom1": "Representative_ID = int",
+      "sortaxiom2": "Date = text",
+      "sortaxiom3": "Votes = real",
+      "sortaxiom4": "Vote_Percent = real",
+      "sortaxiom5": "Seats = real",
+      "sortaxiom6": "Place = real"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Name FROM representative WHERE Representative_ID NOT IN (SELECT Representative_ID FROM election)"
+  },
+  "id": 3117,
+  "Predicted FOL": {
+    "string": "∃rid : Representative_ID ∃st : State ∃p : Party ∃l : Lifespan ( representative(rid, n, st, p, l) ∧ ¬∃eid : Election_ID ∃d : Date ∃v : Votes ∃vp : Vote_Percent ∃s : Seats ∃pl : Place ( election(eid, rid, d, v, vp, s, pl) ) )",
+    "free vars": "n : Name"
+  }
+}

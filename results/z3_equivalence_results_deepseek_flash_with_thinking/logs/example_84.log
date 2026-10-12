@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_84.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_84.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2451 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the contestants whose names are not 'Jessie Alloway'
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        integer -> IntSort()
+      local sorts:
+        contestant_name = varchar(50) -> StringSort()
+        contestant_number = integer -> IntSort()
+      symbols:
+        CONTESTANTS(contestant_number, contestant_name)
+        constant Jessie Alloway : contestant_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : contestant_number ( (CONTESTANTS(c,c1)) ∧ (c1 <> 'Jessie Alloway') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:contestant_number LPAR:( LPAR:( IDENT:CONTESTANTS LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 NEQ:<> LIT:Jessie Alloway RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:contestant_number
+            AND
+              PRED CONTESTANTS(c, c1)
+              NEQ  c1 != 'Jessie Alloway'
+      Predicted FOL: ∃x : contestant_number (CONTESTANTS(x, y) ∧ y ≠ 'Jessie Alloway')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:contestant_number LPAR:( IDENT:CONTESTANTS LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) AND:∧ IDENT:y NEQ:≠ LIT:Jessie Alloway RPAR:) EOF
+        AST:
+          EXISTS x:contestant_number
+            AND
+              PRED CONTESTANTS(x, y)
+              NEQ  y != 'Jessie Alloway'
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_contestant_name_0 : contestant_name   Gold c1 <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local contestant_number, global integer -> IntSort()
+        c1 : local contestant_name, global varchar(50) -> StringSort()
+      Predicted FOL:
+        x : local contestant_number, global integer -> IntSort()
+        y : local contestant_name, global varchar(50) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1], And(P_CONTESTANTS(gold_c_1, FV_contestant_name_0), (FV_contestant_name_0 != L_Jessie_Alloway)))
+      gold_skolem (witnesses WGOLD_c):  And(P_CONTESTANTS(WGOLD_c, FV_contestant_name_0), (FV_contestant_name_0 != L_Jessie_Alloway))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1], And(P_CONTESTANTS(predicted_x_1, FV_contestant_name_0), (FV_contestant_name_0 != L_Jessie_Alloway)))
+      predicted_skolem (witnesses WPREDICTED_x):  And(P_CONTESTANTS(WPREDICTED_x, FV_contestant_name_0), (FV_contestant_name_0 != L_Jessie_Alloway))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Jessie Alloway' at varchar(50) -> L_Jessie_Alloway = StringVal('Jessie Alloway')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 716 lines, 26511 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_84.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_contestant_name_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c
+      claim: And(And(CONTESTANTS(WGOLD_c, FV_contestant_name_0), FV_contestant_name_0 != "Jessie Alloway"), Not(Exists(predicted_x_1, And(CONTESTANTS(predicted_x_1, FV_contestant_name_0), FV_contestant_name_0 != "Jessie Alloway"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_x
+      claim: And(And(CONTESTANTS(WPREDICTED_x, FV_contestant_name_0), FV_contestant_name_0 != "Jessie Alloway"), Not(Exists(gold_c_1, And(CONTESTANTS(gold_c_1, FV_contestant_name_0), FV_contestant_name_0 != "Jessie Alloway"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

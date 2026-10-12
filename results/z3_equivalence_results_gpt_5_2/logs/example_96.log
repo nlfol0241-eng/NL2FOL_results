@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_96.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_96.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3033 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of conductors whose nationalities are not "USA"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Conductor_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Year_of_Work = int -> IntSort()
+      symbols:
+        conductor(Conductor_ID, Name, Age, Nationality, Year_of_Work)
+        constant USA : Nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Conductor_ID ∃a : Age ∃n1 : Nationality ∃y : Year_of_Work ( (conductor(c,n,a,n1,y)) ∧ (n1 <> 'USA') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Conductor_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:y COLON:: IDENT:Year_of_Work LPAR:( LPAR:( IDENT:conductor LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:n1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 NEQ:<> LIT:USA RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Conductor_ID
+            EXISTS a:Age
+              EXISTS n1:Nationality
+                EXISTS y:Year_of_Work
+                  AND
+                    PRED conductor(c, n, a, n1, y)
+                    NEQ  n1 != 'USA'
+      Predicted FOL: ∃a0:Conductor_ID ∃a2:Age ∃a3:Nationality ∃a4:Year_of_Work (conductor(a0, a1, a2, a3, a4) ∧ a3 ≠ USA)
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:Conductor_ID EXISTS:∃ IDENT:a2 COLON:: IDENT:Age EXISTS:∃ IDENT:a3 COLON:: IDENT:Nationality EXISTS:∃ IDENT:a4 COLON:: IDENT:Year_of_Work LPAR:( IDENT:conductor LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) AND:∧ IDENT:a3 NEQ:≠ IDENT:USA RPAR:) EOF
+        AST:
+          EXISTS a0:Conductor_ID
+            EXISTS a2:Age
+              EXISTS a3:Nationality
+                EXISTS a4:Year_of_Work
+                  AND
+                    PRED conductor(a0, a1, a2, a3, a4)
+                    NEQ  a3 != USA<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted a1
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        c : local Conductor_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        y : local Year_of_Work, global int -> IntSort()
+      Predicted FOL:
+        a0 : local Conductor_ID, global int -> IntSort()
+        a1 : local Name, global text -> StringSort()
+        a2 : local Age, global int -> IntSort()
+        a3 : local Nationality, global text -> StringSort()
+        a4 : local Year_of_Work, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_a_2, gold_n1_3, gold_y_4], And(P_conductor(gold_c_1, FV_Name_0, gold_a_2, gold_n1_3, gold_y_4), (gold_n1_3 != L_USA)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_a, WGOLD_n1, WGOLD_y):  And(P_conductor(WGOLD_c, FV_Name_0, WGOLD_a, WGOLD_n1, WGOLD_y), (WGOLD_n1 != L_USA))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a2_2, predicted_a3_3, predicted_a4_4], And(P_conductor(predicted_a0_1, FV_Name_0, predicted_a2_2, predicted_a3_3, predicted_a4_4), (predicted_a3_3 != L_USA)))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4):  And(P_conductor(WPREDICTED_a0, FV_Name_0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4), (WPREDICTED_a3 != L_USA))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'USA' at text -> L_USA = StringVal('USA')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 738 lines, 27686 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_96.py
+   [G8] took 0.029 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_a, WGOLD_n1, WGOLD_y
+      claim: And(And(conductor(WGOLD_c, FV_Name_0, WGOLD_a, WGOLD_n1, WGOLD_y), WGOLD_n1 != "USA"), Not(Exists([predicted_a0_1, predicted_a2_2, predicted_a3_3, predicted_a4_4], And(conductor(predicted_a0_1, FV_Name_0, predicted_a2_2, predicted_a3_3, predicted_a4_4), predicted_a3_3 != "USA"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4
+      claim: And(And(conductor(WPREDICTED_a0, FV_Name_0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4), WPREDICTED_a3 != "USA"), Not(Exists([gold_c_1, gold_a_2, gold_n1_3, gold_y_4], And(conductor(gold_c_1, FV_Name_0, gold_a_2, gold_n1_3, gold_y_4), gold_n1_3 != "USA"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

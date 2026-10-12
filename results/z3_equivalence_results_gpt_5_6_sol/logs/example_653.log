@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_653.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_653.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3005 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the decor of room Recluse and defiance?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        RoomId = text -> StringSort()
+        basePrice = integer -> IntSort()
+        bedType = text -> StringSort()
+        beds = integer -> IntSort()
+        decor = text -> StringSort()
+        maxOccupancy = integer -> IntSort()
+        roomName = text -> StringSort()
+      symbols:
+        Rooms(RoomId, roomName, beds, bedType, maxOccupancy, basePrice, decor)
+        constant Recluse and defiance : roomName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : RoomId ∃r1 : roomName ∃b : beds ∃b1 : bedType ∃m : maxOccupancy ∃b2 : basePrice ( (Rooms(r,r1,b,b1,m,b2,d)) ∧ (r1 = 'Recluse and defiance') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:RoomId EXISTS:∃ IDENT:r1 COLON:: IDENT:roomName EXISTS:∃ IDENT:b COLON:: IDENT:beds EXISTS:∃ IDENT:b1 COLON:: IDENT:bedType EXISTS:∃ IDENT:m COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:b2 COLON:: IDENT:basePrice LPAR:( LPAR:( IDENT:Rooms LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:m COMMA:, IDENT:b2 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r1 EQ:= LIT:Recluse and defiance RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:RoomId
+            EXISTS r1:roomName
+              EXISTS b:beds
+                EXISTS b1:bedType
+                  EXISTS m:maxOccupancy
+                    EXISTS b2:basePrice
+                      AND
+                        PRED Rooms(r, r1, b, b1, m, b2, d)
+                        EQ  r1 = 'Recluse and defiance'
+      Predicted FOL: ∃r : RoomId ∃b : beds ∃t : bedType ∃m : maxOccupancy ∃p : basePrice Rooms(r, 'Recluse and defiance', b, t, m, p, d)
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:RoomId EXISTS:∃ IDENT:b COLON:: IDENT:beds EXISTS:∃ IDENT:t COLON:: IDENT:bedType EXISTS:∃ IDENT:m COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:p COLON:: IDENT:basePrice IDENT:Rooms LPAR:( IDENT:r COMMA:, LIT:Recluse and defiance COMMA:, IDENT:b COMMA:, IDENT:t COMMA:, IDENT:m COMMA:, IDENT:p COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS r:RoomId
+            EXISTS b:beds
+              EXISTS t:bedType
+                EXISTS m:maxOccupancy
+                  EXISTS p:basePrice
+                    PRED Rooms(r, 'Recluse and defiance', b, t, m, p, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_decor_0 : decor   Gold d <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local beds, global integer -> IntSort()
+        b1 : local bedType, global text -> StringSort()
+        b2 : local basePrice, global integer -> IntSort()
+        d : local decor, global text -> StringSort()
+        m : local maxOccupancy, global integer -> IntSort()
+        r : local RoomId, global text -> StringSort()
+        r1 : local roomName, global text -> StringSort()
+      Predicted FOL:
+        b : local beds, global integer -> IntSort()
+        d : local decor, global text -> StringSort()
+        m : local maxOccupancy, global integer -> IntSort()
+        p : local basePrice, global integer -> IntSort()
+        r : local RoomId, global text -> StringSort()
+        t : local bedType, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_r1_2, gold_b_3, gold_b1_4, gold_m_5, gold_b2_6], And(P_Rooms(gold_r_1, gold_r1_2, gold_b_3, gold_b1_4, gold_m_5, gold_b2_6, FV_decor_0), (gold_r1_2 == L_Recluse_and_defiance)))
+      gold_skolem (witnesses WGOLD_r, WGOLD_r1, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2):  And(P_Rooms(WGOLD_r, WGOLD_r1, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, FV_decor_0), (WGOLD_r1 == L_Recluse_and_defiance))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5], P_Rooms(predicted_r_1, L_Recluse_and_defiance, predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5, FV_decor_0))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p):  P_Rooms(WPREDICTED_r, L_Recluse_and_defiance, WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p, FV_decor_0)
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Recluse and defiance' at text -> L_Recluse_and_defiance = StringVal('Recluse and defiance')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 751 lines, 28580 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_653.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_r1, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2
+      claim: And(And(Rooms(WGOLD_r, WGOLD_r1, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, FV_decor_0), WGOLD_r1 == "Recluse and defiance"), Not(Exists([predicted_r_1, predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5], Rooms(predicted_r_1, "Recluse and defiance", predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5, FV_decor_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p
+      claim: And(Rooms(WPREDICTED_r, "Recluse and defiance", WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p, FV_decor_0), Not(Exists([gold_r_1, gold_r1_2, gold_b_3, gold_b1_4, gold_m_5, gold_b2_6], And(Rooms(gold_r_1, gold_r1_2, gold_b_3, gold_b1_4, gold_m_5, gold_b2_6, FV_decor_0), gold_r1_2 == "Recluse and defiance"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_374.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_374.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2620 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the emails of the user named "Mary".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int(11) -> IntSort()
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+      local sorts:
+        email = varchar(255) -> StringSort()
+        followers = int(11) -> IntSort()
+        name = varchar(255) -> StringSort()
+        partitionid = int(11) -> IntSort()
+        uid = int(11) -> IntSort()
+      symbols:
+        user_profiles(uid, name, email, partitionid, followers)
+        constant Mary : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃n : name ∃p : partitionid ∃f : followers ( (user_profiles(u,n,e,p,f)) ∧ (n = 'Mary') )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:p COLON:: IDENT:partitionid EXISTS:∃ IDENT:f COLON:: IDENT:followers LPAR:( LPAR:( IDENT:user_profiles LPAR:( IDENT:u COMMA:, IDENT:n COMMA:, IDENT:e COMMA:, IDENT:p COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Mary RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS n:name
+              EXISTS p:partitionid
+                EXISTS f:followers
+                  AND
+                    PRED user_profiles(u, n, e, p, f)
+                    EQ  n = 'Mary'
+      Predicted FOL: ∃u : uid ∃p : partitionid ∃f : followers user_profiles(u, 'Mary', email, p, f)
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:p COLON:: IDENT:partitionid EXISTS:∃ IDENT:f COLON:: IDENT:followers IDENT:user_profiles LPAR:( IDENT:u COMMA:, LIT:Mary COMMA:, IDENT:email COMMA:, IDENT:p COMMA:, IDENT:f RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS p:partitionid
+              EXISTS f:followers
+                PRED user_profiles(u, 'Mary', email, p, f)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_email_0 : email   Gold e <-> Predicted email
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local email, global varchar(255) -> StringSort()
+        f : local followers, global int(11) -> IntSort()
+        n : local name, global varchar(255) -> StringSort()
+        p : local partitionid, global int(11) -> IntSort()
+        u : local uid, global int(11) -> IntSort()
+      Predicted FOL:
+        email : local email, global varchar(255) -> StringSort()
+        f : local followers, global int(11) -> IntSort()
+        p : local partitionid, global int(11) -> IntSort()
+        u : local uid, global int(11) -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_u_1, gold_n_2, gold_p_3, gold_f_4], And(D_varchar_255_(gold_n_2), And(P_user_profiles(gold_u_1, gold_n_2, FV_email_0, gold_p_3, gold_f_4), (gold_n_2 == L_Mary))))
+      gold_skolem (witnesses WGOLD_u, WGOLD_n, WGOLD_p, WGOLD_f):  And(D_varchar_255_(WGOLD_n), And(P_user_profiles(WGOLD_u, WGOLD_n, FV_email_0, WGOLD_p, WGOLD_f), (WGOLD_n == L_Mary)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_u_1, predicted_p_2, predicted_f_3], And(P_user_profiles(predicted_u_1, L_Mary, FV_email_0, predicted_p_2, predicted_f_3), D_varchar_255_(L_Mary)))
+      predicted_skolem (witnesses WPREDICTED_u, WPREDICTED_p, WPREDICTED_f):  And(P_user_profiles(WPREDICTED_u, L_Mary, FV_email_0, WPREDICTED_p, WPREDICTED_f), D_varchar_255_(L_Mary))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Mary' at varchar(255) -> L_Mary = StringVal('Mary')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 737 lines, 27613 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_374.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_email_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_u, WGOLD_n, WGOLD_p, WGOLD_f
+      claim: And(And(Length(WGOLD_n) <= 255, And(user_profiles(WGOLD_u, WGOLD_n, FV_email_0, WGOLD_p, WGOLD_f), WGOLD_n == "Mary")), Not(Exists([predicted_u_1, predicted_p_2, predicted_f_3], And(user_profiles(predicted_u_1, "Mary", FV_email_0, predicted_p_2, predicted_f_3), Length("Mary") <= 255))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_u, WPREDICTED_p, WPREDICTED_f
+      claim: And(And(user_profiles(WPREDICTED_u, "Mary", FV_email_0, WPREDICTED_p, WPREDICTED_f), Length("Mary") <= 255), Not(Exists([gold_u_1, gold_n_2, gold_p_3, gold_f_4], And(Length(gold_n_2) <= 255, And(user_profiles(gold_u_1, gold_n_2, FV_email_0, gold_p_3, gold_f_4), gold_n_2 == "Mary")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,130 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1975.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1975.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3305 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the statuses of roller coasters longer than 3300 or higher than 100.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Country_ID = int -> IntSort()
+        Height = real -> Float32()
+        Length = real -> Float32()
+        Name = text -> StringSort()
+        Opened = text -> StringSort()
+        Park = text -> StringSort()
+        Roller_Coaster_ID = int -> IntSort()
+        Speed = text -> StringSort()
+        Status = text -> StringSort()
+      symbols:
+        roller_coaster(Roller_Coaster_ID, Name, Park, Country_ID, Length, Height, Speed, Opened, Status)
+        constant 100 : Height
+        constant 3300 : Length
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Roller_Coaster_ID ∃n : Name ∃p : Park ∃c : Country_ID ∃l : Length ∃h : Height ∃s : Speed ∃o : Opened ( (roller_coaster(r,n,p,c,l,h,s,o,s1)) ∧ ((l > 3300) ∨ (h > 100)) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Roller_Coaster_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:p COLON:: IDENT:Park EXISTS:∃ IDENT:c COLON:: IDENT:Country_ID EXISTS:∃ IDENT:l COLON:: IDENT:Length EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:s COLON:: IDENT:Speed EXISTS:∃ IDENT:o COLON:: IDENT:Opened LPAR:( LPAR:( IDENT:roller_coaster LPAR:( IDENT:r COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:o COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:l GT:> NUM:3300 RPAR:) OR:∨ LPAR:( IDENT:h GT:> NUM:100 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Roller_Coaster_ID
+            EXISTS n:Name
+              EXISTS p:Park
+                EXISTS c:Country_ID
+                  EXISTS l:Length
+                    EXISTS h:Height
+                      EXISTS s:Speed
+                        EXISTS o:Opened
+                          AND
+                            PRED roller_coaster(r, n, p, c, l, h, s, o, s1)
+                            OR
+                              CMP  l > 3300
+                              CMP  h > 100
+      Predicted FOL: ∃a0:Roller_Coaster_ID ∃a1:Name ∃a2:Park ∃a3:Country_ID ∃a4:Length ∃a5:Height ∃a6:Speed ∃a7:Opened ( roller_coaster(a0,a1,a2,a3,a4,a5,a6,a7,s) ∧ (a4 > 3300 ∨ a5 > 100) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:Roller_Coaster_ID EXISTS:∃ IDENT:a1 COLON:: IDENT:Name EXISTS:∃ IDENT:a2 COLON:: IDENT:Park EXISTS:∃ IDENT:a3 COLON:: IDENT:Country_ID EXISTS:∃ IDENT:a4 COLON:: IDENT:Length EXISTS:∃ IDENT:a5 COLON:: IDENT:Height EXISTS:∃ IDENT:a6 COLON:: IDENT:Speed EXISTS:∃ IDENT:a7 COLON:: IDENT:Opened LPAR:( IDENT:roller_coaster LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 COMMA:, IDENT:a5 COMMA:, IDENT:a6 COMMA:, IDENT:a7 COMMA:, IDENT:s RPAR:) AND:∧ LPAR:( IDENT:a4 GT:> NUM:3300 OR:∨ IDENT:a5 GT:> NUM:100 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:Roller_Coaster_ID
+            EXISTS a1:Name
+              EXISTS a2:Park
+                EXISTS a3:Country_ID
+                  EXISTS a4:Length
+                    EXISTS a5:Height
+                      EXISTS a6:Speed
+                        EXISTS a7:Opened
+                          AND
+                            PRED roller_coaster(a0, a1, a2, a3, a4, a5, a6, a7, s)
+                            OR
+                              CMP  a4 > 3300
+                              CMP  a5 > 100
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Status_0 : Status   Gold s1 <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country_ID, global int -> IntSort()
+        h : local Height, global real -> Float32()
+        l : local Length, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Opened, global text -> StringSort()
+        p : local Park, global text -> StringSort()
+        r : local Roller_Coaster_ID, global int -> IntSort()
+        s : local Speed, global text -> StringSort()
+        s1 : local Status, global text -> StringSort()
+      Predicted FOL:
+        a0 : local Roller_Coaster_ID, global int -> IntSort()
+        a1 : local Name, global text -> StringSort()
+        a2 : local Park, global text -> StringSort()
+        a3 : local Country_ID, global int -> IntSort()
+        a4 : local Length, global real -> Float32()
+        a5 : local Height, global real -> Float32()
+        a6 : local Speed, global text -> StringSort()
+        a7 : local Opened, global text -> StringSort()
+        s : local Status, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_n_2, gold_p_3, gold_c_4, gold_l_5, gold_h_6, gold_s_7, gold_o_8], And(D_real(gold_l_5), D_real(gold_h_6), And(P_roller_coaster(gold_r_1, gold_n_2, gold_p_3, gold_c_4, gold_l_5, gold_h_6, gold_s_7, gold_o_8, FV_Status_0), Or((gold_l_5 > L_v_3300_real), (gold_h_6 > L_v_100_real)))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_n, WGOLD_p, WGOLD_c, WGOLD_l, WGOLD_h, WGOLD_s, WGOLD_o):  And(D_real(WGOLD_l), D_real(WGOLD_h), And(P_roller_coaster(WGOLD_r, WGOLD_n, WGOLD_p, WGOLD_c, WGOLD_l, WGOLD_h, WGOLD_s, WGOLD_o, FV_Status_0), Or((WGOLD_l > L_v_3300_real), (WGOLD_h > L_v_100_real))))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a1_2, predicted_a2_3, predicted_a3_4, predicted_a4_5, predicted_a5_6, predicted_a6_7, predicted_a7_8], And(D_real(predicted_a4_5), D_real(predicted_a5_6), And(P_roller_coaster(predicted_a0_1, predicted_a1_2, predicted_a2_3, predicted_a3_4, predicted_a4_5, predicted_a5_6, predicted_a6_7, predicted_a7_8, FV_Status_0), Or((predicted_a4_5 > L_v_3300_real), (predicted_a5_6 > L_v_100_real)))))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7):  And(D_real(WPREDICTED_a4), D_real(WPREDICTED_a5), And(P_roller_coaster(WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7, FV_Status_0), Or((WPREDICTED_a4 > L_v_3300_real), (WPREDICTED_a5 > L_v_100_real))))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '100' at real -> L_v_100_real = FPVal(100.0, Float32())
+      literal '3300' at real -> L_v_3300_real = FPVal(3300.0, Float32())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 775 lines, 30584 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1975.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_n, WGOLD_p, WGOLD_c, WGOLD_l, WGOLD_h, WGOLD_s, WGOLD_o
+      claim: And(And(And(Not(fpIsNaN(WGOLD_l)), Not(And(fpIsZero(WGOLD_l), fpIsNegative(WGOLD_l)))), And(Not(fpIsNaN(WGOLD_h)), Not(And(fpIsZero(WGOLD_h), fpIsNegative(WGOLD_h)))), And(roller_coaster(WGOLD_r, WGOLD_n, WGOLD_p, WGOLD_c, WGOLD_l, WGOLD_h, WGOLD_s, WGOLD_o, FV_Status_0), Or(1.611328125*(2**11) < WGOLD_l, 1.5625*(2**6) < WGOLD_h))), Not(Exists([predicted_a0_1, predicted_a1_2, predicted_a2_3, predicted_a3_4, predicted_a4_5, predicted_a5_6, predicted_a6_7, predicted_a7_8], And(And(Not(fpIsNaN(predicted_a4_5)), Not(And(fpIsZero(predicted_a4_5), fpIsNegative(predicted_a4_5)))), And(Not(fpIsNaN(predicted_a5_6)), Not(And(fpIsZero(predicted_a5_6), fpIsNegative(predicted_a5_6)))), And(roller_coaster(predicted_a0_1, predicted_a1_2, predicted_a2_3, predicted_a3_4, predicted_a4_5, predicted_a5_6, predicted_a6_7, predicted_a7_8, FV_Status_0), Or(1.611328125*(2**11) < predicted_a4_5, 1.5625*(2**6) < predicted_a5_6))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a4)), Not(And(fpIsZero(WPREDICTED_a4), fpIsNegative(WPREDICTED_a4)))), And(Not(fpIsNaN(WPREDICTED_a5)), Not(And(fpIsZero(WPREDICTED_a5), fpIsNegative(WPREDICTED_a5)))), And(roller_coaster(WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7, FV_Status_0), Or(1.611328125*(2**11) < WPREDICTED_a4, 1.5625*(2**6) < WPREDICTED_a5))), Not(Exists([gold_r_1, gold_n_2, gold_p_3, gold_c_4, gold_l_5, gold_h_6, gold_s_7, gold_o_8], And(And(Not(fpIsNaN(gold_l_5)), Not(And(fpIsZero(gold_l_5), fpIsNegative(gold_l_5)))), And(Not(fpIsNaN(gold_h_6)), Not(And(fpIsZero(gold_h_6), fpIsNegative(gold_h_6)))), And(roller_coaster(gold_r_1, gold_n_2, gold_p_3, gold_c_4, gold_l_5, gold_h_6, gold_s_7, gold_o_8, FV_Status_0), Or(1.611328125*(2**11) < gold_l_5, 1.5625*(2**6) < gold_h_6))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

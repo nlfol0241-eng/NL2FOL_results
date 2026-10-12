@@ -1,0 +1,65 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1676.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1676.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3503 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give me the names and prices of furnitures which some companies are manufacturing.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Furniture_ID = int -> IntSort()
+        Manufacturer_ID = int -> IntSort()
+        Market_Rate = real -> Float32()
+        Name = text -> StringSort()
+        Num_of_Component = int -> IntSort()
+        Price_in_Dollar = real -> Float32()
+      symbols:
+        furniture(Furniture_ID, Name, Num_of_Component, Market_Rate)
+        furniture_manufacte(Manufacturer_ID, Furniture_ID, Price_in_Dollar)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : Furniture_ID ∃n1 : Num_of_Component ∃m : Market_Rate ∃m1 : Manufacturer_ID ∃f1 : Furniture_ID ( ((furniture(f,n,n1,m)) ∧ (furniture_manufacte(m1,f1,p))) ∧ (f = f1) )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:Furniture_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_Component EXISTS:∃ IDENT:m COLON:: IDENT:Market_Rate EXISTS:∃ IDENT:m1 COLON:: IDENT:Manufacturer_ID EXISTS:∃ IDENT:f1 COLON:: IDENT:Furniture_ID LPAR:( LPAR:( LPAR:( IDENT:furniture LPAR:( IDENT:f COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:furniture_manufacte LPAR:( IDENT:m1 COMMA:, IDENT:f1 COMMA:, IDENT:p RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f EQ:= IDENT:f1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:Furniture_ID
+            EXISTS n1:Num_of_Component
+              EXISTS m:Market_Rate
+                EXISTS m1:Manufacturer_ID
+                  EXISTS f1:Furniture_ID
+                    AND
+                      AND
+                        PRED furniture(f, n, n1, m)
+                        PRED furniture_manufacte(m1, f1, p)
+                      EQ  f = f1
+      Predicted FOL: ∃Furniture_ID : int ∃Num_of_Component : int ∃Market_Rate : real ∃Manufacturer_ID : int ( furniture(Furniture_ID, Name, Num_of_Component, Market_Rate) ∧ furniture_manufacte(Manufacturer_ID, Furniture_ID, Price_in_Dollar) )
+        tokens: EXISTS:∃ IDENT:Furniture_ID COLON:: IDENT:int EXISTS:∃ IDENT:Num_of_Component COLON:: IDENT:int EXISTS:∃ IDENT:Market_Rate COLON:: IDENT:real EXISTS:∃ IDENT:Manufacturer_ID COLON:: IDENT:int LPAR:( IDENT:furniture LPAR:( IDENT:Furniture_ID COMMA:, IDENT:Name COMMA:, IDENT:Num_of_Component COMMA:, IDENT:Market_Rate RPAR:) AND:∧ IDENT:furniture_manufacte LPAR:( IDENT:Manufacturer_ID COMMA:, IDENT:Furniture_ID COMMA:, IDENT:Price_in_Dollar RPAR:) RPAR:) EOF
+        AST:
+          EXISTS Furniture_ID:int
+            EXISTS Num_of_Component:int
+              EXISTS Market_Rate:real
+                EXISTS Manufacturer_ID:int
+                  AND
+                    PRED furniture(Furniture_ID, Name, Num_of_Component, Market_Rate)
+                    PRED furniture_manufacte(Manufacturer_ID, Furniture_ID, Price_in_Dollar)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['Name', 'Price_in_Dollar'] vs Predicted ['real', 'text']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['Name', 'Price_in_Dollar'] vs Predicted ['real', 'text']

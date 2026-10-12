@@ -1,0 +1,154 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3266.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3266.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5236 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of aircrafts and that did not win any match.
+   [G1] took 0.005 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 13 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int(11) -> IntSort()
+        integer -> IntSort()
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Aircraft = varchar(50) -> StringSort()
+        Aircraft_ID = integer -> IntSort()
+        Country = text -> StringSort()
+        Date = text -> StringSort()
+        Description = varchar(50) -> StringSort()
+        Fastest_Qualifying = text -> StringSort()
+        Location = text -> StringSort()
+        Max_Gross_Weight = varchar(50) -> StringSort()
+        Max_disk_Loading = varchar(50) -> StringSort()
+        Round = real -> Float32()
+        Total_disk_area = varchar(50) -> StringSort()
+        Winning_Aircraft = integer -> IntSort()
+        Winning_Pilot = int(11) -> IntSort()
+      symbols:
+        aircraft(Aircraft_ID, Aircraft, Description, Max_Gross_Weight, Total_disk_area, Max_disk_Loading)
+        match(Round, Location, Country, Date, Fastest_Qualifying, Winning_Pilot, Winning_Aircraft)
+   [G2] took 0.002 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Description ∃m1 : Max_disk_Loading ∃t : Total_disk_area ∃m : Max_Gross_Weight ∃a : Aircraft_ID( (aircraft(a,a1,d,m,t,m1)) ∧ (¬(∃w1 : Winning_Aircraft( ((aircraft(a,a1,d,m,t,m1)) ∧ (∃r : Round ∃d1 : Date ∃c : Country ∃w : Winning_Pilot ∃l : Location ∃f : Fastest_Qualifying( match(r,l,c,d1,f,w,w1) ))) ∧ (a = w1) ))) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Description EXISTS:∃ IDENT:m1 COLON:: IDENT:Max_disk_Loading EXISTS:∃ IDENT:t COLON:: IDENT:Total_disk_area EXISTS:∃ IDENT:m COLON:: IDENT:Max_Gross_Weight EXISTS:∃ IDENT:a COLON:: IDENT:Aircraft_ID LPAR:( LPAR:( IDENT:aircraft LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:d COMMA:, IDENT:m COMMA:, IDENT:t COMMA:, IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:w1 COLON:: IDENT:Winning_Aircraft LPAR:( LPAR:( LPAR:( IDENT:aircraft LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:d COMMA:, IDENT:m COMMA:, IDENT:t COMMA:, IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:Round EXISTS:∃ IDENT:d1 COLON:: IDENT:Date EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:w COLON:: IDENT:Winning_Pilot EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:Fastest_Qualifying LPAR:( IDENT:match LPAR:( IDENT:r COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:d1 COMMA:, IDENT:f COMMA:, IDENT:w COMMA:, IDENT:w1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:w1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Description
+            EXISTS m1:Max_disk_Loading
+              EXISTS t:Total_disk_area
+                EXISTS m:Max_Gross_Weight
+                  EXISTS a:Aircraft_ID
+                    AND
+                      PRED aircraft(a, a1, d, m, t, m1)
+                      NOT
+                        EXISTS w1:Winning_Aircraft
+                          AND
+                            AND
+                              PRED aircraft(a, a1, d, m, t, m1)
+                              EXISTS r:Round
+                                EXISTS d1:Date
+                                  EXISTS c:Country
+                                    EXISTS w:Winning_Pilot
+                                      EXISTS l:Location
+                                        EXISTS f:Fastest_Qualifying
+                                          PRED match(r, l, c, d1, f, w, w1)
+                            EQ  a = w1
+      Predicted FOL: ∃i : Aircraft_ID ∃d : Description ∃g : Max_Gross_Weight ∃t : Total_disk_area ∃l : Max_disk_Loading (aircraft(i, n, d, g, t, l) ∧ ¬∃r : Round ∃x : Location ∃c : Country ∃a : Date ∃f : Fastest_Qualifying ∃p : Winning_Pilot ∃w : Winning_Aircraft (match(r, x, c, a, f, p, w) ∧ w = i))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Aircraft_ID EXISTS:∃ IDENT:d COLON:: IDENT:Description EXISTS:∃ IDENT:g COLON:: IDENT:Max_Gross_Weight EXISTS:∃ IDENT:t COLON:: IDENT:Total_disk_area EXISTS:∃ IDENT:l COLON:: IDENT:Max_disk_Loading LPAR:( IDENT:aircraft LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:g COMMA:, IDENT:t COMMA:, IDENT:l RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:r COLON:: IDENT:Round EXISTS:∃ IDENT:x COLON:: IDENT:Location EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:a COLON:: IDENT:Date EXISTS:∃ IDENT:f COLON:: IDENT:Fastest_Qualifying EXISTS:∃ IDENT:p COLON:: IDENT:Winning_Pilot EXISTS:∃ IDENT:w COLON:: IDENT:Winning_Aircraft LPAR:( IDENT:match LPAR:( IDENT:r COMMA:, IDENT:x COMMA:, IDENT:c COMMA:, IDENT:a COMMA:, IDENT:f COMMA:, IDENT:p COMMA:, IDENT:w RPAR:) AND:∧ IDENT:w EQ:= IDENT:i RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Aircraft_ID
+            EXISTS d:Description
+              EXISTS g:Max_Gross_Weight
+                EXISTS t:Total_disk_area
+                  EXISTS l:Max_disk_Loading
+                    AND
+                      PRED aircraft(i, n, d, g, t, l)
+                      NOT
+                        EXISTS r:Round
+                          EXISTS x:Location
+                            EXISTS c:Country
+                              EXISTS a:Date
+                                EXISTS f:Fastest_Qualifying
+                                  EXISTS p:Winning_Pilot
+                                    EXISTS w:Winning_Aircraft
+                                      AND
+                                        PRED match(r, x, c, a, f, p, w)
+                                        EQ  w = i
+   [G3] took 0.014 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Aircraft_0 : Aircraft   Gold a1 <-> Predicted n
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 26 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Aircraft_ID, global integer -> IntSort()
+        a1 : local Aircraft, global varchar(50) -> StringSort()
+        c : local Country, global text -> StringSort()
+        d : local Description, global varchar(50) -> StringSort()
+        d1 : local Date, global text -> StringSort()
+        f : local Fastest_Qualifying, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        m : local Max_Gross_Weight, global varchar(50) -> StringSort()
+        m1 : local Max_disk_Loading, global varchar(50) -> StringSort()
+        r : local Round, global real -> Float32()
+        t : local Total_disk_area, global varchar(50) -> StringSort()
+        w : local Winning_Pilot, global int(11) -> IntSort()
+        w1 : local Winning_Aircraft, global integer -> IntSort()
+      Predicted FOL:
+        a : local Date, global text -> StringSort()
+        c : local Country, global text -> StringSort()
+        d : local Description, global varchar(50) -> StringSort()
+        f : local Fastest_Qualifying, global text -> StringSort()
+        g : local Max_Gross_Weight, global varchar(50) -> StringSort()
+        i : local Aircraft_ID, global integer -> IntSort()
+        l : local Max_disk_Loading, global varchar(50) -> StringSort()
+        n : local Aircraft, global varchar(50) -> StringSort()
+        p : local Winning_Pilot, global int(11) -> IntSort()
+        r : local Round, global real -> Float32()
+        t : local Total_disk_area, global varchar(50) -> StringSort()
+        w : local Winning_Aircraft, global integer -> IntSort()
+        x : local Location, global text -> StringSort()
+   [G5] took 0.003 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_m1_2, gold_t_3, gold_m_4, gold_a_5], And(D_varchar_50_(gold_d_1), D_varchar_50_(gold_m1_2), D_varchar_50_(gold_t_3), D_varchar_50_(gold_m_4), And(P_aircraft(gold_a_5, FV_Aircraft_0, gold_d_1, gold_m_4, gold_t_3, gold_m1_2), Not(Exists([gold_w1_6], And(And(P_aircraft(gold_a_5, FV_Aircraft_0, gold_d_1, gold_m_4, gold_t_3, gold_m1_2), Exists([gold_r_7, gold_d1_8, gold_c_9, gold_w_10, gold_l_11, gold_f_12], And(D_real(gold_r_7), P_match(gold_r_7, gold_l_11, gold_c_9, gold_d1_8, gold_f_12, gold_w_10, gold_w1_6)))), (gold_a_5 == gold_w1_6)))))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_m1, WGOLD_t, WGOLD_m, WGOLD_a):  And(D_varchar_50_(WGOLD_d), D_varchar_50_(WGOLD_m1), D_varchar_50_(WGOLD_t), D_varchar_50_(WGOLD_m), And(P_aircraft(WGOLD_a, FV_Aircraft_0, WGOLD_d, WGOLD_m, WGOLD_t, WGOLD_m1), Not(Exists([goldsk_w1_1], And(And(P_aircraft(WGOLD_a, FV_Aircraft_0, WGOLD_d, WGOLD_m, WGOLD_t, WGOLD_m1), Exists([goldsk_r_2, goldsk_d1_3, goldsk_c_4, goldsk_w_5, goldsk_l_6, goldsk_f_7], And(D_real(goldsk_r_2), P_match(goldsk_r_2, goldsk_l_6, goldsk_c_4, goldsk_d1_3, goldsk_f_7, goldsk_w_5, goldsk_w1_1)))), (WGOLD_a == goldsk_w1_1))))))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_d_2, predicted_g_3, predicted_t_4, predicted_l_5], And(D_varchar_50_(predicted_d_2), D_varchar_50_(predicted_g_3), D_varchar_50_(predicted_t_4), D_varchar_50_(predicted_l_5), And(P_aircraft(predicted_i_1, FV_Aircraft_0, predicted_d_2, predicted_g_3, predicted_t_4, predicted_l_5), Not(Exists([predicted_r_6, predicted_x_7, predicted_c_8, predicted_a_9, predicted_f_10, predicted_p_11, predicted_w_12], And(D_real(predicted_r_6), And(P_match(predicted_r_6, predicted_x_7, predicted_c_8, predicted_a_9, predicted_f_10, predicted_p_11, predicted_w_12), (predicted_w_12 == predicted_i_1))))))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_g, WPREDICTED_t, WPREDICTED_l):  And(D_varchar_50_(WPREDICTED_d), D_varchar_50_(WPREDICTED_g), D_varchar_50_(WPREDICTED_t), D_varchar_50_(WPREDICTED_l), And(P_aircraft(WPREDICTED_i, FV_Aircraft_0, WPREDICTED_d, WPREDICTED_g, WPREDICTED_t, WPREDICTED_l), Not(Exists([predictedsk_r_1, predictedsk_x_2, predictedsk_c_3, predictedsk_a_4, predictedsk_f_5, predictedsk_p_6, predictedsk_w_7], And(D_real(predictedsk_r_1), And(P_match(predictedsk_r_1, predictedsk_x_2, predictedsk_c_3, predictedsk_a_4, predictedsk_f_5, predictedsk_p_6, predictedsk_w_7), (predictedsk_w_7 == WPREDICTED_i)))))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.006 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 800 lines, 33952 bytes
+   [G7] took 0.002 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3266.py
+   [G8] took 0.020 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Aircraft_0) <= 50
+   [R1] took 0.008 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_m1, WGOLD_t, WGOLD_m, WGOLD_a
+      claim: And(And(Length(WGOLD_d) <= 50, Length(WGOLD_m1) <= 50, Length(WGOLD_t) <= 50, Length(WGOLD_m) <= 50, And(aircraft(WGOLD_a, FV_Aircraft_0, WGOLD_d, WGOLD_m, WGOLD_t, WGOLD_m1), Not(Exists(goldsk_w1_1, And(And(aircraft(WGOLD_a, FV_Aircraft_0, WGOLD_d, WGOLD_m, WGOLD_t, WGOLD_m1), Exists([goldsk_r_2, goldsk_d1_3, goldsk_c_4, goldsk_w_5, goldsk_l_6, goldsk_f_7], And(And(Not(fpIsNaN(goldsk_r_2)), Not(And(fpIsZero(goldsk_r_2), fpIsNegative(goldsk_r_2)))), match(goldsk_r_2, goldsk_l_6, goldsk_c_4, goldsk_d1_3, goldsk_f_7, goldsk_w_5, goldsk_w1_1)))), WGOLD_a == goldsk_w1_1))))), Not(Exists([predicted_i_1, predicted_d_2, predicted_g_3, predicted_t_4, predicted_l_5], And(Length(predicted_d_2) <= 50, Length(predicted_g_3) <= 50, Length(predicted_t_4) <= 50, Length(predicted_l_5) <= 50, And(aircraft(predicted_i_1, FV_Aircraft_0, predicted_d_2, predicted_g_3, predicted_t_4, predicted_l_5), Not(Exists([predicted_r_6, predicted_x_7, predicted_c_8, predicted_a_9, predicted_f_10, predicted_p_11, predicted_w_12], And(And(Not(fpIsNaN(predicted_r_6)), Not(And(fpIsZero(predicted_r_6), fpIsNegative(predicted_r_6)))), And(match(predicted_r_6, predicted_x_7, predicted_c_8, predicted_a_9, predicted_f_10, predicted_p_11, predicted_w_12), predicted_w_12 == predicted_i_1)))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.041 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.178 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_g, WPREDICTED_t, WPREDICTED_l
+      claim: And(And(Length(WPREDICTED_d) <= 50, Length(WPREDICTED_g) <= 50, Length(WPREDICTED_t) <= 50, Length(WPREDICTED_l) <= 50, And(aircraft(WPREDICTED_i, FV_Aircraft_0, WPREDICTED_d, WPREDICTED_g, WPREDICTED_t, WPREDICTED_l), Not(Exists([predictedsk_r_1, predictedsk_x_2, predictedsk_c_3, predictedsk_a_4, predictedsk_f_5, predictedsk_p_6, predictedsk_w_7], And(And(Not(fpIsNaN(predictedsk_r_1)), Not(And(fpIsZero(predictedsk_r_1), fpIsNegative(predictedsk_r_1)))), And(match(predictedsk_r_1, predictedsk_x_2, predictedsk_c_3, predictedsk_a_4, predictedsk_f_5, predictedsk_p_6, predictedsk_w_7), predictedsk_w_7 == WPREDICTED_i)))))), Not(Exists([gold_d_1, gold_m1_2, gold_t_3, gold_m_4, gold_a_5], And(Length(gold_d_1) <= 50, Length(gold_m1_2) <= 50, Length(gold_t_3) <= 50, Length(gold_m_4) <= 50, And(aircraft(gold_a_5, FV_Aircraft_0, gold_d_1, gold_m_4, gold_t_3, gold_m1_2), Not(Exists(gold_w1_6, And(And(aircraft(gold_a_5, FV_Aircraft_0, gold_d_1, gold_m_4, gold_t_3, gold_m1_2), Exists([gold_r_7, gold_d1_8, gold_c_9, gold_w_10, gold_l_11, gold_f_12], And(And(Not(fpIsNaN(gold_r_7)), Not(And(fpIsZero(gold_r_7), fpIsNegative(gold_r_7)))), match(gold_r_7, gold_l_11, gold_c_9, gold_d1_8, gold_f_12, gold_w_10, gold_w1_6)))), gold_a_5 == gold_w1_6))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.025 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.160 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

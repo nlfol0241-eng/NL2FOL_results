@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2005.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2005.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2337 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of scientists who are assigned to some project.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        char(4) -> StringSort()   [domain Length(x) <= 4; length <= 4 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        Name = text -> StringSort()
+        Project = char(4) -> StringSort()
+        SSN = int -> IntSort()
+        Scientist = int -> IntSort()
+      symbols:
+        AssignedTo(Scientist, Project)
+        Scientists(SSN, Name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Scientist ∃p : Project ∃s1 : SSN ( ((AssignedTo(s,p)) ∧ (Scientists(s1,n))) ∧ (s = s1) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Scientist EXISTS:∃ IDENT:p COLON:: IDENT:Project EXISTS:∃ IDENT:s1 COLON:: IDENT:SSN LPAR:( LPAR:( LPAR:( IDENT:AssignedTo LPAR:( IDENT:s COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Scientists LPAR:( IDENT:s1 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Scientist
+            EXISTS p:Project
+              EXISTS s1:SSN
+                AND
+                  AND
+                    PRED AssignedTo(s, p)
+                    PRED Scientists(s1, n)
+                  EQ  s = s1
+      Predicted FOL: ∃s:Scientist ∃p:Project (Scientists(s, n) ∧ AssignedTo(s, p))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Scientist EXISTS:∃ IDENT:p COLON:: IDENT:Project LPAR:( IDENT:Scientists LPAR:( IDENT:s COMMA:, IDENT:n RPAR:) AND:∧ IDENT:AssignedTo LPAR:( IDENT:s COMMA:, IDENT:p RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Scientist
+            EXISTS p:Project
+              AND
+                PRED Scientists(s, n)
+                PRED AssignedTo(s, p)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Name, global text -> StringSort()
+        p : local Project, global char(4) -> StringSort()
+        s : local Scientist, global int -> IntSort()
+        s1 : local SSN, global int -> IntSort()
+      Predicted FOL:
+        n : local Name, global text -> StringSort()
+        p : local Project, global char(4) -> StringSort()
+        s : local Scientist, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_p_2, gold_s1_3], And(D_char_4_(gold_p_2), And(And(P_AssignedTo(gold_s_1, gold_p_2), P_Scientists(gold_s1_3, FV_Name_0)), (gold_s_1 == gold_s1_3))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_p, WGOLD_s1):  And(D_char_4_(WGOLD_p), And(And(P_AssignedTo(WGOLD_s, WGOLD_p), P_Scientists(WGOLD_s1, FV_Name_0)), (WGOLD_s == WGOLD_s1)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_p_2], And(D_char_4_(predicted_p_2), And(P_Scientists(predicted_s_1, FV_Name_0), P_AssignedTo(predicted_s_1, predicted_p_2))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_p):  And(D_char_4_(WPREDICTED_p), And(P_Scientists(WPREDICTED_s, FV_Name_0), P_AssignedTo(WPREDICTED_s, WPREDICTED_p)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 731 lines, 27103 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2005.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_p, WGOLD_s1
+      claim: And(And(Length(WGOLD_p) <= 4, And(And(AssignedTo(WGOLD_s, WGOLD_p), Scientists(WGOLD_s1, FV_Name_0)), WGOLD_s == WGOLD_s1)), Not(Exists([predicted_s_1, predicted_p_2], And(Length(predicted_p_2) <= 4, And(Scientists(predicted_s_1, FV_Name_0), AssignedTo(predicted_s_1, predicted_p_2))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_p
+      claim: And(And(Length(WPREDICTED_p) <= 4, And(Scientists(WPREDICTED_s, FV_Name_0), AssignedTo(WPREDICTED_s, WPREDICTED_p))), Not(Exists([gold_s_1, gold_p_2, gold_s1_3], And(Length(gold_p_2) <= 4, And(And(AssignedTo(gold_s_1, gold_p_2), Scientists(gold_s1_3, FV_Name_0)), gold_s_1 == gold_s1_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

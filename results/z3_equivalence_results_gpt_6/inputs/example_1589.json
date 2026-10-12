@@ -1,0 +1,78 @@
+{
+  "NL": "For directors who had more than one movie, return the titles and produced years of all movies directed by them.",
+  "Vocabulary": {
+    "Predicates": [
+      "Movie"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "Movie": [
+        "mID",
+        "title",
+        "year",
+        "director"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( Movie(a0, a1, a2, a3) ∧ Movie(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b0'∀b1'( Reviewer(b0, b1) ∧ Reviewer(b0', b1') ∧ b0 = b0' ) → ( b1 = b1' )",
+    "axiom3": "∀c0∀c1∀c2∀c3 ( Rating(c0, c1, c2, c3) → ∃b0∃b1 ( Reviewer(b0, b1) ∧ b0 = c0 ) )",
+    "axiom4": "∀c0∀c1∀c2∀c3 ( Rating(c0, c1, c2, c3) → ∃a0∃a1∃a2∃a3 ( Movie(a0, a1, a2, a3) ∧ a0 = c1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Movie": {
+        "A": "Movie",
+        "A0": "mID",
+        "A1": "title",
+        "A2": "year",
+        "A3": "director",
+        "B0": "mID",
+        "B1": "title",
+        "B2": "year",
+        "B3": "director"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃m : mID ∃d : director ∃m1 : mID ∃t1 : title ∃y1 : year ∃d1 : director ( (((Movie(m,t,y,d)) ∧ (Movie(m1,t1,y1,d1))) ∧ (d = d1)) ∧ (t <> t1) )",
+    "free vars": "t : title, y : year"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1,A2](<S>[A1 <> B1](<S>[A3 = B3]((A)<X>(<R>[A0->B0](<R>[A1->B1](<R>[A2->B2](<R>[A3->B3](A))))))))",
+    "Processed_RA": "<P>[A1,A2](<S>[A1 = 'A1 <> B1'](<S>[A3 = B3]((A)<X>(<R>[A0->B0](<R>[A1->B1](<R>[A2->B2](<R>[A3->B3](A))))))))",
+    "RC": "[E]?B0,?B3,?B2,?A3,?B1,?A0( (((A(?A0,?A1,?A2,?A3)) & (A(?B0,?B1,?B2,?B3))) & (?A3 = ?B3)) & (?A1 = A1 <> B1) )",
+    "string": "∃B0 ∃B3 ∃B2 ∃A3 ∃B1 ∃A0( (((A(A0,A1,A2,A3)) ∧ (A(B0,B1,B2,B3))) ∧ (A3 = B3)) ∧ (A1 <> B1) )",
+    "free variables": "A1, A2",
+    "db_id": "movie_1",
+    "processed_sql": "SELECT T1.title ,  T1.\"year\" FROM Movie AS T1 JOIN Movie AS T2 ON T1.director  =  T2.director WHERE T1.title <> T2.title"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "Movie": {
+      "sortaxiom0": "mID = int",
+      "sortaxiom1": "title = text",
+      "sortaxiom2": "year = int",
+      "sortaxiom3": "director = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT T1.title ,  T1.year FROM Movie AS T1 JOIN Movie AS T2 ON T1.director  =  T2.director WHERE T1.title != T2.title"
+  },
+  "id": 1589,
+  "Predicted FOL": {
+    "string": "∃m : mID ∃d : director ∃n : mID ∃t₂ : title ∃y₂ : year (Movie(m, t, y, d) ∧ Movie(n, t₂, y₂, d) ∧ m ≠ n)",
+    "free vars": "t : title, y : year"
+  }
+}

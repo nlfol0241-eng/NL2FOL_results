@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_358.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_358.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2856 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all stations with a latitude smaller than 37.5?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        numeric -> RealSort()   [exact, unbounded]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        city = text -> StringSort()
+        dock_count = integer -> IntSort()
+        id = integer -> IntSort()
+        installation_date = text -> StringSort()
+        lat = numeric -> RealSort()
+        long = numeric -> RealSort()
+        name = text -> StringSort()
+      symbols:
+        station(id, name, lat, long, dock_count, city, installation_date)
+        constant 37.5 : lat
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃l : lat ∃l1 : long ∃d : dock_count ∃c : city ∃i1 : installation_date ( (station(i,n,l,l1,d,c,i1)) ∧ (l < 37.5) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:l COLON:: IDENT:lat EXISTS:∃ IDENT:l1 COLON:: IDENT:long EXISTS:∃ IDENT:d COLON:: IDENT:dock_count EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:i1 COLON:: IDENT:installation_date LPAR:( LPAR:( IDENT:station LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:l1 COMMA:, IDENT:d COMMA:, IDENT:c COMMA:, IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l LT:< NUM:37.5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS l:lat
+              EXISTS l1:long
+                EXISTS d:dock_count
+                  EXISTS c:city
+                    EXISTS i1:installation_date
+                      AND
+                        PRED station(i, n, l, l1, d, c, i1)
+                        CMP  l < 37.5
+      Predicted FOL: ∃i : id ∃a : lat ∃o : long ∃d : dock_count ∃c : city ∃t : installation_date (station(i, n, a, o, d, c, t) ∧ a < 37.5)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:a COLON:: IDENT:lat EXISTS:∃ IDENT:o COLON:: IDENT:long EXISTS:∃ IDENT:d COLON:: IDENT:dock_count EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:t COLON:: IDENT:installation_date LPAR:( IDENT:station LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:o COMMA:, IDENT:d COMMA:, IDENT:c COMMA:, IDENT:t RPAR:) AND:∧ IDENT:a LT:< NUM:37.5 RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS a:lat
+              EXISTS o:long
+                EXISTS d:dock_count
+                  EXISTS c:city
+                    EXISTS t:installation_date
+                      AND
+                        PRED station(i, n, a, o, d, c, t)
+                        CMP  a < 37.5
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local city, global text -> StringSort()
+        d : local dock_count, global integer -> IntSort()
+        i : local id, global integer -> IntSort()
+        i1 : local installation_date, global text -> StringSort()
+        l : local lat, global numeric -> RealSort()
+        l1 : local long, global numeric -> RealSort()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        a : local lat, global numeric -> RealSort()
+        c : local city, global text -> StringSort()
+        d : local dock_count, global integer -> IntSort()
+        i : local id, global integer -> IntSort()
+        n : local name, global text -> StringSort()
+        o : local long, global numeric -> RealSort()
+        t : local installation_date, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_l_2, gold_l1_3, gold_d_4, gold_c_5, gold_i1_6], And(P_station(gold_i_1, FV_name_0, gold_l_2, gold_l1_3, gold_d_4, gold_c_5, gold_i1_6), (gold_l_2 < L_v_37_5_numeric)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_l, WGOLD_l1, WGOLD_d, WGOLD_c, WGOLD_i1):  And(P_station(WGOLD_i, FV_name_0, WGOLD_l, WGOLD_l1, WGOLD_d, WGOLD_c, WGOLD_i1), (WGOLD_l < L_v_37_5_numeric))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_a_2, predicted_o_3, predicted_d_4, predicted_c_5, predicted_t_6], And(P_station(predicted_i_1, FV_name_0, predicted_a_2, predicted_o_3, predicted_d_4, predicted_c_5, predicted_t_6), (predicted_a_2 < L_v_37_5_numeric)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_a, WPREDICTED_o, WPREDICTED_d, WPREDICTED_c, WPREDICTED_t):  And(P_station(WPREDICTED_i, FV_name_0, WPREDICTED_a, WPREDICTED_o, WPREDICTED_d, WPREDICTED_c, WPREDICTED_t), (WPREDICTED_a < L_v_37_5_numeric))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '37.5' at numeric -> L_v_37_5_numeric = RealVal('37.5')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 756 lines, 28804 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_358.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_l, WGOLD_l1, WGOLD_d, WGOLD_c, WGOLD_i1
+      claim: And(And(station(WGOLD_i, FV_name_0, WGOLD_l, WGOLD_l1, WGOLD_d, WGOLD_c, WGOLD_i1), 75/2 > WGOLD_l), Not(Exists([predicted_i_1, predicted_a_2, predicted_o_3, predicted_d_4, predicted_c_5, predicted_t_6], And(station(predicted_i_1, FV_name_0, predicted_a_2, predicted_o_3, predicted_d_4, predicted_c_5, predicted_t_6), 75/2 > predicted_a_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_a, WPREDICTED_o, WPREDICTED_d, WPREDICTED_c, WPREDICTED_t
+      claim: And(And(station(WPREDICTED_i, FV_name_0, WPREDICTED_a, WPREDICTED_o, WPREDICTED_d, WPREDICTED_c, WPREDICTED_t), 75/2 > WPREDICTED_a), Not(Exists([gold_i_1, gold_l_2, gold_l1_3, gold_d_4, gold_c_5, gold_i1_6], And(station(gold_i_1, FV_name_0, gold_l_2, gold_l1_3, gold_d_4, gold_c_5, gold_i1_6), 75/2 > gold_l_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

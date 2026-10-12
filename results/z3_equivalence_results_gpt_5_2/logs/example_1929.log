@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1929.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1929.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5252 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the transaction type descriptions and dates if the share count is smaller than 10.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   7 global sorts, 8 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        amount_of_transaction = decimal(19,4) -> RealSort()
+        date_of_transaction = datetime -> IntSort()
+        investor_id = integer -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        share_count = varchar(40) -> StringSort()
+        transaction_id = integer -> IntSort()
+        transaction_type_code = varchar(10) -> StringSort()
+        transaction_type_description = varchar(80) -> StringSort()
+      symbols:
+        Ref_Transaction_Types(transaction_type_code, transaction_type_description)
+        Transactions(transaction_id, investor_id, transaction_type_code, date_of_transaction, amount_of_transaction, share_count, other_details)
+        constant 10 : share_count
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : transaction_type_code ∃t2 : transaction_id ∃i : investor_id ∃t3 : transaction_type_code ∃a : amount_of_transaction ∃s : share_count ∃o : other_details ( (((Ref_Transaction_Types(t,t1)) ∧ (Transactions(t2,i,t3,d,a,s,o))) ∧ (t = t3)) ∧ (s < 10) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:t2 COLON:: IDENT:transaction_id EXISTS:∃ IDENT:i COLON:: IDENT:investor_id EXISTS:∃ IDENT:t3 COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:a COLON:: IDENT:amount_of_transaction EXISTS:∃ IDENT:s COLON:: IDENT:share_count EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Ref_Transaction_Types LPAR:( IDENT:t COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Transactions LPAR:( IDENT:t2 COMMA:, IDENT:i COMMA:, IDENT:t3 COMMA:, IDENT:d COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s LT:< NUM:10 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:transaction_type_code
+            EXISTS t2:transaction_id
+              EXISTS i:investor_id
+                EXISTS t3:transaction_type_code
+                  EXISTS a:amount_of_transaction
+                    EXISTS s:share_count
+                      EXISTS o:other_details
+                        AND
+                          AND
+                            AND
+                              PRED Ref_Transaction_Types(t, t1)
+                              PRED Transactions(t2, i, t3, d, a, s, o)
+                            EQ  t = t3
+                          CMP  s < 10
+      Predicted FOL: ∃d0:transaction_id ∃d1:investor_id ∃d2:transaction_type_code ∃d3:date_of_transaction ∃d4:amount_of_transaction ∃d5:share_count ∃d6:other_details ∃c1:transaction_type_description ( Transactions(d0,d1,d2,d3,d4,d5,d6) ∧ Ref_Transaction_Types(d2,c1) ∧ d5 < 10 )
+        tokens: EXISTS:∃ IDENT:d0 COLON:: IDENT:transaction_id EXISTS:∃ IDENT:d1 COLON:: IDENT:investor_id EXISTS:∃ IDENT:d2 COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:d3 COLON:: IDENT:date_of_transaction EXISTS:∃ IDENT:d4 COLON:: IDENT:amount_of_transaction EXISTS:∃ IDENT:d5 COLON:: IDENT:share_count EXISTS:∃ IDENT:d6 COLON:: IDENT:other_details EXISTS:∃ IDENT:c1 COLON:: IDENT:transaction_type_description LPAR:( IDENT:Transactions LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:d5 COMMA:, IDENT:d6 RPAR:) AND:∧ IDENT:Ref_Transaction_Types LPAR:( IDENT:d2 COMMA:, IDENT:c1 RPAR:) AND:∧ IDENT:d5 LT:< NUM:10 RPAR:) EOF
+        AST:
+          EXISTS d0:transaction_id
+            EXISTS d1:investor_id
+              EXISTS d2:transaction_type_code
+                EXISTS d3:date_of_transaction
+                  EXISTS d4:amount_of_transaction
+                    EXISTS d5:share_count
+                      EXISTS d6:other_details
+                        EXISTS c1:transaction_type_description
+                          AND
+                            PRED Transactions(d0, d1, d2, d3, d4, d5, d6)
+                            PRED Ref_Transaction_Types(d2, c1)
+                            CMP  d5 < 10
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (t1 : transaction_type_description, d : date_of_transaction) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount_of_transaction, global decimal(19,4) -> RealSort()
+        d : local date_of_transaction, global datetime -> IntSort()
+        i : local investor_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        s : local share_count, global varchar(40) -> StringSort()
+        t : local transaction_type_code, global varchar(10) -> StringSort()
+        t1 : local transaction_type_description, global varchar(80) -> StringSort()
+        t2 : local transaction_id, global integer -> IntSort()
+        t3 : local transaction_type_code, global varchar(10) -> StringSort()
+      Predicted FOL:
+        c1 : local transaction_type_description, global varchar(80) -> StringSort()
+        d0 : local transaction_id, global integer -> IntSort()
+        d1 : local investor_id, global integer -> IntSort()
+        d2 : local transaction_type_code, global varchar(10) -> StringSort()
+        d3 : local date_of_transaction, global datetime -> IntSort()
+        d4 : local amount_of_transaction, global decimal(19,4) -> RealSort()
+        d5 : local share_count, global varchar(40) -> StringSort()
+        d6 : local other_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5762 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1929.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (t1 : transaction_type_description, d : date_of_transaction) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

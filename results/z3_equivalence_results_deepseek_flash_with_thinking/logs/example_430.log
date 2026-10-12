@@ -1,0 +1,87 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_430.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_430.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5403 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the titles of all the albums?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        artist_id = integer -> IntSort()
+        id = integer -> IntSort()
+        title = text -> StringSort()
+      symbols:
+        albums(id, title, artist_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃a : artist_id ( albums(i,t,a) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:a COLON:: IDENT:artist_id LPAR:( IDENT:albums LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS a:artist_id
+              PRED albums(i, t, a)
+      Predicted FOL: ∃a0 : id ∃a2 : artist_id albums(a0, x, a2)
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:id EXISTS:∃ IDENT:a2 COLON:: IDENT:artist_id IDENT:albums LPAR:( IDENT:a0 COMMA:, IDENT:x COMMA:, IDENT:a2 RPAR:) EOF
+        AST:
+          EXISTS a0:id
+            EXISTS a2:artist_id
+              PRED albums(a0, x, a2)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_id, global integer -> IntSort()
+        i : local id, global integer -> IntSort()
+        t : local title, global text -> StringSort()
+      Predicted FOL:
+        a0 : local id, global integer -> IntSort()
+        a2 : local artist_id, global integer -> IntSort()
+        x : local title, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_a_2], P_albums(gold_i_1, FV_title_0, gold_a_2))
+      gold_skolem (witnesses WGOLD_i, WGOLD_a):  P_albums(WGOLD_i, FV_title_0, WGOLD_a)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a2_2], P_albums(predicted_a0_1, FV_title_0, predicted_a2_2))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a2):  P_albums(WPREDICTED_a0, FV_title_0, WPREDICTED_a2)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 720 lines, 26169 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_430.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_a
+      claim: And(albums(WGOLD_i, FV_title_0, WGOLD_a), Not(Exists([predicted_a0_1, predicted_a2_2], albums(predicted_a0_1, FV_title_0, predicted_a2_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a2
+      claim: And(albums(WPREDICTED_a0, FV_title_0, WPREDICTED_a2), Not(Exists([gold_i_1, gold_a_2], albums(gold_i_1, FV_title_0, gold_a_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,130 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1718.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1718.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5310 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the date of enrollment of the course named "Spanish"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(120) -> StringSort()   [domain Length(x) <= 120; length <= 120]
+        integer -> IntSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+      local sorts:
+        author_id = integer -> IntSort()
+        course_description = varchar(255) -> StringSort()
+        course_id = integer -> IntSort()
+        course_name = varchar(120) -> StringSort()
+        date_of_completion = datetime -> IntSort()
+        date_of_enrolment = datetime -> IntSort()
+        registration_id = integer -> IntSort()
+        student_id = integer -> IntSort()
+        subject_id = integer -> IntSort()
+      symbols:
+        Courses(course_id, author_id, subject_id, course_name, course_description)
+        Student_Course_Enrolment(registration_id, student_id, course_id, date_of_enrolment, date_of_completion)
+        constant Spanish : course_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : course_id ∃a : author_id ∃s : subject_id ∃c1 : course_name ∃c2 : course_description ∃r : registration_id ∃s1 : student_id ∃c3 : course_id ∃d1 : date_of_completion ( (((Courses(c,a,s,c1,c2)) ∧ (Student_Course_Enrolment(r,s1,c3,d,d1))) ∧ (c = c3)) ∧ (c1 = 'Spanish') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:a COLON:: IDENT:author_id EXISTS:∃ IDENT:s COLON:: IDENT:subject_id EXISTS:∃ IDENT:c1 COLON:: IDENT:course_name EXISTS:∃ IDENT:c2 COLON:: IDENT:course_description EXISTS:∃ IDENT:r COLON:: IDENT:registration_id EXISTS:∃ IDENT:s1 COLON:: IDENT:student_id EXISTS:∃ IDENT:c3 COLON:: IDENT:course_id EXISTS:∃ IDENT:d1 COLON:: IDENT:date_of_completion LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Courses LPAR:( IDENT:c COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Student_Course_Enrolment LPAR:( IDENT:r COMMA:, IDENT:s1 COMMA:, IDENT:c3 COMMA:, IDENT:d COMMA:, IDENT:d1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Spanish RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:course_id
+            EXISTS a:author_id
+              EXISTS s:subject_id
+                EXISTS c1:course_name
+                  EXISTS c2:course_description
+                    EXISTS r:registration_id
+                      EXISTS s1:student_id
+                        EXISTS c3:course_id
+                          EXISTS d1:date_of_completion
+                            AND
+                              AND
+                                AND
+                                  PRED Courses(c, a, s, c1, c2)
+                                  PRED Student_Course_Enrolment(r, s1, c3, d, d1)
+                                EQ  c = c3
+                              EQ  c1 = 'Spanish'
+      Predicted FOL: ∃d0:course_id ∃d1:author_id ∃d2:subject_id ∃d4:course_description ( Courses(d0,d1,d2,'Spanish',d4) ∧ ∃e0:registration_id ∃e1:student_id ∃e4:date_of_completion ( Student_Course_Enrolment(e0,e1,d0,date_of_enrolment,e4) ) )
+        tokens: EXISTS:∃ IDENT:d0 COLON:: IDENT:course_id EXISTS:∃ IDENT:d1 COLON:: IDENT:author_id EXISTS:∃ IDENT:d2 COLON:: IDENT:subject_id EXISTS:∃ IDENT:d4 COLON:: IDENT:course_description LPAR:( IDENT:Courses LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, LIT:Spanish COMMA:, IDENT:d4 RPAR:) AND:∧ EXISTS:∃ IDENT:e0 COLON:: IDENT:registration_id EXISTS:∃ IDENT:e1 COLON:: IDENT:student_id EXISTS:∃ IDENT:e4 COLON:: IDENT:date_of_completion LPAR:( IDENT:Student_Course_Enrolment LPAR:( IDENT:e0 COMMA:, IDENT:e1 COMMA:, IDENT:d0 COMMA:, IDENT:date_of_enrolment COMMA:, IDENT:e4 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d0:course_id
+            EXISTS d1:author_id
+              EXISTS d2:subject_id
+                EXISTS d4:course_description
+                  AND
+                    PRED Courses(d0, d1, d2, 'Spanish', d4)
+                    EXISTS e0:registration_id
+                      EXISTS e1:student_id
+                        EXISTS e4:date_of_completion
+                          PRED Student_Course_Enrolment(e0, e1, d0, date_of_enrolment, e4)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_date_of_enrolment_0 : date_of_enrolment   Gold d <-> Predicted date_of_enrolment
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local author_id, global integer -> IntSort()
+        c : local course_id, global integer -> IntSort()
+        c1 : local course_name, global varchar(120) -> StringSort()
+        c2 : local course_description, global varchar(255) -> StringSort()
+        c3 : local course_id, global integer -> IntSort()
+        d : local date_of_enrolment, global datetime -> IntSort()
+        d1 : local date_of_completion, global datetime -> IntSort()
+        r : local registration_id, global integer -> IntSort()
+        s : local subject_id, global integer -> IntSort()
+        s1 : local student_id, global integer -> IntSort()
+      Predicted FOL:
+        d0 : local course_id, global integer -> IntSort()
+        d1 : local author_id, global integer -> IntSort()
+        d2 : local subject_id, global integer -> IntSort()
+        d4 : local course_description, global varchar(255) -> StringSort()
+        date_of_enrolment : local date_of_enrolment, global datetime -> IntSort()
+        e0 : local registration_id, global integer -> IntSort()
+        e1 : local student_id, global integer -> IntSort()
+        e4 : local date_of_completion, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_a_2, gold_s_3, gold_c1_4, gold_c2_5, gold_r_6, gold_s1_7, gold_c3_8, gold_d1_9], And(D_varchar_120_(gold_c1_4), D_varchar_255_(gold_c2_5), And(And(And(P_Courses(gold_c_1, gold_a_2, gold_s_3, gold_c1_4, gold_c2_5), P_Student_Course_Enrolment(gold_r_6, gold_s1_7, gold_c3_8, FV_date_of_enrolment_0, gold_d1_9)), (gold_c_1 == gold_c3_8)), (gold_c1_4 == L_Spanish))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_c1, WGOLD_c2, WGOLD_r, WGOLD_s1, WGOLD_c3, WGOLD_d1):  And(D_varchar_120_(WGOLD_c1), D_varchar_255_(WGOLD_c2), And(And(And(P_Courses(WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_c1, WGOLD_c2), P_Student_Course_Enrolment(WGOLD_r, WGOLD_s1, WGOLD_c3, FV_date_of_enrolment_0, WGOLD_d1)), (WGOLD_c == WGOLD_c3)), (WGOLD_c1 == L_Spanish)))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d0_1, predicted_d1_2, predicted_d2_3, predicted_d4_4], And(D_varchar_255_(predicted_d4_4), And(And(P_Courses(predicted_d0_1, predicted_d1_2, predicted_d2_3, L_Spanish, predicted_d4_4), D_varchar_120_(L_Spanish)), Exists([predicted_e0_5, predicted_e1_6, predicted_e4_7], P_Student_Course_Enrolment(predicted_e0_5, predicted_e1_6, predicted_d0_1, FV_date_of_enrolment_0, predicted_e4_7)))))
+      predicted_skolem (witnesses WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d4):  And(D_varchar_255_(WPREDICTED_d4), And(And(P_Courses(WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, L_Spanish, WPREDICTED_d4), D_varchar_120_(L_Spanish)), Exists([predictedsk_e0_1, predictedsk_e1_2, predictedsk_e4_3], P_Student_Course_Enrolment(predictedsk_e0_1, predictedsk_e1_2, WPREDICTED_d0, FV_date_of_enrolment_0, predictedsk_e4_3))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Spanish' at varchar(120) -> L_Spanish = StringVal('Spanish')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 781 lines, 31802 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1718.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_c1, WGOLD_c2, WGOLD_r, WGOLD_s1, WGOLD_c3, WGOLD_d1
+      claim: And(And(Length(WGOLD_c1) <= 120, Length(WGOLD_c2) <= 255, And(And(And(Courses(WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_c1, WGOLD_c2), Student_Course_Enrolment(WGOLD_r, WGOLD_s1, WGOLD_c3, FV_date_of_enrolment_0, WGOLD_d1)), WGOLD_c == WGOLD_c3), WGOLD_c1 == "Spanish")), Not(Exists([predicted_d0_1, predicted_d1_2, predicted_d2_3, predicted_d4_4], And(Length(predicted_d4_4) <= 255, And(And(Courses(predicted_d0_1, predicted_d1_2, predicted_d2_3, "Spanish", predicted_d4_4), Length("Spanish") <= 120), Exists([predicted_e0_5, predicted_e1_6, predicted_e4_7], Student_Course_Enrolment(predicted_e0_5, predicted_e1_6, predicted_d0_1, FV_date_of_enrolment_0, predicted_e4_7)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d4
+      claim: And(And(Length(WPREDICTED_d4) <= 255, And(And(Courses(WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, "Spanish", WPREDICTED_d4), Length("Spanish") <= 120), Exists([predictedsk_e0_1, predictedsk_e1_2, predictedsk_e4_3], Student_Course_Enrolment(predictedsk_e0_1, predictedsk_e1_2, WPREDICTED_d0, FV_date_of_enrolment_0, predictedsk_e4_3)))), Not(Exists([gold_c_1, gold_a_2, gold_s_3, gold_c1_4, gold_c2_5, gold_r_6, gold_s1_7, gold_c3_8, gold_d1_9], And(Length(gold_c1_4) <= 120, Length(gold_c2_5) <= 255, And(And(And(Courses(gold_c_1, gold_a_2, gold_s_3, gold_c1_4, gold_c2_5), Student_Course_Enrolment(gold_r_6, gold_s1_7, gold_c3_8, FV_date_of_enrolment_0, gold_d1_9)), gold_c_1 == gold_c3_8), gold_c1_4 == "Spanish")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.012 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

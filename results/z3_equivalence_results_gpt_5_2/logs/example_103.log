@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_103.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_103.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2108 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the grade for the high schooler named Kyle.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        ID = int -> IntSort()
+        grade = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Highschooler(ID, name, grade)
+        constant Kyle : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃n : name ( (Highschooler(i,n,g)) ∧ (n = 'Kyle') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( IDENT:Highschooler LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Kyle RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS n:name
+              AND
+                PRED Highschooler(i, n, g)
+                EQ  n = 'Kyle'
+      Predicted FOL: ∃h:ID (Highschooler(h, 'Kyle', g))
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:ID LPAR:( IDENT:Highschooler LPAR:( IDENT:h COMMA:, LIT:Kyle COMMA:, IDENT:g RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:ID
+            PRED Highschooler(h, 'Kyle', g)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_grade_0 : grade   Gold g <-> Predicted g
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local grade, global int -> IntSort()
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        g : local grade, global int -> IntSort()
+        h : local ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_n_2], And(P_Highschooler(gold_i_1, gold_n_2, FV_grade_0), (gold_n_2 == L_Kyle)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_n):  And(P_Highschooler(WGOLD_i, WGOLD_n, FV_grade_0), (WGOLD_n == L_Kyle))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_h_1], P_Highschooler(predicted_h_1, L_Kyle, FV_grade_0))
+      predicted_skolem (witnesses WPREDICTED_h):  P_Highschooler(WPREDICTED_h, L_Kyle, FV_grade_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Kyle' at text -> L_Kyle = StringVal('Kyle')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 719 lines, 26046 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_103.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_n
+      claim: And(And(Highschooler(WGOLD_i, WGOLD_n, FV_grade_0), WGOLD_n == "Kyle"), Not(Exists(predicted_h_1, Highschooler(predicted_h_1, "Kyle", FV_grade_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_h
+      claim: And(Highschooler(WPREDICTED_h, "Kyle", FV_grade_0), Not(Exists([gold_i_1, gold_n_2], And(Highschooler(gold_i_1, gold_n_2, FV_grade_0), gold_n_2 == "Kyle"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

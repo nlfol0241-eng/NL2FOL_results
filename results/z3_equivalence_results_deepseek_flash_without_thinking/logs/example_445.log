@@ -1,0 +1,78 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_445.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_445.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2175 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the distinct themes of journals.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Date = text -> StringSort()
+        Journal_ID = int -> IntSort()
+        Sales = int -> IntSort()
+        Theme = text -> StringSort()
+      symbols:
+        journal(Journal_ID, Date, Theme, Sales)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃j : Journal_ID ∃d : Date ∃s : Sales ( journal(j,d,t,s) )
+        tokens: EXISTS:∃ IDENT:j COLON:: IDENT:Journal_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:s COLON:: IDENT:Sales LPAR:( IDENT:journal LPAR:( IDENT:j COMMA:, IDENT:d COMMA:, IDENT:t COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS j:Journal_ID
+            EXISTS d:Date
+              EXISTS s:Sales
+                PRED journal(j, d, t, s)
+      Predicted FOL: ∃t : Theme (∃j0 : Journal_ID ∃j1 : Date ∃j2 : Theme ∃j3 : Sales (journal(j0, j1, j2, j3) ∧ t = j2))
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Theme LPAR:( EXISTS:∃ IDENT:j0 COLON:: IDENT:Journal_ID EXISTS:∃ IDENT:j1 COLON:: IDENT:Date EXISTS:∃ IDENT:j2 COLON:: IDENT:Theme EXISTS:∃ IDENT:j3 COLON:: IDENT:Sales LPAR:( IDENT:journal LPAR:( IDENT:j0 COMMA:, IDENT:j1 COMMA:, IDENT:j2 COMMA:, IDENT:j3 RPAR:) AND:∧ IDENT:t EQ:= IDENT:j2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Theme
+            EXISTS j0:Journal_ID
+              EXISTS j1:Date
+                EXISTS j2:Theme
+                  EXISTS j3:Sales
+                    AND
+                      PRED journal(j0, j1, j2, j3)
+                      EQ  t = j2
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : Theme) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Date, global text -> StringSort()
+        j : local Journal_ID, global int -> IntSort()
+        s : local Sales, global int -> IntSort()
+        t : local Theme, global text -> StringSort()
+      Predicted FOL:
+        j0 : local Journal_ID, global int -> IntSort()
+        j1 : local Date, global text -> StringSort()
+        j2 : local Theme, global text -> StringSort()
+        j3 : local Sales, global int -> IntSort()
+        t : local Theme, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5242 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_445.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : Theme) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

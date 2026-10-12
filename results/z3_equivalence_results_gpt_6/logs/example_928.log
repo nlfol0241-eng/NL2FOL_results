@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_928.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_928.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9289 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show me the distinct payment method codes from the invoice record.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Invoice_ID = integer -> IntSort()
+        Order_ID = integer -> IntSort()
+        Order_Item_ID = integer -> IntSort()
+        Order_Quantity = text -> StringSort()
+        Other_Item_Details = varchar(255) -> StringSort()
+        Product_ID = text -> StringSort()
+        payment_method_code = text -> StringSort()
+      symbols:
+        Invoices(Invoice_ID, Order_ID, payment_method_code, Product_ID, Order_Quantity, Other_Item_Details, Order_Item_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Invoice_ID ∃o : Order_ID ∃p1 : Product_ID ∃o1 : Order_Quantity ∃o2 : Other_Item_Details ∃o3 : Order_Item_ID ( Invoices(i,o,p,p1,o1,o2,o3) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Invoice_ID EXISTS:∃ IDENT:o COLON:: IDENT:Order_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Product_ID EXISTS:∃ IDENT:o1 COLON:: IDENT:Order_Quantity EXISTS:∃ IDENT:o2 COLON:: IDENT:Other_Item_Details EXISTS:∃ IDENT:o3 COLON:: IDENT:Order_Item_ID LPAR:( IDENT:Invoices LPAR:( IDENT:i COMMA:, IDENT:o COMMA:, IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:o1 COMMA:, IDENT:o2 COMMA:, IDENT:o3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Invoice_ID
+            EXISTS o:Order_ID
+              EXISTS p1:Product_ID
+                EXISTS o1:Order_Quantity
+                  EXISTS o2:Other_Item_Details
+                    EXISTS o3:Order_Item_ID
+                      PRED Invoices(i, o, p, p1, o1, o2, o3)
+      Predicted FOL: ∃i : Invoice_ID ∃o : Order_ID ∃p : Product_ID ∃q : Order_Quantity ∃d : Other_Item_Details ∃t : Order_Item_ID (Invoices(i, o, m, p, q, d, t))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Invoice_ID EXISTS:∃ IDENT:o COLON:: IDENT:Order_ID EXISTS:∃ IDENT:p COLON:: IDENT:Product_ID EXISTS:∃ IDENT:q COLON:: IDENT:Order_Quantity EXISTS:∃ IDENT:d COLON:: IDENT:Other_Item_Details EXISTS:∃ IDENT:t COLON:: IDENT:Order_Item_ID LPAR:( IDENT:Invoices LPAR:( IDENT:i COMMA:, IDENT:o COMMA:, IDENT:m COMMA:, IDENT:p COMMA:, IDENT:q COMMA:, IDENT:d COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Invoice_ID
+            EXISTS o:Order_ID
+              EXISTS p:Product_ID
+                EXISTS q:Order_Quantity
+                  EXISTS d:Other_Item_Details
+                    EXISTS t:Order_Item_ID
+                      PRED Invoices(i, o, m, p, q, d, t)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_payment_method_code_0 : payment_method_code   Gold p <-> Predicted m
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        i : local Invoice_ID, global integer -> IntSort()
+        o : local Order_ID, global integer -> IntSort()
+        o1 : local Order_Quantity, global text -> StringSort()
+        o2 : local Other_Item_Details, global varchar(255) -> StringSort()
+        o3 : local Order_Item_ID, global integer -> IntSort()
+        p : local payment_method_code, global text -> StringSort()
+        p1 : local Product_ID, global text -> StringSort()
+      Predicted FOL:
+        d : local Other_Item_Details, global varchar(255) -> StringSort()
+        i : local Invoice_ID, global integer -> IntSort()
+        m : local payment_method_code, global text -> StringSort()
+        o : local Order_ID, global integer -> IntSort()
+        p : local Product_ID, global text -> StringSort()
+        q : local Order_Quantity, global text -> StringSort()
+        t : local Order_Item_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_o_2, gold_p1_3, gold_o1_4, gold_o2_5, gold_o3_6], And(D_varchar_255_(gold_o2_5), P_Invoices(gold_i_1, gold_o_2, FV_payment_method_code_0, gold_p1_3, gold_o1_4, gold_o2_5, gold_o3_6)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_o, WGOLD_p1, WGOLD_o1, WGOLD_o2, WGOLD_o3):  And(D_varchar_255_(WGOLD_o2), P_Invoices(WGOLD_i, WGOLD_o, FV_payment_method_code_0, WGOLD_p1, WGOLD_o1, WGOLD_o2, WGOLD_o3))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_o_2, predicted_p_3, predicted_q_4, predicted_d_5, predicted_t_6], And(D_varchar_255_(predicted_d_5), P_Invoices(predicted_i_1, predicted_o_2, FV_payment_method_code_0, predicted_p_3, predicted_q_4, predicted_d_5, predicted_t_6)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_o, WPREDICTED_p, WPREDICTED_q, WPREDICTED_d, WPREDICTED_t):  And(D_varchar_255_(WPREDICTED_d), P_Invoices(WPREDICTED_i, WPREDICTED_o, FV_payment_method_code_0, WPREDICTED_p, WPREDICTED_q, WPREDICTED_d, WPREDICTED_t))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 755 lines, 29417 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_928.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_o, WGOLD_p1, WGOLD_o1, WGOLD_o2, WGOLD_o3
+      claim: And(And(Length(WGOLD_o2) <= 255, Invoices(WGOLD_i, WGOLD_o, FV_payment_method_code_0, WGOLD_p1, WGOLD_o1, WGOLD_o2, WGOLD_o3)), Not(Exists([predicted_i_1, predicted_o_2, predicted_p_3, predicted_q_4, predicted_d_5, predicted_t_6], And(Length(predicted_d_5) <= 255, Invoices(predicted_i_1, predicted_o_2, FV_payment_method_code_0, predicted_p_3, predicted_q_4, predicted_d_5, predicted_t_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_o, WPREDICTED_p, WPREDICTED_q, WPREDICTED_d, WPREDICTED_t
+      claim: And(And(Length(WPREDICTED_d) <= 255, Invoices(WPREDICTED_i, WPREDICTED_o, FV_payment_method_code_0, WPREDICTED_p, WPREDICTED_q, WPREDICTED_d, WPREDICTED_t)), Not(Exists([gold_i_1, gold_o_2, gold_p1_3, gold_o1_4, gold_o2_5, gold_o3_6], And(Length(gold_o2_5) <= 255, Invoices(gold_i_1, gold_o_2, FV_payment_method_code_0, gold_p1_3, gold_o1_4, gold_o2_5, gold_o3_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_815.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_815.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 1851 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show each student's first name and last name.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Classroom = integer -> IntSort()
+        FirstName = text -> StringSort()
+        Grade = integer -> IntSort()
+        LastName = text -> StringSort()
+      symbols:
+        list(LastName, FirstName, Grade, Classroom)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : Grade ∃c : Classroom ( list(l,f,g,c) )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:c COLON:: IDENT:Classroom LPAR:( IDENT:list LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:Grade
+            EXISTS c:Classroom
+              PRED list(l, f, g, c)
+      Predicted FOL: ∃g:Grade ∃c:Classroom list(lastName, firstName, g, c)
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:c COLON:: IDENT:Classroom IDENT:list LPAR:( IDENT:lastName COMMA:, IDENT:firstName COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) EOF
+        AST:
+          EXISTS g:Grade
+            EXISTS c:Classroom
+              PRED list(lastName, firstName, g, c)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_FirstName_0 : FirstName   Gold f <-> Predicted firstName
+      FV_LastName_0 : LastName   Gold l <-> Predicted lastName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Classroom, global integer -> IntSort()
+        f : local FirstName, global text -> StringSort()
+        g : local Grade, global integer -> IntSort()
+        l : local LastName, global text -> StringSort()
+      Predicted FOL:
+        c : local Classroom, global integer -> IntSort()
+        firstName : local FirstName, global text -> StringSort()
+        g : local Grade, global integer -> IntSort()
+        lastName : local LastName, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_g_1, gold_c_2], P_list(FV_LastName_0, FV_FirstName_0, gold_g_1, gold_c_2))
+      gold_skolem (witnesses WGOLD_g, WGOLD_c):  P_list(FV_LastName_0, FV_FirstName_0, WGOLD_g, WGOLD_c)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_g_1, predicted_c_2], P_list(FV_LastName_0, FV_FirstName_0, predicted_g_1, predicted_c_2))
+      predicted_skolem (witnesses WPREDICTED_g, WPREDICTED_c):  P_list(FV_LastName_0, FV_FirstName_0, WPREDICTED_g, WPREDICTED_c)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 724 lines, 26552 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_815.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_g, WGOLD_c
+      claim: And(list(FV_LastName_0, FV_FirstName_0, WGOLD_g, WGOLD_c), Not(Exists([predicted_g_1, predicted_c_2], list(FV_LastName_0, FV_FirstName_0, predicted_g_1, predicted_c_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_g, WPREDICTED_c
+      claim: And(list(FV_LastName_0, FV_FirstName_0, WPREDICTED_g, WPREDICTED_c), Not(Exists([gold_g_1, gold_c_2], list(FV_LastName_0, FV_FirstName_0, gold_g_1, gold_c_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

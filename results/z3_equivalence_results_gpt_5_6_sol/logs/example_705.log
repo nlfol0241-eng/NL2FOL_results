@@ -1,0 +1,115 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_705.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_705.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6855 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the start and end dates for incidents with incident type code "NOISE"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+      local sorts:
+        date_incident_end = datetime -> IntSort()
+        date_incident_start = datetime -> IntSort()
+        incident_id = integer -> IntSort()
+        incident_summary = varchar(255) -> StringSort()
+        incident_type_code = varchar(10) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+        recommendations = varchar(255) -> StringSort()
+        student_id = integer -> IntSort()
+      symbols:
+        Behavior_Incident(incident_id, incident_type_code, student_id, date_incident_start, date_incident_end, incident_summary, recommendations, other_details)
+        constant NOISE : incident_type_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : incident_id ∃i1 : incident_type_code ∃s : student_id ∃i2 : incident_summary ∃r : recommendations ∃o : other_details ( (Behavior_Incident(i,i1,s,d,d1,i2,r,o)) ∧ (i1 = 'NOISE') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:incident_id EXISTS:∃ IDENT:i1 COLON:: IDENT:incident_type_code EXISTS:∃ IDENT:s COLON:: IDENT:student_id EXISTS:∃ IDENT:i2 COLON:: IDENT:incident_summary EXISTS:∃ IDENT:r COLON:: IDENT:recommendations EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( IDENT:Behavior_Incident LPAR:( IDENT:i COMMA:, IDENT:i1 COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:i2 COMMA:, IDENT:r COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i1 EQ:= LIT:NOISE RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:incident_id
+            EXISTS i1:incident_type_code
+              EXISTS s:student_id
+                EXISTS i2:incident_summary
+                  EXISTS r:recommendations
+                    EXISTS o:other_details
+                      AND
+                        PRED Behavior_Incident(i, i1, s, d, d1, i2, r, o)
+                        EQ  i1 = 'NOISE'
+      Predicted FOL: ∃i : incident_id ∃s : student_id ∃u : incident_summary ∃r : recommendations ∃o : other_details Behavior_Incident(i, 'NOISE', s, start, end, u, r, o)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:incident_id EXISTS:∃ IDENT:s COLON:: IDENT:student_id EXISTS:∃ IDENT:u COLON:: IDENT:incident_summary EXISTS:∃ IDENT:r COLON:: IDENT:recommendations EXISTS:∃ IDENT:o COLON:: IDENT:other_details IDENT:Behavior_Incident LPAR:( IDENT:i COMMA:, LIT:NOISE COMMA:, IDENT:s COMMA:, IDENT:start COMMA:, IDENT:end COMMA:, IDENT:u COMMA:, IDENT:r COMMA:, IDENT:o RPAR:) EOF
+        AST:
+          EXISTS i:incident_id
+            EXISTS s:student_id
+              EXISTS u:incident_summary
+                EXISTS r:recommendations
+                  EXISTS o:other_details
+                    PRED Behavior_Incident(i, 'NOISE', s, start, end, u, r, o)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_date_incident_end_0 : date_incident_end   Gold d1 <-> Predicted end
+      FV_date_incident_start_0 : date_incident_start   Gold d <-> Predicted start
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_incident_start, global datetime -> IntSort()
+        d1 : local date_incident_end, global datetime -> IntSort()
+        i : local incident_id, global integer -> IntSort()
+        i1 : local incident_type_code, global varchar(10) -> StringSort()
+        i2 : local incident_summary, global varchar(255) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        r : local recommendations, global varchar(255) -> StringSort()
+        s : local student_id, global integer -> IntSort()
+      Predicted FOL:
+        end : local date_incident_end, global datetime -> IntSort()
+        i : local incident_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        r : local recommendations, global varchar(255) -> StringSort()
+        s : local student_id, global integer -> IntSort()
+        start : local date_incident_start, global datetime -> IntSort()
+        u : local incident_summary, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_i1_2, gold_s_3, gold_i2_4, gold_r_5, gold_o_6], And(D_varchar_10_(gold_i1_2), D_varchar_255_(gold_i2_4), D_varchar_255_(gold_r_5), D_varchar_255_(gold_o_6), And(P_Behavior_Incident(gold_i_1, gold_i1_2, gold_s_3, FV_date_incident_start_0, FV_date_incident_end_0, gold_i2_4, gold_r_5, gold_o_6), (gold_i1_2 == L_NOISE))))
+      gold_skolem (witnesses WGOLD_i, WGOLD_i1, WGOLD_s, WGOLD_i2, WGOLD_r, WGOLD_o):  And(D_varchar_10_(WGOLD_i1), D_varchar_255_(WGOLD_i2), D_varchar_255_(WGOLD_r), D_varchar_255_(WGOLD_o), And(P_Behavior_Incident(WGOLD_i, WGOLD_i1, WGOLD_s, FV_date_incident_start_0, FV_date_incident_end_0, WGOLD_i2, WGOLD_r, WGOLD_o), (WGOLD_i1 == L_NOISE)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_s_2, predicted_u_3, predicted_r_4, predicted_o_5], And(D_varchar_255_(predicted_u_3), D_varchar_255_(predicted_r_4), D_varchar_255_(predicted_o_5), And(P_Behavior_Incident(predicted_i_1, L_NOISE, predicted_s_2, FV_date_incident_start_0, FV_date_incident_end_0, predicted_u_3, predicted_r_4, predicted_o_5), D_varchar_10_(L_NOISE))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_s, WPREDICTED_u, WPREDICTED_r, WPREDICTED_o):  And(D_varchar_255_(WPREDICTED_u), D_varchar_255_(WPREDICTED_r), D_varchar_255_(WPREDICTED_o), And(P_Behavior_Incident(WPREDICTED_i, L_NOISE, WPREDICTED_s, FV_date_incident_start_0, FV_date_incident_end_0, WPREDICTED_u, WPREDICTED_r, WPREDICTED_o), D_varchar_10_(L_NOISE)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'NOISE' at varchar(10) -> L_NOISE = StringVal('NOISE')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 766 lines, 30710 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_705.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_i1, WGOLD_s, WGOLD_i2, WGOLD_r, WGOLD_o
+      claim: And(And(Length(WGOLD_i1) <= 10, Length(WGOLD_i2) <= 255, Length(WGOLD_r) <= 255, Length(WGOLD_o) <= 255, And(Behavior_Incident(WGOLD_i, WGOLD_i1, WGOLD_s, FV_date_incident_start_0, FV_date_incident_end_0, WGOLD_i2, WGOLD_r, WGOLD_o), WGOLD_i1 == "NOISE")), Not(Exists([predicted_i_1, predicted_s_2, predicted_u_3, predicted_r_4, predicted_o_5], And(Length(predicted_u_3) <= 255, Length(predicted_r_4) <= 255, Length(predicted_o_5) <= 255, And(Behavior_Incident(predicted_i_1, "NOISE", predicted_s_2, FV_date_incident_start_0, FV_date_incident_end_0, predicted_u_3, predicted_r_4, predicted_o_5), Length("NOISE") <= 10)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_s, WPREDICTED_u, WPREDICTED_r, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_u) <= 255, Length(WPREDICTED_r) <= 255, Length(WPREDICTED_o) <= 255, And(Behavior_Incident(WPREDICTED_i, "NOISE", WPREDICTED_s, FV_date_incident_start_0, FV_date_incident_end_0, WPREDICTED_u, WPREDICTED_r, WPREDICTED_o), Length("NOISE") <= 10)), Not(Exists([gold_i_1, gold_i1_2, gold_s_3, gold_i2_4, gold_r_5, gold_o_6], And(Length(gold_i1_2) <= 10, Length(gold_i2_4) <= 255, Length(gold_r_5) <= 255, Length(gold_o_6) <= 255, And(Behavior_Incident(gold_i_1, gold_i1_2, gold_s_3, FV_date_incident_start_0, FV_date_incident_end_0, gold_i2_4, gold_r_5, gold_o_6), gold_i1_2 == "NOISE")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

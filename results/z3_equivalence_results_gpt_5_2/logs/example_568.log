@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_568.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_568.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2288 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the ids, names and market shares of all browsers.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        id = int -> IntSort()
+        market_share = real -> Float32()
+        name = text -> StringSort()
+      symbols:
+        browser(id, name, market_share)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: browser(i,n,m)
+        tokens: IDENT:browser LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:m RPAR:) EOF
+        AST:
+          PRED browser(i, n, m)
+      Predicted FOL: ∀b0:id∀b1:name∀b2:market_share( browser(b0, b1, b2) → ∃x0:id∃x1:name∃x2:market_share( browser(x0, x1, x2) ∧ x0 = b0 ∧ x1 = b1 ∧ x2 = b2 ) )
+        tokens: FORALL:∀ IDENT:b0 COLON:: IDENT:id FORALL:∀ IDENT:b1 COLON:: IDENT:name FORALL:∀ IDENT:b2 COLON:: IDENT:market_share LPAR:( IDENT:browser LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 RPAR:) IMPL:→ EXISTS:∃ IDENT:x0 COLON:: IDENT:id EXISTS:∃ IDENT:x1 COLON:: IDENT:name EXISTS:∃ IDENT:x2 COLON:: IDENT:market_share LPAR:( IDENT:browser LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 RPAR:) AND:∧ IDENT:x0 EQ:= IDENT:b0 AND:∧ IDENT:x1 EQ:= IDENT:b1 AND:∧ IDENT:x2 EQ:= IDENT:b2 RPAR:) RPAR:) EOF
+        AST:
+          FORALL b0:id
+            FORALL b1:name
+              FORALL b2:market_share
+                IMPLIES
+                  PRED browser(b0, b1, b2)
+                  EXISTS x0:id
+                    EXISTS x1:name
+                      EXISTS x2:market_share
+                        AND
+                          PRED browser(x0, x1, x2)
+                          EQ  x0 = b0
+                          EQ  x1 = b1
+                          EQ  x2 = b2
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (i : id, n : name, m : market_share) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        i : local id, global int -> IntSort()
+        m : local market_share, global real -> Float32()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        b0 : local id, global int -> IntSort()
+        b1 : local name, global text -> StringSort()
+        b2 : local market_share, global real -> Float32()
+        x0 : local id, global int -> IntSort()
+        x1 : local name, global text -> StringSort()
+        x2 : local market_share, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5308 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_568.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (i : id, n : name, m : market_share) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

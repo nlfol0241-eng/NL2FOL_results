@@ -1,0 +1,145 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3643.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3732 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of companies that do not make DVD drives?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        decimal -> RealSort()   [exact, unbounded]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Code = integer -> IntSort()
+        Founder = varchar(255) -> StringSort()
+        Headquarter = varchar(255) -> StringSort()
+        Manufacturer = integer -> IntSort()
+        Name = varchar(255) -> StringSort()
+        Price = decimal -> RealSort()
+        Revenue = real -> Float32()
+      symbols:
+        Manufacturers(Code, Name, Headquarter, Founder, Revenue)
+        Products(Code, Name, Price, Manufacturer)
+        constant DVD drive : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃h : Headquarter ∃r : Revenue ∃f : Founder ∃c : Code( Manufacturers(c,n,h,f,r) )) ∧ (¬(∃c1 : Code ∃m : Manufacturer ∃h : Headquarter ∃p : Price ∃r : Revenue ∃n1 : Name ∃f : Founder ∃c : Code( (((Products(c1,n1,p,m)) ∧ (Manufacturers(c,n,h,f,r))) ∧ (m = c)) ∧ (n1 = 'DVD drive') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:h COLON:: IDENT:Headquarter EXISTS:∃ IDENT:r COLON:: IDENT:Revenue EXISTS:∃ IDENT:f COLON:: IDENT:Founder EXISTS:∃ IDENT:c COLON:: IDENT:Code LPAR:( IDENT:Manufacturers LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:f COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Code EXISTS:∃ IDENT:m COLON:: IDENT:Manufacturer EXISTS:∃ IDENT:h COLON:: IDENT:Headquarter EXISTS:∃ IDENT:p COLON:: IDENT:Price EXISTS:∃ IDENT:r COLON:: IDENT:Revenue EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:f COLON:: IDENT:Founder EXISTS:∃ IDENT:c COLON:: IDENT:Code LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:c1 COMMA:, IDENT:n1 COMMA:, IDENT:p COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Manufacturers LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:f COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:DVD drive RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS h:Headquarter
+              EXISTS r:Revenue
+                EXISTS f:Founder
+                  EXISTS c:Code
+                    PRED Manufacturers(c, n, h, f, r)
+            NOT
+              EXISTS c1:Code
+                EXISTS m:Manufacturer
+                  EXISTS h:Headquarter
+                    EXISTS p:Price
+                      EXISTS r:Revenue
+                        EXISTS n1:Name
+                          EXISTS f:Founder
+                            EXISTS c:Code
+                              AND
+                                AND
+                                  AND
+                                    PRED Products(c1, n1, p, m)
+                                    PRED Manufacturers(c, n, h, f, r)
+                                  EQ  m = c
+                                EQ  n1 = 'DVD drive'
+      Predicted FOL: ∃mCode:Code ∃mHq:Headquarter ∃mF:Founder ∃mRev:Revenue ( Manufacturers(mCode, xName, mHq, mF, mRev) ∧ ¬∃pCode:Code ∃pPrice:Price ( Products(pCode, 'DVD drive', pPrice, mCode) ) )
+        tokens: EXISTS:∃ IDENT:mCode COLON:: IDENT:Code EXISTS:∃ IDENT:mHq COLON:: IDENT:Headquarter EXISTS:∃ IDENT:mF COLON:: IDENT:Founder EXISTS:∃ IDENT:mRev COLON:: IDENT:Revenue LPAR:( IDENT:Manufacturers LPAR:( IDENT:mCode COMMA:, IDENT:xName COMMA:, IDENT:mHq COMMA:, IDENT:mF COMMA:, IDENT:mRev RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:pCode COLON:: IDENT:Code EXISTS:∃ IDENT:pPrice COLON:: IDENT:Price LPAR:( IDENT:Products LPAR:( IDENT:pCode COMMA:, LIT:DVD drive COMMA:, IDENT:pPrice COMMA:, IDENT:mCode RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS mCode:Code
+            EXISTS mHq:Headquarter
+              EXISTS mF:Founder
+                EXISTS mRev:Revenue
+                  AND
+                    PRED Manufacturers(mCode, xName, mHq, mF, mRev)
+                    NOT
+                      EXISTS pCode:Code
+                        EXISTS pPrice:Price
+                          PRED Products(pCode, 'DVD drive', pPrice, mCode)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted xName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        c1 : local Code, global integer -> IntSort()
+        f : local Founder, global varchar(255) -> StringSort()
+        h : local Headquarter, global varchar(255) -> StringSort()
+        m : local Manufacturer, global integer -> IntSort()
+        n : local Name, global varchar(255) -> StringSort()
+        n1 : local Name, global varchar(255) -> StringSort()
+        p : local Price, global decimal -> RealSort()
+        r : local Revenue, global real -> Float32()
+      Predicted FOL:
+        mCode : local Code, global integer -> IntSort()
+        mF : local Founder, global varchar(255) -> StringSort()
+        mHq : local Headquarter, global varchar(255) -> StringSort()
+        mRev : local Revenue, global real -> Float32()
+        pCode : local Code, global integer -> IntSort()
+        pPrice : local Price, global decimal -> RealSort()
+        xName : local Name, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_h_1, gold_r_2, gold_f_3, gold_c_4], And(D_varchar_255_(gold_h_1), D_real(gold_r_2), D_varchar_255_(gold_f_3), P_Manufacturers(gold_c_4, FV_Name_0, gold_h_1, gold_f_3, gold_r_2))), Not(Exists([gold_c1_5, gold_m_6, gold_h_7, gold_p_8, gold_r_9, gold_n1_10, gold_f_11, gold_c_12], And(D_varchar_255_(gold_h_7), D_real(gold_r_9), D_varchar_255_(gold_n1_10), D_varchar_255_(gold_f_11), And(And(And(P_Products(gold_c1_5, gold_n1_10, gold_p_8, gold_m_6), P_Manufacturers(gold_c_12, FV_Name_0, gold_h_7, gold_f_11, gold_r_9)), (gold_m_6 == gold_c_12)), (gold_n1_10 == L_DVD_drive))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_mCode_1, predicted_mHq_2, predicted_mF_3, predicted_mRev_4], And(D_varchar_255_(predicted_mHq_2), D_varchar_255_(predicted_mF_3), D_real(predicted_mRev_4), And(P_Manufacturers(predicted_mCode_1, FV_Name_0, predicted_mHq_2, predicted_mF_3, predicted_mRev_4), Not(Exists([predicted_pCode_5, predicted_pPrice_6], And(P_Products(predicted_pCode_5, L_DVD_drive, predicted_pPrice_6, predicted_mCode_1), D_varchar_255_(L_DVD_drive)))))))
+      predicted_skolem (witnesses WPREDICTED_mCode, WPREDICTED_mHq, WPREDICTED_mF, WPREDICTED_mRev):  And(D_varchar_255_(WPREDICTED_mHq), D_varchar_255_(WPREDICTED_mF), D_real(WPREDICTED_mRev), And(P_Manufacturers(WPREDICTED_mCode, FV_Name_0, WPREDICTED_mHq, WPREDICTED_mF, WPREDICTED_mRev), Not(Exists([predictedsk_pCode_1, predictedsk_pPrice_2], And(P_Products(predictedsk_pCode_1, L_DVD_drive, predictedsk_pPrice_2, WPREDICTED_mCode), D_varchar_255_(L_DVD_drive))))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'DVD drive' at varchar(255) -> L_DVD_drive = StringVal('DVD drive')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 757 lines, 30097 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_h_1, gold_r_2, gold_f_3, gold_c_4], And(Length(gold_h_1) <= 255, And(Not(fpIsNaN(gold_r_2)), Not(And(fpIsZero(gold_r_2), fpIsNegative(gold_r_2)))), Length(gold_f_3) <= 255, Manufacturers(gold_c_4, FV_Name_0, gold_h_1, gold_f_3, gold_r_2))), Not(Exists([gold_c1_5, gold_m_6, gold_h_7, gold_p_8, gold_r_9, gold_n1_10, gold_f_11, gold_c_12], And(Length(gold_h_7) <= 255, And(Not(fpIsNaN(gold_r_9)), Not(And(fpIsZero(gold_r_9), fpIsNegative(gold_r_9)))), Length(gold_n1_10) <= 255, Length(gold_f_11) <= 255, And(And(And(Products(gold_c1_5, gold_n1_10, gold_p_8, gold_m_6), Manufacturers(gold_c_12, FV_Name_0, gold_h_7, gold_f_11, gold_r_9)), gold_m_6 == gold_c_12), gold_n1_10 == "DVD drive"))))), Not(Exists([predicted_mCode_1, predicted_mHq_2, predicted_mF_3, predicted_mRev_4], And(Length(predicted_mHq_2) <= 255, Length(predicted_mF_3) <= 255, And(Not(fpIsNaN(predicted_mRev_4)), Not(And(fpIsZero(predicted_mRev_4), fpIsNegative(predicted_mRev_4)))), And(Manufacturers(predicted_mCode_1, FV_Name_0, predicted_mHq_2, predicted_mF_3, predicted_mRev_4), Not(Exists([predicted_pCode_5, predicted_pPrice_6], And(Products(predicted_pCode_5, "DVD drive", predicted_pPrice_6, predicted_mCode_1), Length("DVD drive") <= 255))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_mCode, WPREDICTED_mHq, WPREDICTED_mF, WPREDICTED_mRev
+      claim: And(And(Length(WPREDICTED_mHq) <= 255, Length(WPREDICTED_mF) <= 255, And(Not(fpIsNaN(WPREDICTED_mRev)), Not(And(fpIsZero(WPREDICTED_mRev), fpIsNegative(WPREDICTED_mRev)))), And(Manufacturers(WPREDICTED_mCode, FV_Name_0, WPREDICTED_mHq, WPREDICTED_mF, WPREDICTED_mRev), Not(Exists([predictedsk_pCode_1, predictedsk_pPrice_2], And(Products(predictedsk_pCode_1, "DVD drive", predictedsk_pPrice_2, WPREDICTED_mCode), Length("DVD drive") <= 255))))), Not(And(Exists([gold_h_1, gold_r_2, gold_f_3, gold_c_4], And(Length(gold_h_1) <= 255, And(Not(fpIsNaN(gold_r_2)), Not(And(fpIsZero(gold_r_2), fpIsNegative(gold_r_2)))), Length(gold_f_3) <= 255, Manufacturers(gold_c_4, FV_Name_0, gold_h_1, gold_f_3, gold_r_2))), Not(Exists([gold_c1_5, gold_m_6, gold_h_7, gold_p_8, gold_r_9, gold_n1_10, gold_f_11, gold_c_12], And(Length(gold_h_7) <= 255, And(Not(fpIsNaN(gold_r_9)), Not(And(fpIsZero(gold_r_9), fpIsNegative(gold_r_9)))), Length(gold_n1_10) <= 255, Length(gold_f_11) <= 255, And(And(And(Products(gold_c1_5, gold_n1_10, gold_p_8, gold_m_6), Manufacturers(gold_c_12, FV_Name_0, gold_h_7, gold_f_11, gold_r_9)), gold_m_6 == gold_c_12), gold_n1_10 == "DVD drive")))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.007 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py", line 705, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py", line 736, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py", line 687, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py", line 585, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py", line 509, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py", line 389, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3643.py", line 389, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

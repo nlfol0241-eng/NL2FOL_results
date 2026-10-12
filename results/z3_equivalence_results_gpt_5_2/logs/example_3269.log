@@ -1,0 +1,137 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3269.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3269.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4773 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the pilots that have not won any matches in Australia?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 10 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int(11) -> IntSort()
+        integer -> IntSort()
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int(11) -> IntSort()
+        Country = text -> StringSort()
+        Date = text -> StringSort()
+        Fastest_Qualifying = text -> StringSort()
+        Location = text -> StringSort()
+        Name = varchar(50) -> StringSort()
+        Pilot_Id = int(11) -> IntSort()
+        Round = real -> Float32()
+        Winning_Aircraft = integer -> IntSort()
+        Winning_Pilot = int(11) -> IntSort()
+      symbols:
+        match(Round, Location, Country, Date, Fastest_Qualifying, Winning_Pilot, Winning_Aircraft)
+        pilot(Pilot_Id, Name, Age)
+        constant Australia : Country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Age ∃p : Pilot_Id( (pilot(p,n,a)) ∧ (¬(∃w : Winning_Pilot( ((pilot(p,n,a)) ∧ (∃r : Round ∃d : Date ∃w1 : Winning_Aircraft ∃c : Country ∃l : Location ∃f : Fastest_Qualifying( (match(r,l,c,d,f,w,w1)) ∧ (c = 'Australia') ))) ∧ (p = w) ))) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:p COLON:: IDENT:Pilot_Id LPAR:( LPAR:( IDENT:pilot LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:w COLON:: IDENT:Winning_Pilot LPAR:( LPAR:( LPAR:( IDENT:pilot LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:Round EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:w1 COLON:: IDENT:Winning_Aircraft EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:Fastest_Qualifying LPAR:( LPAR:( IDENT:match LPAR:( IDENT:r COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:f COMMA:, IDENT:w COMMA:, IDENT:w1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Australia RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:w RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Age
+            EXISTS p:Pilot_Id
+              AND
+                PRED pilot(p, n, a)
+                NOT
+                  EXISTS w:Winning_Pilot
+                    AND
+                      AND
+                        PRED pilot(p, n, a)
+                        EXISTS r:Round
+                          EXISTS d:Date
+                            EXISTS w1:Winning_Aircraft
+                              EXISTS c:Country
+                                EXISTS l:Location
+                                  EXISTS f:Fastest_Qualifying
+                                    AND
+                                      PRED match(r, l, c, d, f, w, w1)
+                                      EQ  c = 'Australia'
+                      EQ  p = w
+      Predicted FOL: ∃pId:Pilot_Id ∃age:Age ( pilot(pId, n, age) ∧ ¬∃r:Round ∃loc:Location ∃dt:Date ∃fq:Fastest_Qualifying ∃wa:Winning_Aircraft ( match(r, loc, Australia, dt, fq, pId, wa) ) )
+        tokens: EXISTS:∃ IDENT:pId COLON:: IDENT:Pilot_Id EXISTS:∃ IDENT:age COLON:: IDENT:Age LPAR:( IDENT:pilot LPAR:( IDENT:pId COMMA:, IDENT:n COMMA:, IDENT:age RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:r COLON:: IDENT:Round EXISTS:∃ IDENT:loc COLON:: IDENT:Location EXISTS:∃ IDENT:dt COLON:: IDENT:Date EXISTS:∃ IDENT:fq COLON:: IDENT:Fastest_Qualifying EXISTS:∃ IDENT:wa COLON:: IDENT:Winning_Aircraft LPAR:( IDENT:match LPAR:( IDENT:r COMMA:, IDENT:loc COMMA:, IDENT:Australia COMMA:, IDENT:dt COMMA:, IDENT:fq COMMA:, IDENT:pId COMMA:, IDENT:wa RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS pId:Pilot_Id
+            EXISTS age:Age
+              AND
+                PRED pilot(pId, n, age)
+                NOT
+                  EXISTS r:Round
+                    EXISTS loc:Location
+                      EXISTS dt:Date
+                        EXISTS fq:Fastest_Qualifying
+                          EXISTS wa:Winning_Aircraft
+                            PRED match(r, loc, Australia<const>, dt, fq, pId, wa)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int(11) -> IntSort()
+        c : local Country, global text -> StringSort()
+        d : local Date, global text -> StringSort()
+        f : local Fastest_Qualifying, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        n : local Name, global varchar(50) -> StringSort()
+        p : local Pilot_Id, global int(11) -> IntSort()
+        r : local Round, global real -> Float32()
+        w : local Winning_Pilot, global int(11) -> IntSort()
+        w1 : local Winning_Aircraft, global integer -> IntSort()
+      Predicted FOL:
+        age : local Age, global int(11) -> IntSort()
+        dt : local Date, global text -> StringSort()
+        fq : local Fastest_Qualifying, global text -> StringSort()
+        loc : local Location, global text -> StringSort()
+        n : local Name, global varchar(50) -> StringSort()
+        pId : local Pilot_Id, global int(11) -> IntSort()
+        r : local Round, global real -> Float32()
+        wa : local Winning_Aircraft, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_p_2], And(P_pilot(gold_p_2, FV_Name_0, gold_a_1), Not(Exists([gold_w_3], And(And(P_pilot(gold_p_2, FV_Name_0, gold_a_1), Exists([gold_r_4, gold_d_5, gold_w1_6, gold_c_7, gold_l_8, gold_f_9], And(D_real(gold_r_4), And(P_match(gold_r_4, gold_l_8, gold_c_7, gold_d_5, gold_f_9, gold_w_3, gold_w1_6), (gold_c_7 == L_Australia))))), (gold_p_2 == gold_w_3))))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_p):  And(P_pilot(WGOLD_p, FV_Name_0, WGOLD_a), Not(Exists([goldsk_w_1], And(And(P_pilot(WGOLD_p, FV_Name_0, WGOLD_a), Exists([goldsk_r_2, goldsk_d_3, goldsk_w1_4, goldsk_c_5, goldsk_l_6, goldsk_f_7], And(D_real(goldsk_r_2), And(P_match(goldsk_r_2, goldsk_l_6, goldsk_c_5, goldsk_d_3, goldsk_f_7, goldsk_w_1, goldsk_w1_4), (goldsk_c_5 == L_Australia))))), (WGOLD_p == goldsk_w_1)))))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_pId_1, predicted_age_2], And(P_pilot(predicted_pId_1, FV_Name_0, predicted_age_2), Not(Exists([predicted_r_3, predicted_loc_4, predicted_dt_5, predicted_fq_6, predicted_wa_7], And(D_real(predicted_r_3), P_match(predicted_r_3, predicted_loc_4, L_Australia, predicted_dt_5, predicted_fq_6, predicted_pId_1, predicted_wa_7))))))
+      predicted_skolem (witnesses WPREDICTED_pId, WPREDICTED_age):  And(P_pilot(WPREDICTED_pId, FV_Name_0, WPREDICTED_age), Not(Exists([predictedsk_r_1, predictedsk_loc_2, predictedsk_dt_3, predictedsk_fq_4, predictedsk_wa_5], And(D_real(predictedsk_r_1), P_match(predictedsk_r_1, predictedsk_loc_2, L_Australia, predictedsk_dt_3, predictedsk_fq_4, WPREDICTED_pId, predictedsk_wa_5)))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Australia' at text -> L_Australia = StringVal('Australia')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 774 lines, 30774 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3269.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_p
+      claim: And(And(pilot(WGOLD_p, FV_Name_0, WGOLD_a), Not(Exists(goldsk_w_1, And(And(pilot(WGOLD_p, FV_Name_0, WGOLD_a), Exists([goldsk_r_2, goldsk_d_3, goldsk_w1_4, goldsk_c_5, goldsk_l_6, goldsk_f_7], And(And(Not(fpIsNaN(goldsk_r_2)), Not(And(fpIsZero(goldsk_r_2), fpIsNegative(goldsk_r_2)))), And(match(goldsk_r_2, goldsk_l_6, goldsk_c_5, goldsk_d_3, goldsk_f_7, goldsk_w_1, goldsk_w1_4), goldsk_c_5 == "Australia")))), WGOLD_p == goldsk_w_1)))), Not(Exists([predicted_pId_1, predicted_age_2], And(pilot(predicted_pId_1, FV_Name_0, predicted_age_2), Not(Exists([predicted_r_3, predicted_loc_4, predicted_dt_5, predicted_fq_6, predicted_wa_7], And(And(Not(fpIsNaN(predicted_r_3)), Not(And(fpIsZero(predicted_r_3), fpIsNegative(predicted_r_3)))), match(predicted_r_3, predicted_loc_4, "Australia", predicted_dt_5, predicted_fq_6, predicted_pId_1, predicted_wa_7))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_pId, WPREDICTED_age
+      claim: And(And(pilot(WPREDICTED_pId, FV_Name_0, WPREDICTED_age), Not(Exists([predictedsk_r_1, predictedsk_loc_2, predictedsk_dt_3, predictedsk_fq_4, predictedsk_wa_5], And(And(Not(fpIsNaN(predictedsk_r_1)), Not(And(fpIsZero(predictedsk_r_1), fpIsNegative(predictedsk_r_1)))), match(predictedsk_r_1, predictedsk_loc_2, "Australia", predictedsk_dt_3, predictedsk_fq_4, WPREDICTED_pId, predictedsk_wa_5))))), Not(Exists([gold_a_1, gold_p_2], And(pilot(gold_p_2, FV_Name_0, gold_a_1), Not(Exists(gold_w_3, And(And(pilot(gold_p_2, FV_Name_0, gold_a_1), Exists([gold_r_4, gold_d_5, gold_w1_6, gold_c_7, gold_l_8, gold_f_9], And(And(Not(fpIsNaN(gold_r_4)), Not(And(fpIsZero(gold_r_4), fpIsNegative(gold_r_4)))), And(match(gold_r_4, gold_l_8, gold_c_7, gold_d_5, gold_f_9, gold_w_3, gold_w1_6), gold_c_7 == "Australia")))), gold_p_2 == gold_w_3)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

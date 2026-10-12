@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1247.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1247.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3247 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show titles of songs and names of singers.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Birth_Year = real -> Float32()
+        Citizenship = text -> StringSort()
+        Highest_Position = real -> Float32()
+        Name = text -> StringSort()
+        Net_Worth_Millions = real -> Float32()
+        Sales = real -> Float32()
+        Singer_ID = int -> IntSort()
+        Song_ID = int -> IntSort()
+        Title = text -> StringSort()
+      symbols:
+        singer(Singer_ID, Name, Birth_Year, Net_Worth_Millions, Citizenship)
+        song(Song_ID, Title, Singer_ID, Sales, Highest_Position)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Singer_ID ∃b : Birth_Year ∃n1 : Net_Worth_Millions ∃c : Citizenship ∃s1 : Song_ID ∃s2 : Singer_ID ∃s3 : Sales ∃h : Highest_Position ( ((singer(s,n,b,n1,c)) ∧ (song(s1,t,s2,s3,h))) ∧ (s = s2) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:b COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:n1 COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:c COLON:: IDENT:Citizenship EXISTS:∃ IDENT:s1 COLON:: IDENT:Song_ID EXISTS:∃ IDENT:s2 COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:s3 COLON:: IDENT:Sales EXISTS:∃ IDENT:h COLON:: IDENT:Highest_Position LPAR:( LPAR:( LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:n1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:song LPAR:( IDENT:s1 COMMA:, IDENT:t COMMA:, IDENT:s2 COMMA:, IDENT:s3 COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Singer_ID
+            EXISTS b:Birth_Year
+              EXISTS n1:Net_Worth_Millions
+                EXISTS c:Citizenship
+                  EXISTS s1:Song_ID
+                    EXISTS s2:Singer_ID
+                      EXISTS s3:Sales
+                        EXISTS h:Highest_Position
+                          AND
+                            AND
+                              PRED singer(s, n, b, n1, c)
+                              PRED song(s1, t, s2, s3, h)
+                            EQ  s = s2
+      Predicted FOL: ∃s : Song_ID ∃t : Title ∃u : Singer_ID ∃v : Sales ∃w : Highest_Position ∃x : Singer_ID ∃y : Name ∃z : Birth_Year ∃n : Net_Worth_Millions ∃c : Citizenship (song(s, t, u, v, w) ∧ singer(x, y, z, n, c))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Song_ID EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:u COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:v COLON:: IDENT:Sales EXISTS:∃ IDENT:w COLON:: IDENT:Highest_Position EXISTS:∃ IDENT:x COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:y COLON:: IDENT:Name EXISTS:∃ IDENT:z COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:n COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:c COLON:: IDENT:Citizenship LPAR:( IDENT:song LPAR:( IDENT:s COMMA:, IDENT:t COMMA:, IDENT:u COMMA:, IDENT:v COMMA:, IDENT:w RPAR:) AND:∧ IDENT:singer LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:n COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Song_ID
+            EXISTS t:Title
+              EXISTS u:Singer_ID
+                EXISTS v:Sales
+                  EXISTS w:Highest_Position
+                    EXISTS x:Singer_ID
+                      EXISTS y:Name
+                        EXISTS z:Birth_Year
+                          EXISTS n:Net_Worth_Millions
+                            EXISTS c:Citizenship
+                              AND
+                                PRED song(s, t, u, v, w)
+                                PRED singer(x, y, z, n, c)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (n : Name, t : Title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Birth_Year, global real -> Float32()
+        c : local Citizenship, global text -> StringSort()
+        h : local Highest_Position, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        n1 : local Net_Worth_Millions, global real -> Float32()
+        s : local Singer_ID, global int -> IntSort()
+        s1 : local Song_ID, global int -> IntSort()
+        s2 : local Singer_ID, global int -> IntSort()
+        s3 : local Sales, global real -> Float32()
+        t : local Title, global text -> StringSort()
+      Predicted FOL:
+        c : local Citizenship, global text -> StringSort()
+        n : local Net_Worth_Millions, global real -> Float32()
+        s : local Song_ID, global int -> IntSort()
+        t : local Title, global text -> StringSort()
+        u : local Singer_ID, global int -> IntSort()
+        v : local Sales, global real -> Float32()
+        w : local Highest_Position, global real -> Float32()
+        x : local Singer_ID, global int -> IntSort()
+        y : local Name, global text -> StringSort()
+        z : local Birth_Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5531 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1247.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (n : Name, t : Title) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

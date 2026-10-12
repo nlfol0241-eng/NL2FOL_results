@@ -1,0 +1,54 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_17.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_17.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2685 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give the city and country for the Alton airport.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        AirportCode = text -> StringSort()
+        AirportName = text -> StringSort()
+        City = text -> StringSort()
+        Country = text -> StringSort()
+        CountryAbbrev = text -> StringSort()
+      symbols:
+        airports(City, AirportCode, AirportName, Country, CountryAbbrev)
+        constant Alton : AirportName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : AirportCode ∃n : AirportName ∃r : CountryAbbrev ( (airports(c,p,n,c1,r)) ∧ (n = 'Alton') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:AirportCode EXISTS:∃ IDENT:n COLON:: IDENT:AirportName EXISTS:∃ IDENT:r COLON:: IDENT:CountryAbbrev LPAR:( LPAR:( IDENT:airports LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:n COMMA:, IDENT:c1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Alton RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:AirportCode
+            EXISTS n:AirportName
+              EXISTS r:CountryAbbrev
+                AND
+                  PRED airports(c, p, n, c1, r)
+                  EQ  n = 'Alton'
+      Predicted FOL: ∃x : City ∃y : Country airports(x, z, 'Alton', y, w)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:City EXISTS:∃ IDENT:y COLON:: IDENT:Country IDENT:airports LPAR:( IDENT:x COMMA:, IDENT:z COMMA:, LIT:Alton COMMA:, IDENT:y COMMA:, IDENT:w RPAR:) EOF
+        AST:
+          EXISTS x:City
+            EXISTS y:Country
+              PRED airports(x, z, 'Alton', y, w)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['City', 'Country'] vs Predicted ['AirportCode', 'CountryAbbrev']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['City', 'Country'] vs Predicted ['AirportCode', 'CountryAbbrev']

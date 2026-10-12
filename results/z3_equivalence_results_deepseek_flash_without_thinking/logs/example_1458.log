@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1458.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1458.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2826 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of mountains with height more than 5000 or prominence more than 1000.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Country = text -> StringSort()
+        Height = real -> Float32()
+        Mountain_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Prominence = real -> Float32()
+        Range = text -> StringSort()
+      symbols:
+        mountain(Mountain_ID, Name, Height, Prominence, Range, Country)
+        constant 1000 : Prominence
+        constant 5000 : Height
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Mountain_ID ∃h : Height ∃p : Prominence ∃r : Range ∃c : Country ( (mountain(m,n,h,p,r,c)) ∧ ((h > 5000) ∨ (p > 1000)) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Mountain_ID EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:Prominence EXISTS:∃ IDENT:r COLON:: IDENT:Range EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( IDENT:mountain LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:h GT:> NUM:5000 RPAR:) OR:∨ LPAR:( IDENT:p GT:> NUM:1000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Mountain_ID
+            EXISTS h:Height
+              EXISTS p:Prominence
+                EXISTS r:Range
+                  EXISTS c:Country
+                    AND
+                      PRED mountain(m, n, h, p, r, c)
+                      OR
+                        CMP  h > 5000
+                        CMP  p > 1000
+      Predicted FOL: ∃m0 : Mountain_ID ∃m1 : Name ∃m2 : Height ∃m3 : Prominence ∃m4 : Range ∃m5 : Country (mountain(m0, m1, m2, m3, m4, m5) ∧ (m2 > 5000 ∨ m3 > 1000))
+        tokens: EXISTS:∃ IDENT:m0 COLON:: IDENT:Mountain_ID EXISTS:∃ IDENT:m1 COLON:: IDENT:Name EXISTS:∃ IDENT:m2 COLON:: IDENT:Height EXISTS:∃ IDENT:m3 COLON:: IDENT:Prominence EXISTS:∃ IDENT:m4 COLON:: IDENT:Range EXISTS:∃ IDENT:m5 COLON:: IDENT:Country LPAR:( IDENT:mountain LPAR:( IDENT:m0 COMMA:, IDENT:m1 COMMA:, IDENT:m2 COMMA:, IDENT:m3 COMMA:, IDENT:m4 COMMA:, IDENT:m5 RPAR:) AND:∧ LPAR:( IDENT:m2 GT:> NUM:5000 OR:∨ IDENT:m3 GT:> NUM:1000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m0:Mountain_ID
+            EXISTS m1:Name
+              EXISTS m2:Height
+                EXISTS m3:Prominence
+                  EXISTS m4:Range
+                    EXISTS m5:Country
+                      AND
+                        PRED mountain(m0, m1, m2, m3, m4, m5)
+                        OR
+                          CMP  m2 > 5000
+                          CMP  m3 > 1000
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        m : local Mountain_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        p : local Prominence, global real -> Float32()
+        r : local Range, global text -> StringSort()
+      Predicted FOL:
+        m0 : local Mountain_ID, global int -> IntSort()
+        m1 : local Name, global text -> StringSort()
+        m2 : local Height, global real -> Float32()
+        m3 : local Prominence, global real -> Float32()
+        m4 : local Range, global text -> StringSort()
+        m5 : local Country, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5412 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1458.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

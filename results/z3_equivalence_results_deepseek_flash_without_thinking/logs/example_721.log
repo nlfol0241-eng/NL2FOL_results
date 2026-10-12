@@ -1,0 +1,70 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_721.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_721.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4402 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the description and credit for the course QM-261?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(35) -> StringSort()   [domain Length(x) <= 35; length <= 35]
+        float(8) -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        text -> StringSort()
+      local sorts:
+        CRS_CODE = varchar(10) -> StringSort()
+        CRS_CREDIT = float(8) -> Float32()
+        CRS_DESCRIPTION = varchar(35) -> StringSort()
+        DEPT_CODE = text -> StringSort()
+      symbols:
+        COURSE(CRS_CODE, DEPT_CODE, CRS_DESCRIPTION, CRS_CREDIT)
+        constant QM-261 : CRS_CODE
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : CRS_CODE ∃d : DEPT_CODE ( (COURSE(c,d,c1,c2)) ∧ (c = 'QM-261') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:CRS_CODE EXISTS:∃ IDENT:d COLON:: IDENT:DEPT_CODE LPAR:( LPAR:( IDENT:COURSE LPAR:( IDENT:c COMMA:, IDENT:d COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:QM-261 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:CRS_CODE
+            EXISTS d:DEPT_CODE
+              AND
+                PRED COURSE(c, d, c1, c2)
+                EQ  c = 'QM-261'
+      Predicted FOL: ∃x1 : CRS_DESCRIPTION ∃x2 : CRS_CREDIT COURSE('QM-261', x1, x2, x3)
+        tokens: EXISTS:∃ IDENT:x1 COLON:: IDENT:CRS_DESCRIPTION EXISTS:∃ IDENT:x2 COLON:: IDENT:CRS_CREDIT IDENT:COURSE LPAR:( LIT:QM-261 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) EOF
+        AST:
+          EXISTS x1:CRS_DESCRIPTION
+            EXISTS x2:CRS_CREDIT
+              PRED COURSE('QM-261', x1, x2, x3)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) x3 occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 2 free variable(s) (c1 : CRS_DESCRIPTION, c2 : CRS_CREDIT) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'x2' used at incompatible global sorts float(8) and varchar(35)
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'x2' used at incompatible global sorts float(8) and varchar(35)

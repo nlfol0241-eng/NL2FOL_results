@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_935.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_935.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3305 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all the albums in 2012.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        AId = integer -> IntSort()
+        Label = text -> StringSort()
+        Title = text -> StringSort()
+        Type = text -> StringSort()
+        Year = integer -> IntSort()
+      symbols:
+        Albums(AId, Title, Year, Label, Type)
+        constant 2012 : Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (Albums(a,t,y,l,t1)) ∧ (y = 2012)
+        tokens: LPAR:( IDENT:Albums LPAR:( IDENT:a COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:l COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2012 RPAR:) EOF
+        AST:
+          AND
+            PRED Albums(a, t, y, l, t1)
+            EQ  y = 2012
+      Predicted FOL: ∃a0 : AId ∃a1 : Title ∃a2 : Year ∃a3 : Label ∃a4 : Type (Albums(a0, a1, a2, a3, a4) ∧ a2 = 2012)
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:AId EXISTS:∃ IDENT:a1 COLON:: IDENT:Title EXISTS:∃ IDENT:a2 COLON:: IDENT:Year EXISTS:∃ IDENT:a3 COLON:: IDENT:Label EXISTS:∃ IDENT:a4 COLON:: IDENT:Type LPAR:( IDENT:Albums LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) AND:∧ IDENT:a2 EQ:= NUM:2012 RPAR:) EOF
+        AST:
+          EXISTS a0:AId
+            EXISTS a1:Title
+              EXISTS a2:Year
+                EXISTS a3:Label
+                  EXISTS a4:Type
+                    AND
+                      PRED Albums(a0, a1, a2, a3, a4)
+                      EQ  a2 = 2012
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 5 free variable(s) (a : AId, t : Title, y : Year, l : Label, t1 : Type) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local AId, global integer -> IntSort()
+        l : local Label, global text -> StringSort()
+        t : local Title, global text -> StringSort()
+        t1 : local Type, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+      Predicted FOL:
+        a0 : local AId, global integer -> IntSort()
+        a1 : local Title, global text -> StringSort()
+        a2 : local Year, global integer -> IntSort()
+        a3 : local Label, global text -> StringSort()
+        a4 : local Type, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5284 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_935.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 5 free variable(s) (a : AId, t : Title, y : Year, l : Label, t1 : Type) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1169.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1169.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3301 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the first name and age of students who have a pet.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = varchar(12) -> StringSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        PetID = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Has_Pet(StuID, PetID)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : StuID ∃l : LName ∃s1 : Sex ∃m : Major ∃a1 : Advisor ∃c : city_code ∃s2 : StuID ∃p : PetID ( ((Student(s,l,f,a,s1,m,a1,c)) ∧ (Has_Pet(s2,p))) ∧ (s = s2) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:s2 COLON:: IDENT:StuID EXISTS:∃ IDENT:p COLON:: IDENT:PetID LPAR:( LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Has_Pet LPAR:( IDENT:s2 COMMA:, IDENT:p RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS l:LName
+              EXISTS s1:Sex
+                EXISTS m:Major
+                  EXISTS a1:Advisor
+                    EXISTS c:city_code
+                      EXISTS s2:StuID
+                        EXISTS p:PetID
+                          AND
+                            AND
+                              PRED Student(s, l, f, a, s1, m, a1, c)
+                              PRED Has_Pet(s2, p)
+                            EQ  s = s2
+      Predicted FOL: ∃s : StuID ∃l : LName ∃f : Fname ∃a : Age ∃x : Sex ∃m : Major ∃d : Advisor ∃c : city_code ∃p : PetID (Student(s, l, f, a, x, m, d, c) ∧ Has_Pet(s, p))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:x COLON:: IDENT:Sex EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:d COLON:: IDENT:Advisor EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:p COLON:: IDENT:PetID LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:x COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, IDENT:c RPAR:) AND:∧ IDENT:Has_Pet LPAR:( IDENT:s COMMA:, IDENT:p RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS l:LName
+              EXISTS f:Fname
+                EXISTS a:Age
+                  EXISTS x:Sex
+                    EXISTS m:Major
+                      EXISTS d:Advisor
+                        EXISTS c:city_code
+                          EXISTS p:PetID
+                            AND
+                              PRED Student(s, l, f, a, x, m, d, c)
+                              PRED Has_Pet(s, p)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : Fname, a : Age) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        p : local PetID, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+        s2 : local StuID, global integer -> IntSort()
+      Predicted FOL:
+        a : local Age, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        d : local Advisor, global integer -> IntSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        p : local PetID, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        x : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5452 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1169.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : Fname, a : Age) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

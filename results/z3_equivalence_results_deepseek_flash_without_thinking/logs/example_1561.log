@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1561.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1561.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8784 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of races held after 12:00:00 or before 09:00:00?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        circuitId = integer -> IntSort()
+        date = text -> StringSort()
+        name = text -> StringSort()
+        raceId = integer -> IntSort()
+        round = integer -> IntSort()
+        time = text -> StringSort()
+        url = text -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        races(raceId, year, round, circuitId, name, date, time, url)
+        constant 09:00:00 : time
+        constant 12:00:00 : time
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : raceId ∃y : year ∃r1 : round ∃c : circuitId ∃d : date ∃t : time ∃u : url ( (races(r,y,r1,c,n,d,t,u)) ∧ ((t > '12:00:00') ∨ (t < '09:00:00')) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:raceId EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:r1 COLON:: IDENT:round EXISTS:∃ IDENT:c COLON:: IDENT:circuitId EXISTS:∃ IDENT:d COLON:: IDENT:date EXISTS:∃ IDENT:t COLON:: IDENT:time EXISTS:∃ IDENT:u COLON:: IDENT:url LPAR:( LPAR:( IDENT:races LPAR:( IDENT:r COMMA:, IDENT:y COMMA:, IDENT:r1 COMMA:, IDENT:c COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:t COMMA:, IDENT:u RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:t GT:> LIT:12:00:00 RPAR:) OR:∨ LPAR:( IDENT:t LT:< LIT:09:00:00 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:raceId
+            EXISTS y:year
+              EXISTS r1:round
+                EXISTS c:circuitId
+                  EXISTS d:date
+                    EXISTS t:time
+                      EXISTS u:url
+                        AND
+                          PRED races(r, y, r1, c, n, d, t, u)
+                          OR
+                            CMP  t > '12:00:00'
+                            CMP  t < '09:00:00'
+      Predicted FOL: ∃r : raceId ∃y : year ∃rd : round ∃c : circuitId ∃n : name ∃d : date ∃t : time ∃u : url (races(r, y, rd, c, n, d, t, u) ∧ (t > '12:00:00' ∨ t < '09:00:00'))
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:raceId EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:rd COLON:: IDENT:round EXISTS:∃ IDENT:c COLON:: IDENT:circuitId EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:d COLON:: IDENT:date EXISTS:∃ IDENT:t COLON:: IDENT:time EXISTS:∃ IDENT:u COLON:: IDENT:url LPAR:( IDENT:races LPAR:( IDENT:r COMMA:, IDENT:y COMMA:, IDENT:rd COMMA:, IDENT:c COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:t COMMA:, IDENT:u RPAR:) AND:∧ LPAR:( IDENT:t GT:> LIT:12:00:00 OR:∨ IDENT:t LT:< LIT:09:00:00 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:raceId
+            EXISTS y:year
+              EXISTS rd:round
+                EXISTS c:circuitId
+                  EXISTS n:name
+                    EXISTS d:date
+                      EXISTS t:time
+                        EXISTS u:url
+                          AND
+                            PRED races(r, y, rd, c, n, d, t, u)
+                            OR
+                              CMP  t > '12:00:00'
+                              CMP  t < '09:00:00'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local circuitId, global integer -> IntSort()
+        d : local date, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        r : local raceId, global integer -> IntSort()
+        r1 : local round, global integer -> IntSort()
+        t : local time, global text -> StringSort()
+        u : local url, global text -> StringSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        c : local circuitId, global integer -> IntSort()
+        d : local date, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        r : local raceId, global integer -> IntSort()
+        rd : local round, global integer -> IntSort()
+        t : local time, global text -> StringSort()
+        u : local url, global text -> StringSort()
+        y : local year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5437 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1561.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

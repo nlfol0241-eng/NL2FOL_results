@@ -1,0 +1,196 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2902.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4737 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the types of vocals that the musician with the last name "Heilo" played in "Der Kapitan"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Bandmate = integer -> IntSort()
+        Firstname = text -> StringSort()
+        Id = integer -> IntSort()
+        Lastname = text -> StringSort()
+        SongId = integer -> IntSort()
+        Title = text -> StringSort()
+        Type = text -> StringSort()
+      symbols:
+        Band(Id, Firstname, Lastname)
+        Songs(SongId, Title)
+        Vocals(SongId, Bandmate, Type)
+        constant Der Kapitan : Title
+        constant Heilo : Lastname
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : SongId ∃b : Bandmate ∃s1 : SongId ∃t1 : Title ∃i : Id ∃f : Firstname ∃l : Lastname ( (((((Vocals(s,b,t)) ∧ (Songs(s1,t1))) ∧ (s = s1)) ∧ (Band(i,f,l))) ∧ (b = i)) ∧ ((l = 'Heilo') ∧ (t1 = 'Der Kapitan')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:s1 COLON:: IDENT:SongId EXISTS:∃ IDENT:t1 COLON:: IDENT:Title EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:f COLON:: IDENT:Firstname EXISTS:∃ IDENT:l COLON:: IDENT:Lastname LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Songs LPAR:( IDENT:s1 COMMA:, IDENT:t1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Band LPAR:( IDENT:i COMMA:, IDENT:f COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:l EQ:= LIT:Heilo RPAR:) AND:∧ LPAR:( IDENT:t1 EQ:= LIT:Der Kapitan RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:Bandmate
+              EXISTS s1:SongId
+                EXISTS t1:Title
+                  EXISTS i:Id
+                    EXISTS f:Firstname
+                      EXISTS l:Lastname
+                        AND
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED Vocals(s, b, t)
+                                  PRED Songs(s1, t1)
+                                EQ  s = s1
+                              PRED Band(i, f, l)
+                            EQ  b = i
+                          AND
+                            EQ  l = 'Heilo'
+                            EQ  t1 = 'Der Kapitan'
+      Predicted FOL: ∃x : SongId ∃y : Bandmate ∃z : Type (Songs(x, 'Der Kapitan') ∧ Band(y, 'Heilo', 'Heilo') ∧ Vocals(x, y, z))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:SongId EXISTS:∃ IDENT:y COLON:: IDENT:Bandmate EXISTS:∃ IDENT:z COLON:: IDENT:Type LPAR:( IDENT:Songs LPAR:( IDENT:x COMMA:, LIT:Der Kapitan RPAR:) AND:∧ IDENT:Band LPAR:( IDENT:y COMMA:, LIT:Heilo COMMA:, LIT:Heilo RPAR:) AND:∧ IDENT:Vocals LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:SongId
+            EXISTS y:Bandmate
+              EXISTS z:Type
+                AND
+                  PRED Songs(x, 'Der Kapitan')
+                  PRED Band(y, 'Heilo', 'Heilo')
+                  PRED Vocals(x, y, z)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) z do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Type_0 : Type   Gold t <-> Predicted z
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Bandmate, global integer -> IntSort()
+        f : local Firstname, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        l : local Lastname, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+        s1 : local SongId, global integer -> IntSort()
+        t : local Type, global text -> StringSort()
+        t1 : local Title, global text -> StringSort()
+      Predicted FOL:
+        x : local SongId, global integer -> IntSort()
+        y : local Bandmate, global integer -> IntSort()
+        z : local Type, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_b_2, gold_s1_3, gold_t1_4, gold_i_5, gold_f_6, gold_l_7], And(And(And(And(And(P_Vocals(gold_s_1, gold_b_2, FV_Type_0), P_Songs(gold_s1_3, gold_t1_4)), (gold_s_1 == gold_s1_3)), P_Band(gold_i_5, gold_f_6, gold_l_7)), (gold_b_2 == gold_i_5)), And((gold_l_7 == L_Heilo), (gold_t1_4 == L_Der_Kapitan))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_b, WGOLD_s1, WGOLD_t1, WGOLD_i, WGOLD_f, WGOLD_l):  And(And(And(And(And(P_Vocals(WGOLD_s, WGOLD_b, FV_Type_0), P_Songs(WGOLD_s1, WGOLD_t1)), (WGOLD_s == WGOLD_s1)), P_Band(WGOLD_i, WGOLD_f, WGOLD_l)), (WGOLD_b == WGOLD_i)), And((WGOLD_l == L_Heilo), (WGOLD_t1 == L_Der_Kapitan)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2, predicted_z_3], And(P_Songs(predicted_x_1, L_Der_Kapitan), P_Band(predicted_y_2, L_Heilo, L_Heilo), P_Vocals(predicted_x_1, predicted_y_2, predicted_z_3)))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z):  And(P_Songs(WPREDICTED_x, L_Der_Kapitan), P_Band(WPREDICTED_y, L_Heilo, L_Heilo), P_Vocals(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Der Kapitan' at text -> L_Der_Kapitan = StringVal('Der Kapitan')
+      literal 'Heilo' at text -> L_Heilo = StringVal('Heilo')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 756 lines, 28860 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_b, WGOLD_s1, WGOLD_t1, WGOLD_i, WGOLD_f, WGOLD_l
+      claim: And(And(And(And(And(And(Vocals(WGOLD_s, WGOLD_b, FV_Type_0), Songs(WGOLD_s1, WGOLD_t1)), WGOLD_s == WGOLD_s1), Band(WGOLD_i, WGOLD_f, WGOLD_l)), WGOLD_b == WGOLD_i), And(WGOLD_l == "Heilo", WGOLD_t1 == "Der Kapitan")), Not(Exists([predicted_x_1, predicted_y_2, predicted_z_3], And(Songs(predicted_x_1, "Der Kapitan"), Band(predicted_y_2, "Heilo", "Heilo"), Vocals(predicted_x_1, predicted_y_2, predicted_z_3)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 20 relation tuple(s) listed, 17 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          s : SongId = 2
+          b : Bandmate = 3
+          s1 : SongId = 2
+          t1 : Title = 'Der Kapitan'
+          i : Id = 3
+          f : Firstname = 'D'
+          l : Lastname = 'Heilo'
+        free (answer) variables:
+          FV_Type_0 : Type = 'Der Kapitan'
+        literals / constants:
+          Der Kapitan : Title = 'Der Kapitan'
+          Heilo : Lastname = 'Heilo'
+        relations (each value tagged with the local sort of its position):
+          Band(Id, Firstname, Lastname):
+            Band(Id=0, Firstname='', Lastname='D')
+            Band(Id=0, Firstname='', Lastname='Der Kapitan')
+            Band(Id=0, Firstname='Der Kapitan', Lastname='')
+            Band(Id=0, Firstname='Heilo', Lastname='')
+            Band(Id=2, Firstname='', Lastname='')
+            Band(Id=3, Firstname='D', Lastname='Heilo')
+            Band(Id=4, Firstname='', Lastname='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Songs(SongId, Title):
+            Songs(SongId=0, Title='')
+            Songs(SongId=0, Title='D')
+            Songs(SongId=0, Title='Heilo')
+            Songs(SongId=2, Title='Der Kapitan')
+            Songs(SongId=3, Title='')
+            Songs(SongId=4, Title='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Vocals(SongId, Bandmate, Type):
+            Vocals(SongId=0, Bandmate=0, Type='')
+            Vocals(SongId=0, Bandmate=0, Type='D')
+            Vocals(SongId=0, Bandmate=0, Type='Heilo')
+            Vocals(SongId=0, Bandmate=2, Type='')
+            Vocals(SongId=2, Bandmate=3, Type='Der Kapitan')
+            Vocals(SongId=3, Bandmate=4, Type='')
+            Vocals(SongId=4, Bandmate=0, Type='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Bandmate  : {0, 2, 3, 4}
+          Firstname : {'', 'D', 'Der Kapitan', 'Heilo'}
+          Id        : {0, 2, 3, 4}
+          Lastname  : {'', 'D', 'Der Kapitan', 'Heilo'}
+          SongId    : {0, 2, 3, 4}
+          Title     : {'', 'D', 'Der Kapitan', 'Heilo'}
+          Type      : {'', 'D', 'Der Kapitan', 'Heilo'}
+        values shared across local sorts (joins):
+          0 : Bandmate, Id, SongId
+          2 : Bandmate, Id, SongId
+          3 : Bandmate, Id, SongId
+          4 : Bandmate, Id, SongId
+          '' : Firstname, Lastname, Title, Type
+          'D' : Firstname, Lastname, Title, Type
+          'Der Kapitan' : Firstname, Lastname, Title, Type
+          'Heilo' : Firstname, Lastname, Title, Type
+   [R2] took 0.062 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z
+      claim: And(And(Songs(WPREDICTED_x, "Der Kapitan"), Band(WPREDICTED_y, "Heilo", "Heilo"), Vocals(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z)), Not(Exists([gold_s_1, gold_b_2, gold_s1_3, gold_t1_4, gold_i_5, gold_f_6, gold_l_7], And(And(And(And(And(Vocals(gold_s_1, gold_b_2, FV_Type_0), Songs(gold_s1_3, gold_t1_4)), gold_s_1 == gold_s1_3), Band(gold_i_5, gold_f_6, gold_l_7)), gold_b_2 == gold_i_5), And(gold_l_7 == "Heilo", gold_t1_4 == "Der Kapitan")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py", line 704, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py", line 735, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py", line 686, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py", line 584, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py", line 508, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py", line 388, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2902.py", line 388, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

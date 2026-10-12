@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_642.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_642.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2274 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all movies directed by Steven Spielberg?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        constant Steven Spielberg : director
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mID ∃y : year ∃d : director ( (Movie(m,t,y,d)) ∧ (d = 'Steven Spielberg') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:d COLON:: IDENT:director LPAR:( LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Steven Spielberg RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mID
+            EXISTS y:year
+              EXISTS d:director
+                AND
+                  PRED Movie(m, t, y, d)
+                  EQ  d = 'Steven Spielberg'
+      Predicted FOL: ∃id : mID ∃y : year Movie(id, t, y, 'Steven Spielberg')
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:mID EXISTS:∃ IDENT:y COLON:: IDENT:year IDENT:Movie LPAR:( IDENT:id COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, LIT:Steven Spielberg RPAR:) EOF
+        AST:
+          EXISTS id:mID
+            EXISTS y:year
+              PRED Movie(id, t, y, 'Steven Spielberg')
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        id : local mID, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_y_2, gold_d_3], And(P_Movie(gold_m_1, FV_title_0, gold_y_2, gold_d_3), (gold_d_3 == L_Steven_Spielberg)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_y, WGOLD_d):  And(P_Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), (WGOLD_d == L_Steven_Spielberg))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_y_2], P_Movie(predicted_id_1, FV_title_0, predicted_y_2, L_Steven_Spielberg))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_y):  P_Movie(WPREDICTED_id, FV_title_0, WPREDICTED_y, L_Steven_Spielberg)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Steven Spielberg' at text -> L_Steven_Spielberg = StringVal('Steven Spielberg')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 727 lines, 26678 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_642.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_y, WGOLD_d
+      claim: And(And(Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), WGOLD_d == "Steven Spielberg"), Not(Exists([predicted_id_1, predicted_y_2], Movie(predicted_id_1, FV_title_0, predicted_y_2, "Steven Spielberg"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_y
+      claim: And(Movie(WPREDICTED_id, FV_title_0, WPREDICTED_y, "Steven Spielberg"), Not(Exists([gold_m_1, gold_y_2, gold_d_3], And(Movie(gold_m_1, FV_title_0, gold_y_2, gold_d_3), gold_d_3 == "Steven Spielberg"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

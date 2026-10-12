@@ -1,0 +1,112 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3298.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3298.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3112 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of dorms that do not have any amenity
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        amenid = integer -> IntSort()
+        dorm_name = varchar(20) -> StringSort()
+        dormid = integer -> IntSort()
+        gender = varchar(1) -> StringSort()
+        student_capacity = integer -> IntSort()
+      symbols:
+        Dorm(dormid, dorm_name, student_capacity, gender)
+        Has_amenity(dormid, amenid)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : student_capacity ∃g : gender ∃d : dormid( (Dorm(d,d1,s,g)) ∧ (¬(∃d2 : dormid( ((Dorm(d,d1,s,g)) ∧ (∃a : amenid( Has_amenity(d2,a) ))) ∧ (d = d2) ))) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:d COLON:: IDENT:dormid LPAR:( LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:d2 COLON:: IDENT:dormid LPAR:( LPAR:( LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:amenid LPAR:( IDENT:Has_amenity LPAR:( IDENT:d2 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:student_capacity
+            EXISTS g:gender
+              EXISTS d:dormid
+                AND
+                  PRED Dorm(d, d1, s, g)
+                  NOT
+                    EXISTS d2:dormid
+                      AND
+                        AND
+                          PRED Dorm(d, d1, s, g)
+                          EXISTS a:amenid
+                            PRED Has_amenity(d2, a)
+                        EQ  d = d2
+      Predicted FOL: ∃d : dormid ∃c : student_capacity ∃g : gender (Dorm(d, n, c, g) ∧ ¬∃a : amenid Has_amenity(d, a))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:dormid EXISTS:∃ IDENT:c COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:g RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:a COLON:: IDENT:amenid IDENT:Has_amenity LPAR:( IDENT:d COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:dormid
+            EXISTS c:student_capacity
+              EXISTS g:gender
+                AND
+                  PRED Dorm(d, n, c, g)
+                  NOT
+                    EXISTS a:amenid
+                      PRED Has_amenity(d, a)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_dorm_name_0 : dorm_name   Gold d1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amenid, global integer -> IntSort()
+        d : local dormid, global integer -> IntSort()
+        d1 : local dorm_name, global varchar(20) -> StringSort()
+        d2 : local dormid, global integer -> IntSort()
+        g : local gender, global varchar(1) -> StringSort()
+        s : local student_capacity, global integer -> IntSort()
+      Predicted FOL:
+        a : local amenid, global integer -> IntSort()
+        c : local student_capacity, global integer -> IntSort()
+        d : local dormid, global integer -> IntSort()
+        g : local gender, global varchar(1) -> StringSort()
+        n : local dorm_name, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_g_2, gold_d_3], And(D_varchar_1_(gold_g_2), And(P_Dorm(gold_d_3, FV_dorm_name_0, gold_s_1, gold_g_2), Not(Exists([gold_d2_4], And(And(P_Dorm(gold_d_3, FV_dorm_name_0, gold_s_1, gold_g_2), Exists([gold_a_5], P_Has_amenity(gold_d2_4, gold_a_5))), (gold_d_3 == gold_d2_4)))))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_g, WGOLD_d):  And(D_varchar_1_(WGOLD_g), And(P_Dorm(WGOLD_d, FV_dorm_name_0, WGOLD_s, WGOLD_g), Not(Exists([goldsk_d2_1], And(And(P_Dorm(WGOLD_d, FV_dorm_name_0, WGOLD_s, WGOLD_g), Exists([goldsk_a_2], P_Has_amenity(goldsk_d2_1, goldsk_a_2))), (WGOLD_d == goldsk_d2_1))))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_c_2, predicted_g_3], And(D_varchar_1_(predicted_g_3), And(P_Dorm(predicted_d_1, FV_dorm_name_0, predicted_c_2, predicted_g_3), Not(Exists([predicted_a_4], P_Has_amenity(predicted_d_1, predicted_a_4))))))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_c, WPREDICTED_g):  And(D_varchar_1_(WPREDICTED_g), And(P_Dorm(WPREDICTED_d, FV_dorm_name_0, WPREDICTED_c, WPREDICTED_g), Not(Exists([predictedsk_a_1], P_Has_amenity(WPREDICTED_d, predictedsk_a_1)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 746 lines, 28623 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3298.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_dorm_name_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_g, WGOLD_d
+      claim: And(And(Length(WGOLD_g) <= 1, And(Dorm(WGOLD_d, FV_dorm_name_0, WGOLD_s, WGOLD_g), Not(Exists(goldsk_d2_1, And(And(Dorm(WGOLD_d, FV_dorm_name_0, WGOLD_s, WGOLD_g), Exists(goldsk_a_2, Has_amenity(goldsk_d2_1, goldsk_a_2))), WGOLD_d == goldsk_d2_1))))), Not(Exists([predicted_d_1, predicted_c_2, predicted_g_3], And(Length(predicted_g_3) <= 1, And(Dorm(predicted_d_1, FV_dorm_name_0, predicted_c_2, predicted_g_3), Not(Exists(predicted_a_4, Has_amenity(predicted_d_1, predicted_a_4))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_c, WPREDICTED_g
+      claim: And(And(Length(WPREDICTED_g) <= 1, And(Dorm(WPREDICTED_d, FV_dorm_name_0, WPREDICTED_c, WPREDICTED_g), Not(Exists(predictedsk_a_1, Has_amenity(WPREDICTED_d, predictedsk_a_1))))), Not(Exists([gold_s_1, gold_g_2, gold_d_3], And(Length(gold_g_2) <= 1, And(Dorm(gold_d_3, FV_dorm_name_0, gold_s_1, gold_g_2), Not(Exists(gold_d2_4, And(And(Dorm(gold_d_3, FV_dorm_name_0, gold_s_1, gold_g_2), Exists(gold_a_5, Has_amenity(gold_d2_4, gold_a_5))), gold_d_3 == gold_d2_4))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,79 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1838.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1838.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2624 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which college has any student who is a goalie and succeeded in the tryout.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+      local sorts:
+        cName = varchar(20) -> StringSort()
+        decision = varchar(3) -> StringSort()
+        pID = numeric(5,0) -> RealSort()
+        pPos = varchar(8) -> StringSort()
+      symbols:
+        Tryout(pID, cName, pPos, decision)
+        constant goalie : pPos
+        constant yes : decision
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : pID ∃p1 : pPos ∃d : decision ( (Tryout(p,c,p1,d)) ∧ ((d = 'yes') ∧ (p1 = 'goalie')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision LPAR:( LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:d EQ:= LIT:yes RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:goalie RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:pID
+            EXISTS p1:pPos
+              EXISTS d:decision
+                AND
+                  PRED Tryout(p, c, p1, d)
+                  AND
+                    EQ  d = 'yes'
+                    EQ  p1 = 'goalie'
+      Predicted FOL: ∃x : cName ( Tryout(pID, x, goalie, yes) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:cName LPAR:( IDENT:Tryout LPAR:( IDENT:pID COMMA:, IDENT:x COMMA:, IDENT:goalie COMMA:, IDENT:yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:cName
+            PRED Tryout(pID, x, goalie<const>, yes<const>)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) pID occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (c : cName) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        d : local decision, global varchar(3) -> StringSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pPos, global varchar(8) -> StringSort()
+      Predicted FOL:
+        pID : local pID, global numeric(5,0) -> RealSort()
+        x : local cName, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5349 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1838.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : cName) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) pID occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

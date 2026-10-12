@@ -1,0 +1,81 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_752.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_752.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3312 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the id of songs whose format is mp3.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar2(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        number(10) -> RealSort()   [domain And(IsInt(x), x > -10000000000, x < 10000000000); 10 digits, 0 after the point]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        artist_name = varchar2(50) -> StringSort()
+        duration = varchar2(20) -> StringSort()
+        f_id = number(10) -> RealSort()
+        file_size = varchar2(20) -> StringSort()
+        formats = varchar2(20) -> StringSort()
+      symbols:
+        files(f_id, artist_name, file_size, duration, formats)
+        constant mp3 : formats
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : artist_name ∃f1 : file_size ∃d : duration ∃f2 : formats ( (files(f,a,f1,d,f2)) ∧ (f2 = 'mp3') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:artist_name EXISTS:∃ IDENT:f1 COLON:: IDENT:file_size EXISTS:∃ IDENT:d COLON:: IDENT:duration EXISTS:∃ IDENT:f2 COLON:: IDENT:formats LPAR:( LPAR:( IDENT:files LPAR:( IDENT:f COMMA:, IDENT:a COMMA:, IDENT:f1 COMMA:, IDENT:d COMMA:, IDENT:f2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f2 EQ:= LIT:mp3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:artist_name
+            EXISTS f1:file_size
+              EXISTS d:duration
+                EXISTS f2:formats
+                  AND
+                    PRED files(f, a, f1, d, f2)
+                    EQ  f2 = 'mp3'
+      Predicted FOL: ∃x : f_id (files(x, y, z, w, v) ∧ v = mp3)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:f_id LPAR:( IDENT:files LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) AND:∧ IDENT:v EQ:= IDENT:mp3 RPAR:) EOF
+        AST:
+          EXISTS x:f_id
+            AND
+              PRED files(x, y, z, w, v)
+              EQ  v = mp3<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (f : f_id) but Predicted has 4 (y : artist_name, z : file_size, w : duration, v : formats): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        d : local duration, global varchar2(20) -> StringSort()
+        f : local f_id, global number(10) -> RealSort()
+        f1 : local file_size, global varchar2(20) -> StringSort()
+        f2 : local formats, global varchar2(20) -> StringSort()
+      Predicted FOL:
+        v : local formats, global varchar2(20) -> StringSort()
+        w : local duration, global varchar2(20) -> StringSort()
+        x : local f_id, global number(10) -> RealSort()
+        y : local artist_name, global varchar2(50) -> StringSort()
+        z : local file_size, global varchar2(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5336 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_752.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (f : f_id) but Predicted has 4 (y : artist_name, z : file_size, w : duration, v : formats): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

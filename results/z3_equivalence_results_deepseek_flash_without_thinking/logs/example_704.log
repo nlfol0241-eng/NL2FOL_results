@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_704.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_704.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6353 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return all distinct detention type codes.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+      local sorts:
+        datetime_detention_end = datetime -> IntSort()
+        datetime_detention_start = datetime -> IntSort()
+        detention_id = integer -> IntSort()
+        detention_summary = varchar(255) -> StringSort()
+        detention_type_code = varchar(10) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+        teacher_id = integer -> IntSort()
+      symbols:
+        Detention(detention_id, detention_type_code, teacher_id, datetime_detention_start, datetime_detention_end, detention_summary, other_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : detention_id ∃t : teacher_id ∃d2 : datetime_detention_start ∃d3 : datetime_detention_end ∃d4 : detention_summary ∃o : other_details ( Detention(d,d1,t,d2,d3,d4,o) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:detention_id EXISTS:∃ IDENT:t COLON:: IDENT:teacher_id EXISTS:∃ IDENT:d2 COLON:: IDENT:datetime_detention_start EXISTS:∃ IDENT:d3 COLON:: IDENT:datetime_detention_end EXISTS:∃ IDENT:d4 COLON:: IDENT:detention_summary EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Detention LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:t COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:detention_id
+            EXISTS t:teacher_id
+              EXISTS d2:datetime_detention_start
+                EXISTS d3:datetime_detention_end
+                  EXISTS d4:detention_summary
+                    EXISTS o:other_details
+                      PRED Detention(d, d1, t, d2, d3, d4, o)
+      Predicted FOL: ∃x1 : detention_type_code (∃x0 : detention_id ∃x2 : teacher_id ∃x3 : datetime_detention_start ∃x4 : datetime_detention_end ∃x5 : detention_summary ∃x6 : other_details Detention(x0, x1, x2, x3, x4, x5, x6))
+        tokens: EXISTS:∃ IDENT:x1 COLON:: IDENT:detention_type_code LPAR:( EXISTS:∃ IDENT:x0 COLON:: IDENT:detention_id EXISTS:∃ IDENT:x2 COLON:: IDENT:teacher_id EXISTS:∃ IDENT:x3 COLON:: IDENT:datetime_detention_start EXISTS:∃ IDENT:x4 COLON:: IDENT:datetime_detention_end EXISTS:∃ IDENT:x5 COLON:: IDENT:detention_summary EXISTS:∃ IDENT:x6 COLON:: IDENT:other_details IDENT:Detention LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 COMMA:, IDENT:x6 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x1:detention_type_code
+            EXISTS x0:detention_id
+              EXISTS x2:teacher_id
+                EXISTS x3:datetime_detention_start
+                  EXISTS x4:datetime_detention_end
+                    EXISTS x5:detention_summary
+                      EXISTS x6:other_details
+                        PRED Detention(x0, x1, x2, x3, x4, x5, x6)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d1 : detention_type_code) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local detention_id, global integer -> IntSort()
+        d1 : local detention_type_code, global varchar(10) -> StringSort()
+        d2 : local datetime_detention_start, global datetime -> IntSort()
+        d3 : local datetime_detention_end, global datetime -> IntSort()
+        d4 : local detention_summary, global varchar(255) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        t : local teacher_id, global integer -> IntSort()
+      Predicted FOL:
+        x0 : local detention_id, global integer -> IntSort()
+        x1 : local detention_type_code, global varchar(10) -> StringSort()
+        x2 : local teacher_id, global integer -> IntSort()
+        x3 : local datetime_detention_start, global datetime -> IntSort()
+        x4 : local datetime_detention_end, global datetime -> IntSort()
+        x5 : local detention_summary, global varchar(255) -> StringSort()
+        x6 : local other_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5502 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_704.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d1 : detention_type_code) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

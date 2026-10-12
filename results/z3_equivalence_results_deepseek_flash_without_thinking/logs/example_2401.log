@@ -1,0 +1,87 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2401.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2401.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2503 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return all reviewer names and movie names together in a single list.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        name = text -> StringSort()
+        rID = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        Reviewer(rID, name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃r : rID( Reviewer(r,n) )) ∨ (∃m : mID ∃d : director ∃y : year( Movie(m,n,y,d) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( IDENT:Reviewer LPAR:( IDENT:r COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:d COLON:: IDENT:director EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS r:rID
+              PRED Reviewer(r, n)
+            EXISTS m:mID
+              EXISTS d:director
+                EXISTS y:year
+                  PRED Movie(m, n, y, d)
+      Predicted FOL: ∃x_rID : rID ∃x_name : name ∃y_mID : mID ∃y_title : title ∃y_year : year ∃y_director : director (Reviewer(x_rID, x_name) ∧ Movie(y_mID, y_title, y_year, y_director))
+        tokens: EXISTS:∃ IDENT:x_rID COLON:: IDENT:rID EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:y_mID COLON:: IDENT:mID EXISTS:∃ IDENT:y_title COLON:: IDENT:title EXISTS:∃ IDENT:y_year COLON:: IDENT:year EXISTS:∃ IDENT:y_director COLON:: IDENT:director LPAR:( IDENT:Reviewer LPAR:( IDENT:x_rID COMMA:, IDENT:x_name RPAR:) AND:∧ IDENT:Movie LPAR:( IDENT:y_mID COMMA:, IDENT:y_title COMMA:, IDENT:y_year COMMA:, IDENT:y_director RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x_rID:rID
+            EXISTS x_name:name
+              EXISTS y_mID:mID
+                EXISTS y_title:title
+                  EXISTS y_year:year
+                    EXISTS y_director:director
+                      AND
+                        PRED Reviewer(x_rID, x_name)
+                        PRED Movie(y_mID, y_title, y_year, y_director)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        r : local rID, global int -> IntSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        x_name : local name, global text -> StringSort()
+        x_rID : local rID, global int -> IntSort()
+        y_director : local director, global text -> StringSort()
+        y_mID : local mID, global int -> IntSort()
+        y_title : local title, global text -> StringSort()
+        y_year : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5368 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2401.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

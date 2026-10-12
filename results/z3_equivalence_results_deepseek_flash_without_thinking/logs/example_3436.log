@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3436.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3436.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4179 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which cmi cross reference id is not related to any parking taxes?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        cmi_cross_ref_id = integer -> IntSort()
+        council_tax_id = integer -> IntSort()
+        master_customer_id = integer -> IntSort()
+        source_system_code = char(15) -> StringSort()
+      symbols:
+        CMI_Cross_References(cmi_cross_ref_id, master_customer_id, source_system_code)
+        Parking_Fines(council_tax_id, cmi_cross_ref_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s : source_system_code ∃m : master_customer_id( CMI_Cross_References(c,m,s) )) ∧ (¬(∃c1 : council_tax_id( Parking_Fines(c1,c) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:source_system_code EXISTS:∃ IDENT:m COLON:: IDENT:master_customer_id LPAR:( IDENT:CMI_Cross_References LPAR:( IDENT:c COMMA:, IDENT:m COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:council_tax_id LPAR:( IDENT:Parking_Fines LPAR:( IDENT:c1 COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s:source_system_code
+              EXISTS m:master_customer_id
+                PRED CMI_Cross_References(c, m, s)
+            NOT
+              EXISTS c1:council_tax_id
+                PRED Parking_Fines(c1, c)
+      Predicted FOL: ∃x : cmi_cross_ref_id ( CMI_Cross_References(x, y, z) ∧ ¬∃a : council_tax_id ∃b : cmi_cross_ref_id ( Parking_Fines(a, b) ∧ b = x ) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:cmi_cross_ref_id LPAR:( IDENT:CMI_Cross_References LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:a COLON:: IDENT:council_tax_id EXISTS:∃ IDENT:b COLON:: IDENT:cmi_cross_ref_id LPAR:( IDENT:Parking_Fines LPAR:( IDENT:a COMMA:, IDENT:b RPAR:) AND:∧ IDENT:b EQ:= IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:cmi_cross_ref_id
+            AND
+              PRED CMI_Cross_References(x, y, z)
+              NOT
+                EXISTS a:council_tax_id
+                  EXISTS b:cmi_cross_ref_id
+                    AND
+                      PRED Parking_Fines(a, b)
+                      EQ  b = x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : cmi_cross_ref_id) but Predicted has 2 (y : master_customer_id, z : source_system_code): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cmi_cross_ref_id, global integer -> IntSort()
+        c1 : local council_tax_id, global integer -> IntSort()
+        m : local master_customer_id, global integer -> IntSort()
+        s : local source_system_code, global char(15) -> StringSort()
+      Predicted FOL:
+        a : local council_tax_id, global integer -> IntSort()
+        b : local cmi_cross_ref_id, global integer -> IntSort()
+        x : local cmi_cross_ref_id, global integer -> IntSort()
+        y : local master_customer_id, global integer -> IntSort()
+        z : local source_system_code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5485 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3436.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : cmi_cross_ref_id) but Predicted has 2 (y : master_customer_id, z : source_system_code): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

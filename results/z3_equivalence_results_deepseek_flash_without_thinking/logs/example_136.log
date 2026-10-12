@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_136.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_136.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3639 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: how many people are there in california
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        state(state_name, population, area, country_name, capital, density)
+        constant california : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ∃a : area ∃c : country_name ∃c1 : capital ∃d : density ( (state(s,p,a,c,c1,d)) ∧ (s = 'california') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:c1 COLON:: IDENT:capital EXISTS:∃ IDENT:d COLON:: IDENT:density LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:california RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS a:area
+              EXISTS c:country_name
+                EXISTS c1:capital
+                  EXISTS d:density
+                    AND
+                      PRED state(s, p, a, c, c1, d)
+                      EQ  s = 'california'
+      Predicted FOL: ∃x : population (state('california', x, a2, a3, a4, a5))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:population LPAR:( IDENT:state LPAR:( LIT:california COMMA:, IDENT:x COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 COMMA:, IDENT:a5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:population
+            PRED state('california', x, a2, a3, a4, a5)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) a2, a3, a4, a5 occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (p : population) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        a2 : local area, global double -> Float64()
+        a3 : local country_name, global varchar(3) -> StringSort()
+        a4 : local capital, global text -> StringSort()
+        a5 : local density, global double -> Float64()
+        x : local population, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5378 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_136.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p : population) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) a2, a3, a4, a5 occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

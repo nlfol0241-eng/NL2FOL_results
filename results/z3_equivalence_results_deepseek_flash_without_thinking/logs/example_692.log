@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_692.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_692.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2486 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which authors have first name "Amal"? List their last names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        authID = integer -> IntSort()
+        fname = text -> StringSort()
+        lname = text -> StringSort()
+      symbols:
+        Authors(authID, lname, fname)
+        constant Amal : fname
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : authID ∃f : fname ( (Authors(a,l,f)) ∧ (f = 'Amal') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:authID EXISTS:∃ IDENT:f COLON:: IDENT:fname LPAR:( LPAR:( IDENT:Authors LPAR:( IDENT:a COMMA:, IDENT:l COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f EQ:= LIT:Amal RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:authID
+            EXISTS f:fname
+              AND
+                PRED Authors(a, l, f)
+                EQ  f = 'Amal'
+      Predicted FOL: ∃x_authID : authID ∃x_lname : lname ∃x_fname : fname (Authors(x_authID, x_lname, x_fname) ∧ x_fname = Amal)
+        tokens: EXISTS:∃ IDENT:x_authID COLON:: IDENT:authID EXISTS:∃ IDENT:x_lname COLON:: IDENT:lname EXISTS:∃ IDENT:x_fname COLON:: IDENT:fname LPAR:( IDENT:Authors LPAR:( IDENT:x_authID COMMA:, IDENT:x_lname COMMA:, IDENT:x_fname RPAR:) AND:∧ IDENT:x_fname EQ:= IDENT:Amal RPAR:) EOF
+        AST:
+          EXISTS x_authID:authID
+            EXISTS x_lname:lname
+              EXISTS x_fname:fname
+                AND
+                  PRED Authors(x_authID, x_lname, x_fname)
+                  EQ  x_fname = Amal<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x_lname do not occur free in the formula
+   1 shared answer variable(s)
+      FV_lname_0 : lname   Gold l <-> Predicted x_lname
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local authID, global integer -> IntSort()
+        f : local fname, global text -> StringSort()
+        l : local lname, global text -> StringSort()
+      Predicted FOL:
+        x_authID : local authID, global integer -> IntSort()
+        x_fname : local fname, global text -> StringSort()
+        x_lname : local lname, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_f_2], And(P_Authors(gold_a_1, FV_lname_0, gold_f_2), (gold_f_2 == L_Amal)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_f):  And(P_Authors(WGOLD_a, FV_lname_0, WGOLD_f), (WGOLD_f == L_Amal))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_authID_1, predicted_x_lname_2, predicted_x_fname_3], And(P_Authors(predicted_x_authID_1, predicted_x_lname_2, predicted_x_fname_3), (predicted_x_fname_3 == L_Amal)))
+      predicted_skolem (witnesses WPREDICTED_x_authID, WPREDICTED_x_lname, WPREDICTED_x_fname):  And(P_Authors(WPREDICTED_x_authID, WPREDICTED_x_lname, WPREDICTED_x_fname), (WPREDICTED_x_fname == L_Amal))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Amal' at text -> L_Amal = StringVal('Amal')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 725 lines, 26874 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_692.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_f
+      claim: And(And(Authors(WGOLD_a, FV_lname_0, WGOLD_f), WGOLD_f == "Amal"), Not(Exists([predicted_x_authID_1, predicted_x_lname_2, predicted_x_fname_3], And(Authors(predicted_x_authID_1, predicted_x_lname_2, predicted_x_fname_3), predicted_x_fname_3 == "Amal"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x_authID, WPREDICTED_x_lname, WPREDICTED_x_fname
+      claim: And(And(Authors(WPREDICTED_x_authID, WPREDICTED_x_lname, WPREDICTED_x_fname), WPREDICTED_x_fname == "Amal"), Not(Exists([gold_a_1, gold_f_2], And(Authors(gold_a_1, FV_lname_0, gold_f_2), gold_f_2 == "Amal"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 4 relation tuple(s) listed, 3 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x_authID : authID = 2
+          x_lname : lname = 'Amal'
+          x_fname : fname = 'Amal'
+        free (answer) variables:
+          FV_lname_0 : lname = 'A'
+        literals / constants:
+          Amal : fname = 'Amal'
+        relations (each value tagged with the local sort of its position):
+          Authors(authID, lname, fname):
+            Authors(authID=0, lname='', fname='A')
+            Authors(authID=0, lname='A', fname='')
+            Authors(authID=2, lname='Amal', fname='Amal')
+            Authors(authID=3, lname='', fname='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          authID : {0, 2, 3}
+          fname  : {'', 'A', 'Amal'}
+          lname  : {'', 'A', 'Amal'}
+        values shared across local sorts (joins):
+          '' : fname, lname
+          'A' : fname, lname
+          'Amal' : fname, lname
+   [R3] took 0.025 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

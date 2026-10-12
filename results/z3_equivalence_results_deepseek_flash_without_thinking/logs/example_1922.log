@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1922.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1922.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2808 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name and gender type of the dorms whose capacity is greater than 300 or less than 100.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        dorm_name = varchar(20) -> StringSort()
+        dormid = integer -> IntSort()
+        gender = varchar(1) -> StringSort()
+        student_capacity = integer -> IntSort()
+      symbols:
+        Dorm(dormid, dorm_name, student_capacity, gender)
+        constant 100 : student_capacity
+        constant 300 : student_capacity
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : dormid ∃s : student_capacity ( (Dorm(d,d1,s,g)) ∧ ((s > 300) ∨ (s < 100)) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:dormid EXISTS:∃ IDENT:s COLON:: IDENT:student_capacity LPAR:( LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s GT:> NUM:300 RPAR:) OR:∨ LPAR:( IDENT:s LT:< NUM:100 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:dormid
+            EXISTS s:student_capacity
+              AND
+                PRED Dorm(d, d1, s, g)
+                OR
+                  CMP  s > 300
+                  CMP  s < 100
+      Predicted FOL: ∃d0 : dormid ∃d1 : dorm_name ∃d2 : student_capacity ∃d3 : gender (Dorm(d0, d1, d2, d3) ∧ (d2 > 300 ∨ d2 < 100))
+        tokens: EXISTS:∃ IDENT:d0 COLON:: IDENT:dormid EXISTS:∃ IDENT:d1 COLON:: IDENT:dorm_name EXISTS:∃ IDENT:d2 COLON:: IDENT:student_capacity EXISTS:∃ IDENT:d3 COLON:: IDENT:gender LPAR:( IDENT:Dorm LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 RPAR:) AND:∧ LPAR:( IDENT:d2 GT:> NUM:300 OR:∨ IDENT:d2 LT:< NUM:100 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d0:dormid
+            EXISTS d1:dorm_name
+              EXISTS d2:student_capacity
+                EXISTS d3:gender
+                  AND
+                    PRED Dorm(d0, d1, d2, d3)
+                    OR
+                      CMP  d2 > 300
+                      CMP  d2 < 100
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (d1 : dorm_name, g : gender) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local dormid, global integer -> IntSort()
+        d1 : local dorm_name, global varchar(20) -> StringSort()
+        g : local gender, global varchar(1) -> StringSort()
+        s : local student_capacity, global integer -> IntSort()
+      Predicted FOL:
+        d0 : local dormid, global integer -> IntSort()
+        d1 : local dorm_name, global varchar(20) -> StringSort()
+        d2 : local student_capacity, global integer -> IntSort()
+        d3 : local gender, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5371 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1922.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (d1 : dorm_name, g : gender) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

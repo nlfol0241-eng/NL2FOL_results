@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1675.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1675.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3005 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give me the name and year of opening of the manufacturers that have either less than 10 factories or more than 10 shops.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Manufacturer_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Num_of_Factories = int -> IntSort()
+        Num_of_Shops = int -> IntSort()
+        Open_Year = real -> Float32()
+      symbols:
+        manufacturer(Manufacturer_ID, Open_Year, Name, Num_of_Factories, Num_of_Shops)
+        constant 10 : Num_of_Shops
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Manufacturer_ID ∃n1 : Num_of_Factories ∃n2 : Num_of_Shops ( (manufacturer(m,o,n,n1,n2)) ∧ ((n2 > 10) ∨ (n1 < 10)) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Manufacturer_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_Factories EXISTS:∃ IDENT:n2 COLON:: IDENT:Num_of_Shops LPAR:( LPAR:( IDENT:manufacturer LPAR:( IDENT:m COMMA:, IDENT:o COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:n2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n2 GT:> NUM:10 RPAR:) OR:∨ LPAR:( IDENT:n1 LT:< NUM:10 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Manufacturer_ID
+            EXISTS n1:Num_of_Factories
+              EXISTS n2:Num_of_Shops
+                AND
+                  PRED manufacturer(m, o, n, n1, n2)
+                  OR
+                    CMP  n2 > 10
+                    CMP  n1 < 10
+      Predicted FOL: ∃i : Manufacturer_ID ∃f : Num_of_Factories ∃s : Num_of_Shops (manufacturer(i, y, n, f, s) ∧ (f < 10 ∨ s > 10))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Manufacturer_ID EXISTS:∃ IDENT:f COLON:: IDENT:Num_of_Factories EXISTS:∃ IDENT:s COLON:: IDENT:Num_of_Shops LPAR:( IDENT:manufacturer LPAR:( IDENT:i COMMA:, IDENT:y COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:s RPAR:) AND:∧ LPAR:( IDENT:f LT:< NUM:10 OR:∨ IDENT:s GT:> NUM:10 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Manufacturer_ID
+            EXISTS f:Num_of_Factories
+              EXISTS s:Num_of_Shops
+                AND
+                  PRED manufacturer(i, y, n, f, s)
+                  OR
+                    CMP  f < 10
+                    CMP  s > 10
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+      FV_Open_Year_0 : Open_Year   Gold o <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local Manufacturer_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_of_Factories, global int -> IntSort()
+        n2 : local Num_of_Shops, global int -> IntSort()
+        o : local Open_Year, global real -> Float32()
+      Predicted FOL:
+        f : local Num_of_Factories, global int -> IntSort()
+        i : local Manufacturer_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        s : local Num_of_Shops, global int -> IntSort()
+        y : local Open_Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_n1_2, gold_n2_3], And(P_manufacturer(gold_m_1, FV_Open_Year_0, FV_Name_0, gold_n1_2, gold_n2_3), Or((gold_n2_3 > L_v_10_int), (gold_n1_2 < L_v_10_int))))
+      gold_skolem (witnesses WGOLD_m, WGOLD_n1, WGOLD_n2):  And(P_manufacturer(WGOLD_m, FV_Open_Year_0, FV_Name_0, WGOLD_n1, WGOLD_n2), Or((WGOLD_n2 > L_v_10_int), (WGOLD_n1 < L_v_10_int)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_f_2, predicted_s_3], And(P_manufacturer(predicted_i_1, FV_Open_Year_0, FV_Name_0, predicted_f_2, predicted_s_3), Or((predicted_f_2 < L_v_10_int), (predicted_s_3 > L_v_10_int))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_s):  And(P_manufacturer(WPREDICTED_i, FV_Open_Year_0, FV_Name_0, WPREDICTED_f, WPREDICTED_s), Or((WPREDICTED_f < L_v_10_int), (WPREDICTED_s > L_v_10_int)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '10' at int -> L_v_10_int = IntVal(10)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 738 lines, 27987 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1675.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Open_Year_0)), Not(And(fpIsZero(FV_Open_Year_0), fpIsNegative(FV_Open_Year_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_n1, WGOLD_n2
+      claim: And(And(manufacturer(WGOLD_m, FV_Open_Year_0, FV_Name_0, WGOLD_n1, WGOLD_n2), Or(10 < WGOLD_n2, 10 > WGOLD_n1)), Not(Exists([predicted_i_1, predicted_f_2, predicted_s_3], And(manufacturer(predicted_i_1, FV_Open_Year_0, FV_Name_0, predicted_f_2, predicted_s_3), Or(10 > predicted_f_2, 10 < predicted_s_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_s
+      claim: And(And(manufacturer(WPREDICTED_i, FV_Open_Year_0, FV_Name_0, WPREDICTED_f, WPREDICTED_s), Or(10 > WPREDICTED_f, 10 < WPREDICTED_s)), Not(Exists([gold_m_1, gold_n1_2, gold_n2_3], And(manufacturer(gold_m_1, FV_Open_Year_0, FV_Name_0, gold_n1_2, gold_n2_3), Or(10 < gold_n2_3, 10 > gold_n1_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

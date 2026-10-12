@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1312.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1312.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5690 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me the organization " H. V. Jagadish " is in .
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        aid = int -> IntSort()
+        continent = text -> StringSort()
+        homepage = text -> StringSort()
+        name = text -> StringSort()
+        oid = int -> IntSort()
+      symbols:
+        author(aid, homepage, name, oid)
+        organization(continent, homepage, name, oid)
+        constant H. V. Jagadish : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : continent ∃h : homepage ∃o : oid ∃a : aid ∃h1 : homepage ∃n1 : name ∃o1 : oid ( (((organization(c,h,n,o)) ∧ (author(a,h1,n1,o1))) ∧ (o = o1)) ∧ (n1 = 'H. V. Jagadish') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:continent EXISTS:∃ IDENT:h COLON:: IDENT:homepage EXISTS:∃ IDENT:o COLON:: IDENT:oid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:h1 COLON:: IDENT:homepage EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:o1 COLON:: IDENT:oid LPAR:( LPAR:( LPAR:( LPAR:( IDENT:organization LPAR:( IDENT:c COMMA:, IDENT:h COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a COMMA:, IDENT:h1 COMMA:, IDENT:n1 COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:H. V. Jagadish RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:continent
+            EXISTS h:homepage
+              EXISTS o:oid
+                EXISTS a:aid
+                  EXISTS h1:homepage
+                    EXISTS n1:name
+                      EXISTS o1:oid
+                        AND
+                          AND
+                            AND
+                              PRED organization(c, h, n, o)
+                              PRED author(a, h1, n1, o1)
+                            EQ  o = o1
+                          EQ  n1 = 'H. V. Jagadish'
+      Predicted FOL: ∃c : continent ∃oh : homepage ∃o : oid ∃a : aid ∃ah : homepage (organization(c, oh, n, o) ∧ author(a, ah, 'H. V. Jagadish', o))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:continent EXISTS:∃ IDENT:oh COLON:: IDENT:homepage EXISTS:∃ IDENT:o COLON:: IDENT:oid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:ah COLON:: IDENT:homepage LPAR:( IDENT:organization LPAR:( IDENT:c COMMA:, IDENT:oh COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) AND:∧ IDENT:author LPAR:( IDENT:a COMMA:, IDENT:ah COMMA:, LIT:H. V. Jagadish COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:continent
+            EXISTS oh:homepage
+              EXISTS o:oid
+                EXISTS a:aid
+                  EXISTS ah:homepage
+                    AND
+                      PRED organization(c, oh, n, o)
+                      PRED author(a, ah, 'H. V. Jagadish', o)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global int -> IntSort()
+        c : local continent, global text -> StringSort()
+        h : local homepage, global text -> StringSort()
+        h1 : local homepage, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+        o : local oid, global int -> IntSort()
+        o1 : local oid, global int -> IntSort()
+      Predicted FOL:
+        a : local aid, global int -> IntSort()
+        ah : local homepage, global text -> StringSort()
+        c : local continent, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        o : local oid, global int -> IntSort()
+        oh : local homepage, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_h_2, gold_o_3, gold_a_4, gold_h1_5, gold_n1_6, gold_o1_7], And(And(And(P_organization(gold_c_1, gold_h_2, FV_name_0, gold_o_3), P_author(gold_a_4, gold_h1_5, gold_n1_6, gold_o1_7)), (gold_o_3 == gold_o1_7)), (gold_n1_6 == L_H__V__Jagadish)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_h, WGOLD_o, WGOLD_a, WGOLD_h1, WGOLD_n1, WGOLD_o1):  And(And(And(P_organization(WGOLD_c, WGOLD_h, FV_name_0, WGOLD_o), P_author(WGOLD_a, WGOLD_h1, WGOLD_n1, WGOLD_o1)), (WGOLD_o == WGOLD_o1)), (WGOLD_n1 == L_H__V__Jagadish))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_oh_2, predicted_o_3, predicted_a_4, predicted_ah_5], And(P_organization(predicted_c_1, predicted_oh_2, FV_name_0, predicted_o_3), P_author(predicted_a_4, predicted_ah_5, L_H__V__Jagadish, predicted_o_3)))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_oh, WPREDICTED_o, WPREDICTED_a, WPREDICTED_ah):  And(P_organization(WPREDICTED_c, WPREDICTED_oh, FV_name_0, WPREDICTED_o), P_author(WPREDICTED_a, WPREDICTED_ah, L_H__V__Jagadish, WPREDICTED_o))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'H. V. Jagadish' at text -> L_H__V__Jagadish = StringVal('H. V. Jagadish')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 753 lines, 28848 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1312.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_h, WGOLD_o, WGOLD_a, WGOLD_h1, WGOLD_n1, WGOLD_o1
+      claim: And(And(And(And(organization(WGOLD_c, WGOLD_h, FV_name_0, WGOLD_o), author(WGOLD_a, WGOLD_h1, WGOLD_n1, WGOLD_o1)), WGOLD_o == WGOLD_o1), WGOLD_n1 == "H. V. Jagadish"), Not(Exists([predicted_c_1, predicted_oh_2, predicted_o_3, predicted_a_4, predicted_ah_5], And(organization(predicted_c_1, predicted_oh_2, FV_name_0, predicted_o_3), author(predicted_a_4, predicted_ah_5, "H. V. Jagadish", predicted_o_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_oh, WPREDICTED_o, WPREDICTED_a, WPREDICTED_ah
+      claim: And(And(organization(WPREDICTED_c, WPREDICTED_oh, FV_name_0, WPREDICTED_o), author(WPREDICTED_a, WPREDICTED_ah, "H. V. Jagadish", WPREDICTED_o)), Not(Exists([gold_c_1, gold_h_2, gold_o_3, gold_a_4, gold_h1_5, gold_n1_6, gold_o1_7], And(And(And(organization(gold_c_1, gold_h_2, FV_name_0, gold_o_3), author(gold_a_4, gold_h1_5, gold_n1_6, gold_o1_7)), gold_o_3 == gold_o1_7), gold_n1_6 == "H. V. Jagadish"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

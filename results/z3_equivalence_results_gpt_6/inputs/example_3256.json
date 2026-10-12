@@ -1,0 +1,98 @@
+{
+  "NL": "Which buildings do not have any company office? Give me the building names.",
+  "Vocabulary": {
+    "Predicates": [
+      "buildings",
+      "Office_locations"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "buildings": [
+        "id",
+        "name",
+        "City",
+        "Height",
+        "Stories",
+        "Status"
+      ],
+      "Office_locations": [
+        "building_id",
+        "company_id",
+        "move_in_year"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'( buildings(a0, a1, a2, a3, a4, a5) ∧ buildings(a0', a1', a2', a3', a4', a5') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b5∀b6∀b7∀b0'∀b1'∀b2'∀b3'∀b4'∀b5'∀b6'∀b7'( Companies(b0, b1, b2, b3, b4, b5, b6, b7) ∧ Companies(b0', b1', b2', b3', b4', b5', b6', b7') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' ∧ b5 = b5' ∧ b6 = b6' ∧ b7 = b7' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( Office_locations(c0, c1, c2) ∧ Office_locations(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( Office_locations(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4∃b5∃b6∃b7 ( Companies(b0, b1, b2, b3, b4, b5, b6, b7) ∧ b0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( Office_locations(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4∃a5 ( buildings(a0, a1, a2, a3, a4, a5) ∧ a0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "buildings": {
+        "A": "buildings",
+        "A0": "id",
+        "A1": "name",
+        "A2": "City",
+        "A3": "Height",
+        "A4": "Stories",
+        "A5": "Status"
+      },
+      "Office_locations": {
+        "B": "Office_locations",
+        "B0": "building_id",
+        "B1": "company_id",
+        "B2": "move_in_year"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃c : City ∃s1 : Status ∃s : Stories ∃h : Height ∃i : id( (buildings(i,n,c,h,s,s1)) ∧ (¬(∃b : building_id( ((buildings(i,n,c,h,s,s1)) ∧ (∃m : move_in_year ∃c1 : company_id( Office_locations(b,c1,m) ))) ∧ (i = b) ))) )",
+    "free vars": "n : name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4,A5](A))<D>(<P>[A0,A1,A2,A3,A4,A5](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4,A5](A))<D>(<P>[A0,A1,A2,A3,A4,A5](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "RC": "[E]?A2,?A5,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4,?A5)) & (~([E]?B0( ((A(?A0,?A1,?A2,?A3,?A4,?A5)) & ([E]?B2,?B1( B(?B0,?B1,?B2) ))) & (?A0 = ?B0) ))) )",
+    "string": "∃A2 ∃A5 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4,A5)) ∧ (¬(∃B0( ((A(A0,A1,A2,A3,A4,A5)) ∧ (∃B2 ∃B1( B(B0,B1,B2) ))) ∧ (A0 = B0) ))) )",
+    "free variables": "A1",
+    "db_id": "company_office",
+    "processed_sql": "SELECT name FROM buildings WHERE id NOT IN (SELECT building_id FROM Office_locations)"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "buildings": {
+      "sortaxiom0": "id = int",
+      "sortaxiom1": "name = text",
+      "sortaxiom2": "City = text",
+      "sortaxiom3": "Height = int",
+      "sortaxiom4": "Stories = int",
+      "sortaxiom5": "Status = text"
+    },
+    "Office_locations": {
+      "sortaxiom0": "building_id = int",
+      "sortaxiom1": "company_id = int",
+      "sortaxiom2": "move_in_year = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT name FROM buildings WHERE id NOT IN (SELECT building_id FROM Office_locations)"
+  },
+  "id": 3256,
+  "Predicted FOL": {
+    "string": "∃b : id ∃c : City ∃h : Height ∃s : Stories ∃t : Status (buildings(b, n, c, h, s, t) ∧ ¬∃o : company_id ∃y : move_in_year Office_locations(b, o, y))",
+    "free vars": "n : name"
+  }
+}

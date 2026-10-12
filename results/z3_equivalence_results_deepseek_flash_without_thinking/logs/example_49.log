@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_49.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_49.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3363 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the first name and birth date of all players from the country with code USA.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        birth_date = date -> IntSort()
+        country_code = text -> StringSort()
+        first_name = text -> StringSort()
+        hand = text -> StringSort()
+        last_name = text -> StringSort()
+        player_id = int -> IntSort()
+      symbols:
+        players(player_id, first_name, last_name, hand, birth_date, country_code)
+        constant USA : country_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : player_id ∃l : last_name ∃h : hand ∃c : country_code ( (players(p,f,l,h,b,c)) ∧ (c = 'USA') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:player_id EXISTS:∃ IDENT:l COLON:: IDENT:last_name EXISTS:∃ IDENT:h COLON:: IDENT:hand EXISTS:∃ IDENT:c COLON:: IDENT:country_code LPAR:( LPAR:( IDENT:players LPAR:( IDENT:p COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:h COMMA:, IDENT:b COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:USA RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:player_id
+            EXISTS l:last_name
+              EXISTS h:hand
+                EXISTS c:country_code
+                  AND
+                    PRED players(p, f, l, h, b, c)
+                    EQ  c = 'USA'
+      Predicted FOL: ∃x_player_id : player_id ∃x_first_name : first_name ∃x_last_name : last_name ∃x_hand : hand ∃x_birth_date : birth_date ∃x_country_code : country_code (players(x_player_id, x_first_name, x_last_name, x_hand, x_birth_date, x_country_code) ∧ x_country_code = USA)
+        tokens: EXISTS:∃ IDENT:x_player_id COLON:: IDENT:player_id EXISTS:∃ IDENT:x_first_name COLON:: IDENT:first_name EXISTS:∃ IDENT:x_last_name COLON:: IDENT:last_name EXISTS:∃ IDENT:x_hand COLON:: IDENT:hand EXISTS:∃ IDENT:x_birth_date COLON:: IDENT:birth_date EXISTS:∃ IDENT:x_country_code COLON:: IDENT:country_code LPAR:( IDENT:players LPAR:( IDENT:x_player_id COMMA:, IDENT:x_first_name COMMA:, IDENT:x_last_name COMMA:, IDENT:x_hand COMMA:, IDENT:x_birth_date COMMA:, IDENT:x_country_code RPAR:) AND:∧ IDENT:x_country_code EQ:= IDENT:USA RPAR:) EOF
+        AST:
+          EXISTS x_player_id:player_id
+            EXISTS x_first_name:first_name
+              EXISTS x_last_name:last_name
+                EXISTS x_hand:hand
+                  EXISTS x_birth_date:birth_date
+                    EXISTS x_country_code:country_code
+                      AND
+                        PRED players(x_player_id, x_first_name, x_last_name, x_hand, x_birth_date, x_country_code)
+                        EQ  x_country_code = USA<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : first_name, b : birth_date) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local birth_date, global date -> IntSort()
+        c : local country_code, global text -> StringSort()
+        f : local first_name, global text -> StringSort()
+        h : local hand, global text -> StringSort()
+        l : local last_name, global text -> StringSort()
+        p : local player_id, global int -> IntSort()
+      Predicted FOL:
+        x_birth_date : local birth_date, global date -> IntSort()
+        x_country_code : local country_code, global text -> StringSort()
+        x_first_name : local first_name, global text -> StringSort()
+        x_hand : local hand, global text -> StringSort()
+        x_last_name : local last_name, global text -> StringSort()
+        x_player_id : local player_id, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5536 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_49.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : first_name, b : birth_date) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

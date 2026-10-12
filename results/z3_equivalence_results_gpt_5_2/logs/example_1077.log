@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1077.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1077.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2898 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the dates of ceremony and results for each music festival?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Category = text -> StringSort()
+        Date_of_ceremony = text -> StringSort()
+        ID = int -> IntSort()
+        Music_Festival = text -> StringSort()
+        Result = text -> StringSort()
+        Volume = int -> IntSort()
+      symbols:
+        music_festival(ID, Music_Festival, Date_of_ceremony, Category, Volume, Result)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃m : Music_Festival ∃c : Category ∃v : Volume ( music_festival(i,m,d,c,v,r) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:m COLON:: IDENT:Music_Festival EXISTS:∃ IDENT:c COLON:: IDENT:Category EXISTS:∃ IDENT:v COLON:: IDENT:Volume LPAR:( IDENT:music_festival LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, IDENT:c COMMA:, IDENT:v COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS m:Music_Festival
+              EXISTS c:Category
+                EXISTS v:Volume
+                  PRED music_festival(i, m, d, c, v, r)
+      Predicted FOL: ∀m:Music_Festival ∀d:Date_of_ceremony ∀r:Result ( (∃i:ID ∃cat:Category ∃v:Volume music_festival(i, m, d, cat, v, r)) → ∃i2:ID ∃cat2:Category ∃v2:Volume music_festival(i2, m, d, cat2, v2, r) )
+        tokens: FORALL:∀ IDENT:m COLON:: IDENT:Music_Festival FORALL:∀ IDENT:d COLON:: IDENT:Date_of_ceremony FORALL:∀ IDENT:r COLON:: IDENT:Result LPAR:( LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:cat COLON:: IDENT:Category EXISTS:∃ IDENT:v COLON:: IDENT:Volume IDENT:music_festival LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, IDENT:cat COMMA:, IDENT:v COMMA:, IDENT:r RPAR:) RPAR:) IMPL:→ EXISTS:∃ IDENT:i2 COLON:: IDENT:ID EXISTS:∃ IDENT:cat2 COLON:: IDENT:Category EXISTS:∃ IDENT:v2 COLON:: IDENT:Volume IDENT:music_festival LPAR:( IDENT:i2 COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, IDENT:cat2 COMMA:, IDENT:v2 COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          FORALL m:Music_Festival
+            FORALL d:Date_of_ceremony
+              FORALL r:Result
+                IMPLIES
+                  EXISTS i:ID
+                    EXISTS cat:Category
+                      EXISTS v:Volume
+                        PRED music_festival(i, m, d, cat, v, r)
+                  EXISTS i2:ID
+                    EXISTS cat2:Category
+                      EXISTS v2:Volume
+                        PRED music_festival(i2, m, d, cat2, v2, r)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (d : Date_of_ceremony, r : Result) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Category, global text -> StringSort()
+        d : local Date_of_ceremony, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        m : local Music_Festival, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        v : local Volume, global int -> IntSort()
+      Predicted FOL:
+        cat : local Category, global text -> StringSort()
+        cat2 : local Category, global text -> StringSort()
+        d : local Date_of_ceremony, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        i2 : local ID, global int -> IntSort()
+        m : local Music_Festival, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        v : local Volume, global int -> IntSort()
+        v2 : local Volume, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5448 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1077.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (d : Date_of_ceremony, r : Result) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

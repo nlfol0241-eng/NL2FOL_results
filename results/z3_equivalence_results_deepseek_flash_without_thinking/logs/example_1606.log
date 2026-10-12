@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1606.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1606.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3400 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the number of kids staying in the rooms reserved by a person called ROY SWEAZ.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Adults = integer -> IntSort()
+        CheckIn = text -> StringSort()
+        CheckOut = text -> StringSort()
+        Code = integer -> IntSort()
+        FirstName = text -> StringSort()
+        Kids = integer -> IntSort()
+        LastName = text -> StringSort()
+        Rate = real -> Float32()
+        Room = text -> StringSort()
+      symbols:
+        Reservations(Code, Room, CheckIn, CheckOut, Rate, LastName, FirstName, Adults, Kids)
+        constant ROY : FirstName
+        constant SWEAZY : LastName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Code ∃r : Room ∃c1 : CheckIn ∃c2 : CheckOut ∃r1 : Rate ∃l : LastName ∃f : FirstName ∃a : Adults ( (Reservations(c,r,c1,c2,r1,l,f,a,k)) ∧ ((f = 'ROY') ∧ (l = 'SWEAZY')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:r COLON:: IDENT:Room EXISTS:∃ IDENT:c1 COLON:: IDENT:CheckIn EXISTS:∃ IDENT:c2 COLON:: IDENT:CheckOut EXISTS:∃ IDENT:r1 COLON:: IDENT:Rate EXISTS:∃ IDENT:l COLON:: IDENT:LastName EXISTS:∃ IDENT:f COLON:: IDENT:FirstName EXISTS:∃ IDENT:a COLON:: IDENT:Adults LPAR:( LPAR:( IDENT:Reservations LPAR:( IDENT:c COMMA:, IDENT:r COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:r1 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:k RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f EQ:= LIT:ROY RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:SWEAZY RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Code
+            EXISTS r:Room
+              EXISTS c1:CheckIn
+                EXISTS c2:CheckOut
+                  EXISTS r1:Rate
+                    EXISTS l:LastName
+                      EXISTS f:FirstName
+                        EXISTS a:Adults
+                          AND
+                            PRED Reservations(c, r, c1, c2, r1, l, f, a, k)
+                            AND
+                              EQ  f = 'ROY'
+                              EQ  l = 'SWEAZY'
+      Predicted FOL: ∃r : Room ∃ci : CheckIn ∃co : CheckOut ∃rt : Rate ∃ln : LastName ∃fn : FirstName ∃ad : Adults ∃kd : Kids (Reservations(r, ci, co, rt, ln, fn, ad, kd) ∧ ln = 'SWEAZY' ∧ fn = 'ROY')
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Room EXISTS:∃ IDENT:ci COLON:: IDENT:CheckIn EXISTS:∃ IDENT:co COLON:: IDENT:CheckOut EXISTS:∃ IDENT:rt COLON:: IDENT:Rate EXISTS:∃ IDENT:ln COLON:: IDENT:LastName EXISTS:∃ IDENT:fn COLON:: IDENT:FirstName EXISTS:∃ IDENT:ad COLON:: IDENT:Adults EXISTS:∃ IDENT:kd COLON:: IDENT:Kids LPAR:( IDENT:Reservations LPAR:( IDENT:r COMMA:, IDENT:ci COMMA:, IDENT:co COMMA:, IDENT:rt COMMA:, IDENT:ln COMMA:, IDENT:fn COMMA:, IDENT:ad COMMA:, IDENT:kd RPAR:) AND:∧ IDENT:ln EQ:= LIT:SWEAZY AND:∧ IDENT:fn EQ:= LIT:ROY RPAR:) EOF
+        AST:
+          EXISTS r:Room
+            EXISTS ci:CheckIn
+              EXISTS co:CheckOut
+                EXISTS rt:Rate
+                  EXISTS ln:LastName
+                    EXISTS fn:FirstName
+                      EXISTS ad:Adults
+                        EXISTS kd:Kids
+                          AND
+                            PRED Reservations(r, ci, co, rt, ln, fn, ad, kd)
+                            EQ  ln = 'SWEAZY'
+                            EQ  fn = 'ROY'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (k : Kids) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'Reservations' applied to 8 arguments but declared with arity 9
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 5 more times]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 146, in infer
+    raise ValueError(
+ValueError: predicate 'Reservations' applied to 8 arguments but declared with arity 9

@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3686.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3686.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4180 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what states border states that border states that border florida
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        border = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        constant florida : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name( ∃b1 : border( ((border_info(s,b)) ∧ (∃s1 : state_name( ∃b2 : border( ((border_info(s1,b1)) ∧ (∃s2 : state_name( (border_info(s2,b2)) ∧ (s2 = 'florida') ))) ∧ (s1 = b2) ) ))) ∧ (s = b1) ) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:b1 COLON:: IDENT:border LPAR:( LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:b2 COLON:: IDENT:border LPAR:( LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s1 COMMA:, IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s2 COMMA:, IDENT:b2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s2 EQ:= LIT:florida RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= IDENT:b2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:b1 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS b1:border
+              AND
+                AND
+                  PRED border_info(s, b)
+                  EXISTS s1:state_name
+                    EXISTS b2:border
+                      AND
+                        AND
+                          PRED border_info(s1, b1)
+                          EXISTS s2:state_name
+                            AND
+                              PRED border_info(s2, b2)
+                              EQ  s2 = 'florida'
+                        EQ  s1 = b2
+                EQ  s = b1
+      Predicted FOL: ∃x1 : state_name ∃x2 : border ∃x3 : state_name ∃x4 : border (border_info(x1, x2) ∧ border_info(x2, x3) ∧ border_info(x3, x4) ∧ border_info(x4, 'florida'))
+        tokens: EXISTS:∃ IDENT:x1 COLON:: IDENT:state_name EXISTS:∃ IDENT:x2 COLON:: IDENT:border EXISTS:∃ IDENT:x3 COLON:: IDENT:state_name EXISTS:∃ IDENT:x4 COLON:: IDENT:border LPAR:( IDENT:border_info LPAR:( IDENT:x1 COMMA:, IDENT:x2 RPAR:) AND:∧ IDENT:border_info LPAR:( IDENT:x2 COMMA:, IDENT:x3 RPAR:) AND:∧ IDENT:border_info LPAR:( IDENT:x3 COMMA:, IDENT:x4 RPAR:) AND:∧ IDENT:border_info LPAR:( IDENT:x4 COMMA:, LIT:florida RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x1:state_name
+            EXISTS x2:border
+              EXISTS x3:state_name
+                EXISTS x4:border
+                  AND
+                    PRED border_info(x1, x2)
+                    PRED border_info(x2, x3)
+                    PRED border_info(x3, x4)
+                    PRED border_info(x4, 'florida')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (b : border) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local border, global text -> StringSort()
+        b1 : local border, global text -> StringSort()
+        b2 : local border, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+        s1 : local state_name, global text -> StringSort()
+        s2 : local state_name, global text -> StringSort()
+      Predicted FOL:
+        x1 : local state_name, global text -> StringSort()
+        x2 : local border, global text -> StringSort()
+        x3 : local state_name, global text -> StringSort()
+        x4 : local border, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5490 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3686.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (b : border) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

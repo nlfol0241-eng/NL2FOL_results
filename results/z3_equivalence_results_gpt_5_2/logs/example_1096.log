@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1096.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1096.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3306 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids and details of all accounts?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Account_Details = varchar(255) -> StringSort()
+        Account_ID = integer -> IntSort()
+        Statement_ID = integer -> IntSort()
+      symbols:
+        Accounts(Account_ID, Statement_ID, Account_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Statement_ID ( Accounts(a,s,a1) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Statement_ID LPAR:( IDENT:Accounts LPAR:( IDENT:a COMMA:, IDENT:s COMMA:, IDENT:a1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Statement_ID
+            PRED Accounts(a, s, a1)
+      Predicted FOL: ∃g1:Statement_ID ∃g2:Account_Details Accounts(g0, g1, g2)
+        tokens: EXISTS:∃ IDENT:g1 COLON:: IDENT:Statement_ID EXISTS:∃ IDENT:g2 COLON:: IDENT:Account_Details IDENT:Accounts LPAR:( IDENT:g0 COMMA:, IDENT:g1 COMMA:, IDENT:g2 RPAR:) EOF
+        AST:
+          EXISTS g1:Statement_ID
+            EXISTS g2:Account_Details
+              PRED Accounts(g0, g1, g2)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) g2 do not occur free in the formula
+   2 shared answer variable(s)
+      FV_Account_Details_0 : Account_Details   Gold a1 <-> Predicted g2
+      FV_Account_ID_0 : Account_ID   Gold a <-> Predicted g0
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Account_ID, global integer -> IntSort()
+        a1 : local Account_Details, global varchar(255) -> StringSort()
+        s : local Statement_ID, global integer -> IntSort()
+      Predicted FOL:
+        g0 : local Account_ID, global integer -> IntSort()
+        g1 : local Statement_ID, global integer -> IntSort()
+        g2 : local Account_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1], P_Accounts(FV_Account_ID_0, gold_s_1, FV_Account_Details_0))
+      gold_skolem (witnesses WGOLD_s):  P_Accounts(FV_Account_ID_0, WGOLD_s, FV_Account_Details_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_g1_1, predicted_g2_2], And(D_varchar_255_(predicted_g2_2), P_Accounts(FV_Account_ID_0, predicted_g1_1, predicted_g2_2)))
+      predicted_skolem (witnesses WPREDICTED_g1, WPREDICTED_g2):  And(D_varchar_255_(WPREDICTED_g2), P_Accounts(FV_Account_ID_0, WPREDICTED_g1, WPREDICTED_g2))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 721 lines, 26696 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1096.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Account_Details_0) <= 255
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s
+      claim: And(Accounts(FV_Account_ID_0, WGOLD_s, FV_Account_Details_0), Not(Exists([predicted_g1_1, predicted_g2_2], And(Length(predicted_g2_2) <= 255, Accounts(FV_Account_ID_0, predicted_g1_1, predicted_g2_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.019 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_g1, WPREDICTED_g2
+      claim: And(And(Length(WPREDICTED_g2) <= 255, Accounts(FV_Account_ID_0, WPREDICTED_g1, WPREDICTED_g2)), Not(Exists(gold_s_1, Accounts(FV_Account_ID_0, gold_s_1, FV_Account_Details_0))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.013 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 5 relation tuple(s) listed, 4 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          g1 : Statement_ID = 3
+          g2 : Account_Details = 'A'
+        free (answer) variables:
+          FV_Account_Details_0 : Account_Details = ''
+          FV_Account_ID_0 : Account_ID = 2
+        relations (each value tagged with the local sort of its position):
+          Accounts(Account_ID, Statement_ID, Account_Details):
+            Accounts(Account_ID=0, Statement_ID=4, Account_Details='B')
+            Accounts(Account_ID=2, Statement_ID=3, Account_Details='A')
+            Accounts(Account_ID=3, Statement_ID=0, Account_Details='')
+            Accounts(Account_ID=3, Statement_ID=2, Account_Details='A')
+            Accounts(Account_ID=4, Statement_ID=0, Account_Details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Account_Details : {'', 'A', 'B'}
+          Account_ID      : {0, 2, 3, 4}
+          Statement_ID    : {0, 2, 3, 4}
+        values shared across local sorts (joins):
+          0 : Account_ID, Statement_ID
+          2 : Account_ID, Statement_ID
+          3 : Account_ID, Statement_ID
+          4 : Account_ID, Statement_ID
+   [R3] took 0.087 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1868.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1868.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4059 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all the instruments ever used by the musician with last name "Heilo"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        BandmateId = integer -> IntSort()
+        Firstname = text -> StringSort()
+        Id = integer -> IntSort()
+        Instrument = text -> StringSort()
+        Lastname = text -> StringSort()
+        SongId = integer -> IntSort()
+      symbols:
+        Band(Id, Firstname, Lastname)
+        Instruments(SongId, BandmateId, Instrument)
+        constant Heilo : Lastname
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : SongId ∃b : BandmateId ∃i1 : Id ∃f : Firstname ∃l : Lastname ( (((Instruments(s,b,i)) ∧ (Band(i1,f,l))) ∧ (b = i1)) ∧ (l = 'Heilo') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:BandmateId EXISTS:∃ IDENT:i1 COLON:: IDENT:Id EXISTS:∃ IDENT:f COLON:: IDENT:Firstname EXISTS:∃ IDENT:l COLON:: IDENT:Lastname LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Instruments LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Band LPAR:( IDENT:i1 COMMA:, IDENT:f COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:Heilo RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:BandmateId
+              EXISTS i1:Id
+                EXISTS f:Firstname
+                  EXISTS l:Lastname
+                    AND
+                      AND
+                        AND
+                          PRED Instruments(s, b, i)
+                          PRED Band(i1, f, l)
+                        EQ  b = i1
+                      EQ  l = 'Heilo'
+      Predicted FOL: ∃b0 : Id ∃b1 : Firstname ∃b2 : Lastname (Band(b0, b1, b2) ∧ b2 = Heilo ∧ ∀i0 : Instrument (∃s0 : SongId ∃m0 : BandmateId Instruments(s0, m0, i0) ∧ m0 = b0 → Instruments(s0, m0, i0)))
+        tokens: EXISTS:∃ IDENT:b0 COLON:: IDENT:Id EXISTS:∃ IDENT:b1 COLON:: IDENT:Firstname EXISTS:∃ IDENT:b2 COLON:: IDENT:Lastname LPAR:( IDENT:Band LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 RPAR:) AND:∧ IDENT:b2 EQ:= IDENT:Heilo AND:∧ FORALL:∀ IDENT:i0 COLON:: IDENT:Instrument LPAR:( EXISTS:∃ IDENT:s0 COLON:: IDENT:SongId EXISTS:∃ IDENT:m0 COLON:: IDENT:BandmateId IDENT:Instruments LPAR:( IDENT:s0 COMMA:, IDENT:m0 COMMA:, IDENT:i0 RPAR:) AND:∧ IDENT:m0 EQ:= IDENT:b0 IMPL:→ IDENT:Instruments LPAR:( IDENT:s0 COMMA:, IDENT:m0 COMMA:, IDENT:i0 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b0:Id
+            EXISTS b1:Firstname
+              EXISTS b2:Lastname
+                AND
+                  PRED Band(b0, b1, b2)
+                  EQ  b2 = Heilo<const>
+                  FORALL i0:Instrument
+                    EXISTS s0:SongId
+                      EXISTS m0:BandmateId
+                        IMPLIES
+                          AND
+                            PRED Instruments(s0, m0, i0)
+                            EQ  m0 = b0
+                          PRED Instruments(s0, m0, i0)
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (i : Instrument) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local BandmateId, global integer -> IntSort()
+        f : local Firstname, global text -> StringSort()
+        i : local Instrument, global text -> StringSort()
+        i1 : local Id, global integer -> IntSort()
+        l : local Lastname, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+      Predicted FOL:
+        b0 : local Id, global integer -> IntSort()
+        b1 : local Firstname, global text -> StringSort()
+        b2 : local Lastname, global text -> StringSort()
+        i0 : local Instrument, global text -> StringSort()
+        m0 : local BandmateId, global integer -> IntSort()
+        s0 : local SongId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5471 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1868.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (i : Instrument) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

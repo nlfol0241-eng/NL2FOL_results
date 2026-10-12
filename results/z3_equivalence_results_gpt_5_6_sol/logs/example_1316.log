@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1316.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1316.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5889 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me all the researchers in " University of Michigan " .
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        aid = int -> IntSort()
+        continent = text -> StringSort()
+        homepage = text -> StringSort()
+        name = text -> StringSort()
+        oid = int -> IntSort()
+      symbols:
+        author(aid, homepage, name, oid)
+        organization(continent, homepage, name, oid)
+        constant University of Michigan : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : continent ∃h : homepage ∃n : name ∃o : oid ∃a : aid ∃h1 : homepage ∃o1 : oid ( (((organization(c,h,n,o)) ∧ (author(a,h1,n1,o1))) ∧ (o = o1)) ∧ (n = 'University of Michigan') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:continent EXISTS:∃ IDENT:h COLON:: IDENT:homepage EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:o COLON:: IDENT:oid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:h1 COLON:: IDENT:homepage EXISTS:∃ IDENT:o1 COLON:: IDENT:oid LPAR:( LPAR:( LPAR:( LPAR:( IDENT:organization LPAR:( IDENT:c COMMA:, IDENT:h COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a COMMA:, IDENT:h1 COMMA:, IDENT:n1 COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:University of Michigan RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:continent
+            EXISTS h:homepage
+              EXISTS n:name
+                EXISTS o:oid
+                  EXISTS a:aid
+                    EXISTS h1:homepage
+                      EXISTS o1:oid
+                        AND
+                          AND
+                            AND
+                              PRED organization(c, h, n, o)
+                              PRED author(a, h1, n1, o1)
+                            EQ  o = o1
+                          EQ  n = 'University of Michigan'
+      Predicted FOL: ∃aid : aid ∃authorHomepage : homepage ∃oid : oid ∃continent : continent ∃organizationHomepage : homepage (author(aid, authorHomepage, researcher, oid) ∧ organization(continent, organizationHomepage, 'University of Michigan', oid))
+        tokens: EXISTS:∃ IDENT:aid COLON:: IDENT:aid EXISTS:∃ IDENT:authorHomepage COLON:: IDENT:homepage EXISTS:∃ IDENT:oid COLON:: IDENT:oid EXISTS:∃ IDENT:continent COLON:: IDENT:continent EXISTS:∃ IDENT:organizationHomepage COLON:: IDENT:homepage LPAR:( IDENT:author LPAR:( IDENT:aid COMMA:, IDENT:authorHomepage COMMA:, IDENT:researcher COMMA:, IDENT:oid RPAR:) AND:∧ IDENT:organization LPAR:( IDENT:continent COMMA:, IDENT:organizationHomepage COMMA:, LIT:University of Michigan COMMA:, IDENT:oid RPAR:) RPAR:) EOF
+        AST:
+          EXISTS aid:aid
+            EXISTS authorHomepage:homepage
+              EXISTS oid:oid
+                EXISTS continent:continent
+                  EXISTS organizationHomepage:homepage
+                    AND
+                      PRED author(aid, authorHomepage, researcher, oid)
+                      PRED organization(continent, organizationHomepage, 'University of Michigan', oid)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n1 <-> Predicted researcher
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global int -> IntSort()
+        c : local continent, global text -> StringSort()
+        h : local homepage, global text -> StringSort()
+        h1 : local homepage, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+        o : local oid, global int -> IntSort()
+        o1 : local oid, global int -> IntSort()
+      Predicted FOL:
+        aid : local aid, global int -> IntSort()
+        authorHomepage : local homepage, global text -> StringSort()
+        continent : local continent, global text -> StringSort()
+        oid : local oid, global int -> IntSort()
+        organizationHomepage : local homepage, global text -> StringSort()
+        researcher : local name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_h_2, gold_n_3, gold_o_4, gold_a_5, gold_h1_6, gold_o1_7], And(And(And(P_organization(gold_c_1, gold_h_2, gold_n_3, gold_o_4), P_author(gold_a_5, gold_h1_6, FV_name_0, gold_o1_7)), (gold_o_4 == gold_o1_7)), (gold_n_3 == L_University_of_Michigan)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_h, WGOLD_n, WGOLD_o, WGOLD_a, WGOLD_h1, WGOLD_o1):  And(And(And(P_organization(WGOLD_c, WGOLD_h, WGOLD_n, WGOLD_o), P_author(WGOLD_a, WGOLD_h1, FV_name_0, WGOLD_o1)), (WGOLD_o == WGOLD_o1)), (WGOLD_n == L_University_of_Michigan))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_aid_1, predicted_authorHomepage_2, predicted_oid_3, predicted_continent_4, predicted_organizationHomepage_5], And(P_author(predicted_aid_1, predicted_authorHomepage_2, FV_name_0, predicted_oid_3), P_organization(predicted_continent_4, predicted_organizationHomepage_5, L_University_of_Michigan, predicted_oid_3)))
+      predicted_skolem (witnesses WPREDICTED_aid, WPREDICTED_authorHomepage, WPREDICTED_oid, WPREDICTED_continent, WPREDICTED_organizationHomepage):  And(P_author(WPREDICTED_aid, WPREDICTED_authorHomepage, FV_name_0, WPREDICTED_oid), P_organization(WPREDICTED_continent, WPREDICTED_organizationHomepage, L_University_of_Michigan, WPREDICTED_oid))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'University of Michigan' at text -> L_University_of_Michigan = StringVal('University of Michigan')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 753 lines, 29451 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1316.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_h, WGOLD_n, WGOLD_o, WGOLD_a, WGOLD_h1, WGOLD_o1
+      claim: And(And(And(And(organization(WGOLD_c, WGOLD_h, WGOLD_n, WGOLD_o), author(WGOLD_a, WGOLD_h1, FV_name_0, WGOLD_o1)), WGOLD_o == WGOLD_o1), WGOLD_n == "University of Michigan"), Not(Exists([predicted_aid_1, predicted_authorHomepage_2, predicted_oid_3, predicted_continent_4, predicted_organizationHomepage_5], And(author(predicted_aid_1, predicted_authorHomepage_2, FV_name_0, predicted_oid_3), organization(predicted_continent_4, predicted_organizationHomepage_5, "University of Michigan", predicted_oid_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_aid, WPREDICTED_authorHomepage, WPREDICTED_oid, WPREDICTED_continent, WPREDICTED_organizationHomepage
+      claim: And(And(author(WPREDICTED_aid, WPREDICTED_authorHomepage, FV_name_0, WPREDICTED_oid), organization(WPREDICTED_continent, WPREDICTED_organizationHomepage, "University of Michigan", WPREDICTED_oid)), Not(Exists([gold_c_1, gold_h_2, gold_n_3, gold_o_4, gold_a_5, gold_h1_6, gold_o1_7], And(And(And(organization(gold_c_1, gold_h_2, gold_n_3, gold_o_4), author(gold_a_5, gold_h1_6, FV_name_0, gold_o1_7)), gold_o_4 == gold_o1_7), gold_n_3 == "University of Michigan"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

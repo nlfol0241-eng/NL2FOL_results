@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_554.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_554.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5546 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the different product sizes?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        parent_product_id = integer -> IntSort()
+        product_color = varchar(20) -> StringSort()
+        product_id = integer -> IntSort()
+        product_name = varchar(80) -> StringSort()
+        product_size = varchar(20) -> StringSort()
+        production_type_code = varchar(15) -> StringSort()
+        unit_price = decimal(19,4) -> RealSort()
+      symbols:
+        Products(product_id, parent_product_id, production_type_code, unit_price, product_name, product_color, product_size)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃p1 : parent_product_id ∃p2 : production_type_code ∃u : unit_price ∃p3 : product_name ∃p4 : product_color ( Products(p,p1,p2,u,p3,p4,p5) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:p1 COLON:: IDENT:parent_product_id EXISTS:∃ IDENT:p2 COLON:: IDENT:production_type_code EXISTS:∃ IDENT:u COLON:: IDENT:unit_price EXISTS:∃ IDENT:p3 COLON:: IDENT:product_name EXISTS:∃ IDENT:p4 COLON:: IDENT:product_color LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:u COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS p1:parent_product_id
+              EXISTS p2:production_type_code
+                EXISTS u:unit_price
+                  EXISTS p3:product_name
+                    EXISTS p4:product_color
+                      PRED Products(p, p1, p2, u, p3, p4, p5)
+      Predicted FOL: ∃ product_id : product_id ∃ parent_product_id : parent_product_id ∃ production_type_code : production_type_code ∃ unit_price : unit_price ∃ product_name : product_name ∃ product_color : product_color Products(product_id, parent_product_id, production_type_code, unit_price, product_name, product_color, product_size)
+        tokens: EXISTS:∃ IDENT:product_id COLON:: IDENT:product_id EXISTS:∃ IDENT:parent_product_id COLON:: IDENT:parent_product_id EXISTS:∃ IDENT:production_type_code COLON:: IDENT:production_type_code EXISTS:∃ IDENT:unit_price COLON:: IDENT:unit_price EXISTS:∃ IDENT:product_name COLON:: IDENT:product_name EXISTS:∃ IDENT:product_color COLON:: IDENT:product_color IDENT:Products LPAR:( IDENT:product_id COMMA:, IDENT:parent_product_id COMMA:, IDENT:production_type_code COMMA:, IDENT:unit_price COMMA:, IDENT:product_name COMMA:, IDENT:product_color COMMA:, IDENT:product_size RPAR:) EOF
+        AST:
+          EXISTS product_id:product_id
+            EXISTS parent_product_id:parent_product_id
+              EXISTS production_type_code:production_type_code
+                EXISTS unit_price:unit_price
+                  EXISTS product_name:product_name
+                    EXISTS product_color:product_color
+                      PRED Products(product_id, parent_product_id, production_type_code, unit_price, product_name, product_color, product_size)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_product_size_0 : product_size   Gold p5 <-> Predicted product_size
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local product_id, global integer -> IntSort()
+        p1 : local parent_product_id, global integer -> IntSort()
+        p2 : local production_type_code, global varchar(15) -> StringSort()
+        p3 : local product_name, global varchar(80) -> StringSort()
+        p4 : local product_color, global varchar(20) -> StringSort()
+        p5 : local product_size, global varchar(20) -> StringSort()
+        u : local unit_price, global decimal(19,4) -> RealSort()
+      Predicted FOL:
+        parent_product_id : local parent_product_id, global integer -> IntSort()
+        product_color : local product_color, global varchar(20) -> StringSort()
+        product_id : local product_id, global integer -> IntSort()
+        product_name : local product_name, global varchar(80) -> StringSort()
+        product_size : local product_size, global varchar(20) -> StringSort()
+        production_type_code : local production_type_code, global varchar(15) -> StringSort()
+        unit_price : local unit_price, global decimal(19,4) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6], And(D_varchar_15_(gold_p2_3), D_decimal_19_4_(gold_u_4), D_varchar_80_(gold_p3_5), D_varchar_20_(gold_p4_6), P_Products(gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6, FV_product_size_0)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4):  And(D_varchar_15_(WGOLD_p2), D_decimal_19_4_(WGOLD_u), D_varchar_80_(WGOLD_p3), D_varchar_20_(WGOLD_p4), P_Products(WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4, FV_product_size_0))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_product_id_1, predicted_parent_product_id_2, predicted_production_type_code_3, predicted_unit_price_4, predicted_product_name_5, predicted_product_color_6], And(D_varchar_15_(predicted_production_type_code_3), D_decimal_19_4_(predicted_unit_price_4), D_varchar_80_(predicted_product_name_5), D_varchar_20_(predicted_product_color_6), P_Products(predicted_product_id_1, predicted_parent_product_id_2, predicted_production_type_code_3, predicted_unit_price_4, predicted_product_name_5, predicted_product_color_6, FV_product_size_0)))
+      predicted_skolem (witnesses WPREDICTED_product_id, WPREDICTED_parent_product_id, WPREDICTED_production_type_code, WPREDICTED_unit_price, WPREDICTED_product_name, WPREDICTED_product_color):  And(D_varchar_15_(WPREDICTED_production_type_code), D_decimal_19_4_(WPREDICTED_unit_price), D_varchar_80_(WPREDICTED_product_name), D_varchar_20_(WPREDICTED_product_color), P_Products(WPREDICTED_product_id, WPREDICTED_parent_product_id, WPREDICTED_production_type_code, WPREDICTED_unit_price, WPREDICTED_product_name, WPREDICTED_product_color, FV_product_size_0))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 769 lines, 31403 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_554.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_product_size_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4
+      claim: And(And(Length(WGOLD_p2) <= 15, And(IsInt(WGOLD_u*10000), WGOLD_u > -1000000000000000, WGOLD_u < 1000000000000000), Length(WGOLD_p3) <= 80, Length(WGOLD_p4) <= 20, Products(WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4, FV_product_size_0)), Not(Exists([predicted_product_id_1, predicted_parent_product_id_2, predicted_production_type_code_3, predicted_unit_price_4, predicted_product_name_5, predicted_product_color_6], And(Length(predicted_production_type_code_3) <= 15, And(IsInt(predicted_unit_price_4*10000), predicted_unit_price_4 > -1000000000000000, predicted_unit_price_4 < 1000000000000000), Length(predicted_product_name_5) <= 80, Length(predicted_product_color_6) <= 20, Products(predicted_product_id_1, predicted_parent_product_id_2, predicted_production_type_code_3, predicted_unit_price_4, predicted_product_name_5, predicted_product_color_6, FV_product_size_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_product_id, WPREDICTED_parent_product_id, WPREDICTED_production_type_code, WPREDICTED_unit_price, WPREDICTED_product_name, WPREDICTED_product_color
+      claim: And(And(Length(WPREDICTED_production_type_code) <= 15, And(IsInt(WPREDICTED_unit_price*10000), WPREDICTED_unit_price > -1000000000000000, WPREDICTED_unit_price < 1000000000000000), Length(WPREDICTED_product_name) <= 80, Length(WPREDICTED_product_color) <= 20, Products(WPREDICTED_product_id, WPREDICTED_parent_product_id, WPREDICTED_production_type_code, WPREDICTED_unit_price, WPREDICTED_product_name, WPREDICTED_product_color, FV_product_size_0)), Not(Exists([gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6], And(Length(gold_p2_3) <= 15, And(IsInt(gold_u_4*10000), gold_u_4 > -1000000000000000, gold_u_4 < 1000000000000000), Length(gold_p3_5) <= 80, Length(gold_p4_6) <= 20, Products(gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6, FV_product_size_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

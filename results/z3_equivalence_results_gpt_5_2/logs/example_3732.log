@@ -1,0 +1,150 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3732.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3732.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5579 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what rivers run through the states that border the state with the capital atlanta
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        border = text -> StringSort()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        length = integer -> IntSort()
+        population = integer -> IntSort()
+        river_name = text -> StringSort()
+        state_name = text -> StringSort()
+        traverse = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        river(river_name, length, country_name, traverse)
+        state(state_name, population, area, country_name, capital, density)
+        constant atlanta : capital
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : country_name ∃l : length ∃t : traverse( ∃b : border( ((river(r,l,c,t)) ∧ (∃s : state_name( ∃s1 : state_name( ((border_info(s,b)) ∧ (∃d : density ∃a : area ∃c1 : country_name ∃c2 : capital ∃p : population( (state(s1,p,a,c1,c2,d)) ∧ (c2 = 'atlanta') ))) ∧ (s = s1) ) ))) ∧ (t = b) ) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:l COLON:: IDENT:length EXISTS:∃ IDENT:t COLON:: IDENT:traverse LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:border LPAR:( LPAR:( LPAR:( IDENT:river LPAR:( IDENT:r COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c1 COLON:: IDENT:country_name EXISTS:∃ IDENT:c2 COLON:: IDENT:capital EXISTS:∃ IDENT:p COLON:: IDENT:population LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s1 COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c2 EQ:= LIT:atlanta RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:b RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:country_name
+            EXISTS l:length
+              EXISTS t:traverse
+                EXISTS b:border
+                  AND
+                    AND
+                      PRED river(r, l, c, t)
+                      EXISTS s:state_name
+                        EXISTS s1:state_name
+                          AND
+                            AND
+                              PRED border_info(s, b)
+                              EXISTS d:density
+                                EXISTS a:area
+                                  EXISTS c1:country_name
+                                    EXISTS c2:capital
+                                      EXISTS p:population
+                                        AND
+                                          PRED state(s1, p, a, c1, c2, d)
+                                          EQ  c2 = 'atlanta'
+                            EQ  s = s1
+                    EQ  t = b
+      Predicted FOL: ∃r0:river_name ∃r1:length ∃r2:country_name ∃r3:traverse ( river(r0, r1, r2, r3) ∧ ∃s0:state_name ∃s1:population ∃s2:area ∃s3:country_name ∃s4:capital ∃s5:density ( state(s0, s1, s2, s3, s4, s5) ∧ s4 = atlanta ∧ ∃b0:state_name ∃b1:border ( border_info(b0, b1) ∧ b1 = s0 ∧ ∃s0b:state_name ∃s1b:population ∃s2b:area ∃s3b:country_name ∃s4b:capital ∃s5b:density ( state(s0b, s1b, s2b, s3b, s4b, s5b) ∧ s0b = b0 ∧ r3 = s0b ) ) ) )
+        tokens: EXISTS:∃ IDENT:r0 COLON:: IDENT:river_name EXISTS:∃ IDENT:r1 COLON:: IDENT:length EXISTS:∃ IDENT:r2 COLON:: IDENT:country_name EXISTS:∃ IDENT:r3 COLON:: IDENT:traverse LPAR:( IDENT:river LPAR:( IDENT:r0 COMMA:, IDENT:r1 COMMA:, IDENT:r2 COMMA:, IDENT:r3 RPAR:) AND:∧ EXISTS:∃ IDENT:s0 COLON:: IDENT:state_name EXISTS:∃ IDENT:s1 COLON:: IDENT:population EXISTS:∃ IDENT:s2 COLON:: IDENT:area EXISTS:∃ IDENT:s3 COLON:: IDENT:country_name EXISTS:∃ IDENT:s4 COLON:: IDENT:capital EXISTS:∃ IDENT:s5 COLON:: IDENT:density LPAR:( IDENT:state LPAR:( IDENT:s0 COMMA:, IDENT:s1 COMMA:, IDENT:s2 COMMA:, IDENT:s3 COMMA:, IDENT:s4 COMMA:, IDENT:s5 RPAR:) AND:∧ IDENT:s4 EQ:= IDENT:atlanta AND:∧ EXISTS:∃ IDENT:b0 COLON:: IDENT:state_name EXISTS:∃ IDENT:b1 COLON:: IDENT:border LPAR:( IDENT:border_info LPAR:( IDENT:b0 COMMA:, IDENT:b1 RPAR:) AND:∧ IDENT:b1 EQ:= IDENT:s0 AND:∧ EXISTS:∃ IDENT:s0b COLON:: IDENT:state_name EXISTS:∃ IDENT:s1b COLON:: IDENT:population EXISTS:∃ IDENT:s2b COLON:: IDENT:area EXISTS:∃ IDENT:s3b COLON:: IDENT:country_name EXISTS:∃ IDENT:s4b COLON:: IDENT:capital EXISTS:∃ IDENT:s5b COLON:: IDENT:density LPAR:( IDENT:state LPAR:( IDENT:s0b COMMA:, IDENT:s1b COMMA:, IDENT:s2b COMMA:, IDENT:s3b COMMA:, IDENT:s4b COMMA:, IDENT:s5b RPAR:) AND:∧ IDENT:s0b EQ:= IDENT:b0 AND:∧ IDENT:r3 EQ:= IDENT:s0b RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r0:river_name
+            EXISTS r1:length
+              EXISTS r2:country_name
+                EXISTS r3:traverse
+                  AND
+                    PRED river(r0, r1, r2, r3)
+                    EXISTS s0:state_name
+                      EXISTS s1:population
+                        EXISTS s2:area
+                          EXISTS s3:country_name
+                            EXISTS s4:capital
+                              EXISTS s5:density
+                                AND
+                                  PRED state(s0, s1, s2, s3, s4, s5)
+                                  EQ  s4 = atlanta<const>
+                                  EXISTS b0:state_name
+                                    EXISTS b1:border
+                                      AND
+                                        PRED border_info(b0, b1)
+                                        EQ  b1 = s0
+                                        EXISTS s0b:state_name
+                                          EXISTS s1b:population
+                                            EXISTS s2b:area
+                                              EXISTS s3b:country_name
+                                                EXISTS s4b:capital
+                                                  EXISTS s5b:density
+                                                    AND
+                                                      PRED state(s0b, s1b, s2b, s3b, s4b, s5b)
+                                                      EQ  s0b = b0
+                                                      EQ  r3 = s0b
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (r : river_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 30 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        b : local border, global text -> StringSort()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local country_name, global varchar(3) -> StringSort()
+        c2 : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        l : local length, global integer -> IntSort()
+        p : local population, global integer -> IntSort()
+        r : local river_name, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+        s1 : local state_name, global text -> StringSort()
+        t : local traverse, global text -> StringSort()
+      Predicted FOL:
+        b0 : local state_name, global text -> StringSort()
+        b1 : local border, global text -> StringSort()
+        r0 : local river_name, global text -> StringSort()
+        r1 : local length, global integer -> IntSort()
+        r2 : local country_name, global varchar(3) -> StringSort()
+        r3 : local traverse, global text -> StringSort()
+        s0 : local state_name, global text -> StringSort()
+        s0b : local state_name, global text -> StringSort()
+        s1 : local population, global integer -> IntSort()
+        s1b : local population, global integer -> IntSort()
+        s2 : local area, global double -> Float64()
+        s2b : local area, global double -> Float64()
+        s3 : local country_name, global varchar(3) -> StringSort()
+        s3b : local country_name, global varchar(3) -> StringSort()
+        s4 : local capital, global text -> StringSort()
+        s4b : local capital, global text -> StringSort()
+        s5 : local density, global double -> Float64()
+        s5b : local density, global double -> Float64()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5915 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3732.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (r : river_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

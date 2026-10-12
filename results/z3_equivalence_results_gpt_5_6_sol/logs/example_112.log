@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_112.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_112.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4556 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: How much does each charge type costs? List both charge type and amount.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+      local sorts:
+        charge_amount = decimal(19,4) -> RealSort()
+        charge_id = integer -> IntSort()
+        charge_type = varchar(10) -> StringSort()
+      symbols:
+        Charges(charge_id, charge_type, charge_amount)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : charge_id ( Charges(c,c1,c2) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:charge_id LPAR:( IDENT:Charges LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:charge_id
+            PRED Charges(c, c1, c2)
+      Predicted FOL: ∃i : charge_id Charges(i, t, a)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:charge_id IDENT:Charges LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:a RPAR:) EOF
+        AST:
+          EXISTS i:charge_id
+            PRED Charges(i, t, a)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_charge_amount_0 : charge_amount   Gold c2 <-> Predicted a
+      FV_charge_type_0 : charge_type   Gold c1 <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local charge_id, global integer -> IntSort()
+        c1 : local charge_type, global varchar(10) -> StringSort()
+        c2 : local charge_amount, global decimal(19,4) -> RealSort()
+      Predicted FOL:
+        a : local charge_amount, global decimal(19,4) -> RealSort()
+        i : local charge_id, global integer -> IntSort()
+        t : local charge_type, global varchar(10) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1], P_Charges(gold_c_1, FV_charge_type_0, FV_charge_amount_0))
+      gold_skolem (witnesses WGOLD_c):  P_Charges(WGOLD_c, FV_charge_type_0, FV_charge_amount_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1], P_Charges(predicted_i_1, FV_charge_type_0, FV_charge_amount_0))
+      predicted_skolem (witnesses WPREDICTED_i):  P_Charges(WPREDICTED_i, FV_charge_type_0, FV_charge_amount_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 724 lines, 26589 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_112.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_charge_amount_0*10000), FV_charge_amount_0 > -1000000000000000, FV_charge_amount_0 < 1000000000000000)
+      [1] Length(FV_charge_type_0) <= 10
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_c
+      claim: And(Charges(WGOLD_c, FV_charge_type_0, FV_charge_amount_0), Not(Exists(predicted_i_1, Charges(predicted_i_1, FV_charge_type_0, FV_charge_amount_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_i
+      claim: And(Charges(WPREDICTED_i, FV_charge_type_0, FV_charge_amount_0), Not(Exists(gold_c_1, Charges(gold_c_1, FV_charge_type_0, FV_charge_amount_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

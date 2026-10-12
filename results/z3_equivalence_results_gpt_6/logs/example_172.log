@@ -1,0 +1,47 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_172.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_172.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3109 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: give me the states that border kentucky
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        border = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        constant kentucky : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ( (border_info(s,b)) ∧ (s = 'kentucky') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:kentucky RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            AND
+              PRED border_info(s, b)
+              EQ  s = 'kentucky'
+      Predicted FOL: border_info(x, 'kentucky')
+        tokens: IDENT:border_info LPAR:( IDENT:x COMMA:, LIT:kentucky RPAR:) EOF
+        AST:
+          PRED border_info(x, 'kentucky')
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['border'] vs Predicted ['state_name']
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['border'] vs Predicted ['state_name']

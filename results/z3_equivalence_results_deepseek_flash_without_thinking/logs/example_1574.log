@@ -1,0 +1,128 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1574.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1574.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3859 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of perpetrators whose country is not "China"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 12 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Country = text -> StringSort()
+        Date = text -> StringSort()
+        Height = real -> Float32()
+        Home_Town = text -> StringSort()
+        Injured = int -> IntSort()
+        Killed = int -> IntSort()
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        People_ID = int -> IntSort()
+        Perpetrator_ID = int -> IntSort()
+        Weight = real -> Float32()
+        Year = real -> Float32()
+      symbols:
+        people(People_ID, Name, Height, Weight, Home_Town)
+        perpetrator(Perpetrator_ID, People_ID, Date, Year, Location, Country, Killed, Injured)
+        constant China : Country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : People_ID ∃h : Height ∃w : Weight ∃h1 : Home_Town ∃p1 : Perpetrator_ID ∃p2 : People_ID ∃d : Date ∃y : Year ∃l : Location ∃c : Country ∃k : Killed ∃i : Injured ( (((people(p,n,h,w,h1)) ∧ (perpetrator(p1,p2,d,y,l,c,k,i))) ∧ (p = p2)) ∧ (c <> 'China') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:People_ID EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:w COLON:: IDENT:Weight EXISTS:∃ IDENT:h1 COLON:: IDENT:Home_Town EXISTS:∃ IDENT:p1 COLON:: IDENT:Perpetrator_ID EXISTS:∃ IDENT:p2 COLON:: IDENT:People_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:k COLON:: IDENT:Killed EXISTS:∃ IDENT:i COLON:: IDENT:Injured LPAR:( LPAR:( LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:w COMMA:, IDENT:h1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:perpetrator LPAR:( IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:d COMMA:, IDENT:y COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:k COMMA:, IDENT:i RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c NEQ:<> LIT:China RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:People_ID
+            EXISTS h:Height
+              EXISTS w:Weight
+                EXISTS h1:Home_Town
+                  EXISTS p1:Perpetrator_ID
+                    EXISTS p2:People_ID
+                      EXISTS d:Date
+                        EXISTS y:Year
+                          EXISTS l:Location
+                            EXISTS c:Country
+                              EXISTS k:Killed
+                                EXISTS i:Injured
+                                  AND
+                                    AND
+                                      AND
+                                        PRED people(p, n, h, w, h1)
+                                        PRED perpetrator(p1, p2, d, y, l, c, k, i)
+                                      EQ  p = p2
+                                    NEQ  c != 'China'
+      Predicted FOL: ∃p : Perpetrator_ID ∃n : Name ∃c : Country (perpetrator(p, i, d, y, l, c, k, j) ∧ people(i, n, h, w, t) ∧ c ≠ 'China')
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Perpetrator_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( IDENT:perpetrator LPAR:( IDENT:p COMMA:, IDENT:i COMMA:, IDENT:d COMMA:, IDENT:y COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:k COMMA:, IDENT:j RPAR:) AND:∧ IDENT:people LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:w COMMA:, IDENT:t RPAR:) AND:∧ IDENT:c NEQ:≠ LIT:China RPAR:) EOF
+        AST:
+          EXISTS p:Perpetrator_ID
+            EXISTS n:Name
+              EXISTS c:Country
+                AND
+                  PRED perpetrator(p, i, d, y, l, c, k, j)
+                  PRED people(i, n, h, w, t)
+                  NEQ  c != 'China'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) i, d, y, l, k, j, h, w, t occur free in the formula but are not declared in 'free vars'
+   WARNING: Predicted FOL: declared free variable(s) n do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 25 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        d : local Date, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        h1 : local Home_Town, global text -> StringSort()
+        i : local Injured, global int -> IntSort()
+        k : local Killed, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local People_ID, global int -> IntSort()
+        p1 : local Perpetrator_ID, global int -> IntSort()
+        p2 : local People_ID, global int -> IntSort()
+        w : local Weight, global real -> Float32()
+        y : local Year, global real -> Float32()
+      Predicted FOL:
+        c : local Country, global text -> StringSort()
+        d : local Date, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        i : local People_ID, global int -> IntSort()
+        j : local Injured, global int -> IntSort()
+        k : local Killed, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local Perpetrator_ID, global int -> IntSort()
+        t : local Home_Town, global text -> StringSort()
+        w : local Weight, global real -> Float32()
+        y : local Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_h_2, gold_w_3, gold_h1_4, gold_p1_5, gold_p2_6, gold_d_7, gold_y_8, gold_l_9, gold_c_10, gold_k_11, gold_i_12], And(D_real(gold_h_2), D_real(gold_w_3), D_real(gold_y_8), And(And(And(P_people(gold_p_1, FV_Name_0, gold_h_2, gold_w_3, gold_h1_4), P_perpetrator(gold_p1_5, gold_p2_6, gold_d_7, gold_y_8, gold_l_9, gold_c_10, gold_k_11, gold_i_12)), (gold_p_1 == gold_p2_6)), (gold_c_10 != L_China))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_h, WGOLD_w, WGOLD_h1, WGOLD_p1, WGOLD_p2, WGOLD_d, WGOLD_y, WGOLD_l, WGOLD_c, WGOLD_k, WGOLD_i):  And(D_real(WGOLD_h), D_real(WGOLD_w), D_real(WGOLD_y), And(And(And(P_people(WGOLD_p, FV_Name_0, WGOLD_h, WGOLD_w, WGOLD_h1), P_perpetrator(WGOLD_p1, WGOLD_p2, WGOLD_d, WGOLD_y, WGOLD_l, WGOLD_c, WGOLD_k, WGOLD_i)), (WGOLD_p == WGOLD_p2)), (WGOLD_c != L_China)))
+   Gold: 12 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'i'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in formula
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in <genexpr>
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'i'

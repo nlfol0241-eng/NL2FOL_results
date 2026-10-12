@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1312.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1312.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5682 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me the organization " H. V. Jagadish " is in .
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        aid = int -> IntSort()
+        continent = text -> StringSort()
+        homepage = text -> StringSort()
+        name = text -> StringSort()
+        oid = int -> IntSort()
+      symbols:
+        author(aid, homepage, name, oid)
+        organization(continent, homepage, name, oid)
+        constant H. V. Jagadish : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : continent ∃h : homepage ∃o : oid ∃a : aid ∃h1 : homepage ∃n1 : name ∃o1 : oid ( (((organization(c,h,n,o)) ∧ (author(a,h1,n1,o1))) ∧ (o = o1)) ∧ (n1 = 'H. V. Jagadish') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:continent EXISTS:∃ IDENT:h COLON:: IDENT:homepage EXISTS:∃ IDENT:o COLON:: IDENT:oid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:h1 COLON:: IDENT:homepage EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:o1 COLON:: IDENT:oid LPAR:( LPAR:( LPAR:( LPAR:( IDENT:organization LPAR:( IDENT:c COMMA:, IDENT:h COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a COMMA:, IDENT:h1 COMMA:, IDENT:n1 COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:H. V. Jagadish RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:continent
+            EXISTS h:homepage
+              EXISTS o:oid
+                EXISTS a:aid
+                  EXISTS h1:homepage
+                    EXISTS n1:name
+                      EXISTS o1:oid
+                        AND
+                          AND
+                            AND
+                              PRED organization(c, h, n, o)
+                              PRED author(a, h1, n1, o1)
+                            EQ  o = o1
+                          EQ  n1 = 'H. V. Jagadish'
+      Predicted FOL: ∃x_oid : oid ∃x_homepage : homepage ∃x_name : name (organization(x_oid, x_homepage, x_name, x_oid) ∧ x_name = 'H. V. Jagadish')
+        tokens: EXISTS:∃ IDENT:x_oid COLON:: IDENT:oid EXISTS:∃ IDENT:x_homepage COLON:: IDENT:homepage EXISTS:∃ IDENT:x_name COLON:: IDENT:name LPAR:( IDENT:organization LPAR:( IDENT:x_oid COMMA:, IDENT:x_homepage COMMA:, IDENT:x_name COMMA:, IDENT:x_oid RPAR:) AND:∧ IDENT:x_name EQ:= LIT:H. V. Jagadish RPAR:) EOF
+        AST:
+          EXISTS x_oid:oid
+            EXISTS x_homepage:homepage
+              EXISTS x_name:name
+                AND
+                  PRED organization(x_oid, x_homepage, x_name, x_oid)
+                  EQ  x_name = 'H. V. Jagadish'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'x_oid' used at incompatible global sorts int and text
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'x_oid' used at incompatible global sorts int and text

@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1038.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1038.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5908 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct visit dates?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+      local sorts:
+        Tourist_Attraction_ID = integer -> IntSort()
+        Tourist_ID = integer -> IntSort()
+        Visit_Date = datetime -> IntSort()
+        Visit_Details = varchar(40) -> StringSort()
+        Visit_ID = integer -> IntSort()
+      symbols:
+        Visits(Visit_ID, Tourist_Attraction_ID, Tourist_ID, Visit_Date, Visit_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃v : Visit_ID ∃t : Tourist_Attraction_ID ∃t1 : Tourist_ID ∃v2 : Visit_Details ( Visits(v,t,t1,v1,v2) )
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:Visit_ID EXISTS:∃ IDENT:t COLON:: IDENT:Tourist_Attraction_ID EXISTS:∃ IDENT:t1 COLON:: IDENT:Tourist_ID EXISTS:∃ IDENT:v2 COLON:: IDENT:Visit_Details LPAR:( IDENT:Visits LPAR:( IDENT:v COMMA:, IDENT:t COMMA:, IDENT:t1 COMMA:, IDENT:v1 COMMA:, IDENT:v2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v:Visit_ID
+            EXISTS t:Tourist_Attraction_ID
+              EXISTS t1:Tourist_ID
+                EXISTS v2:Visit_Details
+                  PRED Visits(v, t, t1, v1, v2)
+      Predicted FOL: ∃m0:Visit_ID ∃m1:Tourist_Attraction_ID ∃m2:Tourist_ID ∃m4:Visit_Details Visits(m0,m1,m2,d,m4)
+        tokens: EXISTS:∃ IDENT:m0 COLON:: IDENT:Visit_ID EXISTS:∃ IDENT:m1 COLON:: IDENT:Tourist_Attraction_ID EXISTS:∃ IDENT:m2 COLON:: IDENT:Tourist_ID EXISTS:∃ IDENT:m4 COLON:: IDENT:Visit_Details IDENT:Visits LPAR:( IDENT:m0 COMMA:, IDENT:m1 COMMA:, IDENT:m2 COMMA:, IDENT:d COMMA:, IDENT:m4 RPAR:) EOF
+        AST:
+          EXISTS m0:Visit_ID
+            EXISTS m1:Tourist_Attraction_ID
+              EXISTS m2:Tourist_ID
+                EXISTS m4:Visit_Details
+                  PRED Visits(m0, m1, m2, d, m4)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Visit_Date_0 : Visit_Date   Gold v1 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        t : local Tourist_Attraction_ID, global integer -> IntSort()
+        t1 : local Tourist_ID, global integer -> IntSort()
+        v : local Visit_ID, global integer -> IntSort()
+        v1 : local Visit_Date, global datetime -> IntSort()
+        v2 : local Visit_Details, global varchar(40) -> StringSort()
+      Predicted FOL:
+        d : local Visit_Date, global datetime -> IntSort()
+        m0 : local Visit_ID, global integer -> IntSort()
+        m1 : local Tourist_Attraction_ID, global integer -> IntSort()
+        m2 : local Tourist_ID, global integer -> IntSort()
+        m4 : local Visit_Details, global varchar(40) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_v_1, gold_t_2, gold_t1_3, gold_v2_4], And(D_varchar_40_(gold_v2_4), P_Visits(gold_v_1, gold_t_2, gold_t1_3, FV_Visit_Date_0, gold_v2_4)))
+      gold_skolem (witnesses WGOLD_v, WGOLD_t, WGOLD_t1, WGOLD_v2):  And(D_varchar_40_(WGOLD_v2), P_Visits(WGOLD_v, WGOLD_t, WGOLD_t1, FV_Visit_Date_0, WGOLD_v2))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m0_1, predicted_m1_2, predicted_m2_3, predicted_m4_4], And(D_varchar_40_(predicted_m4_4), P_Visits(predicted_m0_1, predicted_m1_2, predicted_m2_3, FV_Visit_Date_0, predicted_m4_4)))
+      predicted_skolem (witnesses WPREDICTED_m0, WPREDICTED_m1, WPREDICTED_m2, WPREDICTED_m4):  And(D_varchar_40_(WPREDICTED_m4), P_Visits(WPREDICTED_m0, WPREDICTED_m1, WPREDICTED_m2, FV_Visit_Date_0, WPREDICTED_m4))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 741 lines, 28128 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1038.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_v, WGOLD_t, WGOLD_t1, WGOLD_v2
+      claim: And(And(Length(WGOLD_v2) <= 40, Visits(WGOLD_v, WGOLD_t, WGOLD_t1, FV_Visit_Date_0, WGOLD_v2)), Not(Exists([predicted_m0_1, predicted_m1_2, predicted_m2_3, predicted_m4_4], And(Length(predicted_m4_4) <= 40, Visits(predicted_m0_1, predicted_m1_2, predicted_m2_3, FV_Visit_Date_0, predicted_m4_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m0, WPREDICTED_m1, WPREDICTED_m2, WPREDICTED_m4
+      claim: And(And(Length(WPREDICTED_m4) <= 40, Visits(WPREDICTED_m0, WPREDICTED_m1, WPREDICTED_m2, FV_Visit_Date_0, WPREDICTED_m4)), Not(Exists([gold_v_1, gold_t_2, gold_t1_3, gold_v2_4], And(Length(gold_v2_4) <= 40, Visits(gold_v_1, gold_t_2, gold_t1_3, FV_Visit_Date_0, gold_v2_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

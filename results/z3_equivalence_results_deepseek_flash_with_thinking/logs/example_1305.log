@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1305.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1305.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4338 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which authors published papers in 2015 ?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        varchar(300) -> StringSort()   [domain Length(x) <= 300; length <= 300]
+      local sorts:
+        authorId = integer -> IntSort()
+        journalId = integer -> IntSort()
+        numCitedBy = integer -> IntSort()
+        numCiting = integer -> IntSort()
+        paperId = integer -> IntSort()
+        title = varchar(300) -> StringSort()
+        venueId = integer -> IntSort()
+        year = integer -> IntSort()
+      symbols:
+        paper(paperId, title, venueId, year, numCiting, numCitedBy, journalId)
+        writes(paperId, authorId)
+        constant 2015 : year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : paperId ∃p1 : paperId ∃t : title ∃v : venueId ∃y : year ∃n : numCiting ∃n1 : numCitedBy ∃j : journalId ( (((writes(p,a)) ∧ (paper(p1,t,v,y,n,n1,j))) ∧ (p = p1)) ∧ (y = 2015) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:paperId EXISTS:∃ IDENT:p1 COLON:: IDENT:paperId EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:v COLON:: IDENT:venueId EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:n COLON:: IDENT:numCiting EXISTS:∃ IDENT:n1 COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:j COLON:: IDENT:journalId LPAR:( LPAR:( LPAR:( LPAR:( IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:paper LPAR:( IDENT:p1 COMMA:, IDENT:t COMMA:, IDENT:v COMMA:, IDENT:y COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:j RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2015 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:paperId
+            EXISTS p1:paperId
+              EXISTS t:title
+                EXISTS v:venueId
+                  EXISTS y:year
+                    EXISTS n:numCiting
+                      EXISTS n1:numCitedBy
+                        EXISTS j:journalId
+                          AND
+                            AND
+                              AND
+                                PRED writes(p, a)
+                                PRED paper(p1, t, v, y, n, n1, j)
+                              EQ  p = p1
+                            EQ  y = 2015
+      Predicted FOL: ∃p : paperId ∃t : title ∃v : venueId ∃nc : numCiting ∃ncb : numCitedBy ∃j : journalId ( writes(p, a) ∧ paper(p, t, v, 2015, nc, ncb, j) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:paperId EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:v COLON:: IDENT:venueId EXISTS:∃ IDENT:nc COLON:: IDENT:numCiting EXISTS:∃ IDENT:ncb COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:j COLON:: IDENT:journalId LPAR:( IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) AND:∧ IDENT:paper LPAR:( IDENT:p COMMA:, IDENT:t COMMA:, IDENT:v COMMA:, NUM:2015 COMMA:, IDENT:nc COMMA:, IDENT:ncb COMMA:, IDENT:j RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:paperId
+            EXISTS t:title
+              EXISTS v:venueId
+                EXISTS nc:numCiting
+                  EXISTS ncb:numCitedBy
+                    EXISTS j:journalId
+                      AND
+                        PRED writes(p, a)
+                        PRED paper(p, t, v, 2015, nc, ncb, j)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_authorId_0 : authorId   Gold a <-> Predicted a
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local authorId, global integer -> IntSort()
+        j : local journalId, global integer -> IntSort()
+        n : local numCiting, global integer -> IntSort()
+        n1 : local numCitedBy, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+        p1 : local paperId, global integer -> IntSort()
+        t : local title, global varchar(300) -> StringSort()
+        v : local venueId, global integer -> IntSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        a : local authorId, global integer -> IntSort()
+        j : local journalId, global integer -> IntSort()
+        nc : local numCiting, global integer -> IntSort()
+        ncb : local numCitedBy, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+        t : local title, global varchar(300) -> StringSort()
+        v : local venueId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p1_2, gold_t_3, gold_v_4, gold_y_5, gold_n_6, gold_n1_7, gold_j_8], And(D_varchar_300_(gold_t_3), And(And(And(P_writes(gold_p_1, FV_authorId_0), P_paper(gold_p1_2, gold_t_3, gold_v_4, gold_y_5, gold_n_6, gold_n1_7, gold_j_8)), (gold_p_1 == gold_p1_2)), (gold_y_5 == L_v_2015_integer))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p1, WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j):  And(D_varchar_300_(WGOLD_t), And(And(And(P_writes(WGOLD_p, FV_authorId_0), P_paper(WGOLD_p1, WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j)), (WGOLD_p == WGOLD_p1)), (WGOLD_y == L_v_2015_integer)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_t_2, predicted_v_3, predicted_nc_4, predicted_ncb_5, predicted_j_6], And(D_varchar_300_(predicted_t_2), And(P_writes(predicted_p_1, FV_authorId_0), P_paper(predicted_p_1, predicted_t_2, predicted_v_3, L_v_2015_integer, predicted_nc_4, predicted_ncb_5, predicted_j_6))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_t, WPREDICTED_v, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j):  And(D_varchar_300_(WPREDICTED_t), And(P_writes(WPREDICTED_p, FV_authorId_0), P_paper(WPREDICTED_p, WPREDICTED_t, WPREDICTED_v, L_v_2015_integer, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j)))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2015' at integer -> L_v_2015_integer = IntVal(2015)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 766 lines, 29868 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1305.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p1, WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j
+      claim: And(And(Length(WGOLD_t) <= 300, And(And(And(writes(WGOLD_p, FV_authorId_0), paper(WGOLD_p1, WGOLD_t, WGOLD_v, WGOLD_y, WGOLD_n, WGOLD_n1, WGOLD_j)), WGOLD_p == WGOLD_p1), 2015 == WGOLD_y)), Not(Exists([predicted_p_1, predicted_t_2, predicted_v_3, predicted_nc_4, predicted_ncb_5, predicted_j_6], And(Length(predicted_t_2) <= 300, And(writes(predicted_p_1, FV_authorId_0), paper(predicted_p_1, predicted_t_2, predicted_v_3, 2015, predicted_nc_4, predicted_ncb_5, predicted_j_6))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_t, WPREDICTED_v, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j
+      claim: And(And(Length(WPREDICTED_t) <= 300, And(writes(WPREDICTED_p, FV_authorId_0), paper(WPREDICTED_p, WPREDICTED_t, WPREDICTED_v, 2015, WPREDICTED_nc, WPREDICTED_ncb, WPREDICTED_j))), Not(Exists([gold_p_1, gold_p1_2, gold_t_3, gold_v_4, gold_y_5, gold_n_6, gold_n1_7, gold_j_8], And(Length(gold_t_3) <= 300, And(And(And(writes(gold_p_1, FV_authorId_0), paper(gold_p1_2, gold_t_3, gold_v_4, gold_y_5, gold_n_6, gold_n1_7, gold_j_8)), gold_p_1 == gold_p1_2), 2015 == gold_y_5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

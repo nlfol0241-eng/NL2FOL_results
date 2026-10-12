@@ -1,0 +1,112 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3091.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3091.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3282 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the titles of books that are not published.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Book_ID = int -> IntSort()
+        Issues = real -> Float32()
+        Price = real -> Float32()
+        Publication_Date = text -> StringSort()
+        Publication_ID = int -> IntSort()
+        Publisher = text -> StringSort()
+        Title = text -> StringSort()
+        Writer = text -> StringSort()
+      symbols:
+        book(Book_ID, Title, Issues, Writer)
+        publication(Publication_ID, Book_ID, Publisher, Publication_Date, Price)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Issues ∃w : Writer ∃b : Book_ID( (book(b,t,i,w)) ∧ (¬(∃b1 : Book_ID( ((book(b,t,i,w)) ∧ (∃p : Publication_ID ∃p2 : Publication_Date ∃p1 : Publisher ∃p3 : Price( publication(p,b1,p1,p2,p3) ))) ∧ (b = b1) ))) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Issues EXISTS:∃ IDENT:w COLON:: IDENT:Writer EXISTS:∃ IDENT:b COLON:: IDENT:Book_ID LPAR:( LPAR:( IDENT:book LPAR:( IDENT:b COMMA:, IDENT:t COMMA:, IDENT:i COMMA:, IDENT:w RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:b1 COLON:: IDENT:Book_ID LPAR:( LPAR:( LPAR:( IDENT:book LPAR:( IDENT:b COMMA:, IDENT:t COMMA:, IDENT:i COMMA:, IDENT:w RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Publication_ID EXISTS:∃ IDENT:p2 COLON:: IDENT:Publication_Date EXISTS:∃ IDENT:p1 COLON:: IDENT:Publisher EXISTS:∃ IDENT:p3 COLON:: IDENT:Price LPAR:( IDENT:publication LPAR:( IDENT:p COMMA:, IDENT:b1 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:b1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Issues
+            EXISTS w:Writer
+              EXISTS b:Book_ID
+                AND
+                  PRED book(b, t, i, w)
+                  NOT
+                    EXISTS b1:Book_ID
+                      AND
+                        AND
+                          PRED book(b, t, i, w)
+                          EXISTS p:Publication_ID
+                            EXISTS p2:Publication_Date
+                              EXISTS p1:Publisher
+                                EXISTS p3:Price
+                                  PRED publication(p, b1, p1, p2, p3)
+                        EQ  b = b1
+      Predicted FOL: ∃b0 : Book_ID ∃b1 : Title ∃b2 : Issues ∃b3 : Writer (book(b0, b1, b2, b3) ∧ ¬∃p0 : Publication_ID ∃p1 : Book_ID ∃p2 : Publisher ∃p3 : Publication_Date ∃p4 : Price (publication(p0, p1, p2, p3, p4) ∧ p1 = b0))
+        tokens: EXISTS:∃ IDENT:b0 COLON:: IDENT:Book_ID EXISTS:∃ IDENT:b1 COLON:: IDENT:Title EXISTS:∃ IDENT:b2 COLON:: IDENT:Issues EXISTS:∃ IDENT:b3 COLON:: IDENT:Writer LPAR:( IDENT:book LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:b3 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:p0 COLON:: IDENT:Publication_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Book_ID EXISTS:∃ IDENT:p2 COLON:: IDENT:Publisher EXISTS:∃ IDENT:p3 COLON:: IDENT:Publication_Date EXISTS:∃ IDENT:p4 COLON:: IDENT:Price LPAR:( IDENT:publication LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 RPAR:) AND:∧ IDENT:p1 EQ:= IDENT:b0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b0:Book_ID
+            EXISTS b1:Title
+              EXISTS b2:Issues
+                EXISTS b3:Writer
+                  AND
+                    PRED book(b0, b1, b2, b3)
+                    NOT
+                      EXISTS p0:Publication_ID
+                        EXISTS p1:Book_ID
+                          EXISTS p2:Publisher
+                            EXISTS p3:Publication_Date
+                              EXISTS p4:Price
+                                AND
+                                  PRED publication(p0, p1, p2, p3, p4)
+                                  EQ  p1 = b0
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : Title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Book_ID, global int -> IntSort()
+        b1 : local Book_ID, global int -> IntSort()
+        i : local Issues, global real -> Float32()
+        p : local Publication_ID, global int -> IntSort()
+        p1 : local Publisher, global text -> StringSort()
+        p2 : local Publication_Date, global text -> StringSort()
+        p3 : local Price, global real -> Float32()
+        t : local Title, global text -> StringSort()
+        w : local Writer, global text -> StringSort()
+      Predicted FOL:
+        b0 : local Book_ID, global int -> IntSort()
+        b1 : local Title, global text -> StringSort()
+        b2 : local Issues, global real -> Float32()
+        b3 : local Writer, global text -> StringSort()
+        p0 : local Publication_ID, global int -> IntSort()
+        p1 : local Book_ID, global int -> IntSort()
+        p2 : local Publisher, global text -> StringSort()
+        p3 : local Publication_Date, global text -> StringSort()
+        p4 : local Price, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5545 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3091.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : Title) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

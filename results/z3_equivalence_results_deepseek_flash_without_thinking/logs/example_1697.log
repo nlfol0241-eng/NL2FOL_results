@@ -1,0 +1,61 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1697.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1697.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3443 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of artists who are Male and are from UK?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar2(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        artist_name = varchar2(50) -> StringSort()
+        country = varchar2(20) -> StringSort()
+        gender = varchar2(20) -> StringSort()
+        preferred_genre = varchar2(20) -> StringSort()
+      symbols:
+        artist(artist_name, country, gender, preferred_genre)
+        constant Male : gender
+        constant UK : country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : country ∃g : gender ∃p : preferred_genre ( (artist(a,c,g,p)) ∧ ((c = 'UK') ∧ (g = 'Male')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:p COLON:: IDENT:preferred_genre LPAR:( LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:UK RPAR:) AND:∧ LPAR:( IDENT:g EQ:= LIT:Male RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:country
+            EXISTS g:gender
+              EXISTS p:preferred_genre
+                AND
+                  PRED artist(a, c, g, p)
+                  AND
+                    EQ  c = 'UK'
+                    EQ  g = 'Male'
+      Predicted FOL: ∃x : artist_name (artist(x, UK, Male, y) ∧ ∀z : preferred_genre (artist(x, UK, Male, z) → z = y))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:artist_name LPAR:( IDENT:artist LPAR:( IDENT:x COMMA:, IDENT:UK COMMA:, IDENT:Male COMMA:, IDENT:y RPAR:) AND:∧ FORALL:∀ IDENT:z COLON:: IDENT:preferred_genre LPAR:( IDENT:artist LPAR:( IDENT:x COMMA:, IDENT:UK COMMA:, IDENT:Male COMMA:, IDENT:z RPAR:) IMPL:→ IDENT:z EQ:= IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:artist_name
+            AND
+              PRED artist(x, UK<const>, Male<const>, y)
+              FORALL z:preferred_genre
+                IMPLIES
+                  PRED artist(x, UK<const>, Male<const>, z)
+                  EQ  z = y
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['artist_name'] vs Predicted ['preferred_genre']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['artist_name'] vs Predicted ['preferred_genre']

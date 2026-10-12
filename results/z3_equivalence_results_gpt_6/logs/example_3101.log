@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3101.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3101.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3070 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of editors that are not on any journal committee.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = real -> Float32()
+        Editor_ID = int -> IntSort()
+        Journal_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Work_Type = text -> StringSort()
+      symbols:
+        editor(Editor_ID, Name, Age)
+        journal_committee(Editor_ID, Journal_ID, Work_Type)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Age ∃e : Editor_ID( (editor(e,n,a)) ∧ (¬(∃e1 : Editor_ID( ((editor(e,n,a)) ∧ (∃w : Work_Type ∃j : Journal_ID( journal_committee(e1,j,w) ))) ∧ (e = e1) ))) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:e COLON:: IDENT:Editor_ID LPAR:( LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e1 COLON:: IDENT:Editor_ID LPAR:( LPAR:( LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:w COLON:: IDENT:Work_Type EXISTS:∃ IDENT:j COLON:: IDENT:Journal_ID LPAR:( IDENT:journal_committee LPAR:( IDENT:e1 COMMA:, IDENT:j COMMA:, IDENT:w RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Age
+            EXISTS e:Editor_ID
+              AND
+                PRED editor(e, n, a)
+                NOT
+                  EXISTS e1:Editor_ID
+                    AND
+                      AND
+                        PRED editor(e, n, a)
+                        EXISTS w:Work_Type
+                          EXISTS j:Journal_ID
+                            PRED journal_committee(e1, j, w)
+                      EQ  e = e1
+      Predicted FOL: ∃e : Editor_ID ∃a : Age (editor(e, n, a) ∧ ¬∃j : Journal_ID ∃w : Work_Type (journal_committee(e, j, w)))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Editor_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:j COLON:: IDENT:Journal_ID EXISTS:∃ IDENT:w COLON:: IDENT:Work_Type LPAR:( IDENT:journal_committee LPAR:( IDENT:e COMMA:, IDENT:j COMMA:, IDENT:w RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Editor_ID
+            EXISTS a:Age
+              AND
+                PRED editor(e, n, a)
+                NOT
+                  EXISTS j:Journal_ID
+                    EXISTS w:Work_Type
+                      PRED journal_committee(e, j, w)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global real -> Float32()
+        e : local Editor_ID, global int -> IntSort()
+        e1 : local Editor_ID, global int -> IntSort()
+        j : local Journal_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        w : local Work_Type, global text -> StringSort()
+      Predicted FOL:
+        a : local Age, global real -> Float32()
+        e : local Editor_ID, global int -> IntSort()
+        j : local Journal_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        w : local Work_Type, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_e_2], And(D_real(gold_a_1), And(P_editor(gold_e_2, FV_Name_0, gold_a_1), Not(Exists([gold_e1_3], And(And(P_editor(gold_e_2, FV_Name_0, gold_a_1), Exists([gold_w_4, gold_j_5], P_journal_committee(gold_e1_3, gold_j_5, gold_w_4))), (gold_e_2 == gold_e1_3)))))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_e):  And(D_real(WGOLD_a), And(P_editor(WGOLD_e, FV_Name_0, WGOLD_a), Not(Exists([goldsk_e1_1], And(And(P_editor(WGOLD_e, FV_Name_0, WGOLD_a), Exists([goldsk_w_2, goldsk_j_3], P_journal_committee(goldsk_e1_1, goldsk_j_3, goldsk_w_2))), (WGOLD_e == goldsk_e1_1))))))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_a_2], And(D_real(predicted_a_2), And(P_editor(predicted_e_1, FV_Name_0, predicted_a_2), Not(Exists([predicted_j_3, predicted_w_4], P_journal_committee(predicted_e_1, predicted_j_3, predicted_w_4))))))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_a):  And(D_real(WPREDICTED_a), And(P_editor(WPREDICTED_e, FV_Name_0, WPREDICTED_a), Not(Exists([predictedsk_j_1, predictedsk_w_2], P_journal_committee(WPREDICTED_e, predictedsk_j_1, predictedsk_w_2)))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 740 lines, 28290 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3101.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_e
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(editor(WGOLD_e, FV_Name_0, WGOLD_a), Not(Exists(goldsk_e1_1, And(And(editor(WGOLD_e, FV_Name_0, WGOLD_a), Exists([goldsk_w_2, goldsk_j_3], journal_committee(goldsk_e1_1, goldsk_j_3, goldsk_w_2))), WGOLD_e == goldsk_e1_1))))), Not(Exists([predicted_e_1, predicted_a_2], And(And(Not(fpIsNaN(predicted_a_2)), Not(And(fpIsZero(predicted_a_2), fpIsNegative(predicted_a_2)))), And(editor(predicted_e_1, FV_Name_0, predicted_a_2), Not(Exists([predicted_j_3, predicted_w_4], journal_committee(predicted_e_1, predicted_j_3, predicted_w_4))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.032 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_a
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), And(editor(WPREDICTED_e, FV_Name_0, WPREDICTED_a), Not(Exists([predictedsk_j_1, predictedsk_w_2], journal_committee(WPREDICTED_e, predictedsk_j_1, predictedsk_w_2))))), Not(Exists([gold_a_1, gold_e_2], And(And(Not(fpIsNaN(gold_a_1)), Not(And(fpIsZero(gold_a_1), fpIsNegative(gold_a_1)))), And(editor(gold_e_2, FV_Name_0, gold_a_1), Not(Exists(gold_e1_3, And(And(editor(gold_e_2, FV_Name_0, gold_a_1), Exists([gold_w_4, gold_j_5], journal_committee(gold_e1_3, gold_j_5, gold_w_4))), gold_e_2 == gold_e1_3))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.027 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2904.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2904.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4875 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the first and last name of the artist who performed back stage for the song "Der Kapitan"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Bandmate = integer -> IntSort()
+        Firstname = text -> StringSort()
+        Id = integer -> IntSort()
+        Lastname = text -> StringSort()
+        SongId = integer -> IntSort()
+        StagePosition = text -> StringSort()
+        Title = text -> StringSort()
+      symbols:
+        Band(Id, Firstname, Lastname)
+        Performance(SongId, Bandmate, StagePosition)
+        Songs(SongId, Title)
+        constant Der Kapitan : Title
+        constant back : StagePosition
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : SongId ∃b : Bandmate ∃s1 : StagePosition ∃i : Id ∃s2 : SongId ∃t : Title ( (((((Performance(s,b,s1)) ∧ (Band(i,f,l))) ∧ (b = i)) ∧ (Songs(s2,t))) ∧ (s2 = s)) ∧ ((t = 'Der Kapitan') ∧ (s1 = 'back')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:s1 COLON:: IDENT:StagePosition EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:s2 COLON:: IDENT:SongId EXISTS:∃ IDENT:t COLON:: IDENT:Title LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Performance LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Band LPAR:( IDENT:i COMMA:, IDENT:f COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Songs LPAR:( IDENT:s2 COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s2 EQ:= IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:t EQ:= LIT:Der Kapitan RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:back RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:Bandmate
+              EXISTS s1:StagePosition
+                EXISTS i:Id
+                  EXISTS s2:SongId
+                    EXISTS t:Title
+                      AND
+                        AND
+                          AND
+                            AND
+                              AND
+                                PRED Performance(s, b, s1)
+                                PRED Band(i, f, l)
+                              EQ  b = i
+                            PRED Songs(s2, t)
+                          EQ  s2 = s
+                        AND
+                          EQ  t = 'Der Kapitan'
+                          EQ  s1 = 'back'
+      Predicted FOL: ∃s:SongId ( Songs(s, 'Der Kapitan') ∧ ∃b:Bandmate ( Performance(s, b, 'back') ∧ ∃f:Firstname ∃l:Lastname ( Band(b, f, l) ) ) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId LPAR:( IDENT:Songs LPAR:( IDENT:s COMMA:, LIT:Der Kapitan RPAR:) AND:∧ EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate LPAR:( IDENT:Performance LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, LIT:back RPAR:) AND:∧ EXISTS:∃ IDENT:f COLON:: IDENT:Firstname EXISTS:∃ IDENT:l COLON:: IDENT:Lastname LPAR:( IDENT:Band LPAR:( IDENT:b COMMA:, IDENT:f COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            AND
+              PRED Songs(s, 'Der Kapitan')
+              EXISTS b:Bandmate
+                AND
+                  PRED Performance(s, b, 'back')
+                  EXISTS f:Firstname
+                    EXISTS l:Lastname
+                      PRED Band(b, f, l)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : Firstname, l : Lastname) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Bandmate, global integer -> IntSort()
+        f : local Firstname, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        l : local Lastname, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+        s1 : local StagePosition, global text -> StringSort()
+        s2 : local SongId, global integer -> IntSort()
+        t : local Title, global text -> StringSort()
+      Predicted FOL:
+        b : local Bandmate, global integer -> IntSort()
+        f : local Firstname, global text -> StringSort()
+        l : local Lastname, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5531 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2904.py
+   [G8] took 0.031 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : Firstname, l : Lastname) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

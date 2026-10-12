@@ -1,0 +1,77 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3255.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3255.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3783 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of buildings that have no company office.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        City = text -> StringSort()
+        Height = int -> IntSort()
+        Status = text -> StringSort()
+        Stories = int -> IntSort()
+        building_id = int -> IntSort()
+        company_id = int -> IntSort()
+        id = int -> IntSort()
+        move_in_year = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Office_locations(building_id, company_id, move_in_year)
+        buildings(id, name, City, Height, Stories, Status)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : City ∃s1 : Status ∃s : Stories ∃h : Height ∃i : id( (buildings(i,n,c,h,s,s1)) ∧ (¬(∃b : building_id( ((buildings(i,n,c,h,s,s1)) ∧ (∃m : move_in_year ∃c1 : company_id( Office_locations(b,c1,m) ))) ∧ (i = b) ))) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:s1 COLON:: IDENT:Status EXISTS:∃ IDENT:s COLON:: IDENT:Stories EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:i COLON:: IDENT:id LPAR:( LPAR:( IDENT:buildings LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:building_id LPAR:( LPAR:( LPAR:( IDENT:buildings LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:m COLON:: IDENT:move_in_year EXISTS:∃ IDENT:c1 COLON:: IDENT:company_id LPAR:( IDENT:Office_locations LPAR:( IDENT:b COMMA:, IDENT:c1 COMMA:, IDENT:m RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:b RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:City
+            EXISTS s1:Status
+              EXISTS s:Stories
+                EXISTS h:Height
+                  EXISTS i:id
+                    AND
+                      PRED buildings(i, n, c, h, s, s1)
+                      NOT
+                        EXISTS b:building_id
+                          AND
+                            AND
+                              PRED buildings(i, n, c, h, s, s1)
+                              EXISTS m:move_in_year
+                                EXISTS c1:company_id
+                                  PRED Office_locations(b, c1, m)
+                            EQ  i = b
+      Predicted FOL: ∃id:int ∃City:text ∃Height:int ∃Stories:int ∃Status:text ( buildings(id, name, City, Height, Stories, Status) ∧ ¬∃company_id:int ∃move_in_year:int Office_locations(id, company_id, move_in_year) )
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:int EXISTS:∃ IDENT:City COLON:: IDENT:text EXISTS:∃ IDENT:Height COLON:: IDENT:int EXISTS:∃ IDENT:Stories COLON:: IDENT:int EXISTS:∃ IDENT:Status COLON:: IDENT:text LPAR:( IDENT:buildings LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:City COMMA:, IDENT:Height COMMA:, IDENT:Stories COMMA:, IDENT:Status RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:company_id COLON:: IDENT:int EXISTS:∃ IDENT:move_in_year COLON:: IDENT:int IDENT:Office_locations LPAR:( IDENT:id COMMA:, IDENT:company_id COMMA:, IDENT:move_in_year RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:int
+            EXISTS City:text
+              EXISTS Height:int
+                EXISTS Stories:int
+                  EXISTS Status:text
+                    AND
+                      PRED buildings(id, name, City, Height, Stories, Status)
+                      NOT
+                        EXISTS company_id:int
+                          EXISTS move_in_year:int
+                            PRED Office_locations(id, company_id, move_in_year)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['name'] vs Predicted ['text']
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['name'] vs Predicted ['text']

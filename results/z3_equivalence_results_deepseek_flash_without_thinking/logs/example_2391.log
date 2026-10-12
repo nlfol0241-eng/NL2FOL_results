@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2391.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2391.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4404 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the campus fee of "San Francisco State University" in year 2000?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Campus = integer -> IntSort()
+        CampusFee = integer -> IntSort()
+        County = text -> StringSort()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        csu_fees(Campus, Year, CampusFee)
+        constant 2000 : Year
+        constant San Francisco State University : campus
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Campus ∃y : Year ∃i : Id ∃c2 : campus ∃l : Location ∃c3 : County ∃y1 : Year ( (((csu_fees(c,y,c1)) ∧ (Campuses(i,c2,l,c3,y1))) ∧ (c = i)) ∧ ((c2 = 'San Francisco State University') ∧ (y = 2000)) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Campus EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:c2 COLON:: IDENT:campus EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c3 COLON:: IDENT:County EXISTS:∃ IDENT:y1 COLON:: IDENT:Year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:csu_fees LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c2 COMMA:, IDENT:l COMMA:, IDENT:c3 COMMA:, IDENT:y1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c2 EQ:= LIT:San Francisco State University RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Campus
+            EXISTS y:Year
+              EXISTS i:Id
+                EXISTS c2:campus
+                  EXISTS l:Location
+                    EXISTS c3:County
+                      EXISTS y1:Year
+                        AND
+                          AND
+                            AND
+                              PRED csu_fees(c, y, c1)
+                              PRED Campuses(i, c2, l, c3, y1)
+                            EQ  c = i
+                          AND
+                            EQ  c2 = 'San Francisco State University'
+                            EQ  y = 2000
+      Predicted FOL: ∃x : CampusFee (csu_fees('San Francisco State University', 2000, x))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:CampusFee LPAR:( IDENT:csu_fees LPAR:( LIT:San Francisco State University COMMA:, NUM:2000 COMMA:, IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:CampusFee
+            PRED csu_fees('San Francisco State University', 2000, x)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c1 : CampusFee) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Campus, global integer -> IntSort()
+        c1 : local CampusFee, global integer -> IntSort()
+        c2 : local campus, global text -> StringSort()
+        c3 : local County, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+        y1 : local Year, global integer -> IntSort()
+      Predicted FOL:
+        x : local CampusFee, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5406 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2391.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c1 : CampusFee) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

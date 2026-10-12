@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2938.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2938.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3348 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the name of the museum that had no visitor yet?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Museum_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Num_of_Staff = int -> IntSort()
+        Num_of_Ticket = int -> IntSort()
+        Open_Year = text -> StringSort()
+        Total_spent = real -> Float32()
+        visitor_ID = int -> IntSort()
+      symbols:
+        museum(Museum_ID, Name, Num_of_Staff, Open_Year)
+        visit(Museum_ID, visitor_ID, Num_of_Ticket, Total_spent)
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n1 : Num_of_Staff ∃o : Open_Year ∃m : Museum_ID( (museum(m,n,n1,o)) ∧ (¬(∃m1 : Museum_ID( ((museum(m,n,n1,o)) ∧ (∃t : Total_spent ∃n2 : Num_of_Ticket ∃v : visitor_ID( visit(m1,v,n2,t) ))) ∧ (m = m1) ))) )
+        tokens: EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_Staff EXISTS:∃ IDENT:o COLON:: IDENT:Open_Year EXISTS:∃ IDENT:m COLON:: IDENT:Museum_ID LPAR:( LPAR:( IDENT:museum LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:Museum_ID LPAR:( LPAR:( LPAR:( IDENT:museum LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:t COLON:: IDENT:Total_spent EXISTS:∃ IDENT:n2 COLON:: IDENT:Num_of_Ticket EXISTS:∃ IDENT:v COLON:: IDENT:visitor_ID LPAR:( IDENT:visit LPAR:( IDENT:m1 COMMA:, IDENT:v COMMA:, IDENT:n2 COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n1:Num_of_Staff
+            EXISTS o:Open_Year
+              EXISTS m:Museum_ID
+                AND
+                  PRED museum(m, n, n1, o)
+                  NOT
+                    EXISTS m1:Museum_ID
+                      AND
+                        AND
+                          PRED museum(m, n, n1, o)
+                          EXISTS t:Total_spent
+                            EXISTS n2:Num_of_Ticket
+                              EXISTS v:visitor_ID
+                                PRED visit(m1, v, n2, t)
+                        EQ  m = m1
+      Predicted FOL: ∃m : Museum_ID ∃s : Num_of_Staff ∃y : Open_Year (museum(m, n, s, y) ∧ ¬∃v : visitor_ID ∃t : Num_of_Ticket ∃p : Total_spent visit(m, v, t, p))
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Museum_ID EXISTS:∃ IDENT:s COLON:: IDENT:Num_of_Staff EXISTS:∃ IDENT:y COLON:: IDENT:Open_Year LPAR:( IDENT:museum LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:v COLON:: IDENT:visitor_ID EXISTS:∃ IDENT:t COLON:: IDENT:Num_of_Ticket EXISTS:∃ IDENT:p COLON:: IDENT:Total_spent IDENT:visit LPAR:( IDENT:m COMMA:, IDENT:v COMMA:, IDENT:t COMMA:, IDENT:p RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Museum_ID
+            EXISTS s:Num_of_Staff
+              EXISTS y:Open_Year
+                AND
+                  PRED museum(m, n, s, y)
+                  NOT
+                    EXISTS v:visitor_ID
+                      EXISTS t:Num_of_Ticket
+                        EXISTS p:Total_spent
+                          PRED visit(m, v, t, p)
+   [G3] took 0.004 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local Museum_ID, global int -> IntSort()
+        m1 : local Museum_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_of_Staff, global int -> IntSort()
+        n2 : local Num_of_Ticket, global int -> IntSort()
+        o : local Open_Year, global text -> StringSort()
+        t : local Total_spent, global real -> Float32()
+        v : local visitor_ID, global int -> IntSort()
+      Predicted FOL:
+        m : local Museum_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        p : local Total_spent, global real -> Float32()
+        s : local Num_of_Staff, global int -> IntSort()
+        t : local Num_of_Ticket, global int -> IntSort()
+        v : local visitor_ID, global int -> IntSort()
+        y : local Open_Year, global text -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n1_1, gold_o_2, gold_m_3], And(P_museum(gold_m_3, FV_Name_0, gold_n1_1, gold_o_2), Not(Exists([gold_m1_4], And(And(P_museum(gold_m_3, FV_Name_0, gold_n1_1, gold_o_2), Exists([gold_t_5, gold_n2_6, gold_v_7], And(D_real(gold_t_5), P_visit(gold_m1_4, gold_v_7, gold_n2_6, gold_t_5)))), (gold_m_3 == gold_m1_4))))))
+      gold_skolem (witnesses WGOLD_n1, WGOLD_o, WGOLD_m):  And(P_museum(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_o), Not(Exists([goldsk_m1_1], And(And(P_museum(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_o), Exists([goldsk_t_2, goldsk_n2_3, goldsk_v_4], And(D_real(goldsk_t_2), P_visit(goldsk_m1_1, goldsk_v_4, goldsk_n2_3, goldsk_t_2)))), (WGOLD_m == goldsk_m1_1)))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_s_2, predicted_y_3], And(P_museum(predicted_m_1, FV_Name_0, predicted_s_2, predicted_y_3), Not(Exists([predicted_v_4, predicted_t_5, predicted_p_6], And(D_real(predicted_p_6), P_visit(predicted_m_1, predicted_v_4, predicted_t_5, predicted_p_6))))))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_s, WPREDICTED_y):  And(P_museum(WPREDICTED_m, FV_Name_0, WPREDICTED_s, WPREDICTED_y), Not(Exists([predictedsk_v_1, predictedsk_t_2, predictedsk_p_3], And(D_real(predictedsk_p_3), P_visit(WPREDICTED_m, predictedsk_v_1, predictedsk_t_2, predictedsk_p_3)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 754 lines, 29440 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2938.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_n1, WGOLD_o, WGOLD_m
+      claim: And(And(museum(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_o), Not(Exists(goldsk_m1_1, And(And(museum(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_o), Exists([goldsk_t_2, goldsk_n2_3, goldsk_v_4], And(And(Not(fpIsNaN(goldsk_t_2)), Not(And(fpIsZero(goldsk_t_2), fpIsNegative(goldsk_t_2)))), visit(goldsk_m1_1, goldsk_v_4, goldsk_n2_3, goldsk_t_2)))), WGOLD_m == goldsk_m1_1)))), Not(Exists([predicted_m_1, predicted_s_2, predicted_y_3], And(museum(predicted_m_1, FV_Name_0, predicted_s_2, predicted_y_3), Not(Exists([predicted_v_4, predicted_t_5, predicted_p_6], And(And(Not(fpIsNaN(predicted_p_6)), Not(And(fpIsZero(predicted_p_6), fpIsNegative(predicted_p_6)))), visit(predicted_m_1, predicted_v_4, predicted_t_5, predicted_p_6))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.040 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_s, WPREDICTED_y
+      claim: And(And(museum(WPREDICTED_m, FV_Name_0, WPREDICTED_s, WPREDICTED_y), Not(Exists([predictedsk_v_1, predictedsk_t_2, predictedsk_p_3], And(And(Not(fpIsNaN(predictedsk_p_3)), Not(And(fpIsZero(predictedsk_p_3), fpIsNegative(predictedsk_p_3)))), visit(WPREDICTED_m, predictedsk_v_1, predictedsk_t_2, predictedsk_p_3))))), Not(Exists([gold_n1_1, gold_o_2, gold_m_3], And(museum(gold_m_3, FV_Name_0, gold_n1_1, gold_o_2), Not(Exists(gold_m1_4, And(And(museum(gold_m_3, FV_Name_0, gold_n1_1, gold_o_2), Exists([gold_t_5, gold_n2_6, gold_v_7], And(And(Not(fpIsNaN(gold_t_5)), Not(And(fpIsZero(gold_t_5), fpIsNegative(gold_t_5)))), visit(gold_m1_4, gold_v_7, gold_n2_6, gold_t_5)))), gold_m_3 == gold_m1_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.009 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.029 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

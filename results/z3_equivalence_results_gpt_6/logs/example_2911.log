@@ -1,0 +1,202 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2911.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2911.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3906 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the last name of every student who is either female or living in a city with the code BAL or male and under 20?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 8 local sorts, 1 predicates, 0 functions, 5 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = varchar(12) -> StringSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+        constant 20 : Age
+        constant BAL : city_code
+        constant F : Sex
+        constant M : Sex
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃f : Fname ∃m : Major ∃s1 : Sex ∃c : city_code ∃a : Age ∃s : StuID ∃a1 : Advisor( (Student(s,l,f,a,s1,m,a1,c)) ∧ ((s1 = 'F') ∧ (c = 'BAL')) )) ∨ (∃f : Fname ∃m : Major ∃s1 : Sex ∃c : city_code ∃a : Age ∃s : StuID ∃a1 : Advisor( (Student(s,l,f,a,s1,m,a1,c)) ∧ ((s1 = 'M') ∧ (a < 20)) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s1 EQ:= LIT:F RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:BAL RPAR:) RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s1 EQ:= LIT:M RPAR:) AND:∧ LPAR:( IDENT:a LT:< NUM:20 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS f:Fname
+              EXISTS m:Major
+                EXISTS s1:Sex
+                  EXISTS c:city_code
+                    EXISTS a:Age
+                      EXISTS s:StuID
+                        EXISTS a1:Advisor
+                          AND
+                            PRED Student(s, l, f, a, s1, m, a1, c)
+                            AND
+                              EQ  s1 = 'F'
+                              EQ  c = 'BAL'
+            EXISTS f:Fname
+              EXISTS m:Major
+                EXISTS s1:Sex
+                  EXISTS c:city_code
+                    EXISTS a:Age
+                      EXISTS s:StuID
+                        EXISTS a1:Advisor
+                          AND
+                            PRED Student(s, l, f, a, s1, m, a1, c)
+                            AND
+                              EQ  s1 = 'M'
+                              CMP  a < 20
+      Predicted FOL: ∃i : StuID ∃f : Fname ∃a : Age ∃s : Sex ∃m : Major ∃d : Advisor ∃c : city_code (Student(i, l, f, a, s, m, d, c) ∧ (s = 'F' ∨ c = 'BAL' ∨ (s = 'M' ∧ a < 20)))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:StuID EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:s COLON:: IDENT:Sex EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:d COLON:: IDENT:Advisor EXISTS:∃ IDENT:c COLON:: IDENT:city_code LPAR:( IDENT:Student LPAR:( IDENT:i COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, IDENT:c RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:F OR:∨ IDENT:c EQ:= LIT:BAL OR:∨ LPAR:( IDENT:s EQ:= LIT:M AND:∧ IDENT:a LT:< NUM:20 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:StuID
+            EXISTS f:Fname
+              EXISTS a:Age
+                EXISTS s:Sex
+                  EXISTS m:Major
+                    EXISTS d:Advisor
+                      EXISTS c:city_code
+                        AND
+                          PRED Student(i, l, f, a, s, m, d, c)
+                          OR
+                            EQ  s = 'F'
+                            EQ  c = 'BAL'
+                            AND
+                              EQ  s = 'M'
+                              CMP  a < 20
+   [G3] took 0.005 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_LName_0 : LName   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        a : local Age, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        d : local Advisor, global integer -> IntSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        i : local StuID, global integer -> IntSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_f_1, gold_m_2, gold_s1_3, gold_c_4, gold_a_5, gold_s_6, gold_a1_7], And(D_varchar_12_(gold_f_1), D_varchar_1_(gold_s1_3), D_varchar_3_(gold_c_4), And(P_Student(gold_s_6, FV_LName_0, gold_f_1, gold_a_5, gold_s1_3, gold_m_2, gold_a1_7, gold_c_4), And((gold_s1_3 == L_F), (gold_c_4 == L_BAL))))), Exists([gold_f_8, gold_m_9, gold_s1_10, gold_c_11, gold_a_12, gold_s_13, gold_a1_14], And(D_varchar_12_(gold_f_8), D_varchar_1_(gold_s1_10), D_varchar_3_(gold_c_11), And(P_Student(gold_s_13, FV_LName_0, gold_f_8, gold_a_12, gold_s1_10, gold_m_9, gold_a1_14, gold_c_11), And((gold_s1_10 == L_M), (gold_a_12 < L_v_20_integer))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_f_2, predicted_a_3, predicted_s_4, predicted_m_5, predicted_d_6, predicted_c_7], And(D_varchar_12_(predicted_f_2), D_varchar_1_(predicted_s_4), D_varchar_3_(predicted_c_7), And(P_Student(predicted_i_1, FV_LName_0, predicted_f_2, predicted_a_3, predicted_s_4, predicted_m_5, predicted_d_6, predicted_c_7), Or((predicted_s_4 == L_F), (predicted_c_7 == L_BAL), And((predicted_s_4 == L_M), (predicted_a_3 < L_v_20_integer))))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_a, WPREDICTED_s, WPREDICTED_m, WPREDICTED_d, WPREDICTED_c):  And(D_varchar_12_(WPREDICTED_f), D_varchar_1_(WPREDICTED_s), D_varchar_3_(WPREDICTED_c), And(P_Student(WPREDICTED_i, FV_LName_0, WPREDICTED_f, WPREDICTED_a, WPREDICTED_s, WPREDICTED_m, WPREDICTED_d, WPREDICTED_c), Or((WPREDICTED_s == L_F), (WPREDICTED_c == L_BAL), And((WPREDICTED_s == L_M), (WPREDICTED_a < L_v_20_integer)))))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 4 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'BAL' at varchar(3) -> L_BAL = StringVal('BAL')
+      literal 'F' at varchar(1) -> L_F = StringVal('F')
+      literal 'M' at varchar(1) -> L_M = StringVal('M')
+      literal '20' at integer -> L_v_20_integer = IntVal(20)
+   0 sort axiom(s), 4 literal(s), 0 order(s) needing a definition; 772 lines, 30467 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2911.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_LName_0) <= 12
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([gold_f_1, gold_m_2, gold_s1_3, gold_c_4, gold_a_5, gold_s_6, gold_a1_7], And(Length(gold_f_1) <= 12, Length(gold_s1_3) <= 1, Length(gold_c_4) <= 3, And(Student(gold_s_6, FV_LName_0, gold_f_1, gold_a_5, gold_s1_3, gold_m_2, gold_a1_7, gold_c_4), And(gold_s1_3 == "F", gold_c_4 == "BAL")))), Exists([gold_f_8, gold_m_9, gold_s1_10, gold_c_11, gold_a_12, gold_s_13, gold_a1_14], And(Length(gold_f_8) <= 12, Length(gold_s1_10) <= 1, Length(gold_c_11) <= 3, And(Student(gold_s_13, FV_LName_0, gold_f_8, gold_a_12, gold_s1_10, gold_m_9, gold_a1_14, gold_c_11), And(gold_s1_10 == "M", 20 > gold_a_12))))), Not(Exists([predicted_i_1, predicted_f_2, predicted_a_3, predicted_s_4, predicted_m_5, predicted_d_6, predicted_c_7], And(Length(predicted_f_2) <= 12, Length(predicted_s_4) <= 1, Length(predicted_c_7) <= 3, And(Student(predicted_i_1, FV_LName_0, predicted_f_2, predicted_a_3, predicted_s_4, predicted_m_5, predicted_d_6, predicted_c_7), Or(predicted_s_4 == "F", predicted_c_7 == "BAL", And(predicted_s_4 == "M", 20 > predicted_a_3)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.013 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.040 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_a, WPREDICTED_s, WPREDICTED_m, WPREDICTED_d, WPREDICTED_c
+      claim: And(And(Length(WPREDICTED_f) <= 12, Length(WPREDICTED_s) <= 1, Length(WPREDICTED_c) <= 3, And(Student(WPREDICTED_i, FV_LName_0, WPREDICTED_f, WPREDICTED_a, WPREDICTED_s, WPREDICTED_m, WPREDICTED_d, WPREDICTED_c), Or(WPREDICTED_s == "F", WPREDICTED_c == "BAL", And(WPREDICTED_s == "M", 20 > WPREDICTED_a)))), Not(Or(Exists([gold_f_1, gold_m_2, gold_s1_3, gold_c_4, gold_a_5, gold_s_6, gold_a1_7], And(Length(gold_f_1) <= 12, Length(gold_s1_3) <= 1, Length(gold_c_4) <= 3, And(Student(gold_s_6, FV_LName_0, gold_f_1, gold_a_5, gold_s1_3, gold_m_2, gold_a1_7, gold_c_4), And(gold_s1_3 == "F", gold_c_4 == "BAL")))), Exists([gold_f_8, gold_m_9, gold_s1_10, gold_c_11, gold_a_12, gold_s_13, gold_a1_14], And(Length(gold_f_8) <= 12, Length(gold_s1_10) <= 1, Length(gold_c_11) <= 3, And(Student(gold_s_13, FV_LName_0, gold_f_8, gold_a_12, gold_s1_10, gold_m_9, gold_a1_14, gold_c_11), And(gold_s1_10 == "M", 20 > gold_a_12)))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.031 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 17 relation tuple(s) listed, 25 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          i : StuID = 4
+          f : Fname = 'F'
+          a : Age = 10450
+          s : Sex = 'F'
+          m : Major = 5
+          d : Advisor = 6
+          c : city_code = ''
+        free (answer) variables:
+          FV_LName_0 : LName = ''
+        literals / constants:
+          BAL : city_code = 'BAL'
+          F : Sex = 'F'
+          M : Sex = 'M'
+          20 : Age = 20
+        relations (each value tagged with the local sort of its position):
+          Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code):
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=4, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=5, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=20, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=10450, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=10451, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=4, Advisor=0, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=7, Advisor=0, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=20, Advisor=0, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=10450, Advisor=0, city_code='')
+            Student(StuID=0, LName='', Fname='', Age=10450, Sex='F', Major=10451, Advisor=0, city_code='')
+            Student(StuID=4, LName='', Fname='F', Age=10450, Sex='F', Major=5, Advisor=6, city_code='')
+            Student(StuID=5, LName='', Fname='', Age=10451, Sex='F', Major=6, Advisor=7, city_code='')
+            Student(StuID=6, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=0, city_code='')
+            Student(StuID=7, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=0, city_code='')
+            Student(StuID=20, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=0, city_code='')
+            Student(StuID=10450, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=0, city_code='')
+            Student(StuID=10451, LName='', Fname='', Age=10450, Sex='F', Major=0, Advisor=0, city_code='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Advisor   : {0, 4, 5, 6, 7, 20, 10450, 10451}
+          Age       : {10450, 10451}
+          Fname     : {'', 'F'}
+          LName     : {''}
+          Major     : {0, 4, 5, 6, 7, 20, 10450, 10451}
+          Sex       : {'F'}
+          StuID     : {0, 4, 5, 6, 7, 20, 10450, 10451}
+          city_code : {''}
+        values shared across local sorts (joins):
+          0 : Advisor, Major, StuID
+          10450 : Advisor, Age, Major, StuID
+          10451 : Advisor, Age, Major, StuID
+          20 : Advisor, Major, StuID
+          4 : Advisor, Major, StuID
+          5 : Advisor, Major, StuID
+          6 : Advisor, Major, StuID
+          7 : Advisor, Major, StuID
+          '' : Fname, LName
+   [R3] took 0.602 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

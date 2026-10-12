@@ -1,0 +1,69 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_786.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_786.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7024 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the physicians' employee ids together with their primary affiliation departments' ids.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        boolean -> BoolSort()
+        integer -> IntSort()
+      local sorts:
+        Department = integer -> IntSort()
+        Physician = integer -> IntSort()
+        PrimaryAffiliation = boolean -> BoolSort()
+      symbols:
+        Affiliated_With(Physician, Department, PrimaryAffiliation)
+        constant 1 : PrimaryAffiliation
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p1 : PrimaryAffiliation ( (Affiliated_With(p,d,p1)) ∧ (p1 = 1) )
+        tokens: EXISTS:∃ IDENT:p1 COLON:: IDENT:PrimaryAffiliation LPAR:( LPAR:( IDENT:Affiliated_With LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p1:PrimaryAffiliation
+            AND
+              PRED Affiliated_With(p, d, p1)
+              EQ  p1 = 1
+      Predicted FOL: ∃x : Physician ∃y : Department ( Affiliated_With(x, y, 1) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Physician EXISTS:∃ IDENT:y COLON:: IDENT:Department LPAR:( IDENT:Affiliated_With LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Physician
+            EXISTS y:Department
+              PRED Affiliated_With(x, y, 1)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (p : Physician, d : Department) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Department, global integer -> IntSort()
+        p : local Physician, global integer -> IntSort()
+        p1 : local PrimaryAffiliation, global boolean -> BoolSort()
+      Predicted FOL:
+        x : local Physician, global integer -> IntSort()
+        y : local Department, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5294 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_786.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (p : Physician, d : Department) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,164 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3451.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3451.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5264 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the titles and directors of the films were never presented in China?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 13 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Country = text -> StringSort()
+        Director = text -> StringSort()
+        Estimation_ID = int -> IntSort()
+        Film_ID = int -> IntSort()
+        Gross_in_dollar = int -> IntSort()
+        High_Estimate = real -> Float32()
+        Low_Estimate = real -> Float32()
+        Market_ID = int -> IntSort()
+        Number_cities = int -> IntSort()
+        Studio = text -> StringSort()
+        Title = text -> StringSort()
+        Type = text -> StringSort()
+        Year = int -> IntSort()
+      symbols:
+        film(Film_ID, Title, Studio, Director, Gross_in_dollar)
+        film_market_estimation(Estimation_ID, Low_Estimate, High_Estimate, Film_ID, Type, Market_ID, Year)
+        market(Market_ID, Country, Number_cities)
+        constant China : Country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Studio ∃g : Gross_in_dollar ∃f : Film_ID( (film(f,t,s,d,g)) ∧ (¬(∃f1 : Film_ID( ((film(f,t,s,d,g)) ∧ (∃e : Estimation_ID ∃y : Year ∃n : Number_cities ∃h : High_Estimate ∃m : Market_ID ∃m1 : Market_ID ∃l : Low_Estimate ∃t1 : Type ∃c : Country( (((film_market_estimation(e,l,h,f1,t1,m,y)) ∧ (market(m1,c,n))) ∧ (m = m1)) ∧ (c = 'China') ))) ∧ (f = f1) ))) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Studio EXISTS:∃ IDENT:g COLON:: IDENT:Gross_in_dollar EXISTS:∃ IDENT:f COLON:: IDENT:Film_ID LPAR:( LPAR:( IDENT:film LPAR:( IDENT:f COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:f1 COLON:: IDENT:Film_ID LPAR:( LPAR:( LPAR:( IDENT:film LPAR:( IDENT:f COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:Estimation_ID EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:n COLON:: IDENT:Number_cities EXISTS:∃ IDENT:h COLON:: IDENT:High_Estimate EXISTS:∃ IDENT:m COLON:: IDENT:Market_ID EXISTS:∃ IDENT:m1 COLON:: IDENT:Market_ID EXISTS:∃ IDENT:l COLON:: IDENT:Low_Estimate EXISTS:∃ IDENT:t1 COLON:: IDENT:Type EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( LPAR:( LPAR:( IDENT:film_market_estimation LPAR:( IDENT:e COMMA:, IDENT:l COMMA:, IDENT:h COMMA:, IDENT:f1 COMMA:, IDENT:t1 COMMA:, IDENT:m COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:market LPAR:( IDENT:m1 COMMA:, IDENT:c COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:China RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f EQ:= IDENT:f1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Studio
+            EXISTS g:Gross_in_dollar
+              EXISTS f:Film_ID
+                AND
+                  PRED film(f, t, s, d, g)
+                  NOT
+                    EXISTS f1:Film_ID
+                      AND
+                        AND
+                          PRED film(f, t, s, d, g)
+                          EXISTS e:Estimation_ID
+                            EXISTS y:Year
+                              EXISTS n:Number_cities
+                                EXISTS h:High_Estimate
+                                  EXISTS m:Market_ID
+                                    EXISTS m1:Market_ID
+                                      EXISTS l:Low_Estimate
+                                        EXISTS t1:Type
+                                          EXISTS c:Country
+                                            AND
+                                              AND
+                                                AND
+                                                  PRED film_market_estimation(e, l, h, f1, t1, m, y)
+                                                  PRED market(m1, c, n)
+                                                EQ  m = m1
+                                              EQ  c = 'China'
+                        EQ  f = f1
+      Predicted FOL: ∃a0:Film_ID ∃a2:Studio ∃a4:Gross_in_dollar ( film(a0, Title, a2, Director, a4) ∧ ¬∃c0:Estimation_ID ∃c1:Low_Estimate ∃c2:High_Estimate ∃c4:Type ∃c5:Market_ID ∃c6:Year ∃b1:Country ∃b2:Number_cities ( film_market_estimation(c0, c1, c2, a0, c4, c5, c6) ∧ market(c5, b1, b2) ∧ b1 = China ) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:Film_ID EXISTS:∃ IDENT:a2 COLON:: IDENT:Studio EXISTS:∃ IDENT:a4 COLON:: IDENT:Gross_in_dollar LPAR:( IDENT:film LPAR:( IDENT:a0 COMMA:, IDENT:Title COMMA:, IDENT:a2 COMMA:, IDENT:Director COMMA:, IDENT:a4 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:c0 COLON:: IDENT:Estimation_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Low_Estimate EXISTS:∃ IDENT:c2 COLON:: IDENT:High_Estimate EXISTS:∃ IDENT:c4 COLON:: IDENT:Type EXISTS:∃ IDENT:c5 COLON:: IDENT:Market_ID EXISTS:∃ IDENT:c6 COLON:: IDENT:Year EXISTS:∃ IDENT:b1 COLON:: IDENT:Country EXISTS:∃ IDENT:b2 COLON:: IDENT:Number_cities LPAR:( IDENT:film_market_estimation LPAR:( IDENT:c0 COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:a0 COMMA:, IDENT:c4 COMMA:, IDENT:c5 COMMA:, IDENT:c6 RPAR:) AND:∧ IDENT:market LPAR:( IDENT:c5 COMMA:, IDENT:b1 COMMA:, IDENT:b2 RPAR:) AND:∧ IDENT:b1 EQ:= IDENT:China RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:Film_ID
+            EXISTS a2:Studio
+              EXISTS a4:Gross_in_dollar
+                AND
+                  PRED film(a0, Title, a2, Director, a4)
+                  NOT
+                    EXISTS c0:Estimation_ID
+                      EXISTS c1:Low_Estimate
+                        EXISTS c2:High_Estimate
+                          EXISTS c4:Type
+                            EXISTS c5:Market_ID
+                              EXISTS c6:Year
+                                EXISTS b1:Country
+                                  EXISTS b2:Number_cities
+                                    AND
+                                      PRED film_market_estimation(c0, c1, c2, a0, c4, c5, c6)
+                                      PRED market(c5, b1, b2)
+                                      EQ  b1 = China<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Director_0 : Director   Gold d <-> Predicted Director
+      FV_Title_0 : Title   Gold t <-> Predicted Title
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 28 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        d : local Director, global text -> StringSort()
+        e : local Estimation_ID, global int -> IntSort()
+        f : local Film_ID, global int -> IntSort()
+        f1 : local Film_ID, global int -> IntSort()
+        g : local Gross_in_dollar, global int -> IntSort()
+        h : local High_Estimate, global real -> Float32()
+        l : local Low_Estimate, global real -> Float32()
+        m : local Market_ID, global int -> IntSort()
+        m1 : local Market_ID, global int -> IntSort()
+        n : local Number_cities, global int -> IntSort()
+        s : local Studio, global text -> StringSort()
+        t : local Title, global text -> StringSort()
+        t1 : local Type, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        Director : local Director, global text -> StringSort()
+        Title : local Title, global text -> StringSort()
+        a0 : local Film_ID, global int -> IntSort()
+        a2 : local Studio, global text -> StringSort()
+        a4 : local Gross_in_dollar, global int -> IntSort()
+        b1 : local Country, global text -> StringSort()
+        b2 : local Number_cities, global int -> IntSort()
+        c0 : local Estimation_ID, global int -> IntSort()
+        c1 : local Low_Estimate, global real -> Float32()
+        c2 : local High_Estimate, global real -> Float32()
+        c4 : local Type, global text -> StringSort()
+        c5 : local Market_ID, global int -> IntSort()
+        c6 : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_g_2, gold_f_3], And(P_film(gold_f_3, FV_Title_0, gold_s_1, FV_Director_0, gold_g_2), Not(Exists([gold_f1_4], And(And(P_film(gold_f_3, FV_Title_0, gold_s_1, FV_Director_0, gold_g_2), Exists([gold_e_5, gold_y_6, gold_n_7, gold_h_8, gold_m_9, gold_m1_10, gold_l_11, gold_t1_12, gold_c_13], And(D_real(gold_h_8), D_real(gold_l_11), And(And(And(P_film_market_estimation(gold_e_5, gold_l_11, gold_h_8, gold_f1_4, gold_t1_12, gold_m_9, gold_y_6), P_market(gold_m1_10, gold_c_13, gold_n_7)), (gold_m_9 == gold_m1_10)), (gold_c_13 == L_China))))), (gold_f_3 == gold_f1_4))))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_g, WGOLD_f):  And(P_film(WGOLD_f, FV_Title_0, WGOLD_s, FV_Director_0, WGOLD_g), Not(Exists([goldsk_f1_1], And(And(P_film(WGOLD_f, FV_Title_0, WGOLD_s, FV_Director_0, WGOLD_g), Exists([goldsk_e_2, goldsk_y_3, goldsk_n_4, goldsk_h_5, goldsk_m_6, goldsk_m1_7, goldsk_l_8, goldsk_t1_9, goldsk_c_10], And(D_real(goldsk_h_5), D_real(goldsk_l_8), And(And(And(P_film_market_estimation(goldsk_e_2, goldsk_l_8, goldsk_h_5, goldsk_f1_1, goldsk_t1_9, goldsk_m_6, goldsk_y_3), P_market(goldsk_m1_7, goldsk_c_10, goldsk_n_4)), (goldsk_m_6 == goldsk_m1_7)), (goldsk_c_10 == L_China))))), (WGOLD_f == goldsk_f1_1)))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a2_2, predicted_a4_3], And(P_film(predicted_a0_1, FV_Title_0, predicted_a2_2, FV_Director_0, predicted_a4_3), Not(Exists([predicted_c0_4, predicted_c1_5, predicted_c2_6, predicted_c4_7, predicted_c5_8, predicted_c6_9, predicted_b1_10, predicted_b2_11], And(D_real(predicted_c1_5), D_real(predicted_c2_6), And(P_film_market_estimation(predicted_c0_4, predicted_c1_5, predicted_c2_6, predicted_a0_1, predicted_c4_7, predicted_c5_8, predicted_c6_9), P_market(predicted_c5_8, predicted_b1_10, predicted_b2_11), (predicted_b1_10 == L_China)))))))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a4):  And(P_film(WPREDICTED_a0, FV_Title_0, WPREDICTED_a2, FV_Director_0, WPREDICTED_a4), Not(Exists([predictedsk_c0_1, predictedsk_c1_2, predictedsk_c2_3, predictedsk_c4_4, predictedsk_c5_5, predictedsk_c6_6, predictedsk_b1_7, predictedsk_b2_8], And(D_real(predictedsk_c1_2), D_real(predictedsk_c2_3), And(P_film_market_estimation(predictedsk_c0_1, predictedsk_c1_2, predictedsk_c2_3, WPREDICTED_a0, predictedsk_c4_4, predictedsk_c5_5, predictedsk_c6_6), P_market(predictedsk_c5_5, predictedsk_b1_7, predictedsk_b2_8), (predictedsk_b1_7 == L_China))))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'China' at text -> L_China = StringVal('China')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 795 lines, 33478 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3451.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_g, WGOLD_f
+      claim: And(And(film(WGOLD_f, FV_Title_0, WGOLD_s, FV_Director_0, WGOLD_g), Not(Exists(goldsk_f1_1, And(And(film(WGOLD_f, FV_Title_0, WGOLD_s, FV_Director_0, WGOLD_g), Exists([goldsk_e_2, goldsk_y_3, goldsk_n_4, goldsk_h_5, goldsk_m_6, goldsk_m1_7, goldsk_l_8, goldsk_t1_9, goldsk_c_10], And(And(Not(fpIsNaN(goldsk_h_5)), Not(And(fpIsZero(goldsk_h_5), fpIsNegative(goldsk_h_5)))), And(Not(fpIsNaN(goldsk_l_8)), Not(And(fpIsZero(goldsk_l_8), fpIsNegative(goldsk_l_8)))), And(And(And(film_market_estimation(goldsk_e_2, goldsk_l_8, goldsk_h_5, goldsk_f1_1, goldsk_t1_9, goldsk_m_6, goldsk_y_3), market(goldsk_m1_7, goldsk_c_10, goldsk_n_4)), goldsk_m_6 == goldsk_m1_7), goldsk_c_10 == "China")))), WGOLD_f == goldsk_f1_1)))), Not(Exists([predicted_a0_1, predicted_a2_2, predicted_a4_3], And(film(predicted_a0_1, FV_Title_0, predicted_a2_2, FV_Director_0, predicted_a4_3), Not(Exists([predicted_c0_4, predicted_c1_5, predicted_c2_6, predicted_c4_7, predicted_c5_8, predicted_c6_9, predicted_b1_10, predicted_b2_11], And(And(Not(fpIsNaN(predicted_c1_5)), Not(And(fpIsZero(predicted_c1_5), fpIsNegative(predicted_c1_5)))), And(Not(fpIsNaN(predicted_c2_6)), Not(And(fpIsZero(predicted_c2_6), fpIsNegative(predicted_c2_6)))), And(film_market_estimation(predicted_c0_4, predicted_c1_5, predicted_c2_6, predicted_a0_1, predicted_c4_7, predicted_c5_8, predicted_c6_9), market(predicted_c5_8, predicted_b1_10, predicted_b2_11), predicted_b1_10 == "China"))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.012 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.025 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a4
+      claim: And(And(film(WPREDICTED_a0, FV_Title_0, WPREDICTED_a2, FV_Director_0, WPREDICTED_a4), Not(Exists([predictedsk_c0_1, predictedsk_c1_2, predictedsk_c2_3, predictedsk_c4_4, predictedsk_c5_5, predictedsk_c6_6, predictedsk_b1_7, predictedsk_b2_8], And(And(Not(fpIsNaN(predictedsk_c1_2)), Not(And(fpIsZero(predictedsk_c1_2), fpIsNegative(predictedsk_c1_2)))), And(Not(fpIsNaN(predictedsk_c2_3)), Not(And(fpIsZero(predictedsk_c2_3), fpIsNegative(predictedsk_c2_3)))), And(film_market_estimation(predictedsk_c0_1, predictedsk_c1_2, predictedsk_c2_3, WPREDICTED_a0, predictedsk_c4_4, predictedsk_c5_5, predictedsk_c6_6), market(predictedsk_c5_5, predictedsk_b1_7, predictedsk_b2_8), predictedsk_b1_7 == "China"))))), Not(Exists([gold_s_1, gold_g_2, gold_f_3], And(film(gold_f_3, FV_Title_0, gold_s_1, FV_Director_0, gold_g_2), Not(Exists(gold_f1_4, And(And(film(gold_f_3, FV_Title_0, gold_s_1, FV_Director_0, gold_g_2), Exists([gold_e_5, gold_y_6, gold_n_7, gold_h_8, gold_m_9, gold_m1_10, gold_l_11, gold_t1_12, gold_c_13], And(And(Not(fpIsNaN(gold_h_8)), Not(And(fpIsZero(gold_h_8), fpIsNegative(gold_h_8)))), And(Not(fpIsNaN(gold_l_11)), Not(And(fpIsZero(gold_l_11), fpIsNegative(gold_l_11)))), And(And(And(film_market_estimation(gold_e_5, gold_l_11, gold_h_8, gold_f1_4, gold_t1_12, gold_m_9, gold_y_6), market(gold_m1_10, gold_c_13, gold_n_7)), gold_m_9 == gold_m1_10), gold_c_13 == "China")))), gold_f_3 == gold_f1_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.035 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

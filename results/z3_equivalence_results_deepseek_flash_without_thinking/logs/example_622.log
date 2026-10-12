@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_622.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_622.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8835 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the first and last name of all the German drivers?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        code = text -> StringSort()
+        dob = text -> StringSort()
+        driverId = integer -> IntSort()
+        driverRef = text -> StringSort()
+        forename = text -> StringSort()
+        nationality = text -> StringSort()
+        number = integer -> IntSort()
+        surname = text -> StringSort()
+        url = text -> StringSort()
+      symbols:
+        drivers(driverId, driverRef, number, code, forename, surname, dob, nationality, url)
+        constant German : nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : driverId ∃d1 : driverRef ∃n : number ∃c : code ∃d2 : dob ∃n1 : nationality ∃u : url ( (drivers(d,d1,n,c,f,s,d2,n1,u)) ∧ (n1 = 'German') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:driverId EXISTS:∃ IDENT:d1 COLON:: IDENT:driverRef EXISTS:∃ IDENT:n COLON:: IDENT:number EXISTS:∃ IDENT:c COLON:: IDENT:code EXISTS:∃ IDENT:d2 COLON:: IDENT:dob EXISTS:∃ IDENT:n1 COLON:: IDENT:nationality EXISTS:∃ IDENT:u COLON:: IDENT:url LPAR:( LPAR:( IDENT:drivers LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d2 COMMA:, IDENT:n1 COMMA:, IDENT:u RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:German RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:driverId
+            EXISTS d1:driverRef
+              EXISTS n:number
+                EXISTS c:code
+                  EXISTS d2:dob
+                    EXISTS n1:nationality
+                      EXISTS u:url
+                        AND
+                          PRED drivers(d, d1, n, c, f, s, d2, n1, u)
+                          EQ  n1 = 'German'
+      Predicted FOL: ∀x0 : driverId ∀x1 : driverRef ∀x2 : number ∀x3 : code ∀x4 : forename ∀x5 : surname ∀x6 : dob ∀x7 : nationality ∀x8 : url (drivers(x0, x1, x2, x3, x4, x5, x6, x7, x8) ∧ x7 = 'German' → ∃y4 : forename ∃y5 : surname (y4 = x4 ∧ y5 = x5))
+        tokens: FORALL:∀ IDENT:x0 COLON:: IDENT:driverId FORALL:∀ IDENT:x1 COLON:: IDENT:driverRef FORALL:∀ IDENT:x2 COLON:: IDENT:number FORALL:∀ IDENT:x3 COLON:: IDENT:code FORALL:∀ IDENT:x4 COLON:: IDENT:forename FORALL:∀ IDENT:x5 COLON:: IDENT:surname FORALL:∀ IDENT:x6 COLON:: IDENT:dob FORALL:∀ IDENT:x7 COLON:: IDENT:nationality FORALL:∀ IDENT:x8 COLON:: IDENT:url LPAR:( IDENT:drivers LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 COMMA:, IDENT:x6 COMMA:, IDENT:x7 COMMA:, IDENT:x8 RPAR:) AND:∧ IDENT:x7 EQ:= LIT:German IMPL:→ EXISTS:∃ IDENT:y4 COLON:: IDENT:forename EXISTS:∃ IDENT:y5 COLON:: IDENT:surname LPAR:( IDENT:y4 EQ:= IDENT:x4 AND:∧ IDENT:y5 EQ:= IDENT:x5 RPAR:) RPAR:) EOF
+        AST:
+          FORALL x0:driverId
+            FORALL x1:driverRef
+              FORALL x2:number
+                FORALL x3:code
+                  FORALL x4:forename
+                    FORALL x5:surname
+                      FORALL x6:dob
+                        FORALL x7:nationality
+                          FORALL x8:url
+                            IMPLIES
+                              AND
+                                PRED drivers(x0, x1, x2, x3, x4, x5, x6, x7, x8)
+                                EQ  x7 = 'German'
+                              EXISTS y4:forename
+                                EXISTS y5:surname
+                                  AND
+                                    EQ  y4 = x4
+                                    EQ  y5 = x5
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : forename, s : surname) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local code, global text -> StringSort()
+        d : local driverId, global integer -> IntSort()
+        d1 : local driverRef, global text -> StringSort()
+        d2 : local dob, global text -> StringSort()
+        f : local forename, global text -> StringSort()
+        n : local number, global integer -> IntSort()
+        n1 : local nationality, global text -> StringSort()
+        s : local surname, global text -> StringSort()
+        u : local url, global text -> StringSort()
+      Predicted FOL:
+        x0 : local driverId, global integer -> IntSort()
+        x1 : local driverRef, global text -> StringSort()
+        x2 : local number, global integer -> IntSort()
+        x3 : local code, global text -> StringSort()
+        x4 : local forename, global text -> StringSort()
+        x5 : local surname, global text -> StringSort()
+        x6 : local dob, global text -> StringSort()
+        x7 : local nationality, global text -> StringSort()
+        x8 : local url, global text -> StringSort()
+        y4 : local forename, global text -> StringSort()
+        y5 : local surname, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5541 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_622.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : forename, s : surname) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

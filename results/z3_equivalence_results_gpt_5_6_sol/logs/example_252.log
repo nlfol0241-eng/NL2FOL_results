@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_252.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_252.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3366 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the major cities of the us
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        city_name = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        city(city_name, population, country_name, state_name)
+        constant 150000 : population
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : population ∃c1 : country_name ∃s : state_name ( (city(c,p,c1,s)) ∧ (p > 150000) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c1 COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p GT:> NUM:150000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:population
+            EXISTS c1:country_name
+              EXISTS s:state_name
+                AND
+                  PRED city(c, p, c1, s)
+                  CMP  p > 150000
+      Predicted FOL: ∃p : population ∃s : state_name (city(x, p, 'USA', s) ∧ p > 150000)
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( IDENT:city LPAR:( IDENT:x COMMA:, IDENT:p COMMA:, LIT:USA COMMA:, IDENT:s RPAR:) AND:∧ IDENT:p GT:> NUM:150000 RPAR:) EOF
+        AST:
+          EXISTS p:population
+            EXISTS s:state_name
+              AND
+                PRED city(x, p, 'USA', s)
+                CMP  p > 150000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_city_name_0 : city_name   Gold c <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local city_name, global text -> StringSort()
+        c1 : local country_name, global varchar(3) -> StringSort()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+        x : local city_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_c1_2, gold_s_3], And(D_varchar_3_(gold_c1_2), And(P_city(FV_city_name_0, gold_p_1, gold_c1_2, gold_s_3), (gold_p_1 > L_v_150000_integer))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_c1, WGOLD_s):  And(D_varchar_3_(WGOLD_c1), And(P_city(FV_city_name_0, WGOLD_p, WGOLD_c1, WGOLD_s), (WGOLD_p > L_v_150000_integer)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_s_2], And(And(P_city(FV_city_name_0, predicted_p_1, L_USA, predicted_s_2), D_varchar_3_(L_USA)), (predicted_p_1 > L_v_150000_integer)))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_s):  And(And(P_city(FV_city_name_0, WPREDICTED_p, L_USA, WPREDICTED_s), D_varchar_3_(L_USA)), (WPREDICTED_p > L_v_150000_integer))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'USA' at varchar(3) -> L_USA = StringVal('USA')
+      literal '150000' at integer -> L_v_150000_integer = IntVal(150000)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 732 lines, 27301 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_252.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_c1, WGOLD_s
+      claim: And(And(Length(WGOLD_c1) <= 3, And(city(FV_city_name_0, WGOLD_p, WGOLD_c1, WGOLD_s), 150000 < WGOLD_p)), Not(Exists([predicted_p_1, predicted_s_2], And(And(city(FV_city_name_0, predicted_p_1, "USA", predicted_s_2), Length("USA") <= 3), 150000 < predicted_p_1))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 2 relation tuple(s) listed, 4 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          p : population = 161798
+          c1 : country_name = ''
+          s : state_name = 'USA'
+        free (answer) variables:
+          FV_city_name_0 : city_name = 'USA'
+        literals / constants:
+          USA : varchar(3) = 'USA'
+          150000 : population = 150000
+        relations (each value tagged with the local sort of its position):
+          city(city_name, population, country_name, state_name):
+            city(city_name='USA', population=161798, country_name='', state_name='USA')
+            city(city_name='USA', population=161799, country_name='', state_name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          city_name    : {'USA'}
+          country_name : {''}
+          population   : {161798, 161799}
+          state_name   : {'', 'USA'}
+        values shared across local sorts (joins):
+          'USA' : city_name, state_name
+   [R2] took 0.023 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_s
+      claim: And(And(And(city(FV_city_name_0, WPREDICTED_p, "USA", WPREDICTED_s), Length("USA") <= 3), 150000 < WPREDICTED_p), Not(Exists([gold_p_1, gold_c1_2, gold_s_3], And(Length(gold_c1_2) <= 3, And(city(FV_city_name_0, gold_p_1, gold_c1_2, gold_s_3), 150000 < gold_p_1)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

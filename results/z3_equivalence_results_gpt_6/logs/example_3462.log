@@ -1,0 +1,112 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3462.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3462.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2966 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of schools that have some players in the mid position but not in the goalie position.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+      local sorts:
+        cName = varchar(20) -> StringSort()
+        decision = varchar(3) -> StringSort()
+        pID = numeric(5,0) -> RealSort()
+        pPos = varchar(8) -> StringSort()
+      symbols:
+        Tryout(pID, cName, pPos, decision)
+        constant goalie : pPos
+        constant mid : pPos
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃p1 : pPos ∃d : decision ∃p : pID( (Tryout(p,c,p1,d)) ∧ (p1 = 'mid') )) ∧ (¬(∃p1 : pPos ∃d : decision ∃p : pID( (Tryout(p,c,p1,d)) ∧ (p1 = 'goalie') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision EXISTS:∃ IDENT:p COLON:: IDENT:pID LPAR:( LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:mid RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision EXISTS:∃ IDENT:p COLON:: IDENT:pID LPAR:( LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:goalie RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p1:pPos
+              EXISTS d:decision
+                EXISTS p:pID
+                  AND
+                    PRED Tryout(p, c, p1, d)
+                    EQ  p1 = 'mid'
+            NOT
+              EXISTS p1:pPos
+                EXISTS d:decision
+                  EXISTS p:pID
+                    AND
+                      PRED Tryout(p, c, p1, d)
+                      EQ  p1 = 'goalie'
+      Predicted FOL: (∃p : pID ∃d : decision Tryout(p, s, 'mid', d)) ∧ ¬(∃q : pID ∃e : decision Tryout(q, s, 'goalie', e))
+        tokens: LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:d COLON:: IDENT:decision IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:s COMMA:, LIT:mid COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ NOT:¬ LPAR:( EXISTS:∃ IDENT:q COLON:: IDENT:pID EXISTS:∃ IDENT:e COLON:: IDENT:decision IDENT:Tryout LPAR:( IDENT:q COMMA:, IDENT:s COMMA:, LIT:goalie COMMA:, IDENT:e RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p:pID
+              EXISTS d:decision
+                PRED Tryout(p, s, 'mid', d)
+            NOT
+              EXISTS q:pID
+                EXISTS e:decision
+                  PRED Tryout(q, s, 'goalie', e)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_cName_0 : cName   Gold c <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        d : local decision, global varchar(3) -> StringSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pPos, global varchar(8) -> StringSort()
+      Predicted FOL:
+        d : local decision, global varchar(3) -> StringSort()
+        e : local decision, global varchar(3) -> StringSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        q : local pID, global numeric(5,0) -> RealSort()
+        s : local cName, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_p1_1, gold_d_2, gold_p_3], And(D_varchar_8_(gold_p1_1), D_varchar_3_(gold_d_2), D_numeric_5_0_(gold_p_3), And(P_Tryout(gold_p_3, FV_cName_0, gold_p1_1, gold_d_2), (gold_p1_1 == L_mid)))), Not(Exists([gold_p1_4, gold_d_5, gold_p_6], And(D_varchar_8_(gold_p1_4), D_varchar_3_(gold_d_5), D_numeric_5_0_(gold_p_6), And(P_Tryout(gold_p_6, FV_cName_0, gold_p1_4, gold_d_5), (gold_p1_4 == L_goalie))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(Exists([predicted_p_1, predicted_d_2], And(D_numeric_5_0_(predicted_p_1), D_varchar_3_(predicted_d_2), And(P_Tryout(predicted_p_1, FV_cName_0, L_mid, predicted_d_2), D_varchar_8_(L_mid)))), Not(Exists([predicted_q_3, predicted_e_4], And(D_numeric_5_0_(predicted_q_3), D_varchar_3_(predicted_e_4), And(P_Tryout(predicted_q_3, FV_cName_0, L_goalie, predicted_e_4), D_varchar_8_(L_goalie))))))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'goalie' at varchar(8) -> L_goalie = StringVal('goalie')
+      literal 'mid' at varchar(8) -> L_mid = StringVal('mid')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 737 lines, 27665 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3462.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_cName_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_p1_1, gold_d_2, gold_p_3], And(Length(gold_p1_1) <= 8, Length(gold_d_2) <= 3, And(IsInt(gold_p_3), gold_p_3 > -100000, gold_p_3 < 100000), And(Tryout(gold_p_3, FV_cName_0, gold_p1_1, gold_d_2), gold_p1_1 == "mid"))), Not(Exists([gold_p1_4, gold_d_5, gold_p_6], And(Length(gold_p1_4) <= 8, Length(gold_d_5) <= 3, And(IsInt(gold_p_6), gold_p_6 > -100000, gold_p_6 < 100000), And(Tryout(gold_p_6, FV_cName_0, gold_p1_4, gold_d_5), gold_p1_4 == "goalie"))))), Not(And(Exists([predicted_p_1, predicted_d_2], And(And(IsInt(predicted_p_1), predicted_p_1 > -100000, predicted_p_1 < 100000), Length(predicted_d_2) <= 3, And(Tryout(predicted_p_1, FV_cName_0, "mid", predicted_d_2), Length("mid") <= 8))), Not(Exists([predicted_q_3, predicted_e_4], And(And(IsInt(predicted_q_3), predicted_q_3 > -100000, predicted_q_3 < 100000), Length(predicted_e_4) <= 3, And(Tryout(predicted_q_3, FV_cName_0, "goalie", predicted_e_4), Length("goalie") <= 8)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.018 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([predicted_p_1, predicted_d_2], And(And(IsInt(predicted_p_1), predicted_p_1 > -100000, predicted_p_1 < 100000), Length(predicted_d_2) <= 3, And(Tryout(predicted_p_1, FV_cName_0, "mid", predicted_d_2), Length("mid") <= 8))), Not(Exists([predicted_q_3, predicted_e_4], And(And(IsInt(predicted_q_3), predicted_q_3 > -100000, predicted_q_3 < 100000), Length(predicted_e_4) <= 3, And(Tryout(predicted_q_3, FV_cName_0, "goalie", predicted_e_4), Length("goalie") <= 8))))), Not(And(Exists([gold_p1_1, gold_d_2, gold_p_3], And(Length(gold_p1_1) <= 8, Length(gold_d_2) <= 3, And(IsInt(gold_p_3), gold_p_3 > -100000, gold_p_3 < 100000), And(Tryout(gold_p_3, FV_cName_0, gold_p1_1, gold_d_2), gold_p1_1 == "mid"))), Not(Exists([gold_p1_4, gold_d_5, gold_p_6], And(Length(gold_p1_4) <= 8, Length(gold_d_5) <= 3, And(IsInt(gold_p_6), gold_p_6 > -100000, gold_p_6 < 100000), And(Tryout(gold_p_6, FV_cName_0, gold_p1_4, gold_d_5), gold_p1_4 == "goalie")))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

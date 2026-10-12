@@ -1,0 +1,97 @@
+{
+  "NL": "Which customers do not have a first notification of loss record? Give me the customer names.",
+  "Vocabulary": {
+    "Predicates": [
+      "Customers",
+      "First_Notification_of_Loss"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "Customers": [
+        "Customer_ID",
+        "Customer_name"
+      ],
+      "First_Notification_of_Loss": [
+        "FNOL_ID",
+        "Customer_ID",
+        "Policy_ID",
+        "Service_ID"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a0'∀a1'( Customers(a0, a1) ∧ Customers(a0', a1') ∧ a0 = a0' ) → ( a1 = a1' )",
+    "axiom2": "∀b0∀b1∀b0'∀b1'( Services(b0, b1) ∧ Services(b0', b1') ∧ b0 = b0' ) → ( b1 = b1' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( Available_Policies(c0, c1, c2) ∧ Available_Policies(c0', c1', c2') ∧ c0 = c0' ) → ( c1 = c1' ∧ c2 = c2' )",
+    "axiom4": "∀d0∀d1∀d2∀d3∀d0'∀d1'∀d2'∀d3'( Customers_Policies(d0, d1, d2, d3) ∧ Customers_Policies(d0', d1', d2', d3') ∧ d0 = d0' ∧ d1 = d1' ) → ( d2 = d2' ∧ d3 = d3' )",
+    "axiom5": "∀e0∀e1∀e2∀e3∀e0'∀e1'∀e2'∀e3'( First_Notification_of_Loss(e0, e1, e2, e3) ∧ First_Notification_of_Loss(e0', e1', e2', e3') ∧ e0 = e0' ) → ( e1 = e1' ∧ e2 = e2' ∧ e3 = e3' )",
+    "axiom6": "∀f0∀f1∀f2∀f0'∀f1'∀f2'( Claims(f0, f1, f2) ∧ Claims(f0', f1', f2') ∧ f0 = f0' ) → ( f1 = f1' ∧ f2 = f2' )",
+    "axiom7": "∀g0∀g1∀g2∀g3∀g0'∀g1'∀g2'∀g3'( Settlements(g0, g1, g2, g3) ∧ Settlements(g0', g1', g2', g3') ∧ g0 = g0' ) → ( g1 = g1' ∧ g2 = g2' ∧ g3 = g3' )",
+    "axiom8": "∀d0∀d1∀d2∀d3 ( Customers_Policies(d0, d1, d2, d3) → ∃c0∃c1∃c2 ( Available_Policies(c0, c1, c2) ∧ c0 = d1 ) )",
+    "axiom9": "∀d0∀d1∀d2∀d3 ( Customers_Policies(d0, d1, d2, d3) → ∃a0∃a1 ( Customers(a0, a1) ∧ a0 = d0 ) )",
+    "axiom10": "∀e0∀e1∀e2∀e3 ( First_Notification_of_Loss(e0, e1, e2, e3) → ∃d0∃d1∃d2∃d3 ( Customers_Policies(d0, d1, d2, d3) ∧ d0 = e1 ∧ d1 = e2 ) )",
+    "axiom11": "∀e0∀e1∀e2∀e3 ( First_Notification_of_Loss(e0, e1, e2, e3) → ∃b0∃b1 ( Services(b0, b1) ∧ b0 = e3 ) )",
+    "axiom12": "∀f0∀f1∀f2 ( Claims(f0, f1, f2) → ∃e0∃e1∃e2∃e3 ( First_Notification_of_Loss(e0, e1, e2, e3) ∧ e0 = f1 ) )",
+    "axiom13": "∀g0∀g1∀g2∀g3 ( Settlements(g0, g1, g2, g3) → ∃f0∃f1∃f2 ( Claims(f0, f1, f2) ∧ f0 = g1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Customers": {
+        "A": "Customers",
+        "A0": "Customer_ID",
+        "A1": "Customer_name"
+      },
+      "First_Notification_of_Loss": {
+        "B": "First_Notification_of_Loss",
+        "B0": "FNOL_ID",
+        "B1": "Customer_ID",
+        "B2": "Policy_ID",
+        "B3": "Service_ID"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "(∃c : Customer_ID( Customers(c,c1) )) ∧ (¬(∃f : FNOL_ID ∃s : Service_ID ∃p : Policy_ID ∃c2 : Customer_ID ∃c : Customer_ID( ((Customers(c,c1)) ∧ (First_Notification_of_Loss(f,c2,p,s))) ∧ (c = c2) )))",
+    "free vars": "c1 : Customer_name"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A1](A))<D>(<P>[A1](<S>[A0 = B1]((A)<X>(B))))",
+    "Processed_RA": "(<P>[A1](A))<D>(<P>[A1](<S>[A0 = B1]((A)<X>(B))))",
+    "RC": "([E]?A0( A(?A0,?A1) )) & (~([E]?B0,?B3,?B2,?B1,?A0( ((A(?A0,?A1)) & (B(?B0,?B1,?B2,?B3))) & (?A0 = ?B1) )))",
+    "string": "(∃A0( A(A0,A1) )) ∧ (¬(∃B0 ∃B3 ∃B2 ∃B1 ∃A0( ((A(A0,A1)) ∧ (B(B0,B1,B2,B3))) ∧ (A0 = B1) )))",
+    "free variables": "A1",
+    "db_id": "insurance_fnol",
+    "processed_sql": "SELECT customer_name FROM customers EXCEPT SELECT t1.customer_name FROM customers AS t1 JOIN first_notification_of_loss AS t2 ON t1.customer_id  =  t2.customer_id"
+  },
+  "Global Sorts": [
+    "varchar(40)",
+    "integer"
+  ],
+  "Sort Axioms": {
+    "Customers": {
+      "sortaxiom0": "Customer_ID = integer",
+      "sortaxiom1": "Customer_name = varchar(40)"
+    },
+    "First_Notification_of_Loss": {
+      "sortaxiom0": "FNOL_ID = integer",
+      "sortaxiom1": "Customer_ID = integer",
+      "sortaxiom2": "Policy_ID = integer",
+      "sortaxiom3": "Service_ID = integer"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT customer_name FROM customers EXCEPT SELECT t1.customer_name FROM customers AS t1 JOIN first_notification_of_loss AS t2 ON t1.customer_id  =  t2.customer_id"
+  },
+  "id": 3549,
+  "Predicted FOL": {
+    "string": "∃cID:Customer_ID ( Customers(cID, cName) ∧ ¬∃fnolID:FNOL_ID ∃pID:Policy_ID ∃sID:Service_ID First_Notification_of_Loss(fnolID, cID, pID, sID) )",
+    "free vars": "cName:Customer_name"
+  }
+}

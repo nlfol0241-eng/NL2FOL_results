@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1092.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1092.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2408 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name, home city, and age for all drivers.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Driver_ID = int -> IntSort()
+        Home_city = text -> StringSort()
+        Name = text -> StringSort()
+        Party = text -> StringSort()
+      symbols:
+        driver(Driver_ID, Name, Party, Home_city, Age)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Driver_ID ∃p : Party ( driver(d,n,p,h,a) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:p COLON:: IDENT:Party LPAR:( IDENT:driver LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:h COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Driver_ID
+            EXISTS p:Party
+              PRED driver(d, n, p, h, a)
+      Predicted FOL: ∃d : Driver_ID ∃p : Party (driver(d, n, p, h, a))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:p COLON:: IDENT:Party LPAR:( IDENT:driver LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:h COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Driver_ID
+            EXISTS p:Party
+              PRED driver(d, n, p, h, a)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Age_0 : Age   Gold a <-> Predicted a
+      FV_Home_city_0 : Home_city   Gold h <-> Predicted h
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        d : local Driver_ID, global int -> IntSort()
+        h : local Home_city, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local Party, global text -> StringSort()
+      Predicted FOL:
+        a : local Age, global int -> IntSort()
+        d : local Driver_ID, global int -> IntSort()
+        h : local Home_city, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local Party, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_p_2], P_driver(gold_d_1, FV_Name_0, gold_p_2, FV_Home_city_0, FV_Age_0))
+      gold_skolem (witnesses WGOLD_d, WGOLD_p):  P_driver(WGOLD_d, FV_Name_0, WGOLD_p, FV_Home_city_0, FV_Age_0)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_p_2], P_driver(predicted_d_1, FV_Name_0, predicted_p_2, FV_Home_city_0, FV_Age_0))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_p):  P_driver(WPREDICTED_d, FV_Name_0, WPREDICTED_p, FV_Home_city_0, FV_Age_0)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 26700 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1092.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_p
+      claim: And(driver(WGOLD_d, FV_Name_0, WGOLD_p, FV_Home_city_0, FV_Age_0), Not(Exists([predicted_d_1, predicted_p_2], driver(predicted_d_1, FV_Name_0, predicted_p_2, FV_Home_city_0, FV_Age_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_p
+      claim: And(driver(WPREDICTED_d, FV_Name_0, WPREDICTED_p, FV_Home_city_0, FV_Age_0), Not(Exists([gold_d_1, gold_p_2], driver(gold_d_1, FV_Name_0, gold_p_2, FV_Home_city_0, FV_Age_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

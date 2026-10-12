@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1116.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1116.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3119 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all wines produced in 2008?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 11 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Appelation = text -> StringSort()
+        Cases = integer -> IntSort()
+        Drink = text -> StringSort()
+        Grape = text -> StringSort()
+        Name = text -> StringSort()
+        No = integer -> IntSort()
+        Price = integer -> IntSort()
+        Score = integer -> IntSort()
+        State = text -> StringSort()
+        Winery = text -> StringSort()
+        Year = integer -> IntSort()
+      symbols:
+        wine(No, Grape, Winery, Appelation, State, Name, Year, Price, Score, Cases, Drink)
+        constant 2008 : Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : No ∃g : Grape ∃d : Drink ∃w : Winery ∃a : Appelation ∃s : State ∃y : Year ∃p : Price ∃s1 : Score ∃c : Cases ( (wine(n,g,w,a,s,n1,y,p,s1,c,d)) ∧ (y = '2008') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:No EXISTS:∃ IDENT:g COLON:: IDENT:Grape EXISTS:∃ IDENT:d COLON:: IDENT:Drink EXISTS:∃ IDENT:w COLON:: IDENT:Winery EXISTS:∃ IDENT:a COLON:: IDENT:Appelation EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:p COLON:: IDENT:Price EXISTS:∃ IDENT:s1 COLON:: IDENT:Score EXISTS:∃ IDENT:c COLON:: IDENT:Cases LPAR:( LPAR:( IDENT:wine LPAR:( IDENT:n COMMA:, IDENT:g COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:n1 COMMA:, IDENT:y COMMA:, IDENT:p COMMA:, IDENT:s1 COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y EQ:= LIT:2008 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:No
+            EXISTS g:Grape
+              EXISTS d:Drink
+                EXISTS w:Winery
+                  EXISTS a:Appelation
+                    EXISTS s:State
+                      EXISTS y:Year
+                        EXISTS p:Price
+                          EXISTS s1:Score
+                            EXISTS c:Cases
+                              AND
+                                PRED wine(n, g, w, a, s, n1, y, p, s1, c, d)
+                                EQ  y = '2008'
+      Predicted FOL: ∃n : Name (wine(No, Grape, Winery, Appelation, State, n, 2008, Price, Score, Cases, Drink))
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( IDENT:wine LPAR:( IDENT:No COMMA:, IDENT:Grape COMMA:, IDENT:Winery COMMA:, IDENT:Appelation COMMA:, IDENT:State COMMA:, IDENT:n COMMA:, NUM:2008 COMMA:, IDENT:Price COMMA:, IDENT:Score COMMA:, IDENT:Cases COMMA:, IDENT:Drink RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Name
+            PRED wine(No, Grape, Winery, Appelation, State, n, 2008, Price, Score, Cases, Drink)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) No, Grape, Winery, Appelation, State, Price, Score, Cases, Drink occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n1 : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Appelation, global text -> StringSort()
+        c : local Cases, global integer -> IntSort()
+        d : local Drink, global text -> StringSort()
+        g : local Grape, global text -> StringSort()
+        n : local No, global integer -> IntSort()
+        n1 : local Name, global text -> StringSort()
+        p : local Price, global integer -> IntSort()
+        s : local State, global text -> StringSort()
+        s1 : local Score, global integer -> IntSort()
+        w : local Winery, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+      Predicted FOL:
+        Appelation : local Appelation, global text -> StringSort()
+        Cases : local Cases, global integer -> IntSort()
+        Drink : local Drink, global text -> StringSort()
+        Grape : local Grape, global text -> StringSort()
+        No : local No, global integer -> IntSort()
+        Price : local Price, global integer -> IntSort()
+        Score : local Score, global integer -> IntSort()
+        State : local State, global text -> StringSort()
+        Winery : local Winery, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5519 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1116.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : Name) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) No, Grape, Winery, Appelation, State, Price, Score, Cases, Drink occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

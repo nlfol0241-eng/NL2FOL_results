@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1553.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1553.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5081 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What address was the document with id 4 mailed to?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+      local sorts:
+        address_details = varchar(255) -> StringSort()
+        address_id = integer -> IntSort()
+        document_id = integer -> IntSort()
+        mailed_to_address_id = integer -> IntSort()
+        mailing_date = datetime -> IntSort()
+      symbols:
+        Addresses(address_id, address_details)
+        Documents_Mailed(document_id, mailed_to_address_id, mailing_date)
+        constant 4 : document_id
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : address_id ∃d : document_id ∃m : mailed_to_address_id ∃m1 : mailing_date ( (((Addresses(a,a1)) ∧ (Documents_Mailed(d,m,m1))) ∧ (m = a)) ∧ (d = 4) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:address_id EXISTS:∃ IDENT:d COLON:: IDENT:document_id EXISTS:∃ IDENT:m COLON:: IDENT:mailed_to_address_id EXISTS:∃ IDENT:m1 COLON:: IDENT:mailing_date LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Addresses LPAR:( IDENT:a COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Documents_Mailed LPAR:( IDENT:d COMMA:, IDENT:m COMMA:, IDENT:m1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= NUM:4 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:address_id
+            EXISTS d:document_id
+              EXISTS m:mailed_to_address_id
+                EXISTS m1:mailing_date
+                  AND
+                    AND
+                      AND
+                        PRED Addresses(a, a1)
+                        PRED Documents_Mailed(d, m, m1)
+                      EQ  m = a
+                    EQ  d = 4
+      Predicted FOL: ∃a : address_id ∃m : mailing_date (Documents_Mailed(4, a, m) ∧ Addresses(a, x))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:address_id EXISTS:∃ IDENT:m COLON:: IDENT:mailing_date LPAR:( IDENT:Documents_Mailed LPAR:( NUM:4 COMMA:, IDENT:a COMMA:, IDENT:m RPAR:) AND:∧ IDENT:Addresses LPAR:( IDENT:a COMMA:, IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:address_id
+            EXISTS m:mailing_date
+              AND
+                PRED Documents_Mailed(4, a, m)
+                PRED Addresses(a, x)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_address_details_0 : address_details   Gold a1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local address_id, global integer -> IntSort()
+        a1 : local address_details, global varchar(255) -> StringSort()
+        d : local document_id, global integer -> IntSort()
+        m : local mailed_to_address_id, global integer -> IntSort()
+        m1 : local mailing_date, global datetime -> IntSort()
+      Predicted FOL:
+        a : local address_id, global integer -> IntSort()
+        m : local mailing_date, global datetime -> IntSort()
+        x : local address_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_d_2, gold_m_3, gold_m1_4], And(And(And(P_Addresses(gold_a_1, FV_address_details_0), P_Documents_Mailed(gold_d_2, gold_m_3, gold_m1_4)), (gold_m_3 == gold_a_1)), (gold_d_2 == L_v_4_integer)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_d, WGOLD_m, WGOLD_m1):  And(And(And(P_Addresses(WGOLD_a, FV_address_details_0), P_Documents_Mailed(WGOLD_d, WGOLD_m, WGOLD_m1)), (WGOLD_m == WGOLD_a)), (WGOLD_d == L_v_4_integer))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_m_2], And(P_Documents_Mailed(L_v_4_integer, predicted_a_1, predicted_m_2), P_Addresses(predicted_a_1, FV_address_details_0)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_m):  And(P_Documents_Mailed(L_v_4_integer, WPREDICTED_a, WPREDICTED_m), P_Addresses(WPREDICTED_a, FV_address_details_0))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '4' at integer -> L_v_4_integer = IntVal(4)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 741 lines, 28125 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1553.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_address_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_d, WGOLD_m, WGOLD_m1
+      claim: And(And(And(And(Addresses(WGOLD_a, FV_address_details_0), Documents_Mailed(WGOLD_d, WGOLD_m, WGOLD_m1)), WGOLD_m == WGOLD_a), 4 == WGOLD_d), Not(Exists([predicted_a_1, predicted_m_2], And(Documents_Mailed(4, predicted_a_1, predicted_m_2), Addresses(predicted_a_1, FV_address_details_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_m
+      claim: And(And(Documents_Mailed(4, WPREDICTED_a, WPREDICTED_m), Addresses(WPREDICTED_a, FV_address_details_0)), Not(Exists([gold_a_1, gold_d_2, gold_m_3, gold_m1_4], And(And(And(Addresses(gold_a_1, FV_address_details_0), Documents_Mailed(gold_d_2, gold_m_3, gold_m1_4)), gold_m_3 == gold_a_1), 4 == gold_d_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

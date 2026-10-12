@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1294.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1294.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3847 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: sharon goldwater papers
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        integer -> IntSort()
+      local sorts:
+        authorId = integer -> IntSort()
+        authorName = varchar(50) -> StringSort()
+        paperId = integer -> IntSort()
+      symbols:
+        author(authorId, authorName)
+        writes(paperId, authorId)
+        constant sharon goldwater : authorName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : authorId ∃a1 : authorId ∃a2 : authorName ( (((writes(p,a)) ∧ (author(a1,a2))) ∧ (a = a1)) ∧ (a2 = 'sharon goldwater') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:authorId EXISTS:∃ IDENT:a1 COLON:: IDENT:authorId EXISTS:∃ IDENT:a2 COLON:: IDENT:authorName LPAR:( LPAR:( LPAR:( LPAR:( IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= LIT:sharon goldwater RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:authorId
+            EXISTS a1:authorId
+              EXISTS a2:authorName
+                AND
+                  AND
+                    AND
+                      PRED writes(p, a)
+                      PRED author(a1, a2)
+                    EQ  a = a1
+                  EQ  a2 = 'sharon goldwater'
+      Predicted FOL: ∃a : authorId (author(a, 'sharon goldwater') ∧ writes(p, a))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:authorId LPAR:( IDENT:author LPAR:( IDENT:a COMMA:, LIT:sharon goldwater RPAR:) AND:∧ IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:authorId
+            AND
+              PRED author(a, 'sharon goldwater')
+              PRED writes(p, a)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_paperId_0 : paperId   Gold p <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local authorId, global integer -> IntSort()
+        a1 : local authorId, global integer -> IntSort()
+        a2 : local authorName, global varchar(50) -> StringSort()
+        p : local paperId, global integer -> IntSort()
+      Predicted FOL:
+        a : local authorId, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_a1_2, gold_a2_3], And(D_varchar_50_(gold_a2_3), And(And(And(P_writes(FV_paperId_0, gold_a_1), P_author(gold_a1_2, gold_a2_3)), (gold_a_1 == gold_a1_2)), (gold_a2_3 == L_sharon_goldwater))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_a1, WGOLD_a2):  And(D_varchar_50_(WGOLD_a2), And(And(And(P_writes(FV_paperId_0, WGOLD_a), P_author(WGOLD_a1, WGOLD_a2)), (WGOLD_a == WGOLD_a1)), (WGOLD_a2 == L_sharon_goldwater)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1], And(And(P_author(predicted_a_1, L_sharon_goldwater), D_varchar_50_(L_sharon_goldwater)), P_writes(FV_paperId_0, predicted_a_1)))
+      predicted_skolem (witnesses WPREDICTED_a):  And(And(P_author(WPREDICTED_a, L_sharon_goldwater), D_varchar_50_(L_sharon_goldwater)), P_writes(FV_paperId_0, WPREDICTED_a))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'sharon goldwater' at varchar(50) -> L_sharon_goldwater = StringVal('sharon goldwater')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 726 lines, 27095 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1294.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_a1, WGOLD_a2
+      claim: And(And(Length(WGOLD_a2) <= 50, And(And(And(writes(FV_paperId_0, WGOLD_a), author(WGOLD_a1, WGOLD_a2)), WGOLD_a == WGOLD_a1), WGOLD_a2 == "sharon goldwater")), Not(Exists(predicted_a_1, And(And(author(predicted_a_1, "sharon goldwater"), Length("sharon goldwater") <= 50), writes(FV_paperId_0, predicted_a_1)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a
+      claim: And(And(And(author(WPREDICTED_a, "sharon goldwater"), Length("sharon goldwater") <= 50), writes(FV_paperId_0, WPREDICTED_a)), Not(Exists([gold_a_1, gold_a1_2, gold_a2_3], And(Length(gold_a2_3) <= 50, And(And(And(writes(FV_paperId_0, gold_a_1), author(gold_a1_2, gold_a2_3)), gold_a_1 == gold_a1_2), gold_a2_3 == "sharon goldwater")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

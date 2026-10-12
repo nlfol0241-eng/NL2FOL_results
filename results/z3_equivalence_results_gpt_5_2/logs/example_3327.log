@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3327.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3327.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2628 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of projects that have not been assigned?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        char(4) -> StringSort()   [domain Length(x) <= 4; length <= 4 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        Code = char(4) -> StringSort()
+        Hours = int -> IntSort()
+        Name = text -> StringSort()
+        Project = char(4) -> StringSort()
+        Scientist = int -> IntSort()
+      symbols:
+        AssignedTo(Scientist, Project)
+        Projects(Code, Name, Hours)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃h : Hours ∃c : Code( (Projects(c,n,h)) ∧ (¬(∃p : Project( ((Projects(c,n,h)) ∧ (∃s : Scientist( AssignedTo(s,p) ))) ∧ (c = p) ))) )
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:Hours EXISTS:∃ IDENT:c COLON:: IDENT:Code LPAR:( LPAR:( IDENT:Projects LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Project LPAR:( LPAR:( LPAR:( IDENT:Projects LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:Scientist LPAR:( IDENT:AssignedTo LPAR:( IDENT:s COMMA:, IDENT:p RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:p RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:Hours
+            EXISTS c:Code
+              AND
+                PRED Projects(c, n, h)
+                NOT
+                  EXISTS p:Project
+                    AND
+                      AND
+                        PRED Projects(c, n, h)
+                        EXISTS s:Scientist
+                          PRED AssignedTo(s, p)
+                      EQ  c = p
+      Predicted FOL: ∀x:Name ( x = x → ( ∃c:Code ∃h:Hours ( Projects(c, x, h) ∧ ¬∃s:Scientist AssignedTo(s, c) ) ) )
+        tokens: FORALL:∀ IDENT:x COLON:: IDENT:Name LPAR:( IDENT:x EQ:= IDENT:x IMPL:→ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:h COLON:: IDENT:Hours LPAR:( IDENT:Projects LPAR:( IDENT:c COMMA:, IDENT:x COMMA:, IDENT:h RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:s COLON:: IDENT:Scientist IDENT:AssignedTo LPAR:( IDENT:s COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          FORALL x:Name
+            IMPLIES
+              EQ  x = x
+              EXISTS c:Code
+                EXISTS h:Hours
+                  AND
+                    PRED Projects(c, x, h)
+                    NOT
+                      EXISTS s:Scientist
+                        PRED AssignedTo(s, c)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global char(4) -> StringSort()
+        h : local Hours, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        p : local Project, global char(4) -> StringSort()
+        s : local Scientist, global int -> IntSort()
+      Predicted FOL:
+        c : local Code, global char(4) -> StringSort()
+        h : local Hours, global int -> IntSort()
+        s : local Scientist, global int -> IntSort()
+        x : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5343 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3327.py
+   [G8] took 0.030 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

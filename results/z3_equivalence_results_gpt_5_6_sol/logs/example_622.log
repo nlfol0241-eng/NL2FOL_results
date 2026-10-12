@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_622.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_622.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8738 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the first and last name of all the German drivers?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        code = text -> StringSort()
+        dob = text -> StringSort()
+        driverId = integer -> IntSort()
+        driverRef = text -> StringSort()
+        forename = text -> StringSort()
+        nationality = text -> StringSort()
+        number = integer -> IntSort()
+        surname = text -> StringSort()
+        url = text -> StringSort()
+      symbols:
+        drivers(driverId, driverRef, number, code, forename, surname, dob, nationality, url)
+        constant German : nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : driverId ∃d1 : driverRef ∃n : number ∃c : code ∃d2 : dob ∃n1 : nationality ∃u : url ( (drivers(d,d1,n,c,f,s,d2,n1,u)) ∧ (n1 = 'German') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:driverId EXISTS:∃ IDENT:d1 COLON:: IDENT:driverRef EXISTS:∃ IDENT:n COLON:: IDENT:number EXISTS:∃ IDENT:c COLON:: IDENT:code EXISTS:∃ IDENT:d2 COLON:: IDENT:dob EXISTS:∃ IDENT:n1 COLON:: IDENT:nationality EXISTS:∃ IDENT:u COLON:: IDENT:url LPAR:( LPAR:( IDENT:drivers LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d2 COMMA:, IDENT:n1 COMMA:, IDENT:u RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:German RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:driverId
+            EXISTS d1:driverRef
+              EXISTS n:number
+                EXISTS c:code
+                  EXISTS d2:dob
+                    EXISTS n1:nationality
+                      EXISTS u:url
+                        AND
+                          PRED drivers(d, d1, n, c, f, s, d2, n1, u)
+                          EQ  n1 = 'German'
+      Predicted FOL: ∃d : driverId ∃r : driverRef ∃n : number ∃c : code ∃b : dob ∃u : url (drivers(d, r, n, c, f, s, b, 'German', u))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:driverId EXISTS:∃ IDENT:r COLON:: IDENT:driverRef EXISTS:∃ IDENT:n COLON:: IDENT:number EXISTS:∃ IDENT:c COLON:: IDENT:code EXISTS:∃ IDENT:b COLON:: IDENT:dob EXISTS:∃ IDENT:u COLON:: IDENT:url LPAR:( IDENT:drivers LPAR:( IDENT:d COMMA:, IDENT:r COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:b COMMA:, LIT:German COMMA:, IDENT:u RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:driverId
+            EXISTS r:driverRef
+              EXISTS n:number
+                EXISTS c:code
+                  EXISTS b:dob
+                    EXISTS u:url
+                      PRED drivers(d, r, n, c, f, s, b, 'German', u)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_forename_0 : forename   Gold f <-> Predicted f
+      FV_surname_0 : surname   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local code, global text -> StringSort()
+        d : local driverId, global integer -> IntSort()
+        d1 : local driverRef, global text -> StringSort()
+        d2 : local dob, global text -> StringSort()
+        f : local forename, global text -> StringSort()
+        n : local number, global integer -> IntSort()
+        n1 : local nationality, global text -> StringSort()
+        s : local surname, global text -> StringSort()
+        u : local url, global text -> StringSort()
+      Predicted FOL:
+        b : local dob, global text -> StringSort()
+        c : local code, global text -> StringSort()
+        d : local driverId, global integer -> IntSort()
+        f : local forename, global text -> StringSort()
+        n : local number, global integer -> IntSort()
+        r : local driverRef, global text -> StringSort()
+        s : local surname, global text -> StringSort()
+        u : local url, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_n_3, gold_c_4, gold_d2_5, gold_n1_6, gold_u_7], And(P_drivers(gold_d_1, gold_d1_2, gold_n_3, gold_c_4, FV_forename_0, FV_surname_0, gold_d2_5, gold_n1_6, gold_u_7), (gold_n1_6 == L_German)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_n, WGOLD_c, WGOLD_d2, WGOLD_n1, WGOLD_u):  And(P_drivers(WGOLD_d, WGOLD_d1, WGOLD_n, WGOLD_c, FV_forename_0, FV_surname_0, WGOLD_d2, WGOLD_n1, WGOLD_u), (WGOLD_n1 == L_German))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_r_2, predicted_n_3, predicted_c_4, predicted_b_5, predicted_u_6], P_drivers(predicted_d_1, predicted_r_2, predicted_n_3, predicted_c_4, FV_forename_0, FV_surname_0, predicted_b_5, L_German, predicted_u_6))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_r, WPREDICTED_n, WPREDICTED_c, WPREDICTED_b, WPREDICTED_u):  P_drivers(WPREDICTED_d, WPREDICTED_r, WPREDICTED_n, WPREDICTED_c, FV_forename_0, FV_surname_0, WPREDICTED_b, L_German, WPREDICTED_u)
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'German' at text -> L_German = StringVal('German')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 763 lines, 29260 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_622.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_n, WGOLD_c, WGOLD_d2, WGOLD_n1, WGOLD_u
+      claim: And(And(drivers(WGOLD_d, WGOLD_d1, WGOLD_n, WGOLD_c, FV_forename_0, FV_surname_0, WGOLD_d2, WGOLD_n1, WGOLD_u), WGOLD_n1 == "German"), Not(Exists([predicted_d_1, predicted_r_2, predicted_n_3, predicted_c_4, predicted_b_5, predicted_u_6], drivers(predicted_d_1, predicted_r_2, predicted_n_3, predicted_c_4, FV_forename_0, FV_surname_0, predicted_b_5, "German", predicted_u_6))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_r, WPREDICTED_n, WPREDICTED_c, WPREDICTED_b, WPREDICTED_u
+      claim: And(drivers(WPREDICTED_d, WPREDICTED_r, WPREDICTED_n, WPREDICTED_c, FV_forename_0, FV_surname_0, WPREDICTED_b, "German", WPREDICTED_u), Not(Exists([gold_d_1, gold_d1_2, gold_n_3, gold_c_4, gold_d2_5, gold_n1_6, gold_u_7], And(drivers(gold_d_1, gold_d1_2, gold_n_3, gold_c_4, FV_forename_0, FV_surname_0, gold_d2_5, gold_n1_6, gold_u_7), gold_n1_6 == "German"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

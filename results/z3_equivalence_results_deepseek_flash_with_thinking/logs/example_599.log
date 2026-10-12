@@ -1,0 +1,172 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_599.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_599.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3417 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which ministers are not a part of the Progress Party?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Left_office = text -> StringSort()
+        Minister = text -> StringSort()
+        Party_ID = text -> StringSort()
+        Party_name = text -> StringSort()
+        Region_ID = int -> IntSort()
+        Took_office = text -> StringSort()
+      symbols:
+        party(Party_ID, Minister, Took_office, Left_office, Region_ID, Party_name)
+        constant Progress Party : Party_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Party_ID ∃t : Took_office ∃l : Left_office ∃r : Region_ID ∃p1 : Party_name ( (party(p,m,t,l,r,p1)) ∧ (p1 <> 'Progress Party') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:t COLON:: IDENT:Took_office EXISTS:∃ IDENT:l COLON:: IDENT:Left_office EXISTS:∃ IDENT:r COLON:: IDENT:Region_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Party_name LPAR:( LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:m COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:r COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 NEQ:<> LIT:Progress Party RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Party_ID
+            EXISTS t:Took_office
+              EXISTS l:Left_office
+                EXISTS r:Region_ID
+                  EXISTS p1:Party_name
+                    AND
+                      PRED party(p, m, t, l, r, p1)
+                      NEQ  p1 != 'Progress Party'
+      Predicted FOL: ¬∃p : Party_ID ∃t : Took_office ∃l : Left_office ∃r : Region_ID ( party(p, x, t, l, r, 'Progress Party') )
+        tokens: NOT:¬ EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:t COLON:: IDENT:Took_office EXISTS:∃ IDENT:l COLON:: IDENT:Left_office EXISTS:∃ IDENT:r COLON:: IDENT:Region_ID LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:x COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:r COMMA:, LIT:Progress Party RPAR:) RPAR:) EOF
+        AST:
+          NOT
+            EXISTS p:Party_ID
+              EXISTS t:Took_office
+                EXISTS l:Left_office
+                  EXISTS r:Region_ID
+                    PRED party(p, x, t, l, r, 'Progress Party')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Minister_0 : Minister   Gold m <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Left_office, global text -> StringSort()
+        m : local Minister, global text -> StringSort()
+        p : local Party_ID, global text -> StringSort()
+        p1 : local Party_name, global text -> StringSort()
+        r : local Region_ID, global int -> IntSort()
+        t : local Took_office, global text -> StringSort()
+      Predicted FOL:
+        l : local Left_office, global text -> StringSort()
+        p : local Party_ID, global text -> StringSort()
+        r : local Region_ID, global int -> IntSort()
+        t : local Took_office, global text -> StringSort()
+        x : local Minister, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_t_2, gold_l_3, gold_r_4, gold_p1_5], And(P_party(gold_p_1, FV_Minister_0, gold_t_2, gold_l_3, gold_r_4, gold_p1_5), (gold_p1_5 != L_Progress_Party)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1):  And(P_party(WGOLD_p, FV_Minister_0, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1), (WGOLD_p1 != L_Progress_Party))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Not(Exists([predicted_p_1, predicted_t_2, predicted_l_3, predicted_r_4], P_party(predicted_p_1, FV_Minister_0, predicted_t_2, predicted_l_3, predicted_r_4, L_Progress_Party)))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Progress Party' at text -> L_Progress_Party = StringVal('Progress Party')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 734 lines, 27400 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_599.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1
+      claim: And(And(party(WGOLD_p, FV_Minister_0, WGOLD_t, WGOLD_l, WGOLD_r, WGOLD_p1), WGOLD_p1 != "Progress Party"), Not(Not(Exists([predicted_p_1, predicted_t_2, predicted_l_3, predicted_r_4], party(predicted_p_1, FV_Minister_0, predicted_t_2, predicted_l_3, predicted_r_4, "Progress Party")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 27 relation tuple(s) listed, 25 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          p : Party_ID = ''
+          t : Took_office = ''
+          l : Left_office = ''
+          r : Region_ID = 2
+          p1 : Party_name = ''
+        free (answer) variables:
+          FV_Minister_0 : Minister = ''
+        literals / constants:
+          Progress Party : Party_name = 'Progress Party'
+        relations (each value tagged with the local sort of its position):
+          party(Party_ID, Minister, Took_office, Left_office, Region_ID, Party_name):
+            party(Party_ID='', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='!0!')
+            party(Party_ID='', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='!1!')
+            party(Party_ID='', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='!2!')
+            party(Party_ID='', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='B')
+            party(Party_ID='', Minister='', Took_office='', Left_office='', Region_ID=2, Party_name='')
+            party(Party_ID='', Minister='', Took_office='', Left_office='', Region_ID=2, Party_name='Progress Party')
+            party(Party_ID='', Minister='', Took_office='', Left_office='!1!', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='', Left_office='!2!', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='', Left_office='A', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='', Left_office='B', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='', Left_office='Progress Party', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='!0!', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='!2!', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='A', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='B', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='', Took_office='Progress Party', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='!0!', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='!1!', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='A', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='B', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='', Minister='Progress Party', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='!0!', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='!1!', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='!2!', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='A', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            party(Party_ID='B', Minister='!2!', Took_office='!1!', Left_office='!0!', Region_ID=3, Party_name='A')
+            party(Party_ID='Progress Party', Minister='', Took_office='', Left_office='', Region_ID=0, Party_name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Left_office : {'', '!0!', '!1!', '!2!', 'A', 'B', 'Progress Party'}
+          Minister    : {'', '!0!', '!1!', '!2!', 'A', 'B', 'Progress Party'}
+          Party_ID    : {'', '!0!', '!1!', '!2!', 'A', 'B', 'Progress Party'}
+          Party_name  : {'', '!0!', '!1!', '!2!', 'A', 'B', 'Progress Party'}
+          Region_ID   : {0, 2, 3}
+          Took_office : {'', '!0!', '!1!', '!2!', 'A', 'B', 'Progress Party'}
+        values shared across local sorts (joins):
+          '!0!' : Left_office, Minister, Party_ID, Party_name, Took_office
+          '!1!' : Left_office, Minister, Party_ID, Party_name, Took_office
+          '!2!' : Left_office, Minister, Party_ID, Party_name, Took_office
+          '' : Left_office, Minister, Party_ID, Party_name, Took_office
+          'A' : Left_office, Minister, Party_ID, Party_name, Took_office
+          'B' : Left_office, Minister, Party_ID, Party_name, Took_office
+          'Progress Party' : Left_office, Minister, Party_ID, Party_name, Took_office
+   [R2] took 0.161 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Not(Exists([predicted_p_1, predicted_t_2, predicted_l_3, predicted_r_4], party(predicted_p_1, FV_Minister_0, predicted_t_2, predicted_l_3, predicted_r_4, "Progress Party"))), Not(Exists([gold_p_1, gold_t_2, gold_l_3, gold_r_4, gold_p1_5], And(party(gold_p_1, FV_Minister_0, gold_t_2, gold_l_3, gold_r_4, gold_p1_5), gold_p1_5 != "Progress Party"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 0 relation tuple(s) listed, 0 probe queries
+        --- counter-model (local sorts) ---
+        free (answer) variables:
+          FV_Minister_0 : Minister = 'Progress Party'
+        literals / constants:
+          Progress Party : Party_name = 'Progress Party'
+        relations (each value tagged with the local sort of its position):
+          party(Party_ID, Minister, Took_office, Left_office, Region_ID, Party_name):
+            <empty over the values of this model>
+        local-sort domains (values occurring at positions of each local sort):
+          Minister : {'Progress Party'}
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

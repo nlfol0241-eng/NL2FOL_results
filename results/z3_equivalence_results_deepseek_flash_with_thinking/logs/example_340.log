@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_340.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_340.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5691 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the nationality of " Kevin Spacey " ?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        birth_city = text -> StringSort()
+        birth_year = int -> IntSort()
+        did = int -> IntSort()
+        gender = text -> StringSort()
+        name = text -> StringSort()
+        nationality = text -> StringSort()
+      symbols:
+        director(did, gender, name, nationality, birth_city, birth_year)
+        constant director_name0 : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : did ∃g : gender ∃n : name ∃b : birth_city ∃b1 : birth_year ( (director(d,g,n,n1,b,b1)) ∧ (n = 'director_name0') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:did EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:b COLON:: IDENT:birth_city EXISTS:∃ IDENT:b1 COLON:: IDENT:birth_year LPAR:( LPAR:( IDENT:director LPAR:( IDENT:d COMMA:, IDENT:g COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:b COMMA:, IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:director_name0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:did
+            EXISTS g:gender
+              EXISTS n:name
+                EXISTS b:birth_city
+                  EXISTS b1:birth_year
+                    AND
+                      PRED director(d, g, n, n1, b, b1)
+                      EQ  n = 'director_name0'
+      Predicted FOL: ∃a : did ∃b : gender ∃c : birth_city ∃d : birth_year director(a, b, director_name0, x, c, d)
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:did EXISTS:∃ IDENT:b COLON:: IDENT:gender EXISTS:∃ IDENT:c COLON:: IDENT:birth_city EXISTS:∃ IDENT:d COLON:: IDENT:birth_year IDENT:director LPAR:( IDENT:a COMMA:, IDENT:b COMMA:, IDENT:director_name0 COMMA:, IDENT:x COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS a:did
+            EXISTS b:gender
+              EXISTS c:birth_city
+                EXISTS d:birth_year
+                  PRED director(a, b, director_name0<const>, x, c, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_nationality_0 : nationality   Gold n1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local birth_city, global text -> StringSort()
+        b1 : local birth_year, global int -> IntSort()
+        d : local did, global int -> IntSort()
+        g : local gender, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        n1 : local nationality, global text -> StringSort()
+      Predicted FOL:
+        a : local did, global int -> IntSort()
+        b : local gender, global text -> StringSort()
+        c : local birth_city, global text -> StringSort()
+        d : local birth_year, global int -> IntSort()
+        x : local nationality, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_g_2, gold_n_3, gold_b_4, gold_b1_5], And(P_director(gold_d_1, gold_g_2, gold_n_3, FV_nationality_0, gold_b_4, gold_b1_5), (gold_n_3 == L_director_name0)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_g, WGOLD_n, WGOLD_b, WGOLD_b1):  And(P_director(WGOLD_d, WGOLD_g, WGOLD_n, FV_nationality_0, WGOLD_b, WGOLD_b1), (WGOLD_n == L_director_name0))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_b_2, predicted_c_3, predicted_d_4], P_director(predicted_a_1, predicted_b_2, L_director_name0, FV_nationality_0, predicted_c_3, predicted_d_4))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_b, WPREDICTED_c, WPREDICTED_d):  P_director(WPREDICTED_a, WPREDICTED_b, L_director_name0, FV_nationality_0, WPREDICTED_c, WPREDICTED_d)
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'director_name0' at text -> L_director_name0 = StringVal('director_name0')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 743 lines, 27946 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_340.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_g, WGOLD_n, WGOLD_b, WGOLD_b1
+      claim: And(And(director(WGOLD_d, WGOLD_g, WGOLD_n, FV_nationality_0, WGOLD_b, WGOLD_b1), WGOLD_n == "director_name0"), Not(Exists([predicted_a_1, predicted_b_2, predicted_c_3, predicted_d_4], director(predicted_a_1, predicted_b_2, "director_name0", FV_nationality_0, predicted_c_3, predicted_d_4))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_b, WPREDICTED_c, WPREDICTED_d
+      claim: And(director(WPREDICTED_a, WPREDICTED_b, "director_name0", FV_nationality_0, WPREDICTED_c, WPREDICTED_d), Not(Exists([gold_d_1, gold_g_2, gold_n_3, gold_b_4, gold_b1_5], And(director(gold_d_1, gold_g_2, gold_n_3, FV_nationality_0, gold_b_4, gold_b1_5), gold_n_3 == "director_name0"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

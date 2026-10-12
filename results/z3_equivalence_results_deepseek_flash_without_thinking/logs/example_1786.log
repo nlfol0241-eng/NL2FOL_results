@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1786.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1786.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5447 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the section titles of the document named "David CV"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        integer -> IntSort()
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        access_count = integer -> IntSort()
+        document_code = varchar(15) -> StringSort()
+        document_name = varchar(80) -> StringSort()
+        document_structure_code = varchar(15) -> StringSort()
+        document_type_code = varchar(15) -> StringSort()
+        section_code = varchar(20) -> StringSort()
+        section_id = integer -> IntSort()
+        section_sequence = integer -> IntSort()
+        section_title = varchar(80) -> StringSort()
+      symbols:
+        Document_Sections(section_id, document_code, section_sequence, section_code, section_title)
+        Documents(document_code, document_structure_code, document_type_code, access_count, document_name)
+        constant David CV : document_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : document_code ∃d1 : document_structure_code ∃d2 : document_type_code ∃a : access_count ∃d3 : document_name ∃s : section_id ∃d4 : document_code ∃s1 : section_sequence ∃s2 : section_code ( (((Documents(d,d1,d2,a,d3)) ∧ (Document_Sections(s,d4,s1,s2,s3))) ∧ (d = d4)) ∧ (d3 = 'David CV') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_code EXISTS:∃ IDENT:d1 COLON:: IDENT:document_structure_code EXISTS:∃ IDENT:d2 COLON:: IDENT:document_type_code EXISTS:∃ IDENT:a COLON:: IDENT:access_count EXISTS:∃ IDENT:d3 COLON:: IDENT:document_name EXISTS:∃ IDENT:s COLON:: IDENT:section_id EXISTS:∃ IDENT:d4 COLON:: IDENT:document_code EXISTS:∃ IDENT:s1 COLON:: IDENT:section_sequence EXISTS:∃ IDENT:s2 COLON:: IDENT:section_code LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:a COMMA:, IDENT:d3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Document_Sections LPAR:( IDENT:s COMMA:, IDENT:d4 COMMA:, IDENT:s1 COMMA:, IDENT:s2 COMMA:, IDENT:s3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d4 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d3 EQ:= LIT:David CV RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:document_code
+            EXISTS d1:document_structure_code
+              EXISTS d2:document_type_code
+                EXISTS a:access_count
+                  EXISTS d3:document_name
+                    EXISTS s:section_id
+                      EXISTS d4:document_code
+                        EXISTS s1:section_sequence
+                          EXISTS s2:section_code
+                            AND
+                              AND
+                                AND
+                                  PRED Documents(d, d1, d2, a, d3)
+                                  PRED Document_Sections(s, d4, s1, s2, s3)
+                                EQ  d = d4
+                              EQ  d3 = 'David CV'
+      Predicted FOL: ∃d : document_code ∃s : section_id ∃q : section_sequence ∃c : section_code ( Documents(d, _, _, _, 'David CV') ∧ Document_Sections(s, d, q, c, x) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_code EXISTS:∃ IDENT:s COLON:: IDENT:section_id EXISTS:∃ IDENT:q COLON:: IDENT:section_sequence EXISTS:∃ IDENT:c COLON:: IDENT:section_code LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, LIT:David CV RPAR:) AND:∧ IDENT:Document_Sections LPAR:( IDENT:s COMMA:, IDENT:d COMMA:, IDENT:q COMMA:, IDENT:c COMMA:, IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:document_code
+            EXISTS s:section_id
+              EXISTS q:section_sequence
+                EXISTS c:section_code
+                  AND
+                    PRED Documents(d, _, _, _, 'David CV')
+                    PRED Document_Sections(s, d, q, c, x)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) _ occur free in the formula but are not declared in 'free vars'
+   1 shared answer variable(s)
+      FV_section_title_0 : section_title   Gold s3 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable '_' used at incompatible global sorts varchar(15) and integer
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 1 more time]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable '_' used at incompatible global sorts varchar(15) and integer

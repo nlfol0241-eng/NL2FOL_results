@@ -1,0 +1,117 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3690.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3690.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4298 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all employees who are not certified to fly Boeing 737-800s?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        number(10,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000000, x < 100000000); 10 digits, 2 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        number(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        distance = number(6,0) -> RealSort()
+        eid = number(9,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+        salary = number(10,2) -> RealSort()
+      symbols:
+        aircraft(aid, name, distance)
+        certificate(eid, aid)
+        employee(eid, name, salary)
+        constant Boeing 737-800 : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s : salary ∃e : eid( employee(e,n,s) )) ∧ (¬(∃e1 : eid ∃s : salary ∃d : distance ∃a1 : aid ∃a : aid ∃e : eid ∃n1 : name( (((((employee(e,n,s)) ∧ (certificate(e1,a))) ∧ (e = e1)) ∧ (aircraft(a1,n1,d))) ∧ (a1 = a)) ∧ (n1 = 'Boeing 737-800') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:salary EXISTS:∃ IDENT:e COLON:: IDENT:eid LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e1 COLON:: IDENT:eid EXISTS:∃ IDENT:s COLON:: IDENT:salary EXISTS:∃ IDENT:d COLON:: IDENT:distance EXISTS:∃ IDENT:a1 COLON:: IDENT:aid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:e COLON:: IDENT:eid EXISTS:∃ IDENT:n1 COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:certificate LPAR:( IDENT:e1 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:aircraft LPAR:( IDENT:a1 COMMA:, IDENT:n1 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:Boeing 737-800 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s:salary
+              EXISTS e:eid
+                PRED employee(e, n, s)
+            NOT
+              EXISTS e1:eid
+                EXISTS s:salary
+                  EXISTS d:distance
+                    EXISTS a1:aid
+                      EXISTS a:aid
+                        EXISTS e:eid
+                          EXISTS n1:name
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      PRED employee(e, n, s)
+                                      PRED certificate(e1, a)
+                                    EQ  e = e1
+                                  PRED aircraft(a1, n1, d)
+                                EQ  a1 = a
+                              EQ  n1 = 'Boeing 737-800'
+      Predicted FOL: ∃x_eid : eid ∃x_name : name ∃x_salary : salary (employee(x_eid, x_name, x_salary) ∧ ¬∃y_aid : aid (certificate(x_eid, y_aid) ∧ ∃z_aid : aid ∃z_name : name ∃z_distance : distance (aircraft(z_aid, z_name, z_distance) ∧ z_name = 'Boeing 737-800' ∧ y_aid = z_aid)))
+        tokens: EXISTS:∃ IDENT:x_eid COLON:: IDENT:eid EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:x_salary COLON:: IDENT:salary LPAR:( IDENT:employee LPAR:( IDENT:x_eid COMMA:, IDENT:x_name COMMA:, IDENT:x_salary RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:y_aid COLON:: IDENT:aid LPAR:( IDENT:certificate LPAR:( IDENT:x_eid COMMA:, IDENT:y_aid RPAR:) AND:∧ EXISTS:∃ IDENT:z_aid COLON:: IDENT:aid EXISTS:∃ IDENT:z_name COLON:: IDENT:name EXISTS:∃ IDENT:z_distance COLON:: IDENT:distance LPAR:( IDENT:aircraft LPAR:( IDENT:z_aid COMMA:, IDENT:z_name COMMA:, IDENT:z_distance RPAR:) AND:∧ IDENT:z_name EQ:= LIT:Boeing 737-800 AND:∧ IDENT:y_aid EQ:= IDENT:z_aid RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x_eid:eid
+            EXISTS x_name:name
+              EXISTS x_salary:salary
+                AND
+                  PRED employee(x_eid, x_name, x_salary)
+                  NOT
+                    EXISTS y_aid:aid
+                      AND
+                        PRED certificate(x_eid, y_aid)
+                        EXISTS z_aid:aid
+                          EXISTS z_name:name
+                            EXISTS z_distance:distance
+                              AND
+                                PRED aircraft(z_aid, z_name, z_distance)
+                                EQ  z_name = 'Boeing 737-800'
+                                EQ  y_aid = z_aid
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        a1 : local aid, global number(9,0) -> RealSort()
+        d : local distance, global number(6,0) -> RealSort()
+        e : local eid, global number(9,0) -> RealSort()
+        e1 : local eid, global number(9,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+        n1 : local name, global varchar2(30) -> StringSort()
+        s : local salary, global number(10,2) -> RealSort()
+      Predicted FOL:
+        x_eid : local eid, global number(9,0) -> RealSort()
+        x_name : local name, global varchar2(30) -> StringSort()
+        x_salary : local salary, global number(10,2) -> RealSort()
+        y_aid : local aid, global number(9,0) -> RealSort()
+        z_aid : local aid, global number(9,0) -> RealSort()
+        z_distance : local distance, global number(6,0) -> RealSort()
+        z_name : local name, global varchar2(30) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5669 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3690.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

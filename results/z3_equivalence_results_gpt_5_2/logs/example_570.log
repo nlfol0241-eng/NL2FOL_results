@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_570.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_570.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2999 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the name and os of web client accelerators that do not work with only a 'Broadband' type connection?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Client = text -> StringSort()
+        Connection = text -> StringSort()
+        Operating_system = text -> StringSort()
+        id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Web_client_accelerator(id, name, Operating_system, Client, Connection)
+        constant Broadband : Connection
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃c : Client ∃c1 : Connection ( (Web_client_accelerator(i,n,o,c,c1)) ∧ (c1 <> 'Broadband') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:c COLON:: IDENT:Client EXISTS:∃ IDENT:c1 COLON:: IDENT:Connection LPAR:( LPAR:( IDENT:Web_client_accelerator LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 NEQ:<> LIT:Broadband RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS c:Client
+              EXISTS c1:Connection
+                AND
+                  PRED Web_client_accelerator(i, n, o, c, c1)
+                  NEQ  c1 != 'Broadband'
+      Predicted FOL: ∃a0:id ∃a1:name ∃a2:Operating_system ∃a3:Client ∃a4:Connection ( Web_client_accelerator(a0, a1, a2, a3, a4) ∧ ¬(a4 = Broadband) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:id EXISTS:∃ IDENT:a1 COLON:: IDENT:name EXISTS:∃ IDENT:a2 COLON:: IDENT:Operating_system EXISTS:∃ IDENT:a3 COLON:: IDENT:Client EXISTS:∃ IDENT:a4 COLON:: IDENT:Connection LPAR:( IDENT:Web_client_accelerator LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) AND:∧ NOT:¬ LPAR:( IDENT:a4 EQ:= IDENT:Broadband RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:id
+            EXISTS a1:name
+              EXISTS a2:Operating_system
+                EXISTS a3:Client
+                  EXISTS a4:Connection
+                    AND
+                      PRED Web_client_accelerator(a0, a1, a2, a3, a4)
+                      NOT
+                        EQ  a4 = Broadband<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (n : name, o : Operating_system) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Client, global text -> StringSort()
+        c1 : local Connection, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        o : local Operating_system, global text -> StringSort()
+      Predicted FOL:
+        a0 : local id, global int -> IntSort()
+        a1 : local name, global text -> StringSort()
+        a2 : local Operating_system, global text -> StringSort()
+        a3 : local Client, global text -> StringSort()
+        a4 : local Connection, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5431 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_570.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (n : name, o : Operating_system) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

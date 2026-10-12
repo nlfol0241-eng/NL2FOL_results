@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_841.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_841.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4716 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the name and description for role code "MG"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Role_Code = char(15) -> StringSort()
+        Role_Description = varchar(255) -> StringSort()
+        Role_Name = varchar(255) -> StringSort()
+      symbols:
+        Roles(Role_Code, Role_Name, Role_Description)
+        constant MG : Role_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Role_Code ( (Roles(r,r1,r2)) ∧ (r = 'MG') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Role_Code LPAR:( LPAR:( IDENT:Roles LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:MG RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Role_Code
+            AND
+              PRED Roles(r, r1, r2)
+              EQ  r = 'MG'
+      Predicted FOL: Roles('MG', x, y)
+        tokens: IDENT:Roles LPAR:( LIT:MG COMMA:, IDENT:x COMMA:, IDENT:y RPAR:) EOF
+        AST:
+          PRED Roles('MG', x, y)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Role_Description_0 : Role_Description   Gold r2 <-> Predicted y
+      FV_Role_Name_0 : Role_Name   Gold r1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        r : local Role_Code, global char(15) -> StringSort()
+        r1 : local Role_Name, global varchar(255) -> StringSort()
+        r2 : local Role_Description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        x : local Role_Name, global varchar(255) -> StringSort()
+        y : local Role_Description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1], And(D_char_15_(gold_r_1), And(P_Roles(gold_r_1, FV_Role_Name_0, FV_Role_Description_0), (gold_r_1 == L_MG))))
+      gold_skolem (witnesses WGOLD_r):  And(D_char_15_(WGOLD_r), And(P_Roles(WGOLD_r, FV_Role_Name_0, FV_Role_Description_0), (WGOLD_r == L_MG)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_Roles(L_MG, FV_Role_Name_0, FV_Role_Description_0), D_char_15_(L_MG))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'MG' at char(15) -> L_MG = StringVal('MG')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 720 lines, 26311 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_841.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Role_Description_0) <= 255
+      [1] Length(FV_Role_Name_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_r
+      claim: And(And(Length(WGOLD_r) <= 15, And(Roles(WGOLD_r, FV_Role_Name_0, FV_Role_Description_0), WGOLD_r == "MG")), Not(And(Roles("MG", FV_Role_Name_0, FV_Role_Description_0), Length("MG") <= 15)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses -
+      claim: And(And(Roles("MG", FV_Role_Name_0, FV_Role_Description_0), Length("MG") <= 15), Not(Exists(gold_r_1, And(Length(gold_r_1) <= 15, And(Roles(gold_r_1, FV_Role_Name_0, FV_Role_Description_0), gold_r_1 == "MG")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

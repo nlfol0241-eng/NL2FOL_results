@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1738.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1738.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2902 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name of ships whose nationality is either United States or United Kingdom.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Ship_ID = int -> IntSort()
+        Tonnage = int -> IntSort()
+        Type = text -> StringSort()
+      symbols:
+        ship(Ship_ID, Name, Type, Nationality, Tonnage)
+        constant United Kingdom : Nationality
+        constant United States : Nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Ship_ID ∃t : Type ∃n1 : Nationality ∃t1 : Tonnage ( (ship(s,n,t,n1,t1)) ∧ ((n1 = 'United States') ∨ (n1 = 'United Kingdom')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Ship_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:t1 COLON:: IDENT:Tonnage LPAR:( LPAR:( IDENT:ship LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:t COMMA:, IDENT:n1 COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n1 EQ:= LIT:United States RPAR:) OR:∨ LPAR:( IDENT:n1 EQ:= LIT:United Kingdom RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Ship_ID
+            EXISTS t:Type
+              EXISTS n1:Nationality
+                EXISTS t1:Tonnage
+                  AND
+                    PRED ship(s, n, t, n1, t1)
+                    OR
+                      EQ  n1 = 'United States'
+                      EQ  n1 = 'United Kingdom'
+      Predicted FOL: ∃sid:Ship_ID ∃t:Type ∃nat:Nationality ∃ton:Tonnage ( ship(sid, name, t, nat, ton) ∧ (nat = 'United States' ∨ nat = 'United Kingdom') )
+        tokens: EXISTS:∃ IDENT:sid COLON:: IDENT:Ship_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:nat COLON:: IDENT:Nationality EXISTS:∃ IDENT:ton COLON:: IDENT:Tonnage LPAR:( IDENT:ship LPAR:( IDENT:sid COMMA:, IDENT:name COMMA:, IDENT:t COMMA:, IDENT:nat COMMA:, IDENT:ton RPAR:) AND:∧ LPAR:( IDENT:nat EQ:= LIT:United States OR:∨ IDENT:nat EQ:= LIT:United Kingdom RPAR:) RPAR:) EOF
+        AST:
+          EXISTS sid:Ship_ID
+            EXISTS t:Type
+              EXISTS nat:Nationality
+                EXISTS ton:Tonnage
+                  AND
+                    PRED ship(sid, name, t, nat, ton)
+                    OR
+                      EQ  nat = 'United States'
+                      EQ  nat = 'United Kingdom'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        s : local Ship_ID, global int -> IntSort()
+        t : local Type, global text -> StringSort()
+        t1 : local Tonnage, global int -> IntSort()
+      Predicted FOL:
+        name : local Name, global text -> StringSort()
+        nat : local Nationality, global text -> StringSort()
+        sid : local Ship_ID, global int -> IntSort()
+        t : local Type, global text -> StringSort()
+        ton : local Tonnage, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_t_2, gold_n1_3, gold_t1_4], And(P_ship(gold_s_1, FV_Name_0, gold_t_2, gold_n1_3, gold_t1_4), Or((gold_n1_3 == L_United_States), (gold_n1_3 == L_United_Kingdom))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_t, WGOLD_n1, WGOLD_t1):  And(P_ship(WGOLD_s, FV_Name_0, WGOLD_t, WGOLD_n1, WGOLD_t1), Or((WGOLD_n1 == L_United_States), (WGOLD_n1 == L_United_Kingdom)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_sid_1, predicted_t_2, predicted_nat_3, predicted_ton_4], And(P_ship(predicted_sid_1, FV_Name_0, predicted_t_2, predicted_nat_3, predicted_ton_4), Or((predicted_nat_3 == L_United_States), (predicted_nat_3 == L_United_Kingdom))))
+      predicted_skolem (witnesses WPREDICTED_sid, WPREDICTED_t, WPREDICTED_nat, WPREDICTED_ton):  And(P_ship(WPREDICTED_sid, FV_Name_0, WPREDICTED_t, WPREDICTED_nat, WPREDICTED_ton), Or((WPREDICTED_nat == L_United_States), (WPREDICTED_nat == L_United_Kingdom)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'United Kingdom' at text -> L_United_Kingdom = StringVal('United Kingdom')
+      literal 'United States' at text -> L_United_States = StringVal('United States')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 740 lines, 28034 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1738.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_t, WGOLD_n1, WGOLD_t1
+      claim: And(And(ship(WGOLD_s, FV_Name_0, WGOLD_t, WGOLD_n1, WGOLD_t1), Or(WGOLD_n1 == "United States", WGOLD_n1 == "United Kingdom")), Not(Exists([predicted_sid_1, predicted_t_2, predicted_nat_3, predicted_ton_4], And(ship(predicted_sid_1, FV_Name_0, predicted_t_2, predicted_nat_3, predicted_ton_4), Or(predicted_nat_3 == "United States", predicted_nat_3 == "United Kingdom")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_sid, WPREDICTED_t, WPREDICTED_nat, WPREDICTED_ton
+      claim: And(And(ship(WPREDICTED_sid, FV_Name_0, WPREDICTED_t, WPREDICTED_nat, WPREDICTED_ton), Or(WPREDICTED_nat == "United States", WPREDICTED_nat == "United Kingdom")), Not(Exists([gold_s_1, gold_t_2, gold_n1_3, gold_t1_4], And(ship(gold_s_1, FV_Name_0, gold_t_2, gold_n1_3, gold_t1_4), Or(gold_n1_3 == "United States", gold_n1_3 == "United Kingdom")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1064.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1064.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3752 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Retrieve the list of all cities.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        address_content = varchar(80) -> StringSort()
+        address_id = integer -> IntSort()
+        city = varchar(50) -> StringSort()
+        country = varchar(50) -> StringSort()
+        other_address_details = varchar(255) -> StringSort()
+        state_province_county = varchar(50) -> StringSort()
+        zip_postcode = varchar(20) -> StringSort()
+      symbols:
+        Addresses(address_id, address_content, city, zip_postcode, state_province_county, country, other_address_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : address_id ∃a1 : address_content ∃z : zip_postcode ∃s : state_province_county ∃c1 : country ∃o : other_address_details ( Addresses(a,a1,c,z,s,c1,o) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:address_id EXISTS:∃ IDENT:a1 COLON:: IDENT:address_content EXISTS:∃ IDENT:z COLON:: IDENT:zip_postcode EXISTS:∃ IDENT:s COLON:: IDENT:state_province_county EXISTS:∃ IDENT:c1 COLON:: IDENT:country EXISTS:∃ IDENT:o COLON:: IDENT:other_address_details LPAR:( IDENT:Addresses LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:c COMMA:, IDENT:z COMMA:, IDENT:s COMMA:, IDENT:c1 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:address_id
+            EXISTS a1:address_content
+              EXISTS z:zip_postcode
+                EXISTS s:state_province_county
+                  EXISTS c1:country
+                    EXISTS o:other_address_details
+                      PRED Addresses(a, a1, c, z, s, c1, o)
+      Predicted FOL: ∃a0:address_id ∃a1:address_content ∃a3:zip_postcode ∃a4:state_province_county ∃a5:country ∃a6:other_address_details (Addresses(a0, a1, x, a3, a4, a5, a6))
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:address_id EXISTS:∃ IDENT:a1 COLON:: IDENT:address_content EXISTS:∃ IDENT:a3 COLON:: IDENT:zip_postcode EXISTS:∃ IDENT:a4 COLON:: IDENT:state_province_county EXISTS:∃ IDENT:a5 COLON:: IDENT:country EXISTS:∃ IDENT:a6 COLON:: IDENT:other_address_details LPAR:( IDENT:Addresses LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:x COMMA:, IDENT:a3 COMMA:, IDENT:a4 COMMA:, IDENT:a5 COMMA:, IDENT:a6 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:address_id
+            EXISTS a1:address_content
+              EXISTS a3:zip_postcode
+                EXISTS a4:state_province_county
+                  EXISTS a5:country
+                    EXISTS a6:other_address_details
+                      PRED Addresses(a0, a1, x, a3, a4, a5, a6)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_city_0 : city   Gold c <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local address_id, global integer -> IntSort()
+        a1 : local address_content, global varchar(80) -> StringSort()
+        c : local city, global varchar(50) -> StringSort()
+        c1 : local country, global varchar(50) -> StringSort()
+        o : local other_address_details, global varchar(255) -> StringSort()
+        s : local state_province_county, global varchar(50) -> StringSort()
+        z : local zip_postcode, global varchar(20) -> StringSort()
+      Predicted FOL:
+        a0 : local address_id, global integer -> IntSort()
+        a1 : local address_content, global varchar(80) -> StringSort()
+        a3 : local zip_postcode, global varchar(20) -> StringSort()
+        a4 : local state_province_county, global varchar(50) -> StringSort()
+        a5 : local country, global varchar(50) -> StringSort()
+        a6 : local other_address_details, global varchar(255) -> StringSort()
+        x : local city, global varchar(50) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_a1_2, gold_z_3, gold_s_4, gold_c1_5, gold_o_6], And(D_varchar_80_(gold_a1_2), D_varchar_20_(gold_z_3), D_varchar_50_(gold_s_4), D_varchar_50_(gold_c1_5), D_varchar_255_(gold_o_6), P_Addresses(gold_a_1, gold_a1_2, FV_city_0, gold_z_3, gold_s_4, gold_c1_5, gold_o_6)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_a1, WGOLD_z, WGOLD_s, WGOLD_c1, WGOLD_o):  And(D_varchar_80_(WGOLD_a1), D_varchar_20_(WGOLD_z), D_varchar_50_(WGOLD_s), D_varchar_50_(WGOLD_c1), D_varchar_255_(WGOLD_o), P_Addresses(WGOLD_a, WGOLD_a1, FV_city_0, WGOLD_z, WGOLD_s, WGOLD_c1, WGOLD_o))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a1_2, predicted_a3_3, predicted_a4_4, predicted_a5_5, predicted_a6_6], And(D_varchar_80_(predicted_a1_2), D_varchar_20_(predicted_a3_3), D_varchar_50_(predicted_a4_4), D_varchar_50_(predicted_a5_5), D_varchar_255_(predicted_a6_6), P_Addresses(predicted_a0_1, predicted_a1_2, FV_city_0, predicted_a3_3, predicted_a4_4, predicted_a5_5, predicted_a6_6)))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6):  And(D_varchar_80_(WPREDICTED_a1), D_varchar_20_(WPREDICTED_a3), D_varchar_50_(WPREDICTED_a4), D_varchar_50_(WPREDICTED_a5), D_varchar_255_(WPREDICTED_a6), P_Addresses(WPREDICTED_a0, WPREDICTED_a1, FV_city_0, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 769 lines, 30425 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1064.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_city_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_a1, WGOLD_z, WGOLD_s, WGOLD_c1, WGOLD_o
+      claim: And(And(Length(WGOLD_a1) <= 80, Length(WGOLD_z) <= 20, Length(WGOLD_s) <= 50, Length(WGOLD_c1) <= 50, Length(WGOLD_o) <= 255, Addresses(WGOLD_a, WGOLD_a1, FV_city_0, WGOLD_z, WGOLD_s, WGOLD_c1, WGOLD_o)), Not(Exists([predicted_a0_1, predicted_a1_2, predicted_a3_3, predicted_a4_4, predicted_a5_5, predicted_a6_6], And(Length(predicted_a1_2) <= 80, Length(predicted_a3_3) <= 20, Length(predicted_a4_4) <= 50, Length(predicted_a5_5) <= 50, Length(predicted_a6_6) <= 255, Addresses(predicted_a0_1, predicted_a1_2, FV_city_0, predicted_a3_3, predicted_a4_4, predicted_a5_5, predicted_a6_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6
+      claim: And(And(Length(WPREDICTED_a1) <= 80, Length(WPREDICTED_a3) <= 20, Length(WPREDICTED_a4) <= 50, Length(WPREDICTED_a5) <= 50, Length(WPREDICTED_a6) <= 255, Addresses(WPREDICTED_a0, WPREDICTED_a1, FV_city_0, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6)), Not(Exists([gold_a_1, gold_a1_2, gold_z_3, gold_s_4, gold_c1_5, gold_o_6], And(Length(gold_a1_2) <= 80, Length(gold_z_3) <= 20, Length(gold_s_4) <= 50, Length(gold_c1_5) <= 50, Length(gold_o_6) <= 255, Addresses(gold_a_1, gold_a1_2, FV_city_0, gold_z_3, gold_s_4, gold_c1_5, gold_o_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

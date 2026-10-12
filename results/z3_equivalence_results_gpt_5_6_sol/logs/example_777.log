@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_777.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_777.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3178 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all the subjects.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(120) -> StringSort()   [domain Length(x) <= 120; length <= 120]
+        integer -> IntSort()
+      local sorts:
+        subject_id = integer -> IntSort()
+        subject_name = varchar(120) -> StringSort()
+      symbols:
+        Subjects(subject_id, subject_name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : subject_id ( Subjects(s,s1) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:subject_id LPAR:( IDENT:Subjects LPAR:( IDENT:s COMMA:, IDENT:s1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:subject_id
+            PRED Subjects(s, s1)
+      Predicted FOL: ∃subject_id : subject_id Subjects(subject_id, subject_name)
+        tokens: EXISTS:∃ IDENT:subject_id COLON:: IDENT:subject_id IDENT:Subjects LPAR:( IDENT:subject_id COMMA:, IDENT:subject_name RPAR:) EOF
+        AST:
+          EXISTS subject_id:subject_id
+            PRED Subjects(subject_id, subject_name)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_subject_name_0 : subject_name   Gold s1 <-> Predicted subject_name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        s : local subject_id, global integer -> IntSort()
+        s1 : local subject_name, global varchar(120) -> StringSort()
+      Predicted FOL:
+        subject_id : local subject_id, global integer -> IntSort()
+        subject_name : local subject_name, global varchar(120) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1], P_Subjects(gold_s_1, FV_subject_name_0))
+      gold_skolem (witnesses WGOLD_s):  P_Subjects(WGOLD_s, FV_subject_name_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_subject_id_1], P_Subjects(predicted_subject_id_1, FV_subject_name_0))
+      predicted_skolem (witnesses WPREDICTED_subject_id):  P_Subjects(WPREDICTED_subject_id, FV_subject_name_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 714 lines, 26076 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_777.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_subject_name_0) <= 120
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s
+      claim: And(Subjects(WGOLD_s, FV_subject_name_0), Not(Exists(predicted_subject_id_1, Subjects(predicted_subject_id_1, FV_subject_name_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_subject_id
+      claim: And(Subjects(WPREDICTED_subject_id, FV_subject_name_0), Not(Exists(gold_s_1, Subjects(gold_s_1, FV_subject_name_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

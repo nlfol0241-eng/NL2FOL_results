@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_907.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_907.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5400 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the customer event id and the corresponding move in date and property id.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+      local sorts:
+        Customer_Event_ID = integer -> IntSort()
+        customer_id = integer -> IntSort()
+        date_moved_in = datetime -> IntSort()
+        property_id = integer -> IntSort()
+        resident_id = integer -> IntSort()
+        thing_id = integer -> IntSort()
+      symbols:
+        Customer_Events(Customer_Event_ID, customer_id, date_moved_in, property_id, resident_id, thing_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c1 : customer_id ∃r : resident_id ∃t : thing_id ( Customer_Events(c,c1,d,p,r,t) )
+        tokens: EXISTS:∃ IDENT:c1 COLON:: IDENT:customer_id EXISTS:∃ IDENT:r COLON:: IDENT:resident_id EXISTS:∃ IDENT:t COLON:: IDENT:thing_id LPAR:( IDENT:Customer_Events LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c1:customer_id
+            EXISTS r:resident_id
+              EXISTS t:thing_id
+                PRED Customer_Events(c, c1, d, p, r, t)
+      Predicted FOL: ∃x0 : Customer_Event_ID ∃x1 : customer_id ∃x2 : date_moved_in ∃x3 : property_id ∃x4 : resident_id ∃x5 : thing_id Customer_Events(x0, x1, x2, x3, x4, x5)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:Customer_Event_ID EXISTS:∃ IDENT:x1 COLON:: IDENT:customer_id EXISTS:∃ IDENT:x2 COLON:: IDENT:date_moved_in EXISTS:∃ IDENT:x3 COLON:: IDENT:property_id EXISTS:∃ IDENT:x4 COLON:: IDENT:resident_id EXISTS:∃ IDENT:x5 COLON:: IDENT:thing_id IDENT:Customer_Events LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 RPAR:) EOF
+        AST:
+          EXISTS x0:Customer_Event_ID
+            EXISTS x1:customer_id
+              EXISTS x2:date_moved_in
+                EXISTS x3:property_id
+                  EXISTS x4:resident_id
+                    EXISTS x5:thing_id
+                      PRED Customer_Events(x0, x1, x2, x3, x4, x5)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x0, x1, x2, x3, x4, x5 do not occur free in the formula
+   MISMATCH: Gold has 3 free variable(s) (c : Customer_Event_ID, d : date_moved_in, p : property_id) but Predicted has 6 (x0 : Customer_Event_ID, x1 : customer_id, x2 : date_moved_in, x3 : property_id, x4 : resident_id, x5 : thing_id): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Customer_Event_ID, global integer -> IntSort()
+        c1 : local customer_id, global integer -> IntSort()
+        d : local date_moved_in, global datetime -> IntSort()
+        p : local property_id, global integer -> IntSort()
+        r : local resident_id, global integer -> IntSort()
+        t : local thing_id, global integer -> IntSort()
+      Predicted FOL:
+        x0 : local Customer_Event_ID, global integer -> IntSort()
+        x1 : local customer_id, global integer -> IntSort()
+        x2 : local date_moved_in, global datetime -> IntSort()
+        x3 : local property_id, global integer -> IntSort()
+        x4 : local resident_id, global integer -> IntSort()
+        x5 : local thing_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5775 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_907.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (c : Customer_Event_ID, d : date_moved_in, p : property_id) but Predicted has 6 (x0 : Customer_Event_ID, x1 : customer_id, x2 : date_moved_in, x3 : property_id, x4 : resident_id, x5 : thing_id): their answers have different arities
+   WARNING: Predicted FOL: declared free variable(s) x0, x1, x2, x3, x4, x5 do not occur free in the formula
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

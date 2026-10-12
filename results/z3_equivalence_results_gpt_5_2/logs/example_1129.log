@@ -1,0 +1,188 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1129.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1129.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3318 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names and total passengers for all train stations not in London.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Annual_entry_exit = real -> Float32()
+        Annual_interchanges = real -> Float32()
+        Location = text -> StringSort()
+        Main_Services = text -> StringSort()
+        Name = text -> StringSort()
+        Number_of_Platforms = int -> IntSort()
+        Station_ID = int -> IntSort()
+        Total_Passengers = real -> Float32()
+      symbols:
+        station(Station_ID, Name, Annual_entry_exit, Annual_interchanges, Total_Passengers, Location, Main_Services, Number_of_Platforms)
+        constant London : Location
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Station_ID ∃a : Annual_entry_exit ∃a1 : Annual_interchanges ∃l : Location ∃m : Main_Services ∃n1 : Number_of_Platforms ( (station(s,n,a,a1,t,l,m,n1)) ∧ (l <> 'London') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Station_ID EXISTS:∃ IDENT:a COLON:: IDENT:Annual_entry_exit EXISTS:∃ IDENT:a1 COLON:: IDENT:Annual_interchanges EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:m COLON:: IDENT:Main_Services EXISTS:∃ IDENT:n1 COLON:: IDENT:Number_of_Platforms LPAR:( LPAR:( IDENT:station LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:m COMMA:, IDENT:n1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l NEQ:<> LIT:London RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Station_ID
+            EXISTS a:Annual_entry_exit
+              EXISTS a1:Annual_interchanges
+                EXISTS l:Location
+                  EXISTS m:Main_Services
+                    EXISTS n1:Number_of_Platforms
+                      AND
+                        PRED station(s, n, a, a1, t, l, m, n1)
+                        NEQ  l != 'London'
+      Predicted FOL: ∃n:Name ∃tp:Total_Passengers ( ∃sid:Station_ID ∃aee:Annual_entry_exit ∃ai:Annual_interchanges ∃loc:Location ∃ms:Main_Services ∃nop:Number_of_Platforms ( station(sid,n,aee,ai,tp,loc,ms,nop) ∧ loc ≠ London ) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:tp COLON:: IDENT:Total_Passengers LPAR:( EXISTS:∃ IDENT:sid COLON:: IDENT:Station_ID EXISTS:∃ IDENT:aee COLON:: IDENT:Annual_entry_exit EXISTS:∃ IDENT:ai COLON:: IDENT:Annual_interchanges EXISTS:∃ IDENT:loc COLON:: IDENT:Location EXISTS:∃ IDENT:ms COLON:: IDENT:Main_Services EXISTS:∃ IDENT:nop COLON:: IDENT:Number_of_Platforms LPAR:( IDENT:station LPAR:( IDENT:sid COMMA:, IDENT:n COMMA:, IDENT:aee COMMA:, IDENT:ai COMMA:, IDENT:tp COMMA:, IDENT:loc COMMA:, IDENT:ms COMMA:, IDENT:nop RPAR:) AND:∧ IDENT:loc NEQ:≠ IDENT:London RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Name
+            EXISTS tp:Total_Passengers
+              EXISTS sid:Station_ID
+                EXISTS aee:Annual_entry_exit
+                  EXISTS ai:Annual_interchanges
+                    EXISTS loc:Location
+                      EXISTS ms:Main_Services
+                        EXISTS nop:Number_of_Platforms
+                          AND
+                            PRED station(sid, n, aee, ai, tp, loc, ms, nop)
+                            NEQ  loc != London<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) n, tp do not occur free in the formula
+   2 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+      FV_Total_Passengers_0 : Total_Passengers   Gold t <-> Predicted tp
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Annual_entry_exit, global real -> Float32()
+        a1 : local Annual_interchanges, global real -> Float32()
+        l : local Location, global text -> StringSort()
+        m : local Main_Services, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Number_of_Platforms, global int -> IntSort()
+        s : local Station_ID, global int -> IntSort()
+        t : local Total_Passengers, global real -> Float32()
+      Predicted FOL:
+        aee : local Annual_entry_exit, global real -> Float32()
+        ai : local Annual_interchanges, global real -> Float32()
+        loc : local Location, global text -> StringSort()
+        ms : local Main_Services, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        nop : local Number_of_Platforms, global int -> IntSort()
+        sid : local Station_ID, global int -> IntSort()
+        tp : local Total_Passengers, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_a_2, gold_a1_3, gold_l_4, gold_m_5, gold_n1_6], And(D_real(gold_a_2), D_real(gold_a1_3), And(P_station(gold_s_1, FV_Name_0, gold_a_2, gold_a1_3, FV_Total_Passengers_0, gold_l_4, gold_m_5, gold_n1_6), (gold_l_4 != L_London))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_a, WGOLD_a1, WGOLD_l, WGOLD_m, WGOLD_n1):  And(D_real(WGOLD_a), D_real(WGOLD_a1), And(P_station(WGOLD_s, FV_Name_0, WGOLD_a, WGOLD_a1, FV_Total_Passengers_0, WGOLD_l, WGOLD_m, WGOLD_n1), (WGOLD_l != L_London)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_n_1, predicted_tp_2, predicted_sid_3, predicted_aee_4, predicted_ai_5, predicted_loc_6, predicted_ms_7, predicted_nop_8], And(D_real(predicted_tp_2), D_real(predicted_aee_4), D_real(predicted_ai_5), And(P_station(predicted_sid_3, predicted_n_1, predicted_aee_4, predicted_ai_5, predicted_tp_2, predicted_loc_6, predicted_ms_7, predicted_nop_8), (predicted_loc_6 != L_London))))
+      predicted_skolem (witnesses WPREDICTED_n, WPREDICTED_tp, WPREDICTED_sid, WPREDICTED_aee, WPREDICTED_ai, WPREDICTED_loc, WPREDICTED_ms, WPREDICTED_nop):  And(D_real(WPREDICTED_tp), D_real(WPREDICTED_aee), D_real(WPREDICTED_ai), And(P_station(WPREDICTED_sid, WPREDICTED_n, WPREDICTED_aee, WPREDICTED_ai, WPREDICTED_tp, WPREDICTED_loc, WPREDICTED_ms, WPREDICTED_nop), (WPREDICTED_loc != L_London)))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'London' at text -> L_London = StringVal('London')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 768 lines, 30608 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1129.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Total_Passengers_0)), Not(And(fpIsZero(FV_Total_Passengers_0), fpIsNegative(FV_Total_Passengers_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_a, WGOLD_a1, WGOLD_l, WGOLD_m, WGOLD_n1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(Not(fpIsNaN(WGOLD_a1)), Not(And(fpIsZero(WGOLD_a1), fpIsNegative(WGOLD_a1)))), And(station(WGOLD_s, FV_Name_0, WGOLD_a, WGOLD_a1, FV_Total_Passengers_0, WGOLD_l, WGOLD_m, WGOLD_n1), WGOLD_l != "London")), Not(Exists([predicted_n_1, predicted_tp_2, predicted_sid_3, predicted_aee_4, predicted_ai_5, predicted_loc_6, predicted_ms_7, predicted_nop_8], And(And(Not(fpIsNaN(predicted_tp_2)), Not(And(fpIsZero(predicted_tp_2), fpIsNegative(predicted_tp_2)))), And(Not(fpIsNaN(predicted_aee_4)), Not(And(fpIsZero(predicted_aee_4), fpIsNegative(predicted_aee_4)))), And(Not(fpIsNaN(predicted_ai_5)), Not(And(fpIsZero(predicted_ai_5), fpIsNegative(predicted_ai_5)))), And(station(predicted_sid_3, predicted_n_1, predicted_aee_4, predicted_ai_5, predicted_tp_2, predicted_loc_6, predicted_ms_7, predicted_nop_8), predicted_loc_6 != "London")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_n, WPREDICTED_tp, WPREDICTED_sid, WPREDICTED_aee, WPREDICTED_ai, WPREDICTED_loc, WPREDICTED_ms, WPREDICTED_nop
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_tp)), Not(And(fpIsZero(WPREDICTED_tp), fpIsNegative(WPREDICTED_tp)))), And(Not(fpIsNaN(WPREDICTED_aee)), Not(And(fpIsZero(WPREDICTED_aee), fpIsNegative(WPREDICTED_aee)))), And(Not(fpIsNaN(WPREDICTED_ai)), Not(And(fpIsZero(WPREDICTED_ai), fpIsNegative(WPREDICTED_ai)))), And(station(WPREDICTED_sid, WPREDICTED_n, WPREDICTED_aee, WPREDICTED_ai, WPREDICTED_tp, WPREDICTED_loc, WPREDICTED_ms, WPREDICTED_nop), WPREDICTED_loc != "London")), Not(Exists([gold_s_1, gold_a_2, gold_a1_3, gold_l_4, gold_m_5, gold_n1_6], And(And(Not(fpIsNaN(gold_a_2)), Not(And(fpIsZero(gold_a_2), fpIsNegative(gold_a_2)))), And(Not(fpIsNaN(gold_a1_3)), Not(And(fpIsZero(gold_a1_3), fpIsNegative(gold_a1_3)))), And(station(gold_s_1, FV_Name_0, gold_a_2, gold_a1_3, FV_Total_Passengers_0, gold_l_4, gold_m_5, gold_n1_6), gold_l_4 != "London")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.009 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 22 relation tuple(s) listed, 20 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          n : Name = ''
+          tp : Total_Passengers = 2.524354896707238e-29
+          sid : Station_ID = 2
+          aee : Annual_entry_exit = 1.5046334865173417e-36
+          ai : Annual_interchanges = 2.350989262163961e-38
+          loc : Location = ''
+          ms : Main_Services = ''
+          nop : Number_of_Platforms = 3
+        free (answer) variables:
+          FV_Name_0 : Name = ''
+          FV_Total_Passengers_0 : Total_Passengers = 1.175494490952134e-38
+        literals / constants:
+          London : Location = 'London'
+        relations (each value tagged with the local sort of its position):
+          station(Station_ID, Name, Annual_entry_exit, Annual_interchanges, Total_Passengers, Location, Main_Services, Number_of_Platforms):
+            station(Station_ID=0, Name='', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175566097303661e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.176068322673275e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=2.350989262163961e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.5046334865173417e-36, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='!0!', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=2)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='A', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='!0!', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175566097303661e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.176068322673275e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.5046334865173417e-36, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=2.524354896707238e-29, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175566097303661e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='London', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.175566097303661e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='B', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=1.176068322673275e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='B', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=2.350989262163961e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='A', Annual_entry_exit=2.524354896707238e-29, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=0, Name='London', Annual_entry_exit=1.175494490952134e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            station(Station_ID=2, Name='', Annual_entry_exit=1.5046334865173417e-36, Annual_interchanges=2.350989262163961e-38, Total_Passengers=2.524354896707238e-29, Location='', Main_Services='', Number_of_Platforms=3)
+            station(Station_ID=2, Name='', Annual_entry_exit=1.5046334865173417e-36, Annual_interchanges=2.350989262163961e-38, Total_Passengers=2.524354896707238e-29, Location='London', Main_Services='', Number_of_Platforms=3)
+            station(Station_ID=3, Name='B', Annual_entry_exit=1.176068322673275e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='A', Main_Services='!0!', Number_of_Platforms=4)
+            station(Station_ID=4, Name='A', Annual_entry_exit=1.175566097303661e-38, Annual_interchanges=1.175494490952134e-38, Total_Passengers=1.175494490952134e-38, Location='', Main_Services='', Number_of_Platforms=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Annual_entry_exit   : {1.175494490952134e-38, 1.175566097303661e-38, 1.176068322673275e-38, 2.350989262163961e-38, 1.5046334865173417e-36, 2.524354896707238e-29}
+          Annual_interchanges : {1.175494490952134e-38, 1.175566097303661e-38, 1.176068322673275e-38, 2.350989262163961e-38, 1.5046334865173417e-36, 2.524354896707238e-29}
+          Location            : {'', '!0!', 'A', 'B', 'London'}
+          Main_Services       : {'', '!0!', 'A', 'B', 'London'}
+          Name                : {'', '!0!', 'A', 'B', 'London'}
+          Number_of_Platforms : {0, 2, 3, 4}
+          Station_ID          : {0, 2, 3, 4}
+          Total_Passengers    : {1.175494490952134e-38, 1.175566097303661e-38, 1.176068322673275e-38, 2.350989262163961e-38, 1.5046334865173417e-36, 2.524354896707238e-29}
+        values shared across local sorts (joins):
+          0 : Number_of_Platforms, Station_ID
+          2 : Number_of_Platforms, Station_ID
+          3 : Number_of_Platforms, Station_ID
+          4 : Number_of_Platforms, Station_ID
+          2.524354896707238e-29 : Annual_entry_exit, Annual_interchanges, Total_Passengers
+          1.175494490952134e-38 : Annual_entry_exit, Annual_interchanges, Total_Passengers
+          2.350989262163961e-38 : Annual_entry_exit, Annual_interchanges, Total_Passengers
+          1.5046334865173417e-36 : Annual_entry_exit, Annual_interchanges, Total_Passengers
+          1.175566097303661e-38 : Annual_entry_exit, Annual_interchanges, Total_Passengers
+          1.176068322673275e-38 : Annual_entry_exit, Annual_interchanges, Total_Passengers
+          '!0!' : Location, Main_Services, Name
+          '' : Location, Main_Services, Name
+          'A' : Location, Main_Services, Name
+          'B' : Location, Main_Services, Name
+          'London' : Location, Main_Services, Name
+   [R3] took 0.274 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

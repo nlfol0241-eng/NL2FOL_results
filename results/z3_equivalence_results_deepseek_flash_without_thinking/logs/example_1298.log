@@ -1,0 +1,59 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1298.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1298.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3858 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: papers written by sharon goldwater
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        integer -> IntSort()
+      local sorts:
+        authorId = integer -> IntSort()
+        authorName = varchar(50) -> StringSort()
+        paperId = integer -> IntSort()
+      symbols:
+        author(authorId, authorName)
+        writes(paperId, authorId)
+        constant sharon goldwater : authorName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : authorId ∃a1 : authorId ∃a2 : authorName ( (((writes(p,a)) ∧ (author(a1,a2))) ∧ (a = a1)) ∧ (a2 = 'sharon goldwater') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:authorId EXISTS:∃ IDENT:a1 COLON:: IDENT:authorId EXISTS:∃ IDENT:a2 COLON:: IDENT:authorName LPAR:( LPAR:( LPAR:( LPAR:( IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= LIT:sharon goldwater RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:authorId
+            EXISTS a1:authorId
+              EXISTS a2:authorName
+                AND
+                  AND
+                    AND
+                      PRED writes(p, a)
+                      PRED author(a1, a2)
+                    EQ  a = a1
+                  EQ  a2 = 'sharon goldwater'
+      Predicted FOL: ∃p : paperId (writes(p, a) ∧ author(a, 'sharon goldwater'))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:paperId LPAR:( IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) AND:∧ IDENT:author LPAR:( IDENT:a COMMA:, LIT:sharon goldwater RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:paperId
+            AND
+              PRED writes(p, a)
+              PRED author(a, 'sharon goldwater')
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['paperId'] vs Predicted ['authorId']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['paperId'] vs Predicted ['authorId']

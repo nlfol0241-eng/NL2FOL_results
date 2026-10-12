@@ -1,0 +1,138 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3415.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3415.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5647 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the title of course that is provided by Statistics but not Psychology departments.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        numeric(2,0) -> RealSort()   [domain And(IsInt(x), x > -100, x < 100); 2 digits, 0 after the point]
+      local sorts:
+        course_id = varchar(8) -> StringSort()
+        credits = numeric(2,0) -> RealSort()
+        dept_name = varchar(20) -> StringSort()
+        title = varchar(50) -> StringSort()
+      symbols:
+        course(course_id, title, dept_name, credits)
+        constant Psychology : dept_name
+        constant Statistics : dept_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃d : dept_name ∃c1 : credits ∃c : course_id( (course(c,t,d,c1)) ∧ (d = 'Statistics') )) ∧ (¬(∃d : dept_name ∃c1 : credits ∃c : course_id( (course(c,t,d,c1)) ∧ (d = 'Psychology') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:c1 COLON:: IDENT:credits EXISTS:∃ IDENT:c COLON:: IDENT:course_id LPAR:( LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Statistics RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:c1 COLON:: IDENT:credits EXISTS:∃ IDENT:c COLON:: IDENT:course_id LPAR:( LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Psychology RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS d:dept_name
+              EXISTS c1:credits
+                EXISTS c:course_id
+                  AND
+                    PRED course(c, t, d, c1)
+                    EQ  d = 'Statistics'
+            NOT
+              EXISTS d:dept_name
+                EXISTS c1:credits
+                  EXISTS c:course_id
+                    AND
+                      PRED course(c, t, d, c1)
+                      EQ  d = 'Psychology'
+      Predicted FOL: ∃x_course_id : course_id ∃x_title : title ∃x_dept_name : dept_name ∃x_credits : credits ( course(x_course_id, x_title, x_dept_name, x_credits) ∧ x_dept_name = 'Statistics' ∧ x_dept_name ≠ 'Psychology' )
+        tokens: EXISTS:∃ IDENT:x_course_id COLON:: IDENT:course_id EXISTS:∃ IDENT:x_title COLON:: IDENT:title EXISTS:∃ IDENT:x_dept_name COLON:: IDENT:dept_name EXISTS:∃ IDENT:x_credits COLON:: IDENT:credits LPAR:( IDENT:course LPAR:( IDENT:x_course_id COMMA:, IDENT:x_title COMMA:, IDENT:x_dept_name COMMA:, IDENT:x_credits RPAR:) AND:∧ IDENT:x_dept_name EQ:= LIT:Statistics AND:∧ IDENT:x_dept_name NEQ:≠ LIT:Psychology RPAR:) EOF
+        AST:
+          EXISTS x_course_id:course_id
+            EXISTS x_title:title
+              EXISTS x_dept_name:dept_name
+                EXISTS x_credits:credits
+                  AND
+                    PRED course(x_course_id, x_title, x_dept_name, x_credits)
+                    EQ  x_dept_name = 'Statistics'
+                    NEQ  x_dept_name != 'Psychology'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x_title do not occur free in the formula
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted x_title
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global varchar(8) -> StringSort()
+        c1 : local credits, global numeric(2,0) -> RealSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        t : local title, global varchar(50) -> StringSort()
+      Predicted FOL:
+        x_course_id : local course_id, global varchar(8) -> StringSort()
+        x_credits : local credits, global numeric(2,0) -> RealSort()
+        x_dept_name : local dept_name, global varchar(20) -> StringSort()
+        x_title : local title, global varchar(50) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_d_1, gold_c1_2, gold_c_3], And(D_varchar_20_(gold_d_1), D_numeric_2_0_(gold_c1_2), D_varchar_8_(gold_c_3), And(P_course(gold_c_3, FV_title_0, gold_d_1, gold_c1_2), (gold_d_1 == L_Statistics)))), Not(Exists([gold_d_4, gold_c1_5, gold_c_6], And(D_varchar_20_(gold_d_4), D_numeric_2_0_(gold_c1_5), D_varchar_8_(gold_c_6), And(P_course(gold_c_6, FV_title_0, gold_d_4, gold_c1_5), (gold_d_4 == L_Psychology))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_course_id_1, predicted_x_title_2, predicted_x_dept_name_3, predicted_x_credits_4], And(D_varchar_8_(predicted_x_course_id_1), D_varchar_50_(predicted_x_title_2), D_varchar_20_(predicted_x_dept_name_3), D_numeric_2_0_(predicted_x_credits_4), And(P_course(predicted_x_course_id_1, predicted_x_title_2, predicted_x_dept_name_3, predicted_x_credits_4), (predicted_x_dept_name_3 == L_Statistics), (predicted_x_dept_name_3 != L_Psychology))))
+      predicted_skolem (witnesses WPREDICTED_x_course_id, WPREDICTED_x_title, WPREDICTED_x_dept_name, WPREDICTED_x_credits):  And(D_varchar_8_(WPREDICTED_x_course_id), D_varchar_50_(WPREDICTED_x_title), D_varchar_20_(WPREDICTED_x_dept_name), D_numeric_2_0_(WPREDICTED_x_credits), And(P_course(WPREDICTED_x_course_id, WPREDICTED_x_title, WPREDICTED_x_dept_name, WPREDICTED_x_credits), (WPREDICTED_x_dept_name == L_Statistics), (WPREDICTED_x_dept_name != L_Psychology)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Psychology' at varchar(20) -> L_Psychology = StringVal('Psychology')
+      literal 'Statistics' at varchar(20) -> L_Statistics = StringVal('Statistics')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 746 lines, 29153 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3415.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_title_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_d_1, gold_c1_2, gold_c_3], And(Length(gold_d_1) <= 20, And(IsInt(gold_c1_2), gold_c1_2 > -100, gold_c1_2 < 100), Length(gold_c_3) <= 8, And(course(gold_c_3, FV_title_0, gold_d_1, gold_c1_2), gold_d_1 == "Statistics"))), Not(Exists([gold_d_4, gold_c1_5, gold_c_6], And(Length(gold_d_4) <= 20, And(IsInt(gold_c1_5), gold_c1_5 > -100, gold_c1_5 < 100), Length(gold_c_6) <= 8, And(course(gold_c_6, FV_title_0, gold_d_4, gold_c1_5), gold_d_4 == "Psychology"))))), Not(Exists([predicted_x_course_id_1, predicted_x_title_2, predicted_x_dept_name_3, predicted_x_credits_4], And(Length(predicted_x_course_id_1) <= 8, Length(predicted_x_title_2) <= 50, Length(predicted_x_dept_name_3) <= 20, And(IsInt(predicted_x_credits_4), predicted_x_credits_4 > -100, predicted_x_credits_4 < 100), And(course(predicted_x_course_id_1, predicted_x_title_2, predicted_x_dept_name_3, predicted_x_credits_4), predicted_x_dept_name_3 == "Statistics", predicted_x_dept_name_3 != "Psychology")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_x_course_id, WPREDICTED_x_title, WPREDICTED_x_dept_name, WPREDICTED_x_credits
+      claim: And(And(Length(WPREDICTED_x_course_id) <= 8, Length(WPREDICTED_x_title) <= 50, Length(WPREDICTED_x_dept_name) <= 20, And(IsInt(WPREDICTED_x_credits), WPREDICTED_x_credits > -100, WPREDICTED_x_credits < 100), And(course(WPREDICTED_x_course_id, WPREDICTED_x_title, WPREDICTED_x_dept_name, WPREDICTED_x_credits), WPREDICTED_x_dept_name == "Statistics", WPREDICTED_x_dept_name != "Psychology")), Not(And(Exists([gold_d_1, gold_c1_2, gold_c_3], And(Length(gold_d_1) <= 20, And(IsInt(gold_c1_2), gold_c1_2 > -100, gold_c1_2 < 100), Length(gold_c_3) <= 8, And(course(gold_c_3, FV_title_0, gold_d_1, gold_c1_2), gold_d_1 == "Statistics"))), Not(Exists([gold_d_4, gold_c1_5, gold_c_6], And(Length(gold_d_4) <= 20, And(IsInt(gold_c1_5), gold_c1_5 > -100, gold_c1_5 < 100), Length(gold_c_6) <= 8, And(course(gold_c_6, FV_title_0, gold_d_4, gold_c1_5), gold_d_4 == "Psychology")))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.007 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 5 relation tuple(s) listed, 1 probe query
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x_course_id : course_id = ''
+          x_title : title = 'S'
+          x_dept_name : dept_name = 'Statistics'
+          x_credits : credits = 0
+        free (answer) variables:
+          FV_title_0 : title = ''
+        literals / constants:
+          Psychology : dept_name = 'Psychology'
+          Statistics : dept_name = 'Statistics'
+        relations (each value tagged with the local sort of its position):
+          course(course_id, title, dept_name, credits):
+            course(course_id='', title='', dept_name='Psychology', credits=0)
+            course(course_id='', title='', dept_name='Statistics', credits=0)
+            course(course_id='', title='S', dept_name='Psychology', credits=0)
+            course(course_id='', title='S', dept_name='Statistics', credits=0)
+            course(course_id='A', title='B', dept_name='', credits=-1)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          course_id : {'', 'A'}
+          credits   : {-1, 0}
+          dept_name : {'', 'Psychology', 'Statistics'}
+          title     : {'', 'B', 'S'}
+   [R3] took 0.024 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

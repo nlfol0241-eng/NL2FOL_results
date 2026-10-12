@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_399.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_399.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3343 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show origins of all flights with destination Honolulu.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        number(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+        number(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        number(7,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000, x < 100000); 7 digits, 2 after the point]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        arrival_date = date -> IntSort()
+        departure_date = date -> IntSort()
+        destination = varchar2(20) -> StringSort()
+        distance = number(6,0) -> RealSort()
+        flno = number(4,0) -> RealSort()
+        origin = varchar2(20) -> StringSort()
+        price = number(7,2) -> RealSort()
+      symbols:
+        flight(flno, origin, destination, distance, departure_date, arrival_date, price, aid)
+        constant Honolulu : destination
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : flno ∃d : destination ∃d1 : distance ∃d2 : departure_date ∃a : arrival_date ∃p : price ∃a1 : aid ( (flight(f,o,d,d1,d2,a,p,a1)) ∧ (d = 'Honolulu') )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:flno EXISTS:∃ IDENT:d COLON:: IDENT:destination EXISTS:∃ IDENT:d1 COLON:: IDENT:distance EXISTS:∃ IDENT:d2 COLON:: IDENT:departure_date EXISTS:∃ IDENT:a COLON:: IDENT:arrival_date EXISTS:∃ IDENT:p COLON:: IDENT:price EXISTS:∃ IDENT:a1 COLON:: IDENT:aid LPAR:( LPAR:( IDENT:flight LPAR:( IDENT:f COMMA:, IDENT:o COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:a COMMA:, IDENT:p COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Honolulu RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:flno
+            EXISTS d:destination
+              EXISTS d1:distance
+                EXISTS d2:departure_date
+                  EXISTS a:arrival_date
+                    EXISTS p:price
+                      EXISTS a1:aid
+                        AND
+                          PRED flight(f, o, d, d1, d2, a, p, a1)
+                          EQ  d = 'Honolulu'
+      Predicted FOL: ∀f:flno ∀o:origin ∀d:destination ∀dist:distance ∀dep:departure_date ∀arr:arrival_date ∀p:price ∀a:aid (flight(f,o,d,dist,dep,arr,p,a) ∧ d = 'Honolulu' → ∃o2:origin (o2 = o))
+        tokens: FORALL:∀ IDENT:f COLON:: IDENT:flno FORALL:∀ IDENT:o COLON:: IDENT:origin FORALL:∀ IDENT:d COLON:: IDENT:destination FORALL:∀ IDENT:dist COLON:: IDENT:distance FORALL:∀ IDENT:dep COLON:: IDENT:departure_date FORALL:∀ IDENT:arr COLON:: IDENT:arrival_date FORALL:∀ IDENT:p COLON:: IDENT:price FORALL:∀ IDENT:a COLON:: IDENT:aid LPAR:( IDENT:flight LPAR:( IDENT:f COMMA:, IDENT:o COMMA:, IDENT:d COMMA:, IDENT:dist COMMA:, IDENT:dep COMMA:, IDENT:arr COMMA:, IDENT:p COMMA:, IDENT:a RPAR:) AND:∧ IDENT:d EQ:= LIT:Honolulu IMPL:→ EXISTS:∃ IDENT:o2 COLON:: IDENT:origin LPAR:( IDENT:o2 EQ:= IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          FORALL f:flno
+            FORALL o:origin
+              FORALL d:destination
+                FORALL dist:distance
+                  FORALL dep:departure_date
+                    FORALL arr:arrival_date
+                      FORALL p:price
+                        FORALL a:aid
+                          IMPLIES
+                            AND
+                              PRED flight(f, o, d, dist, dep, arr, p, a)
+                              EQ  d = 'Honolulu'
+                            EXISTS o2:origin
+                              EQ  o2 = o
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (o : origin) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local arrival_date, global date -> IntSort()
+        a1 : local aid, global number(9,0) -> RealSort()
+        d : local destination, global varchar2(20) -> StringSort()
+        d1 : local distance, global number(6,0) -> RealSort()
+        d2 : local departure_date, global date -> IntSort()
+        f : local flno, global number(4,0) -> RealSort()
+        o : local origin, global varchar2(20) -> StringSort()
+        p : local price, global number(7,2) -> RealSort()
+      Predicted FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        arr : local arrival_date, global date -> IntSort()
+        d : local destination, global varchar2(20) -> StringSort()
+        dep : local departure_date, global date -> IntSort()
+        dist : local distance, global number(6,0) -> RealSort()
+        f : local flno, global number(4,0) -> RealSort()
+        o : local origin, global varchar2(20) -> StringSort()
+        o2 : local origin, global varchar2(20) -> StringSort()
+        p : local price, global number(7,2) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5451 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_399.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (o : origin) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3184.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3184.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2916 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the titles of all movies that have no ratings.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        rID = int -> IntSort()
+        ratingDate = date -> IntSort()
+        stars = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        Rating(rID, mID, stars, ratingDate)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃y : year ∃d : director ∃m : mID( (Movie(m,t,y,d)) ∧ (¬(∃m1 : mID( ((Movie(m,t,y,d)) ∧ (∃r : rID ∃r1 : ratingDate ∃s : stars( Rating(r,m1,s,r1) ))) ∧ (m = m1) ))) )
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:d COLON:: IDENT:director EXISTS:∃ IDENT:m COLON:: IDENT:mID LPAR:( LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:mID LPAR:( LPAR:( LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:rID EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate EXISTS:∃ IDENT:s COLON:: IDENT:stars LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m1 COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:year
+            EXISTS d:director
+              EXISTS m:mID
+                AND
+                  PRED Movie(m, t, y, d)
+                  NOT
+                    EXISTS m1:mID
+                      AND
+                        AND
+                          PRED Movie(m, t, y, d)
+                          EXISTS r:rID
+                            EXISTS r1:ratingDate
+                              EXISTS s:stars
+                                PRED Rating(r, m1, s, r1)
+                        EQ  m = m1
+      Predicted FOL: ∃m:mID ∃y:year ∃d:director ( Movie(m, t, y, d) ∧ ¬∃r:rID ∃s:stars ∃rd:ratingDate Rating(r, m, s, rd) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:d COLON:: IDENT:director LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:r COLON:: IDENT:rID EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:rd COLON:: IDENT:ratingDate IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:rd RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mID
+            EXISTS y:year
+              EXISTS d:director
+                AND
+                  PRED Movie(m, t, y, d)
+                  NOT
+                    EXISTS r:rID
+                      EXISTS s:stars
+                        EXISTS rd:ratingDate
+                          PRED Rating(r, m, s, rd)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        m1 : local mID, global int -> IntSort()
+        r : local rID, global int -> IntSort()
+        r1 : local ratingDate, global date -> IntSort()
+        s : local stars, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        r : local rID, global int -> IntSort()
+        rd : local ratingDate, global date -> IntSort()
+        s : local stars, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_y_1, gold_d_2, gold_m_3], And(P_Movie(gold_m_3, FV_title_0, gold_y_1, gold_d_2), Not(Exists([gold_m1_4], And(And(P_Movie(gold_m_3, FV_title_0, gold_y_1, gold_d_2), Exists([gold_r_5, gold_r1_6, gold_s_7], P_Rating(gold_r_5, gold_m1_4, gold_s_7, gold_r1_6))), (gold_m_3 == gold_m1_4))))))
+      gold_skolem (witnesses WGOLD_y, WGOLD_d, WGOLD_m):  And(P_Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), Not(Exists([goldsk_m1_1], And(And(P_Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), Exists([goldsk_r_2, goldsk_r1_3, goldsk_s_4], P_Rating(goldsk_r_2, goldsk_m1_1, goldsk_s_4, goldsk_r1_3))), (WGOLD_m == goldsk_m1_1)))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_y_2, predicted_d_3], And(P_Movie(predicted_m_1, FV_title_0, predicted_y_2, predicted_d_3), Not(Exists([predicted_r_4, predicted_s_5, predicted_rd_6], P_Rating(predicted_r_4, predicted_m_1, predicted_s_5, predicted_rd_6)))))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_y, WPREDICTED_d):  And(P_Movie(WPREDICTED_m, FV_title_0, WPREDICTED_y, WPREDICTED_d), Not(Exists([predictedsk_r_1, predictedsk_s_2, predictedsk_rd_3], P_Rating(predictedsk_r_1, WPREDICTED_m, predictedsk_s_2, predictedsk_rd_3))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 755 lines, 28905 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3184.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_y, WGOLD_d, WGOLD_m
+      claim: And(And(Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), Not(Exists(goldsk_m1_1, And(And(Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), Exists([goldsk_r_2, goldsk_r1_3, goldsk_s_4], Rating(goldsk_r_2, goldsk_m1_1, goldsk_s_4, goldsk_r1_3))), WGOLD_m == goldsk_m1_1)))), Not(Exists([predicted_m_1, predicted_y_2, predicted_d_3], And(Movie(predicted_m_1, FV_title_0, predicted_y_2, predicted_d_3), Not(Exists([predicted_r_4, predicted_s_5, predicted_rd_6], Rating(predicted_r_4, predicted_m_1, predicted_s_5, predicted_rd_6)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_y, WPREDICTED_d
+      claim: And(And(Movie(WPREDICTED_m, FV_title_0, WPREDICTED_y, WPREDICTED_d), Not(Exists([predictedsk_r_1, predictedsk_s_2, predictedsk_rd_3], Rating(predictedsk_r_1, WPREDICTED_m, predictedsk_s_2, predictedsk_rd_3)))), Not(Exists([gold_y_1, gold_d_2, gold_m_3], And(Movie(gold_m_3, FV_title_0, gold_y_1, gold_d_2), Not(Exists(gold_m1_4, And(And(Movie(gold_m_3, FV_title_0, gold_y_1, gold_d_2), Exists([gold_r_5, gold_r1_6, gold_s_7], Rating(gold_r_5, gold_m1_4, gold_s_7, gold_r1_6))), gold_m_3 == gold_m1_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

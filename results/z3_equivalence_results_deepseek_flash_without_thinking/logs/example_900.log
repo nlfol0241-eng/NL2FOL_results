@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_900.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_900.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4476 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the name of the department in the Building Mergenthaler?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+        integer -> IntSort()
+        varchar(25) -> StringSort()   [domain Length(x) <= 25; length <= 25]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        varchar(13) -> StringSort()   [domain Length(x) <= 13; length <= 13]
+      local sorts:
+        Building = varchar(13) -> StringSort()
+        DNO = integer -> IntSort()
+        DName = varchar(25) -> StringSort()
+        DPhone = integer -> IntSort()
+        Division = varchar(2) -> StringSort()
+        Room = varchar(5) -> StringSort()
+      symbols:
+        Department(DNO, Division, DName, Room, Building, DPhone)
+        constant Mergenthaler : Building
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : DNO ∃d1 : Division ∃r : Room ∃b : Building ∃d3 : DPhone ( (Department(d,d1,d2,r,b,d3)) ∧ (b = 'Mergenthaler') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:DNO EXISTS:∃ IDENT:d1 COLON:: IDENT:Division EXISTS:∃ IDENT:r COLON:: IDENT:Room EXISTS:∃ IDENT:b COLON:: IDENT:Building EXISTS:∃ IDENT:d3 COLON:: IDENT:DPhone LPAR:( LPAR:( IDENT:Department LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:r COMMA:, IDENT:b COMMA:, IDENT:d3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= LIT:Mergenthaler RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:DNO
+            EXISTS d1:Division
+              EXISTS r:Room
+                EXISTS b:Building
+                  EXISTS d3:DPhone
+                    AND
+                      PRED Department(d, d1, d2, r, b, d3)
+                      EQ  b = 'Mergenthaler'
+      Predicted FOL: ∃x0 : DNO ∃x1 : Division ∃x2 : DName ∃x3 : Room ∃x4 : Building ∃x5 : DPhone (Department(x0, x1, x2, x3, x4, x5) ∧ x4 = Mergenthaler)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:DNO EXISTS:∃ IDENT:x1 COLON:: IDENT:Division EXISTS:∃ IDENT:x2 COLON:: IDENT:DName EXISTS:∃ IDENT:x3 COLON:: IDENT:Room EXISTS:∃ IDENT:x4 COLON:: IDENT:Building EXISTS:∃ IDENT:x5 COLON:: IDENT:DPhone LPAR:( IDENT:Department LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 RPAR:) AND:∧ IDENT:x4 EQ:= IDENT:Mergenthaler RPAR:) EOF
+        AST:
+          EXISTS x0:DNO
+            EXISTS x1:Division
+              EXISTS x2:DName
+                EXISTS x3:Room
+                  EXISTS x4:Building
+                    EXISTS x5:DPhone
+                      AND
+                        PRED Department(x0, x1, x2, x3, x4, x5)
+                        EQ  x4 = Mergenthaler<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d2 : DName) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Building, global varchar(13) -> StringSort()
+        d : local DNO, global integer -> IntSort()
+        d1 : local Division, global varchar(2) -> StringSort()
+        d2 : local DName, global varchar(25) -> StringSort()
+        d3 : local DPhone, global integer -> IntSort()
+        r : local Room, global varchar(5) -> StringSort()
+      Predicted FOL:
+        x0 : local DNO, global integer -> IntSort()
+        x1 : local Division, global varchar(2) -> StringSort()
+        x2 : local DName, global varchar(25) -> StringSort()
+        x3 : local Room, global varchar(5) -> StringSort()
+        x4 : local Building, global varchar(13) -> StringSort()
+        x5 : local DPhone, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5371 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_900.py
+   [G8] took 0.006 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d2 : DName) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

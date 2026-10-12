@@ -1,0 +1,73 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_749.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_749.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4256 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is all the information about the Marketing department?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        decimal(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+        decimal(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+      local sorts:
+        DEPARTMENT_ID = decimal(4,0) -> RealSort()
+        DEPARTMENT_NAME = varchar(30) -> StringSort()
+        LOCATION_ID = decimal(4,0) -> RealSort()
+        MANAGER_ID = decimal(6,0) -> RealSort()
+      symbols:
+        departments(DEPARTMENT_ID, DEPARTMENT_NAME, MANAGER_ID, LOCATION_ID)
+        constant Marketing : DEPARTMENT_NAME
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (departments(d,d1,m,l)) ∧ (d1 = 'Marketing')
+        tokens: LPAR:( IDENT:departments LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:m COMMA:, IDENT:l RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:Marketing RPAR:) EOF
+        AST:
+          AND
+            PRED departments(d, d1, m, l)
+            EQ  d1 = 'Marketing'
+      Predicted FOL: ∃c0:DEPARTMENT_ID ∃c2:MANAGER_ID ∃c3:LOCATION_ID (departments(c0, Marketing, c2, c3))
+        tokens: EXISTS:∃ IDENT:c0 COLON:: IDENT:DEPARTMENT_ID EXISTS:∃ IDENT:c2 COLON:: IDENT:MANAGER_ID EXISTS:∃ IDENT:c3 COLON:: IDENT:LOCATION_ID LPAR:( IDENT:departments LPAR:( IDENT:c0 COMMA:, IDENT:Marketing COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c0:DEPARTMENT_ID
+            EXISTS c2:MANAGER_ID
+              EXISTS c3:LOCATION_ID
+                PRED departments(c0, Marketing<const>, c2, c3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 4 free variable(s) (d : DEPARTMENT_ID, d1 : DEPARTMENT_NAME, m : MANAGER_ID, l : LOCATION_ID) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        d1 : local DEPARTMENT_NAME, global varchar(30) -> StringSort()
+        l : local LOCATION_ID, global decimal(4,0) -> RealSort()
+        m : local MANAGER_ID, global decimal(6,0) -> RealSort()
+      Predicted FOL:
+        c0 : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        c2 : local MANAGER_ID, global decimal(6,0) -> RealSort()
+        c3 : local LOCATION_ID, global decimal(4,0) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5353 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_749.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 4 free variable(s) (d : DEPARTMENT_ID, d1 : DEPARTMENT_NAME, m : MANAGER_ID, l : LOCATION_ID) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

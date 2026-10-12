@@ -1,0 +1,133 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2825.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2825.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6326 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids for courses in the Fall of 2009 or the Spring of 2010?
+   [G1] took 0.003 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 7 local sorts, 1 predicates, 0 functions, 6 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        varchar(4) -> StringSort()   [domain Length(x) <= 4; length <= 4]
+        varchar(7) -> StringSort()   [domain Length(x) <= 7; length <= 7]
+        varchar(6) -> StringSort()   [domain Length(x) <= 6; length <= 6]
+        numeric(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+      local sorts:
+        building = varchar(15) -> StringSort()
+        course_id = varchar(8) -> StringSort()
+        room_number = varchar(7) -> StringSort()
+        sec_id = varchar(8) -> StringSort()
+        semester = varchar(6) -> StringSort()
+        time_slot_id = varchar(4) -> StringSort()
+        year = numeric(4,0) -> RealSort()
+      symbols:
+        section(course_id, sec_id, semester, year, building, room_number, time_slot_id)
+        constant 2009 : year
+        constant 2010 : year
+        constant Fall : semester
+        constant Spring : semester
+   [G2] took 0.002 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s1 : semester ∃r : room_number ∃s : sec_id ∃b : building ∃y : year ∃t : time_slot_id( (section(c,s,s1,y,b,r,t)) ∧ ((s1 = 'Fall') ∧ (y = 2009)) )) ∨ (∃s1 : semester ∃r : room_number ∃s : sec_id ∃b : building ∃y : year ∃t : time_slot_id( (section(c,s,s1,y,b,r,t)) ∧ ((s1 = 'Spring') ∧ (y = 2010)) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:semester EXISTS:∃ IDENT:r COLON:: IDENT:room_number EXISTS:∃ IDENT:s COLON:: IDENT:sec_id EXISTS:∃ IDENT:b COLON:: IDENT:building EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:t COLON:: IDENT:time_slot_id LPAR:( LPAR:( IDENT:section LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:y COMMA:, IDENT:b COMMA:, IDENT:r COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s1 EQ:= LIT:Fall RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2009 RPAR:) RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:semester EXISTS:∃ IDENT:r COLON:: IDENT:room_number EXISTS:∃ IDENT:s COLON:: IDENT:sec_id EXISTS:∃ IDENT:b COLON:: IDENT:building EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:t COLON:: IDENT:time_slot_id LPAR:( LPAR:( IDENT:section LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:y COMMA:, IDENT:b COMMA:, IDENT:r COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s1 EQ:= LIT:Spring RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2010 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS s1:semester
+              EXISTS r:room_number
+                EXISTS s:sec_id
+                  EXISTS b:building
+                    EXISTS y:year
+                      EXISTS t:time_slot_id
+                        AND
+                          PRED section(c, s, s1, y, b, r, t)
+                          AND
+                            EQ  s1 = 'Fall'
+                            EQ  y = 2009
+            EXISTS s1:semester
+              EXISTS r:room_number
+                EXISTS s:sec_id
+                  EXISTS b:building
+                    EXISTS y:year
+                      EXISTS t:time_slot_id
+                        AND
+                          PRED section(c, s, s1, y, b, r, t)
+                          AND
+                            EQ  s1 = 'Spring'
+                            EQ  y = 2010
+      Predicted FOL: ∃s : sec_id ∃b : building ∃r : room_number ∃t : time_slot_id (section(c, s, 'Fall', 2009, b, r, t) ∨ section(c, s, 'Spring', 2010, b, r, t))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:sec_id EXISTS:∃ IDENT:b COLON:: IDENT:building EXISTS:∃ IDENT:r COLON:: IDENT:room_number EXISTS:∃ IDENT:t COLON:: IDENT:time_slot_id LPAR:( IDENT:section LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, LIT:Fall COMMA:, NUM:2009 COMMA:, IDENT:b COMMA:, IDENT:r COMMA:, IDENT:t RPAR:) OR:∨ IDENT:section LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, LIT:Spring COMMA:, NUM:2010 COMMA:, IDENT:b COMMA:, IDENT:r COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:sec_id
+            EXISTS b:building
+              EXISTS r:room_number
+                EXISTS t:time_slot_id
+                  OR
+                    PRED section(c, s, 'Fall', 2009, b, r, t)
+                    PRED section(c, s, 'Spring', 2010, b, r, t)
+   [G3] took 0.008 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_course_id_0 : course_id   Gold c <-> Predicted c
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local building, global varchar(15) -> StringSort()
+        c : local course_id, global varchar(8) -> StringSort()
+        r : local room_number, global varchar(7) -> StringSort()
+        s : local sec_id, global varchar(8) -> StringSort()
+        s1 : local semester, global varchar(6) -> StringSort()
+        t : local time_slot_id, global varchar(4) -> StringSort()
+        y : local year, global numeric(4,0) -> RealSort()
+      Predicted FOL:
+        b : local building, global varchar(15) -> StringSort()
+        c : local course_id, global varchar(8) -> StringSort()
+        r : local room_number, global varchar(7) -> StringSort()
+        s : local sec_id, global varchar(8) -> StringSort()
+        t : local time_slot_id, global varchar(4) -> StringSort()
+   [G5] took 0.002 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_s1_1, gold_r_2, gold_s_3, gold_b_4, gold_y_5, gold_t_6], And(D_varchar_6_(gold_s1_1), D_varchar_7_(gold_r_2), D_varchar_8_(gold_s_3), D_varchar_15_(gold_b_4), D_numeric_4_0_(gold_y_5), D_varchar_4_(gold_t_6), And(P_section(FV_course_id_0, gold_s_3, gold_s1_1, gold_y_5, gold_b_4, gold_r_2, gold_t_6), And((gold_s1_1 == L_Fall), (gold_y_5 == L_v_2009_numeric_4_0_))))), Exists([gold_s1_7, gold_r_8, gold_s_9, gold_b_10, gold_y_11, gold_t_12], And(D_varchar_6_(gold_s1_7), D_varchar_7_(gold_r_8), D_varchar_8_(gold_s_9), D_varchar_15_(gold_b_10), D_numeric_4_0_(gold_y_11), D_varchar_4_(gold_t_12), And(P_section(FV_course_id_0, gold_s_9, gold_s1_7, gold_y_11, gold_b_10, gold_r_8, gold_t_12), And((gold_s1_7 == L_Spring), (gold_y_11 == L_v_2010_numeric_4_0_))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_b_2, predicted_r_3, predicted_t_4], And(D_varchar_8_(predicted_s_1), D_varchar_15_(predicted_b_2), D_varchar_7_(predicted_r_3), D_varchar_4_(predicted_t_4), Or(And(P_section(FV_course_id_0, predicted_s_1, L_Fall, L_v_2009_numeric_4_0_, predicted_b_2, predicted_r_3, predicted_t_4), D_varchar_6_(L_Fall), D_numeric_4_0_(L_v_2009_numeric_4_0_)), And(P_section(FV_course_id_0, predicted_s_1, L_Spring, L_v_2010_numeric_4_0_, predicted_b_2, predicted_r_3, predicted_t_4), D_varchar_6_(L_Spring), D_numeric_4_0_(L_v_2010_numeric_4_0_)))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_b, WPREDICTED_r, WPREDICTED_t):  And(D_varchar_8_(WPREDICTED_s), D_varchar_15_(WPREDICTED_b), D_varchar_7_(WPREDICTED_r), D_varchar_4_(WPREDICTED_t), Or(And(P_section(FV_course_id_0, WPREDICTED_s, L_Fall, L_v_2009_numeric_4_0_, WPREDICTED_b, WPREDICTED_r, WPREDICTED_t), D_varchar_6_(L_Fall), D_numeric_4_0_(L_v_2009_numeric_4_0_)), And(P_section(FV_course_id_0, WPREDICTED_s, L_Spring, L_v_2010_numeric_4_0_, WPREDICTED_b, WPREDICTED_r, WPREDICTED_t), D_varchar_6_(L_Spring), D_numeric_4_0_(L_v_2010_numeric_4_0_))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 4 literal(s) registered
+   [G6] took 0.003 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Fall' at varchar(6) -> L_Fall = StringVal('Fall')
+      literal 'Spring' at varchar(6) -> L_Spring = StringVal('Spring')
+      literal '2009' at numeric(4,0) -> L_v_2009_numeric_4_0_ = RealVal('2009')
+      literal '2010' at numeric(4,0) -> L_v_2010_numeric_4_0_ = RealVal('2010')
+   0 sort axiom(s), 4 literal(s), 0 order(s) needing a definition; 772 lines, 30837 bytes
+   [G7] took 0.002 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2825.py
+   [G8] took 0.036 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_course_id_0) <= 8
+   [R1] took 0.006 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([gold_s1_1, gold_r_2, gold_s_3, gold_b_4, gold_y_5, gold_t_6], And(Length(gold_s1_1) <= 6, Length(gold_r_2) <= 7, Length(gold_s_3) <= 8, Length(gold_b_4) <= 15, And(IsInt(gold_y_5), gold_y_5 > -10000, gold_y_5 < 10000), Length(gold_t_6) <= 4, And(section(FV_course_id_0, gold_s_3, gold_s1_1, gold_y_5, gold_b_4, gold_r_2, gold_t_6), And(gold_s1_1 == "Fall", 2009 == gold_y_5)))), Exists([gold_s1_7, gold_r_8, gold_s_9, gold_b_10, gold_y_11, gold_t_12], And(Length(gold_s1_7) <= 6, Length(gold_r_8) <= 7, Length(gold_s_9) <= 8, Length(gold_b_10) <= 15, And(IsInt(gold_y_11), gold_y_11 > -10000, gold_y_11 < 10000), Length(gold_t_12) <= 4, And(section(FV_course_id_0, gold_s_9, gold_s1_7, gold_y_11, gold_b_10, gold_r_8, gold_t_12), And(gold_s1_7 == "Spring", 2010 == gold_y_11))))), Not(Exists([predicted_s_1, predicted_b_2, predicted_r_3, predicted_t_4], And(Length(predicted_s_1) <= 8, Length(predicted_b_2) <= 15, Length(predicted_r_3) <= 7, Length(predicted_t_4) <= 4, Or(And(section(FV_course_id_0, predicted_s_1, "Fall", 2009, predicted_b_2, predicted_r_3, predicted_t_4), Length("Fall") <= 6, And(IsInt(2009), 2009 > -10000, 2009 < 10000)), And(section(FV_course_id_0, predicted_s_1, "Spring", 2010, predicted_b_2, predicted_r_3, predicted_t_4), Length("Spring") <= 6, And(IsInt(2010), 2010 > -10000, 2010 < 10000)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.023 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.159 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_b, WPREDICTED_r, WPREDICTED_t
+      claim: And(And(Length(WPREDICTED_s) <= 8, Length(WPREDICTED_b) <= 15, Length(WPREDICTED_r) <= 7, Length(WPREDICTED_t) <= 4, Or(And(section(FV_course_id_0, WPREDICTED_s, "Fall", 2009, WPREDICTED_b, WPREDICTED_r, WPREDICTED_t), Length("Fall") <= 6, And(IsInt(2009), 2009 > -10000, 2009 < 10000)), And(section(FV_course_id_0, WPREDICTED_s, "Spring", 2010, WPREDICTED_b, WPREDICTED_r, WPREDICTED_t), Length("Spring") <= 6, And(IsInt(2010), 2010 > -10000, 2010 < 10000)))), Not(Or(Exists([gold_s1_1, gold_r_2, gold_s_3, gold_b_4, gold_y_5, gold_t_6], And(Length(gold_s1_1) <= 6, Length(gold_r_2) <= 7, Length(gold_s_3) <= 8, Length(gold_b_4) <= 15, And(IsInt(gold_y_5), gold_y_5 > -10000, gold_y_5 < 10000), Length(gold_t_6) <= 4, And(section(FV_course_id_0, gold_s_3, gold_s1_1, gold_y_5, gold_b_4, gold_r_2, gold_t_6), And(gold_s1_1 == "Fall", 2009 == gold_y_5)))), Exists([gold_s1_7, gold_r_8, gold_s_9, gold_b_10, gold_y_11, gold_t_12], And(Length(gold_s1_7) <= 6, Length(gold_r_8) <= 7, Length(gold_s_9) <= 8, Length(gold_b_10) <= 15, And(IsInt(gold_y_11), gold_y_11 > -10000, gold_y_11 < 10000), Length(gold_t_12) <= 4, And(section(FV_course_id_0, gold_s_9, gold_s1_7, gold_y_11, gold_b_10, gold_r_8, gold_t_12), And(gold_s1_7 == "Spring", 2010 == gold_y_11)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.025 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.116 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

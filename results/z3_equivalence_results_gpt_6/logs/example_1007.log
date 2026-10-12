@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1007.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1007.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2534 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of dorms that can accommodate more than 300 students.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        dorm_name = varchar(20) -> StringSort()
+        dormid = integer -> IntSort()
+        gender = varchar(1) -> StringSort()
+        student_capacity = integer -> IntSort()
+      symbols:
+        Dorm(dormid, dorm_name, student_capacity, gender)
+        constant 300 : student_capacity
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : dormid ∃s : student_capacity ∃g : gender ( (Dorm(d,d1,s,g)) ∧ (s > 300) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:dormid EXISTS:∃ IDENT:s COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender LPAR:( LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s GT:> NUM:300 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:dormid
+            EXISTS s:student_capacity
+              EXISTS g:gender
+                AND
+                  PRED Dorm(d, d1, s, g)
+                  CMP  s > 300
+      Predicted FOL: ∃d : dormid ∃c : student_capacity ∃g : gender (Dorm(d, n, c, g) ∧ c > 300)
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:dormid EXISTS:∃ IDENT:c COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:g RPAR:) AND:∧ IDENT:c GT:> NUM:300 RPAR:) EOF
+        AST:
+          EXISTS d:dormid
+            EXISTS c:student_capacity
+              EXISTS g:gender
+                AND
+                  PRED Dorm(d, n, c, g)
+                  CMP  c > 300
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_dorm_name_0 : dorm_name   Gold d1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local dormid, global integer -> IntSort()
+        d1 : local dorm_name, global varchar(20) -> StringSort()
+        g : local gender, global varchar(1) -> StringSort()
+        s : local student_capacity, global integer -> IntSort()
+      Predicted FOL:
+        c : local student_capacity, global integer -> IntSort()
+        d : local dormid, global integer -> IntSort()
+        g : local gender, global varchar(1) -> StringSort()
+        n : local dorm_name, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_s_2, gold_g_3], And(D_varchar_1_(gold_g_3), And(P_Dorm(gold_d_1, FV_dorm_name_0, gold_s_2, gold_g_3), (gold_s_2 > L_v_300_integer))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_s, WGOLD_g):  And(D_varchar_1_(WGOLD_g), And(P_Dorm(WGOLD_d, FV_dorm_name_0, WGOLD_s, WGOLD_g), (WGOLD_s > L_v_300_integer)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_c_2, predicted_g_3], And(D_varchar_1_(predicted_g_3), And(P_Dorm(predicted_d_1, FV_dorm_name_0, predicted_c_2, predicted_g_3), (predicted_c_2 > L_v_300_integer))))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_c, WPREDICTED_g):  And(D_varchar_1_(WPREDICTED_g), And(P_Dorm(WPREDICTED_d, FV_dorm_name_0, WPREDICTED_c, WPREDICTED_g), (WPREDICTED_c > L_v_300_integer)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '300' at integer -> L_v_300_integer = IntVal(300)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 737 lines, 27607 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1007.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_dorm_name_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_s, WGOLD_g
+      claim: And(And(Length(WGOLD_g) <= 1, And(Dorm(WGOLD_d, FV_dorm_name_0, WGOLD_s, WGOLD_g), 300 < WGOLD_s)), Not(Exists([predicted_d_1, predicted_c_2, predicted_g_3], And(Length(predicted_g_3) <= 1, And(Dorm(predicted_d_1, FV_dorm_name_0, predicted_c_2, predicted_g_3), 300 < predicted_c_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_c, WPREDICTED_g
+      claim: And(And(Length(WPREDICTED_g) <= 1, And(Dorm(WPREDICTED_d, FV_dorm_name_0, WPREDICTED_c, WPREDICTED_g), 300 < WPREDICTED_c)), Not(Exists([gold_d_1, gold_s_2, gold_g_3], And(Length(gold_g_3) <= 1, And(Dorm(gold_d_1, FV_dorm_name_0, gold_s_2, gold_g_3), 300 < gold_s_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

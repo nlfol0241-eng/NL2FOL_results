@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3335.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3335.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4089 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the ids for all the students who participate in an activity and are under 20.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = text -> StringSort()
+        LName = text -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        actid = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+        stuid = integer -> IntSort()
+      symbols:
+        Participates_in(stuid, actid)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+        constant 20 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃a : actid( Participates_in(s,a) )) ∧ (¬((∃a : actid( Participates_in(s,a) )) ∧ (¬(∃a1 : Age ∃a2 : Advisor ∃f : Fname ∃m : Major ∃l : LName ∃s1 : Sex ∃c : city_code( (Student(s,l,f,a1,s1,m,a2,c)) ∧ (a1 < 20) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:actid LPAR:( IDENT:Participates_in LPAR:( IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:actid LPAR:( IDENT:Participates_in LPAR:( IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a1 COLON:: IDENT:Age EXISTS:∃ IDENT:a2 COLON:: IDENT:Advisor EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:c COLON:: IDENT:city_code LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a1 COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a2 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 LT:< NUM:20 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS a:actid
+              PRED Participates_in(s, a)
+            NOT
+              AND
+                EXISTS a:actid
+                  PRED Participates_in(s, a)
+                NOT
+                  EXISTS a1:Age
+                    EXISTS a2:Advisor
+                      EXISTS f:Fname
+                        EXISTS m:Major
+                          EXISTS l:LName
+                            EXISTS s1:Sex
+                              EXISTS c:city_code
+                                AND
+                                  PRED Student(s, l, f, a1, s1, m, a2, c)
+                                  CMP  a1 < 20
+      Predicted FOL: ∃ln: LName ∃fn: Fname ∃age: Age ∃sx: Sex ∃mj: Major ∃adv: Advisor ∃cc: city_code ( Student(id, ln, fn, age, sx, mj, adv, cc) ∧ age < 20 ∧ ∃act: actid Participates_in(id, act) )
+        tokens: EXISTS:∃ IDENT:ln COLON:: IDENT:LName EXISTS:∃ IDENT:fn COLON:: IDENT:Fname EXISTS:∃ IDENT:age COLON:: IDENT:Age EXISTS:∃ IDENT:sx COLON:: IDENT:Sex EXISTS:∃ IDENT:mj COLON:: IDENT:Major EXISTS:∃ IDENT:adv COLON:: IDENT:Advisor EXISTS:∃ IDENT:cc COLON:: IDENT:city_code LPAR:( IDENT:Student LPAR:( IDENT:id COMMA:, IDENT:ln COMMA:, IDENT:fn COMMA:, IDENT:age COMMA:, IDENT:sx COMMA:, IDENT:mj COMMA:, IDENT:adv COMMA:, IDENT:cc RPAR:) AND:∧ IDENT:age LT:< NUM:20 AND:∧ EXISTS:∃ IDENT:act COLON:: IDENT:actid IDENT:Participates_in LPAR:( IDENT:id COMMA:, IDENT:act RPAR:) RPAR:) EOF
+        AST:
+          EXISTS ln:LName
+            EXISTS fn:Fname
+              EXISTS age:Age
+                EXISTS sx:Sex
+                  EXISTS mj:Major
+                    EXISTS adv:Advisor
+                      EXISTS cc:city_code
+                        AND
+                          PRED Student(id, ln, fn, age, sx, mj, adv, cc)
+                          CMP  age < 20
+                          EXISTS act:actid
+                            PRED Participates_in(id, act)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['stuid'] vs Predicted ['StuID']
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['stuid'] vs Predicted ['StuID']

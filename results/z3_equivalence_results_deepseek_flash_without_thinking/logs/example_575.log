@@ -1,0 +1,163 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_575.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_575.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2847 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the elimination moves of wrestlers whose team is "Team Orton"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        Eliminated_By = text -> StringSort()
+        Elimination_ID = text -> StringSort()
+        Elimination_Move = text -> StringSort()
+        Team = text -> StringSort()
+        Time = text -> StringSort()
+        Wrestler_ID = text -> StringSort()
+      symbols:
+        Elimination(Elimination_ID, Wrestler_ID, Team, Eliminated_By, Elimination_Move, Time)
+        constant Team Orton : Team
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Elimination_ID ∃w : Wrestler_ID ∃t : Team ∃e1 : Eliminated_By ∃t1 : Time ( (Elimination(e,w,t,e1,e2,t1)) ∧ (t = 'Team Orton') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Elimination_ID EXISTS:∃ IDENT:w COLON:: IDENT:Wrestler_ID EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:e1 COLON:: IDENT:Eliminated_By EXISTS:∃ IDENT:t1 COLON:: IDENT:Time LPAR:( LPAR:( IDENT:Elimination LPAR:( IDENT:e COMMA:, IDENT:w COMMA:, IDENT:t COMMA:, IDENT:e1 COMMA:, IDENT:e2 COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Team Orton RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Elimination_ID
+            EXISTS w:Wrestler_ID
+              EXISTS t:Team
+                EXISTS e1:Eliminated_By
+                  EXISTS t1:Time
+                    AND
+                      PRED Elimination(e, w, t, e1, e2, t1)
+                      EQ  t = 'Team Orton'
+      Predicted FOL: ∃e : Elimination_ID ∃w : Wrestler_ID ∃t : Team ∃eb : Eliminated_By ∃em : Elimination_Move ∃tm : Time (Elimination(e, w, t, eb, em, tm) ∧ t = 'Team Orton')
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Elimination_ID EXISTS:∃ IDENT:w COLON:: IDENT:Wrestler_ID EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:eb COLON:: IDENT:Eliminated_By EXISTS:∃ IDENT:em COLON:: IDENT:Elimination_Move EXISTS:∃ IDENT:tm COLON:: IDENT:Time LPAR:( IDENT:Elimination LPAR:( IDENT:e COMMA:, IDENT:w COMMA:, IDENT:t COMMA:, IDENT:eb COMMA:, IDENT:em COMMA:, IDENT:tm RPAR:) AND:∧ IDENT:t EQ:= LIT:Team Orton RPAR:) EOF
+        AST:
+          EXISTS e:Elimination_ID
+            EXISTS w:Wrestler_ID
+              EXISTS t:Team
+                EXISTS eb:Eliminated_By
+                  EXISTS em:Elimination_Move
+                    EXISTS tm:Time
+                      AND
+                        PRED Elimination(e, w, t, eb, em, tm)
+                        EQ  t = 'Team Orton'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) em do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Elimination_Move_0 : Elimination_Move   Gold e2 <-> Predicted em
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local Elimination_ID, global text -> StringSort()
+        e1 : local Eliminated_By, global text -> StringSort()
+        e2 : local Elimination_Move, global text -> StringSort()
+        t : local Team, global text -> StringSort()
+        t1 : local Time, global text -> StringSort()
+        w : local Wrestler_ID, global text -> StringSort()
+      Predicted FOL:
+        e : local Elimination_ID, global text -> StringSort()
+        eb : local Eliminated_By, global text -> StringSort()
+        em : local Elimination_Move, global text -> StringSort()
+        t : local Team, global text -> StringSort()
+        tm : local Time, global text -> StringSort()
+        w : local Wrestler_ID, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_w_2, gold_t_3, gold_e1_4, gold_t1_5], And(P_Elimination(gold_e_1, gold_w_2, gold_t_3, gold_e1_4, FV_Elimination_Move_0, gold_t1_5), (gold_t_3 == L_Team_Orton)))
+      gold_skolem (witnesses WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, WGOLD_t1):  And(P_Elimination(WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, FV_Elimination_Move_0, WGOLD_t1), (WGOLD_t == L_Team_Orton))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_w_2, predicted_t_3, predicted_eb_4, predicted_em_5, predicted_tm_6], And(P_Elimination(predicted_e_1, predicted_w_2, predicted_t_3, predicted_eb_4, predicted_em_5, predicted_tm_6), (predicted_t_3 == L_Team_Orton)))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_w, WPREDICTED_t, WPREDICTED_eb, WPREDICTED_em, WPREDICTED_tm):  And(P_Elimination(WPREDICTED_e, WPREDICTED_w, WPREDICTED_t, WPREDICTED_eb, WPREDICTED_em, WPREDICTED_tm), (WPREDICTED_t == L_Team_Orton))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Team Orton' at text -> L_Team_Orton = StringVal('Team Orton')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 747 lines, 28794 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_575.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, WGOLD_t1
+      claim: And(And(Elimination(WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, FV_Elimination_Move_0, WGOLD_t1), WGOLD_t == "Team Orton"), Not(Exists([predicted_e_1, predicted_w_2, predicted_t_3, predicted_eb_4, predicted_em_5, predicted_tm_6], And(Elimination(predicted_e_1, predicted_w_2, predicted_t_3, predicted_eb_4, predicted_em_5, predicted_tm_6), predicted_t_3 == "Team Orton"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_w, WPREDICTED_t, WPREDICTED_eb, WPREDICTED_em, WPREDICTED_tm
+      claim: And(And(Elimination(WPREDICTED_e, WPREDICTED_w, WPREDICTED_t, WPREDICTED_eb, WPREDICTED_em, WPREDICTED_tm), WPREDICTED_t == "Team Orton"), Not(Exists([gold_e_1, gold_w_2, gold_t_3, gold_e1_4, gold_t1_5], And(Elimination(gold_e_1, gold_w_2, gold_t_3, gold_e1_4, FV_Elimination_Move_0, gold_t1_5), gold_t_3 == "Team Orton"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 24 relation tuple(s) listed, 23 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          e : Elimination_ID = 'Team Orton'
+          w : Wrestler_ID = 'Team Orton'
+          t : Team = 'Team Orton'
+          eb : Eliminated_By = 'T'
+          em : Elimination_Move = 'T'
+          tm : Time = 'T'
+        free (answer) variables:
+          FV_Elimination_Move_0 : Elimination_Move = 'e'
+        literals / constants:
+          Team Orton : Team = 'Team Orton'
+        relations (each value tagged with the local sort of its position):
+          Elimination(Elimination_ID, Wrestler_ID, Team, Eliminated_By, Elimination_Move, Time):
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='', Time='!0!')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='', Time='Team Orton')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='', Time='e')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='!0!', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='!1!', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='Team Orton', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='e', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='!0!', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='!1!', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='Team Orton', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='', Eliminated_By='e', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='!0!', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='!1!', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='T', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='', Team='e', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='!0!', Team='', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='!1!', Team='', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='T', Team='', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='', Wrestler_ID='e', Team='', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='!0!', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='', Time='!1!')
+            Elimination(Elimination_ID='!1!', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='T', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='', Time='')
+            Elimination(Elimination_ID='Team Orton', Wrestler_ID='Team Orton', Team='Team Orton', Eliminated_By='T', Elimination_Move='T', Time='T')
+            Elimination(Elimination_ID='e', Wrestler_ID='', Team='', Eliminated_By='', Elimination_Move='', Time='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Eliminated_By    : {'', '!0!', '!1!', 'T', 'Team Orton', 'e'}
+          Elimination_ID   : {'', '!0!', '!1!', 'T', 'Team Orton', 'e'}
+          Elimination_Move : {'', '!0!', '!1!', 'T', 'Team Orton', 'e'}
+          Team             : {'', '!0!', '!1!', 'T', 'Team Orton', 'e'}
+          Time             : {'', '!0!', '!1!', 'T', 'Team Orton', 'e'}
+          Wrestler_ID      : {'', '!0!', '!1!', 'T', 'Team Orton', 'e'}
+        values shared across local sorts (joins):
+          '!0!' : Eliminated_By, Elimination_ID, Elimination_Move, Team, Time, Wrestler_ID
+          '!1!' : Eliminated_By, Elimination_ID, Elimination_Move, Team, Time, Wrestler_ID
+          '' : Eliminated_By, Elimination_ID, Elimination_Move, Team, Time, Wrestler_ID
+          'T' : Eliminated_By, Elimination_ID, Elimination_Move, Team, Time, Wrestler_ID
+          'Team Orton' : Eliminated_By, Elimination_ID, Elimination_Move, Team, Time, Wrestler_ID
+          'e' : Eliminated_By, Elimination_ID, Elimination_Move, Team, Time, Wrestler_ID
+   [R3] took 0.233 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

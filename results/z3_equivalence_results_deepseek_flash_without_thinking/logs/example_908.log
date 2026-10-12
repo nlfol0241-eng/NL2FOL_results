@@ -1,0 +1,86 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_908.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_908.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5154 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct move in dates of the residents?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        date_moved_in = datetime -> IntSort()
+        date_moved_out = datetime -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        property_id = integer -> IntSort()
+        resident_id = integer -> IntSort()
+      symbols:
+        Residents(resident_id, property_id, date_moved_in, date_moved_out, other_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : resident_id ∃p : property_id ∃d1 : date_moved_out ∃o : other_details ( Residents(r,p,d,d1,o) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:resident_id EXISTS:∃ IDENT:p COLON:: IDENT:property_id EXISTS:∃ IDENT:d1 COLON:: IDENT:date_moved_out EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Residents LPAR:( IDENT:r COMMA:, IDENT:p COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:resident_id
+            EXISTS p:property_id
+              EXISTS d1:date_moved_out
+                EXISTS o:other_details
+                  PRED Residents(r, p, d, d1, o)
+      Predicted FOL: ∃x : date_moved_in (Residents(r, p, x, o, d) ∧ ∀y : date_moved_in (Residents(r', p', y, o', d') → y = x))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:date_moved_in LPAR:( IDENT:Residents LPAR:( IDENT:r COMMA:, IDENT:p COMMA:, IDENT:x COMMA:, IDENT:o COMMA:, IDENT:d RPAR:) AND:∧ FORALL:∀ IDENT:y COLON:: IDENT:date_moved_in LPAR:( IDENT:Residents LPAR:( IDENT:r' COMMA:, IDENT:p' COMMA:, IDENT:y COMMA:, IDENT:o' COMMA:, IDENT:d' RPAR:) IMPL:→ IDENT:y EQ:= IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:date_moved_in
+            AND
+              PRED Residents(r, p, x, o, d)
+              FORALL y:date_moved_in
+                IMPLIES
+                  PRED Residents(r', p', y, o', d')
+                  EQ  y = x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d : date_moved_in) but Predicted has 8 (r : resident_id, p : property_id, o : date_moved_out, d : other_details, r' : resident_id, p' : property_id, o' : date_moved_out, d' : other_details): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_moved_in, global datetime -> IntSort()
+        d1 : local date_moved_out, global datetime -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        p : local property_id, global integer -> IntSort()
+        r : local resident_id, global integer -> IntSort()
+      Predicted FOL:
+        d : local other_details, global varchar(255) -> StringSort()
+        d' : local other_details, global varchar(255) -> StringSort()
+        o : local date_moved_out, global datetime -> IntSort()
+        o' : local date_moved_out, global datetime -> IntSort()
+        p : local property_id, global integer -> IntSort()
+        p' : local property_id, global integer -> IntSort()
+        r : local resident_id, global integer -> IntSort()
+        r' : local resident_id, global integer -> IntSort()
+        x : local date_moved_in, global datetime -> IntSort()
+        y : local date_moved_in, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5608 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_908.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d : date_moved_in) but Predicted has 8 (r : resident_id, p : property_id, o : date_moved_out, d : other_details, r' : resident_id, p' : property_id, o' : date_moved_out, d' : other_details): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

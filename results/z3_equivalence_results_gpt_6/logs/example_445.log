@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_445.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_445.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2141 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the distinct themes of journals.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Date = text -> StringSort()
+        Journal_ID = int -> IntSort()
+        Sales = int -> IntSort()
+        Theme = text -> StringSort()
+      symbols:
+        journal(Journal_ID, Date, Theme, Sales)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃j : Journal_ID ∃d : Date ∃s : Sales ( journal(j,d,t,s) )
+        tokens: EXISTS:∃ IDENT:j COLON:: IDENT:Journal_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:s COLON:: IDENT:Sales LPAR:( IDENT:journal LPAR:( IDENT:j COMMA:, IDENT:d COMMA:, IDENT:t COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS j:Journal_ID
+            EXISTS d:Date
+              EXISTS s:Sales
+                PRED journal(j, d, t, s)
+      Predicted FOL: ∃i : Journal_ID ∃d : Date ∃s : Sales journal(i, d, t, s)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Journal_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:s COLON:: IDENT:Sales IDENT:journal LPAR:( IDENT:i COMMA:, IDENT:d COMMA:, IDENT:t COMMA:, IDENT:s RPAR:) EOF
+        AST:
+          EXISTS i:Journal_ID
+            EXISTS d:Date
+              EXISTS s:Sales
+                PRED journal(i, d, t, s)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Theme_0 : Theme   Gold t <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Date, global text -> StringSort()
+        j : local Journal_ID, global int -> IntSort()
+        s : local Sales, global int -> IntSort()
+        t : local Theme, global text -> StringSort()
+      Predicted FOL:
+        d : local Date, global text -> StringSort()
+        i : local Journal_ID, global int -> IntSort()
+        s : local Sales, global int -> IntSort()
+        t : local Theme, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_j_1, gold_d_2, gold_s_3], P_journal(gold_j_1, gold_d_2, FV_Theme_0, gold_s_3))
+      gold_skolem (witnesses WGOLD_j, WGOLD_d, WGOLD_s):  P_journal(WGOLD_j, WGOLD_d, FV_Theme_0, WGOLD_s)
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_d_2, predicted_s_3], P_journal(predicted_i_1, predicted_d_2, FV_Theme_0, predicted_s_3))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_s):  P_journal(WPREDICTED_i, WPREDICTED_d, FV_Theme_0, WPREDICTED_s)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 26687 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_445.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_j, WGOLD_d, WGOLD_s
+      claim: And(journal(WGOLD_j, WGOLD_d, FV_Theme_0, WGOLD_s), Not(Exists([predicted_i_1, predicted_d_2, predicted_s_3], journal(predicted_i_1, predicted_d_2, FV_Theme_0, predicted_s_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_s
+      claim: And(journal(WPREDICTED_i, WPREDICTED_d, FV_Theme_0, WPREDICTED_s), Not(Exists([gold_j_1, gold_d_2, gold_s_3], journal(gold_j_1, gold_d_2, FV_Theme_0, gold_s_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1616.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1616.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3194 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the first year and last year of parties with theme "Spring" or "Teqnology".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        First_year = text -> StringSort()
+        Last_year = text -> StringSort()
+        Location = text -> StringSort()
+        Number_of_hosts = int -> IntSort()
+        Party_ID = int -> IntSort()
+        Party_Theme = text -> StringSort()
+      symbols:
+        party(Party_ID, Party_Theme, Location, First_year, Last_year, Number_of_hosts)
+        constant Spring : Party_Theme
+        constant Teqnology : Party_Theme
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Party_ID ∃p1 : Party_Theme ∃l : Location ∃n : Number_of_hosts ( (party(p,p1,l,f,l1,n)) ∧ ((p1 = 'Spring') ∨ (p1 = 'Teqnology')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Party_Theme EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:n COLON:: IDENT:Number_of_hosts LPAR:( LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:l1 COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:p1 EQ:= LIT:Spring RPAR:) OR:∨ LPAR:( IDENT:p1 EQ:= LIT:Teqnology RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Party_ID
+            EXISTS p1:Party_Theme
+              EXISTS l:Location
+                EXISTS n:Number_of_hosts
+                  AND
+                    PRED party(p, p1, l, f, l1, n)
+                    OR
+                      EQ  p1 = 'Spring'
+                      EQ  p1 = 'Teqnology'
+      Predicted FOL: ∃x : Party_ID ∃y : Party_Theme ∃z : Location ∃u : First_year ∃v : Last_year ∃w : Number_of_hosts (party(x, y, z, u, v, w) ∧ (y = Spring ∨ y = Teqnology))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Party_ID EXISTS:∃ IDENT:y COLON:: IDENT:Party_Theme EXISTS:∃ IDENT:z COLON:: IDENT:Location EXISTS:∃ IDENT:u COLON:: IDENT:First_year EXISTS:∃ IDENT:v COLON:: IDENT:Last_year EXISTS:∃ IDENT:w COLON:: IDENT:Number_of_hosts LPAR:( IDENT:party LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:u COMMA:, IDENT:v COMMA:, IDENT:w RPAR:) AND:∧ LPAR:( IDENT:y EQ:= IDENT:Spring OR:∨ IDENT:y EQ:= IDENT:Teqnology RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Party_ID
+            EXISTS y:Party_Theme
+              EXISTS z:Location
+                EXISTS u:First_year
+                  EXISTS v:Last_year
+                    EXISTS w:Number_of_hosts
+                      AND
+                        PRED party(x, y, z, u, v, w)
+                        OR
+                          EQ  y = Spring<const>
+                          EQ  y = Teqnology<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : First_year, l1 : Last_year) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        f : local First_year, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        l1 : local Last_year, global text -> StringSort()
+        n : local Number_of_hosts, global int -> IntSort()
+        p : local Party_ID, global int -> IntSort()
+        p1 : local Party_Theme, global text -> StringSort()
+      Predicted FOL:
+        u : local First_year, global text -> StringSort()
+        v : local Last_year, global text -> StringSort()
+        w : local Number_of_hosts, global int -> IntSort()
+        x : local Party_ID, global int -> IntSort()
+        y : local Party_Theme, global text -> StringSort()
+        z : local Location, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5468 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1616.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : First_year, l1 : Last_year) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

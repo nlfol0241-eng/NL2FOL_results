@@ -1,0 +1,72 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_392.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_392.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2543 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the id of every employee who has at least a salary of  100000?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        number(10,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000000, x < 100000000); 10 digits, 2 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+      local sorts:
+        eid = number(9,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+        salary = number(10,2) -> RealSort()
+      symbols:
+        employee(eid, name, salary)
+        constant 100000 : salary
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃s : salary ( (employee(e,n,s)) ∧ (s > 100000) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:s COLON:: IDENT:salary LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s GT:> NUM:100000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS s:salary
+              AND
+                PRED employee(e, n, s)
+                CMP  s > 100000
+      Predicted FOL: ∀x_eid ∀x_name ∀x_salary (employee(x_eid, x_name, x_salary) ∧ x_salary ≥ 100000 → answer(x_eid))
+        tokens: FORALL:∀ IDENT:x_eid FORALL:∀ IDENT:x_name FORALL:∀ IDENT:x_salary LPAR:( IDENT:employee LPAR:( IDENT:x_eid COMMA:, IDENT:x_name COMMA:, IDENT:x_salary RPAR:) AND:∧ IDENT:x_salary GE:≥ NUM:100000 IMPL:→ IDENT:answer LPAR:( IDENT:x_eid RPAR:) RPAR:) EOF
+        AST:
+          FORALL x_eid
+            FORALL x_name
+              FORALL x_salary
+                IMPLIES
+                  AND
+                    PRED employee(x_eid, x_name, x_salary)
+                    CMP  x_salary >= 100000
+                  PRED answer(x_eid)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (e : eid) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'answer' has no declared arity
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 140, in infer
+    infer(node[2], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 144, in infer
+    raise ValueError(f"predicate {node[1]!r} has no declared arity")
+ValueError: predicate 'answer' has no declared arity

@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_702.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_702.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3436 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the states, account types, and credit scores for customers who have 0 loans?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        int -> IntSort()
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+      local sorts:
+        acc_bal = int -> IntSort()
+        acc_type = char(1) -> StringSort()
+        branch_ID = text -> StringSort()
+        credit_score = int -> IntSort()
+        cust_ID = varchar(3) -> StringSort()
+        cust_name = varchar(20) -> StringSort()
+        no_of_loans = int -> IntSort()
+        state = varchar(20) -> StringSort()
+      symbols:
+        customer(cust_ID, cust_name, acc_type, acc_bal, no_of_loans, credit_score, branch_ID, state)
+        constant 0 : no_of_loans
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : cust_ID ∃c1 : cust_name ∃a1 : acc_bal ∃n : no_of_loans ∃b : branch_ID ( (customer(c,c1,a,a1,n,c2,b,s)) ∧ (n = 0) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:cust_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:cust_name EXISTS:∃ IDENT:a1 COLON:: IDENT:acc_bal EXISTS:∃ IDENT:n COLON:: IDENT:no_of_loans EXISTS:∃ IDENT:b COLON:: IDENT:branch_ID LPAR:( LPAR:( IDENT:customer LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:n COMMA:, IDENT:c2 COMMA:, IDENT:b COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= NUM:0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:cust_ID
+            EXISTS c1:cust_name
+              EXISTS a1:acc_bal
+                EXISTS n:no_of_loans
+                  EXISTS b:branch_ID
+                    AND
+                      PRED customer(c, c1, a, a1, n, c2, b, s)
+                      EQ  n = 0
+      Predicted FOL: ∃id:cust_ID ∃nm:cust_name ( customer(id, nm, accT, accB, 0, cred, br, st) )
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:cust_ID EXISTS:∃ IDENT:nm COLON:: IDENT:cust_name LPAR:( IDENT:customer LPAR:( IDENT:id COMMA:, IDENT:nm COMMA:, IDENT:accT COMMA:, IDENT:accB COMMA:, NUM:0 COMMA:, IDENT:cred COMMA:, IDENT:br COMMA:, IDENT:st RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:cust_ID
+            EXISTS nm:cust_name
+              PRED customer(id, nm, accT, accB, 0, cred, br, st)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) accB, br occur free in the formula but are not declared in 'free vars'
+   3 shared answer variable(s)
+      FV_acc_type_0 : acc_type   Gold a <-> Predicted accT
+      FV_credit_score_0 : credit_score   Gold c2 <-> Predicted cred
+      FV_state_0 : state   Gold s <-> Predicted st
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local acc_type, global char(1) -> StringSort()
+        a1 : local acc_bal, global int -> IntSort()
+        b : local branch_ID, global text -> StringSort()
+        c : local cust_ID, global varchar(3) -> StringSort()
+        c1 : local cust_name, global varchar(20) -> StringSort()
+        c2 : local credit_score, global int -> IntSort()
+        n : local no_of_loans, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+      Predicted FOL:
+        accB : local acc_bal, global int -> IntSort()
+        accT : local acc_type, global char(1) -> StringSort()
+        br : local branch_ID, global text -> StringSort()
+        cred : local credit_score, global int -> IntSort()
+        id : local cust_ID, global varchar(3) -> StringSort()
+        nm : local cust_name, global varchar(20) -> StringSort()
+        st : local state, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_a1_3, gold_n_4, gold_b_5], And(D_varchar_3_(gold_c_1), D_varchar_20_(gold_c1_2), And(P_customer(gold_c_1, gold_c1_2, FV_acc_type_0, gold_a1_3, gold_n_4, FV_credit_score_0, gold_b_5, FV_state_0), (gold_n_4 == L_v_0_int))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_a1, WGOLD_n, WGOLD_b):  And(D_varchar_3_(WGOLD_c), D_varchar_20_(WGOLD_c1), And(P_customer(WGOLD_c, WGOLD_c1, FV_acc_type_0, WGOLD_a1, WGOLD_n, FV_credit_score_0, WGOLD_b, FV_state_0), (WGOLD_n == L_v_0_int)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'accB'
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'accB'

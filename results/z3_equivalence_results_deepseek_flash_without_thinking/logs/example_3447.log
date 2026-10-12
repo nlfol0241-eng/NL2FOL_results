@@ -1,0 +1,135 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3447.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3447.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5167 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of the artists who are from Bangladesh and have never received rating higher than 7.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 11 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar2(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        date -> IntSort()   [days since 1970-01-01]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+        number(10) -> RealSort()   [domain And(IsInt(x), x > -10000000000, x < 10000000000); 10 digits, 0 after the point]
+      local sorts:
+        artist_name = varchar2(50) -> StringSort()
+        country = varchar2(20) -> StringSort()
+        f_id = number(10) -> RealSort()
+        gender = varchar2(20) -> StringSort()
+        genre_is = varchar2(20) -> StringSort()
+        languages = varchar2(20) -> StringSort()
+        preferred_genre = varchar2(20) -> StringSort()
+        rating = text -> StringSort()
+        releasedate = date -> IntSort()
+        resolution = number(10) -> RealSort()
+        song_name = varchar2(50) -> StringSort()
+      symbols:
+        artist(artist_name, country, gender, preferred_genre)
+        song(song_name, artist_name, country, f_id, genre_is, rating, languages, releasedate, resolution)
+        constant 7 : rating
+        constant Bangladesh : country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃g : gender ∃c : country ∃p : preferred_genre( (artist(a,c,g,p)) ∧ (c = 'Bangladesh') )) ∧ (¬(∃s : song_name ∃f : f_id ∃l : languages ∃c1 : country ∃r : rating ∃r2 : resolution ∃g1 : genre_is ∃r1 : releasedate( (song(s,a,c1,f,g1,r,l,r1,r2)) ∧ (r > 7) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:p COLON:: IDENT:preferred_genre LPAR:( LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Bangladesh RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:song_name EXISTS:∃ IDENT:f COLON:: IDENT:f_id EXISTS:∃ IDENT:l COLON:: IDENT:languages EXISTS:∃ IDENT:c1 COLON:: IDENT:country EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:r2 COLON:: IDENT:resolution EXISTS:∃ IDENT:g1 COLON:: IDENT:genre_is EXISTS:∃ IDENT:r1 COLON:: IDENT:releasedate LPAR:( LPAR:( IDENT:song LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:c1 COMMA:, IDENT:f COMMA:, IDENT:g1 COMMA:, IDENT:r COMMA:, IDENT:l COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r GT:> NUM:7 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS g:gender
+              EXISTS c:country
+                EXISTS p:preferred_genre
+                  AND
+                    PRED artist(a, c, g, p)
+                    EQ  c = 'Bangladesh'
+            NOT
+              EXISTS s:song_name
+                EXISTS f:f_id
+                  EXISTS l:languages
+                    EXISTS c1:country
+                      EXISTS r:rating
+                        EXISTS r2:resolution
+                          EXISTS g1:genre_is
+                            EXISTS r1:releasedate
+                              AND
+                                PRED song(s, a, c1, f, g1, r, l, r1, r2)
+                                CMP  r > 7
+      Predicted FOL: ∃a0 : artist_name ∃a1 : country ∃a2 : gender ∃a3 : preferred_genre ( artist(a0, a1, a2, a3) ∧ a1 = 'Bangladesh' ∧ ¬∃s0 : song_name ∃s1 : artist_name ∃s2 : country ∃s3 : f_id ∃s4 : genre_is ∃s5 : rating ∃s6 : languages ∃s7 : releasedate ∃s8 : resolution ( song(s0, s1, s2, s3, s4, s5, s6, s7, s8) ∧ s1 = a0 ∧ s5 > 7 ) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:artist_name EXISTS:∃ IDENT:a1 COLON:: IDENT:country EXISTS:∃ IDENT:a2 COLON:: IDENT:gender EXISTS:∃ IDENT:a3 COLON:: IDENT:preferred_genre LPAR:( IDENT:artist LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 RPAR:) AND:∧ IDENT:a1 EQ:= LIT:Bangladesh AND:∧ NOT:¬ EXISTS:∃ IDENT:s0 COLON:: IDENT:song_name EXISTS:∃ IDENT:s1 COLON:: IDENT:artist_name EXISTS:∃ IDENT:s2 COLON:: IDENT:country EXISTS:∃ IDENT:s3 COLON:: IDENT:f_id EXISTS:∃ IDENT:s4 COLON:: IDENT:genre_is EXISTS:∃ IDENT:s5 COLON:: IDENT:rating EXISTS:∃ IDENT:s6 COLON:: IDENT:languages EXISTS:∃ IDENT:s7 COLON:: IDENT:releasedate EXISTS:∃ IDENT:s8 COLON:: IDENT:resolution LPAR:( IDENT:song LPAR:( IDENT:s0 COMMA:, IDENT:s1 COMMA:, IDENT:s2 COMMA:, IDENT:s3 COMMA:, IDENT:s4 COMMA:, IDENT:s5 COMMA:, IDENT:s6 COMMA:, IDENT:s7 COMMA:, IDENT:s8 RPAR:) AND:∧ IDENT:s1 EQ:= IDENT:a0 AND:∧ IDENT:s5 GT:> NUM:7 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:artist_name
+            EXISTS a1:country
+              EXISTS a2:gender
+                EXISTS a3:preferred_genre
+                  AND
+                    PRED artist(a0, a1, a2, a3)
+                    EQ  a1 = 'Bangladesh'
+                    NOT
+                      EXISTS s0:song_name
+                        EXISTS s1:artist_name
+                          EXISTS s2:country
+                            EXISTS s3:f_id
+                              EXISTS s4:genre_is
+                                EXISTS s5:rating
+                                  EXISTS s6:languages
+                                    EXISTS s7:releasedate
+                                      EXISTS s8:resolution
+                                        AND
+                                          PRED song(s0, s1, s2, s3, s4, s5, s6, s7, s8)
+                                          EQ  s1 = a0
+                                          CMP  s5 > 7
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (a : artist_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 25 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        c : local country, global varchar2(20) -> StringSort()
+        c1 : local country, global varchar2(20) -> StringSort()
+        f : local f_id, global number(10) -> RealSort()
+        g : local gender, global varchar2(20) -> StringSort()
+        g1 : local genre_is, global varchar2(20) -> StringSort()
+        l : local languages, global varchar2(20) -> StringSort()
+        p : local preferred_genre, global varchar2(20) -> StringSort()
+        r : local rating, global text -> StringSort()
+        r1 : local releasedate, global date -> IntSort()
+        r2 : local resolution, global number(10) -> RealSort()
+        s : local song_name, global varchar2(50) -> StringSort()
+      Predicted FOL:
+        a0 : local artist_name, global varchar2(50) -> StringSort()
+        a1 : local country, global varchar2(20) -> StringSort()
+        a2 : local gender, global varchar2(20) -> StringSort()
+        a3 : local preferred_genre, global varchar2(20) -> StringSort()
+        s0 : local song_name, global varchar2(50) -> StringSort()
+        s1 : local artist_name, global varchar2(50) -> StringSort()
+        s2 : local country, global varchar2(20) -> StringSort()
+        s3 : local f_id, global number(10) -> RealSort()
+        s4 : local genre_is, global varchar2(20) -> StringSort()
+        s5 : local rating, global text -> StringSort()
+        s6 : local languages, global varchar2(20) -> StringSort()
+        s7 : local releasedate, global date -> IntSort()
+        s8 : local resolution, global number(10) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5779 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3447.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (a : artist_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

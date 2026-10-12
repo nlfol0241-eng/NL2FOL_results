@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_85.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_85.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2398 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct states and create time of all votes?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        timestamp -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        integer -> IntSort()
+      local sorts:
+        contestant_number = integer -> IntSort()
+        created = timestamp -> IntSort()
+        phone_number = integer -> IntSort()
+        state = varchar(2) -> StringSort()
+        vote_id = integer -> IntSort()
+      symbols:
+        VOTES(vote_id, phone_number, state, contestant_number, created)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃v : vote_id ∃p : phone_number ∃c : contestant_number ( VOTES(v,p,s,c,c1) )
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:vote_id EXISTS:∃ IDENT:p COLON:: IDENT:phone_number EXISTS:∃ IDENT:c COLON:: IDENT:contestant_number LPAR:( IDENT:VOTES LPAR:( IDENT:v COMMA:, IDENT:p COMMA:, IDENT:s COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v:vote_id
+            EXISTS p:phone_number
+              EXISTS c:contestant_number
+                PRED VOTES(v, p, s, c, c1)
+      Predicted FOL: ∃v : vote_id ∃p : phone_number ∃c : contestant_number (VOTES(v, p, st, c, ct))
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:vote_id EXISTS:∃ IDENT:p COLON:: IDENT:phone_number EXISTS:∃ IDENT:c COLON:: IDENT:contestant_number LPAR:( IDENT:VOTES LPAR:( IDENT:v COMMA:, IDENT:p COMMA:, IDENT:st COMMA:, IDENT:c COMMA:, IDENT:ct RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v:vote_id
+            EXISTS p:phone_number
+              EXISTS c:contestant_number
+                PRED VOTES(v, p, st, c, ct)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_created_0 : created   Gold c1 <-> Predicted ct
+      FV_state_0 : state   Gold s <-> Predicted st
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local contestant_number, global integer -> IntSort()
+        c1 : local created, global timestamp -> IntSort()
+        p : local phone_number, global integer -> IntSort()
+        s : local state, global varchar(2) -> StringSort()
+        v : local vote_id, global integer -> IntSort()
+      Predicted FOL:
+        c : local contestant_number, global integer -> IntSort()
+        ct : local created, global timestamp -> IntSort()
+        p : local phone_number, global integer -> IntSort()
+        st : local state, global varchar(2) -> StringSort()
+        v : local vote_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_v_1, gold_p_2, gold_c_3], P_VOTES(gold_v_1, gold_p_2, FV_state_0, gold_c_3, FV_created_0))
+      gold_skolem (witnesses WGOLD_v, WGOLD_p, WGOLD_c):  P_VOTES(WGOLD_v, WGOLD_p, FV_state_0, WGOLD_c, FV_created_0)
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_v_1, predicted_p_2, predicted_c_3], P_VOTES(predicted_v_1, predicted_p_2, FV_state_0, predicted_c_3, FV_created_0))
+      predicted_skolem (witnesses WPREDICTED_v, WPREDICTED_p, WPREDICTED_c):  P_VOTES(WPREDICTED_v, WPREDICTED_p, FV_state_0, WPREDICTED_c, FV_created_0)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 738 lines, 27512 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_85.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_state_0) <= 2
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_v, WGOLD_p, WGOLD_c
+      claim: And(VOTES(WGOLD_v, WGOLD_p, FV_state_0, WGOLD_c, FV_created_0), Not(Exists([predicted_v_1, predicted_p_2, predicted_c_3], VOTES(predicted_v_1, predicted_p_2, FV_state_0, predicted_c_3, FV_created_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_v, WPREDICTED_p, WPREDICTED_c
+      claim: And(VOTES(WPREDICTED_v, WPREDICTED_p, FV_state_0, WPREDICTED_c, FV_created_0), Not(Exists([gold_v_1, gold_p_2, gold_c_3], VOTES(gold_v_1, gold_p_2, FV_state_0, gold_c_3, FV_created_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

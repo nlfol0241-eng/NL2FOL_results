@@ -1,0 +1,98 @@
+{
+  "NL": "What are the names of members who are not in charge of any events?",
+  "Vocabulary": {
+    "Predicates": [
+      "member",
+      "party_events"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "member": [
+        "Member_ID",
+        "Member_Name",
+        "Party_ID",
+        "In_office"
+      ],
+      "party_events": [
+        "Event_ID",
+        "Event_Name",
+        "Party_ID",
+        "Member_in_charge_ID"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'( region(a0, a1, a2, a3, a4, a5) ∧ region(a0', a1', a2', a3', a4', a5') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b5∀b0'∀b1'∀b2'∀b3'∀b4'∀b5'( party(b0, b1, b2, b3, b4, b5) ∧ party(b0', b1', b2', b3', b4', b5') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' ∧ b5 = b5' )",
+    "axiom3": "∀c0∀c1∀c2∀c3∀c0'∀c1'∀c2'∀c3'( member(c0, c1, c2, c3) ∧ member(c0', c1', c2', c3') ∧ c0 = c0' ) → ( c1 = c1' ∧ c2 = c2' ∧ c3 = c3' )",
+    "axiom4": "∀d0∀d1∀d2∀d3∀d0'∀d1'∀d2'∀d3'( party_events(d0, d1, d2, d3) ∧ party_events(d0', d1', d2', d3') ∧ d0 = d0' ) → ( d1 = d1' ∧ d2 = d2' ∧ d3 = d3' )",
+    "axiom5": "∀b0∀b1∀b2∀b3∀b4∀b5 ( party(b0, b1, b2, b3, b4, b5) → ∃a0∃a1∃a2∃a3∃a4∃a5 ( region(a0, a1, a2, a3, a4, a5) ∧ a0 = b4 ) )",
+    "axiom6": "∀c0∀c1∀c2∀c3 ( member(c0, c1, c2, c3) → ∃b0∃b1∃b2∃b3∃b4∃b5 ( party(b0, b1, b2, b3, b4, b5) ∧ b0 = c2 ) )",
+    "axiom7": "∀d0∀d1∀d2∀d3 ( party_events(d0, d1, d2, d3) → ∃c0∃c1∃c2∃c3 ( member(c0, c1, c2, c3) ∧ c0 = d3 ) )",
+    "axiom8": "∀d0∀d1∀d2∀d3 ( party_events(d0, d1, d2, d3) → ∃b0∃b1∃b2∃b3∃b4∃b5 ( party(b0, b1, b2, b3, b4, b5) ∧ b0 = d2 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "member": {
+        "A": "member",
+        "A0": "Member_ID",
+        "A1": "Member_Name",
+        "A2": "Party_ID",
+        "A3": "In_office"
+      },
+      "party_events": {
+        "B": "party_events",
+        "B0": "Event_ID",
+        "B1": "Event_Name",
+        "B2": "Party_ID",
+        "B3": "Member_in_charge_ID"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "(∃p : Party_ID ∃i : In_office ∃m : Member_ID( member(m,m1,p,i) )) ∧ (¬(∃e : Event_ID ∃m2 : Member_in_charge_ID ∃p : Party_ID ∃p1 : Party_ID ∃i : In_office ∃e1 : Event_Name ∃m : Member_ID( ((member(m,m1,p,i)) ∧ (party_events(e,e1,p1,m2))) ∧ (m = m2) )))",
+    "free vars": "m1 : Member_Name"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A1](A))<D>(<P>[A1](<S>[A0 = B3]((A)<X>(B))))",
+    "Processed_RA": "(<P>[A1](A))<D>(<P>[A1](<S>[A0 = B3]((A)<X>(B))))",
+    "RC": "([E]?A2,?A3,?A0( A(?A0,?A1,?A2,?A3) )) & (~([E]?B0,?B3,?A2,?B2,?A3,?B1,?A0( ((A(?A0,?A1,?A2,?A3)) & (B(?B0,?B1,?B2,?B3))) & (?A0 = ?B3) )))",
+    "string": "(∃A2 ∃A3 ∃A0( A(A0,A1,A2,A3) )) ∧ (¬(∃B0 ∃B3 ∃A2 ∃B2 ∃A3 ∃B1 ∃A0( ((A(A0,A1,A2,A3)) ∧ (B(B0,B1,B2,B3))) ∧ (A0 = B3) )))",
+    "free variables": "A1",
+    "db_id": "party_people",
+    "processed_sql": "SELECT member_name FROM \"member\" EXCEPT SELECT T1.member_name FROM \"member\" AS T1 JOIN party_events AS T2 ON T1.member_id  =  T2.member_in_charge_id"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "member": {
+      "sortaxiom0": "Member_ID = int",
+      "sortaxiom1": "Member_Name = text",
+      "sortaxiom2": "Party_ID = text",
+      "sortaxiom3": "In_office = text"
+    },
+    "party_events": {
+      "sortaxiom0": "Event_ID = int",
+      "sortaxiom1": "Event_Name = text",
+      "sortaxiom2": "Party_ID = text",
+      "sortaxiom3": "Member_in_charge_ID = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT member_name FROM member EXCEPT SELECT T1.member_name FROM member AS T1 JOIN party_events AS T2 ON T1.member_id  =  T2.member_in_charge_id"
+  },
+  "id": 3580,
+  "Predicted FOL": {
+    "string": "∃m : Member_ID ∃p : Party_ID ∃o : In_office (member(m, n, p, o) ∧ ¬∃e : Event_ID ∃t : Event_Name ∃q : Party_ID (party_events(e, t, q, m)))",
+    "free vars": "n : Member_Name"
+  }
+}

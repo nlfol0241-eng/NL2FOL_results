@@ -1,0 +1,134 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1584.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1584.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2523 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the titles of all movies that James Cameron directed after 2000?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        constant 2000 : year
+        constant James Cameron : director
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mID ∃y : year ∃d : director ( (Movie(m,t,y,d)) ∧ ((d = 'James Cameron') ∧ (y > 2000)) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:d COLON:: IDENT:director LPAR:( LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:d EQ:= LIT:James Cameron RPAR:) AND:∧ LPAR:( IDENT:y GT:> NUM:2000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mID
+            EXISTS y:year
+              EXISTS d:director
+                AND
+                  PRED Movie(m, t, y, d)
+                  AND
+                    EQ  d = 'James Cameron'
+                    CMP  y > 2000
+      Predicted FOL: ∃mID : mID ∃title : title ∃year : year ∃director : director (Movie(mID, title, year, director) ∧ director = 'James Cameron' ∧ year > 2000)
+        tokens: EXISTS:∃ IDENT:mID COLON:: IDENT:mID EXISTS:∃ IDENT:title COLON:: IDENT:title EXISTS:∃ IDENT:year COLON:: IDENT:year EXISTS:∃ IDENT:director COLON:: IDENT:director LPAR:( IDENT:Movie LPAR:( IDENT:mID COMMA:, IDENT:title COMMA:, IDENT:year COMMA:, IDENT:director RPAR:) AND:∧ IDENT:director EQ:= LIT:James Cameron AND:∧ IDENT:year GT:> NUM:2000 RPAR:) EOF
+        AST:
+          EXISTS mID:mID
+            EXISTS title:title
+              EXISTS year:year
+                EXISTS director:director
+                  AND
+                    PRED Movie(mID, title, year, director)
+                    EQ  director = 'James Cameron'
+                    CMP  year > 2000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) title do not occur free in the formula
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted title
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        director : local director, global text -> StringSort()
+        mID : local mID, global int -> IntSort()
+        title : local title, global text -> StringSort()
+        year : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_y_2, gold_d_3], And(P_Movie(gold_m_1, FV_title_0, gold_y_2, gold_d_3), And((gold_d_3 == L_James_Cameron), (gold_y_2 > L_v_2000_int))))
+      gold_skolem (witnesses WGOLD_m, WGOLD_y, WGOLD_d):  And(P_Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), And((WGOLD_d == L_James_Cameron), (WGOLD_y > L_v_2000_int)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_mID_1, predicted_title_2, predicted_year_3, predicted_director_4], And(P_Movie(predicted_mID_1, predicted_title_2, predicted_year_3, predicted_director_4), (predicted_director_4 == L_James_Cameron), (predicted_year_3 > L_v_2000_int)))
+      predicted_skolem (witnesses WPREDICTED_mID, WPREDICTED_title, WPREDICTED_year, WPREDICTED_director):  And(P_Movie(WPREDICTED_mID, WPREDICTED_title, WPREDICTED_year, WPREDICTED_director), (WPREDICTED_director == L_James_Cameron), (WPREDICTED_year > L_v_2000_int))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'James Cameron' at text -> L_James_Cameron = StringVal('James Cameron')
+      literal '2000' at int -> L_v_2000_int = IntVal(2000)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 735 lines, 27639 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1584.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_y, WGOLD_d
+      claim: And(And(Movie(WGOLD_m, FV_title_0, WGOLD_y, WGOLD_d), And(WGOLD_d == "James Cameron", 2000 < WGOLD_y)), Not(Exists([predicted_mID_1, predicted_title_2, predicted_year_3, predicted_director_4], And(Movie(predicted_mID_1, predicted_title_2, predicted_year_3, predicted_director_4), predicted_director_4 == "James Cameron", 2000 < predicted_year_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_mID, WPREDICTED_title, WPREDICTED_year, WPREDICTED_director
+      claim: And(And(Movie(WPREDICTED_mID, WPREDICTED_title, WPREDICTED_year, WPREDICTED_director), WPREDICTED_director == "James Cameron", 2000 < WPREDICTED_year), Not(Exists([gold_m_1, gold_y_2, gold_d_3], And(Movie(gold_m_1, FV_title_0, gold_y_2, gold_d_3), And(gold_d_3 == "James Cameron", 2000 < gold_y_2)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.009 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 5 relation tuple(s) listed, 9 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          mID : mID = 2
+          title : title = 'James Cameron'
+          year : year = 23239
+          director : director = 'James Cameron'
+        free (answer) variables:
+          FV_title_0 : title = 'J'
+        literals / constants:
+          James Cameron : director = 'James Cameron'
+          2000 : year = 2000
+        relations (each value tagged with the local sort of its position):
+          Movie(mID, title, year, director):
+            Movie(mID=2, title='James Cameron', year=23239, director='James Cameron')
+            Movie(mID=3, title='James Cameron', year=23240, director='James Cameron')
+            Movie(mID=2000, title='James Cameron', year=23239, director='James Cameron')
+            Movie(mID=23239, title='James Cameron', year=23239, director='James Cameron')
+            Movie(mID=23240, title='James Cameron', year=23239, director='James Cameron')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          director : {'James Cameron'}
+          mID      : {2, 3, 2000, 23239, 23240}
+          title    : {'J', 'James Cameron'}
+          year     : {23239, 23240}
+        values shared across local sorts (joins):
+          23239 : mID, year
+          23240 : mID, year
+          'James Cameron' : director, title
+   [R3] took 0.066 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

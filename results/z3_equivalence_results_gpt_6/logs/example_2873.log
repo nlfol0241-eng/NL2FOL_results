@@ -1,0 +1,143 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2873.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2873.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9027 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of physicians who are affiliated with Surgery or Psychiatry department.
+   [G1] took 0.004 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        boolean -> BoolSort()
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        Department = integer -> IntSort()
+        DepartmentID = integer -> IntSort()
+        EmployeeID = integer -> IntSort()
+        Head = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        PrimaryAffiliation = boolean -> BoolSort()
+        SSN = integer -> IntSort()
+      symbols:
+        Affiliated_With(Physician, Department, PrimaryAffiliation)
+        Department(DepartmentID, Name, Head)
+        Physician(EmployeeID, Name, Position, SSN)
+        constant Psychiatry : Name
+        constant Surgery : Name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : EmployeeID ∃p : Position ∃s : SSN ∃p1 : Physician ∃d : Department ∃p2 : PrimaryAffiliation ∃d1 : DepartmentID ∃n1 : Name ∃h : Head ( (((((Physician(e,n,p,s)) ∧ (Affiliated_With(p1,d,p2))) ∧ (e = p1)) ∧ (Department(d1,n1,h))) ∧ (d = d1)) ∧ ((n1 = 'Surgery') ∨ (n1 = 'Psychiatry')) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:p1 COLON:: IDENT:Physician EXISTS:∃ IDENT:d COLON:: IDENT:Department EXISTS:∃ IDENT:p2 COLON:: IDENT:PrimaryAffiliation EXISTS:∃ IDENT:d1 COLON:: IDENT:DepartmentID EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Head LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Affiliated_With LPAR:( IDENT:p1 COMMA:, IDENT:d COMMA:, IDENT:p2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Department LPAR:( IDENT:d1 COMMA:, IDENT:n1 COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n1 EQ:= LIT:Surgery RPAR:) OR:∨ LPAR:( IDENT:n1 EQ:= LIT:Psychiatry RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:EmployeeID
+            EXISTS p:Position
+              EXISTS s:SSN
+                EXISTS p1:Physician
+                  EXISTS d:Department
+                    EXISTS p2:PrimaryAffiliation
+                      EXISTS d1:DepartmentID
+                        EXISTS n1:Name
+                          EXISTS h:Head
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      PRED Physician(e, n, p, s)
+                                      PRED Affiliated_With(p1, d, p2)
+                                    EQ  e = p1
+                                  PRED Department(d1, n1, h)
+                                EQ  d = d1
+                              OR
+                                EQ  n1 = 'Surgery'
+                                EQ  n1 = 'Psychiatry'
+      Predicted FOL: ∃e : EmployeeID ∃p : Position ∃s : SSN ∃d : DepartmentID ∃a : PrimaryAffiliation ∃dn : Name ∃h : Head (Physician(e, n, p, s) ∧ Affiliated_With(e, d, a) ∧ Department(d, dn, h) ∧ (dn = 'Surgery' ∨ dn = 'Psychiatry'))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:d COLON:: IDENT:DepartmentID EXISTS:∃ IDENT:a COLON:: IDENT:PrimaryAffiliation EXISTS:∃ IDENT:dn COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Head LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) AND:∧ IDENT:Affiliated_With LPAR:( IDENT:e COMMA:, IDENT:d COMMA:, IDENT:a RPAR:) AND:∧ IDENT:Department LPAR:( IDENT:d COMMA:, IDENT:dn COMMA:, IDENT:h RPAR:) AND:∧ LPAR:( IDENT:dn EQ:= LIT:Surgery OR:∨ IDENT:dn EQ:= LIT:Psychiatry RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:EmployeeID
+            EXISTS p:Position
+              EXISTS s:SSN
+                EXISTS d:DepartmentID
+                  EXISTS a:PrimaryAffiliation
+                    EXISTS dn:Name
+                      EXISTS h:Head
+                        AND
+                          PRED Physician(e, n, p, s)
+                          PRED Affiliated_With(e, d, a)
+                          PRED Department(d, dn, h)
+                          OR
+                            EQ  dn = 'Surgery'
+                            EQ  dn = 'Psychiatry'
+   [G3] took 0.011 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Department, global integer -> IntSort()
+        d1 : local DepartmentID, global integer -> IntSort()
+        e : local EmployeeID, global integer -> IntSort()
+        h : local Head, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        n1 : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        p1 : local Physician, global integer -> IntSort()
+        p2 : local PrimaryAffiliation, global boolean -> BoolSort()
+        s : local SSN, global integer -> IntSort()
+      Predicted FOL:
+        a : local PrimaryAffiliation, global boolean -> BoolSort()
+        d : local DepartmentID, global integer -> IntSort()
+        dn : local Name, global varchar(30) -> StringSort()
+        e : local EmployeeID, global integer -> IntSort()
+        h : local Head, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        s : local SSN, global integer -> IntSort()
+   [G5] took 0.002 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_p_2, gold_s_3, gold_p1_4, gold_d_5, gold_p2_6, gold_d1_7, gold_n1_8, gold_h_9], And(D_varchar_30_(gold_p_2), D_varchar_30_(gold_n1_8), And(And(And(And(And(P_Physician(gold_e_1, FV_Name_0, gold_p_2, gold_s_3), P_Affiliated_With(gold_p1_4, gold_d_5, gold_p2_6)), (gold_e_1 == gold_p1_4)), P_Department(gold_d1_7, gold_n1_8, gold_h_9)), (gold_d_5 == gold_d1_7)), Or((gold_n1_8 == L_Surgery), (gold_n1_8 == L_Psychiatry)))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_p, WGOLD_s, WGOLD_p1, WGOLD_d, WGOLD_p2, WGOLD_d1, WGOLD_n1, WGOLD_h):  And(D_varchar_30_(WGOLD_p), D_varchar_30_(WGOLD_n1), And(And(And(And(And(P_Physician(WGOLD_e, FV_Name_0, WGOLD_p, WGOLD_s), P_Affiliated_With(WGOLD_p1, WGOLD_d, WGOLD_p2)), (WGOLD_e == WGOLD_p1)), P_Department(WGOLD_d1, WGOLD_n1, WGOLD_h)), (WGOLD_d == WGOLD_d1)), Or((WGOLD_n1 == L_Surgery), (WGOLD_n1 == L_Psychiatry))))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_p_2, predicted_s_3, predicted_d_4, predicted_a_5, predicted_dn_6, predicted_h_7], And(D_varchar_30_(predicted_p_2), D_varchar_30_(predicted_dn_6), And(P_Physician(predicted_e_1, FV_Name_0, predicted_p_2, predicted_s_3), P_Affiliated_With(predicted_e_1, predicted_d_4, predicted_a_5), P_Department(predicted_d_4, predicted_dn_6, predicted_h_7), Or((predicted_dn_6 == L_Surgery), (predicted_dn_6 == L_Psychiatry)))))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_p, WPREDICTED_s, WPREDICTED_d, WPREDICTED_a, WPREDICTED_dn, WPREDICTED_h):  And(D_varchar_30_(WPREDICTED_p), D_varchar_30_(WPREDICTED_dn), And(P_Physician(WPREDICTED_e, FV_Name_0, WPREDICTED_p, WPREDICTED_s), P_Affiliated_With(WPREDICTED_e, WPREDICTED_d, WPREDICTED_a), P_Department(WPREDICTED_d, WPREDICTED_dn, WPREDICTED_h), Or((WPREDICTED_dn == L_Surgery), (WPREDICTED_dn == L_Psychiatry))))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.002 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Psychiatry' at varchar(30) -> L_Psychiatry = StringVal('Psychiatry')
+      literal 'Surgery' at varchar(30) -> L_Surgery = StringVal('Surgery')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 782 lines, 31561 bytes
+   [G7] took 0.002 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2873.py
+   [G8] took 0.016 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 30
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_p, WGOLD_s, WGOLD_p1, WGOLD_d, WGOLD_p2, WGOLD_d1, WGOLD_n1, WGOLD_h
+      claim: And(And(Length(WGOLD_p) <= 30, Length(WGOLD_n1) <= 30, And(And(And(And(And(Physician(WGOLD_e, FV_Name_0, WGOLD_p, WGOLD_s), Affiliated_With(WGOLD_p1, WGOLD_d, WGOLD_p2)), WGOLD_e == WGOLD_p1), Department(WGOLD_d1, WGOLD_n1, WGOLD_h)), WGOLD_d == WGOLD_d1), Or(WGOLD_n1 == "Surgery", WGOLD_n1 == "Psychiatry"))), Not(Exists([predicted_e_1, predicted_p_2, predicted_s_3, predicted_d_4, predicted_a_5, predicted_dn_6, predicted_h_7], And(Length(predicted_p_2) <= 30, Length(predicted_dn_6) <= 30, And(Physician(predicted_e_1, FV_Name_0, predicted_p_2, predicted_s_3), Affiliated_With(predicted_e_1, predicted_d_4, predicted_a_5), Department(predicted_d_4, predicted_dn_6, predicted_h_7), Or(predicted_dn_6 == "Surgery", predicted_dn_6 == "Psychiatry"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.016 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.046 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_p, WPREDICTED_s, WPREDICTED_d, WPREDICTED_a, WPREDICTED_dn, WPREDICTED_h
+      claim: And(And(Length(WPREDICTED_p) <= 30, Length(WPREDICTED_dn) <= 30, And(Physician(WPREDICTED_e, FV_Name_0, WPREDICTED_p, WPREDICTED_s), Affiliated_With(WPREDICTED_e, WPREDICTED_d, WPREDICTED_a), Department(WPREDICTED_d, WPREDICTED_dn, WPREDICTED_h), Or(WPREDICTED_dn == "Surgery", WPREDICTED_dn == "Psychiatry"))), Not(Exists([gold_e_1, gold_p_2, gold_s_3, gold_p1_4, gold_d_5, gold_p2_6, gold_d1_7, gold_n1_8, gold_h_9], And(Length(gold_p_2) <= 30, Length(gold_n1_8) <= 30, And(And(And(And(And(Physician(gold_e_1, FV_Name_0, gold_p_2, gold_s_3), Affiliated_With(gold_p1_4, gold_d_5, gold_p2_6)), gold_e_1 == gold_p1_4), Department(gold_d1_7, gold_n1_8, gold_h_9)), gold_d_5 == gold_d1_7), Or(gold_n1_8 == "Surgery", gold_n1_8 == "Psychiatry"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.035 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

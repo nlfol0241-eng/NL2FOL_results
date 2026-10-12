@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1792.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1792.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5320 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the shipping charge and customer id for customer orders with order status Cancelled or Paid.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        customer_id = integer -> IntSort()
+        order_delivered_datetime = datetime -> IntSort()
+        order_id = integer -> IntSort()
+        order_placed_datetime = datetime -> IntSort()
+        order_shipping_charges = varchar(255) -> StringSort()
+        order_status_code = varchar(15) -> StringSort()
+        shipping_method_code = varchar(15) -> StringSort()
+      symbols:
+        Customer_Orders(order_id, customer_id, order_status_code, shipping_method_code, order_placed_datetime, order_delivered_datetime, order_shipping_charges)
+        constant Cancelled : order_status_code
+        constant Paid : order_status_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : order_id ∃o1 : order_status_code ∃s : shipping_method_code ∃o2 : order_placed_datetime ∃o3 : order_delivered_datetime ( (Customer_Orders(o,c,o1,s,o2,o3,o4)) ∧ ((o1 = 'Cancelled') ∨ (o1 = 'Paid')) )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:order_id EXISTS:∃ IDENT:o1 COLON:: IDENT:order_status_code EXISTS:∃ IDENT:s COLON:: IDENT:shipping_method_code EXISTS:∃ IDENT:o2 COLON:: IDENT:order_placed_datetime EXISTS:∃ IDENT:o3 COLON:: IDENT:order_delivered_datetime LPAR:( LPAR:( IDENT:Customer_Orders LPAR:( IDENT:o COMMA:, IDENT:c COMMA:, IDENT:o1 COMMA:, IDENT:s COMMA:, IDENT:o2 COMMA:, IDENT:o3 COMMA:, IDENT:o4 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:o1 EQ:= LIT:Cancelled RPAR:) OR:∨ LPAR:( IDENT:o1 EQ:= LIT:Paid RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:order_id
+            EXISTS o1:order_status_code
+              EXISTS s:shipping_method_code
+                EXISTS o2:order_placed_datetime
+                  EXISTS o3:order_delivered_datetime
+                    AND
+                      PRED Customer_Orders(o, c, o1, s, o2, o3, o4)
+                      OR
+                        EQ  o1 = 'Cancelled'
+                        EQ  o1 = 'Paid'
+      Predicted FOL: ∃order_id : order_id ∃order_status : order_status_code ∃shipping_method : shipping_method_code ∃placed_at : order_placed_datetime ∃delivered_at : order_delivered_datetime (Customer_Orders(order_id, customer_id, order_status, shipping_method, placed_at, delivered_at, shipping_charge) ∧ (order_status = 'Cancelled' ∨ order_status = 'Paid'))
+        tokens: EXISTS:∃ IDENT:order_id COLON:: IDENT:order_id EXISTS:∃ IDENT:order_status COLON:: IDENT:order_status_code EXISTS:∃ IDENT:shipping_method COLON:: IDENT:shipping_method_code EXISTS:∃ IDENT:placed_at COLON:: IDENT:order_placed_datetime EXISTS:∃ IDENT:delivered_at COLON:: IDENT:order_delivered_datetime LPAR:( IDENT:Customer_Orders LPAR:( IDENT:order_id COMMA:, IDENT:customer_id COMMA:, IDENT:order_status COMMA:, IDENT:shipping_method COMMA:, IDENT:placed_at COMMA:, IDENT:delivered_at COMMA:, IDENT:shipping_charge RPAR:) AND:∧ LPAR:( IDENT:order_status EQ:= LIT:Cancelled OR:∨ IDENT:order_status EQ:= LIT:Paid RPAR:) RPAR:) EOF
+        AST:
+          EXISTS order_id:order_id
+            EXISTS order_status:order_status_code
+              EXISTS shipping_method:shipping_method_code
+                EXISTS placed_at:order_placed_datetime
+                  EXISTS delivered_at:order_delivered_datetime
+                    AND
+                      PRED Customer_Orders(order_id, customer_id, order_status, shipping_method, placed_at, delivered_at, shipping_charge)
+                      OR
+                        EQ  order_status = 'Cancelled'
+                        EQ  order_status = 'Paid'
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_customer_id_0 : customer_id   Gold c <-> Predicted customer_id
+      FV_order_shipping_charges_0 : order_shipping_charges   Gold o4 <-> Predicted shipping_charge
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local customer_id, global integer -> IntSort()
+        o : local order_id, global integer -> IntSort()
+        o1 : local order_status_code, global varchar(15) -> StringSort()
+        o2 : local order_placed_datetime, global datetime -> IntSort()
+        o3 : local order_delivered_datetime, global datetime -> IntSort()
+        o4 : local order_shipping_charges, global varchar(255) -> StringSort()
+        s : local shipping_method_code, global varchar(15) -> StringSort()
+      Predicted FOL:
+        customer_id : local customer_id, global integer -> IntSort()
+        delivered_at : local order_delivered_datetime, global datetime -> IntSort()
+        order_id : local order_id, global integer -> IntSort()
+        order_status : local order_status_code, global varchar(15) -> StringSort()
+        placed_at : local order_placed_datetime, global datetime -> IntSort()
+        shipping_charge : local order_shipping_charges, global varchar(255) -> StringSort()
+        shipping_method : local shipping_method_code, global varchar(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_o_1, gold_o1_2, gold_s_3, gold_o2_4, gold_o3_5], And(D_varchar_15_(gold_o1_2), D_varchar_15_(gold_s_3), And(P_Customer_Orders(gold_o_1, FV_customer_id_0, gold_o1_2, gold_s_3, gold_o2_4, gold_o3_5, FV_order_shipping_charges_0), Or((gold_o1_2 == L_Cancelled), (gold_o1_2 == L_Paid)))))
+      gold_skolem (witnesses WGOLD_o, WGOLD_o1, WGOLD_s, WGOLD_o2, WGOLD_o3):  And(D_varchar_15_(WGOLD_o1), D_varchar_15_(WGOLD_s), And(P_Customer_Orders(WGOLD_o, FV_customer_id_0, WGOLD_o1, WGOLD_s, WGOLD_o2, WGOLD_o3, FV_order_shipping_charges_0), Or((WGOLD_o1 == L_Cancelled), (WGOLD_o1 == L_Paid))))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_order_id_1, predicted_order_status_2, predicted_shipping_method_3, predicted_placed_at_4, predicted_delivered_at_5], And(D_varchar_15_(predicted_order_status_2), D_varchar_15_(predicted_shipping_method_3), And(P_Customer_Orders(predicted_order_id_1, FV_customer_id_0, predicted_order_status_2, predicted_shipping_method_3, predicted_placed_at_4, predicted_delivered_at_5, FV_order_shipping_charges_0), Or((predicted_order_status_2 == L_Cancelled), (predicted_order_status_2 == L_Paid)))))
+      predicted_skolem (witnesses WPREDICTED_order_id, WPREDICTED_order_status, WPREDICTED_shipping_method, WPREDICTED_placed_at, WPREDICTED_delivered_at):  And(D_varchar_15_(WPREDICTED_order_status), D_varchar_15_(WPREDICTED_shipping_method), And(P_Customer_Orders(WPREDICTED_order_id, FV_customer_id_0, WPREDICTED_order_status, WPREDICTED_shipping_method, WPREDICTED_placed_at, WPREDICTED_delivered_at, FV_order_shipping_charges_0), Or((WPREDICTED_order_status == L_Cancelled), (WPREDICTED_order_status == L_Paid))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Cancelled' at varchar(15) -> L_Cancelled = StringVal('Cancelled')
+      literal 'Paid' at varchar(15) -> L_Paid = StringVal('Paid')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 764 lines, 31450 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1792.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_order_shipping_charges_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_o, WGOLD_o1, WGOLD_s, WGOLD_o2, WGOLD_o3
+      claim: And(And(Length(WGOLD_o1) <= 15, Length(WGOLD_s) <= 15, And(Customer_Orders(WGOLD_o, FV_customer_id_0, WGOLD_o1, WGOLD_s, WGOLD_o2, WGOLD_o3, FV_order_shipping_charges_0), Or(WGOLD_o1 == "Cancelled", WGOLD_o1 == "Paid"))), Not(Exists([predicted_order_id_1, predicted_order_status_2, predicted_shipping_method_3, predicted_placed_at_4, predicted_delivered_at_5], And(Length(predicted_order_status_2) <= 15, Length(predicted_shipping_method_3) <= 15, And(Customer_Orders(predicted_order_id_1, FV_customer_id_0, predicted_order_status_2, predicted_shipping_method_3, predicted_placed_at_4, predicted_delivered_at_5, FV_order_shipping_charges_0), Or(predicted_order_status_2 == "Cancelled", predicted_order_status_2 == "Paid"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.010 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.028 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_order_id, WPREDICTED_order_status, WPREDICTED_shipping_method, WPREDICTED_placed_at, WPREDICTED_delivered_at
+      claim: And(And(Length(WPREDICTED_order_status) <= 15, Length(WPREDICTED_shipping_method) <= 15, And(Customer_Orders(WPREDICTED_order_id, FV_customer_id_0, WPREDICTED_order_status, WPREDICTED_shipping_method, WPREDICTED_placed_at, WPREDICTED_delivered_at, FV_order_shipping_charges_0), Or(WPREDICTED_order_status == "Cancelled", WPREDICTED_order_status == "Paid"))), Not(Exists([gold_o_1, gold_o1_2, gold_s_3, gold_o2_4, gold_o3_5], And(Length(gold_o1_2) <= 15, Length(gold_s_3) <= 15, And(Customer_Orders(gold_o_1, FV_customer_id_0, gold_o1_2, gold_s_3, gold_o2_4, gold_o3_5, FV_order_shipping_charges_0), Or(gold_o1_2 == "Cancelled", gold_o1_2 == "Paid"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.021 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

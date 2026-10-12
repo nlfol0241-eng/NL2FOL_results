@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_706.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_706.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6313 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return all detention summaries.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+      local sorts:
+        datetime_detention_end = datetime -> IntSort()
+        datetime_detention_start = datetime -> IntSort()
+        detention_id = integer -> IntSort()
+        detention_summary = varchar(255) -> StringSort()
+        detention_type_code = varchar(10) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+        teacher_id = integer -> IntSort()
+      symbols:
+        Detention(detention_id, detention_type_code, teacher_id, datetime_detention_start, datetime_detention_end, detention_summary, other_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : detention_id ∃d1 : detention_type_code ∃t : teacher_id ∃d2 : datetime_detention_start ∃d3 : datetime_detention_end ∃o : other_details ( Detention(d,d1,t,d2,d3,d4,o) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:detention_id EXISTS:∃ IDENT:d1 COLON:: IDENT:detention_type_code EXISTS:∃ IDENT:t COLON:: IDENT:teacher_id EXISTS:∃ IDENT:d2 COLON:: IDENT:datetime_detention_start EXISTS:∃ IDENT:d3 COLON:: IDENT:datetime_detention_end EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Detention LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:t COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:detention_id
+            EXISTS d1:detention_type_code
+              EXISTS t:teacher_id
+                EXISTS d2:datetime_detention_start
+                  EXISTS d3:datetime_detention_end
+                    EXISTS o:other_details
+                      PRED Detention(d, d1, t, d2, d3, d4, o)
+      Predicted FOL: ∃i : detention_id ∃c : detention_type_code ∃t : teacher_id ∃b : datetime_detention_start ∃e : datetime_detention_end ∃o : other_details (Detention(i, c, t, b, e, s, o))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:detention_id EXISTS:∃ IDENT:c COLON:: IDENT:detention_type_code EXISTS:∃ IDENT:t COLON:: IDENT:teacher_id EXISTS:∃ IDENT:b COLON:: IDENT:datetime_detention_start EXISTS:∃ IDENT:e COLON:: IDENT:datetime_detention_end EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Detention LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:b COMMA:, IDENT:e COMMA:, IDENT:s COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:detention_id
+            EXISTS c:detention_type_code
+              EXISTS t:teacher_id
+                EXISTS b:datetime_detention_start
+                  EXISTS e:datetime_detention_end
+                    EXISTS o:other_details
+                      PRED Detention(i, c, t, b, e, s, o)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_detention_summary_0 : detention_summary   Gold d4 <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local detention_id, global integer -> IntSort()
+        d1 : local detention_type_code, global varchar(10) -> StringSort()
+        d2 : local datetime_detention_start, global datetime -> IntSort()
+        d3 : local datetime_detention_end, global datetime -> IntSort()
+        d4 : local detention_summary, global varchar(255) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        t : local teacher_id, global integer -> IntSort()
+      Predicted FOL:
+        b : local datetime_detention_start, global datetime -> IntSort()
+        c : local detention_type_code, global varchar(10) -> StringSort()
+        e : local datetime_detention_end, global datetime -> IntSort()
+        i : local detention_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        s : local detention_summary, global varchar(255) -> StringSort()
+        t : local teacher_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_t_3, gold_d2_4, gold_d3_5, gold_o_6], And(D_varchar_10_(gold_d1_2), D_varchar_255_(gold_o_6), P_Detention(gold_d_1, gold_d1_2, gold_t_3, gold_d2_4, gold_d3_5, FV_detention_summary_0, gold_o_6)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, WGOLD_o):  And(D_varchar_10_(WGOLD_d1), D_varchar_255_(WGOLD_o), P_Detention(WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, FV_detention_summary_0, WGOLD_o))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_c_2, predicted_t_3, predicted_b_4, predicted_e_5, predicted_o_6], And(D_varchar_10_(predicted_c_2), D_varchar_255_(predicted_o_6), P_Detention(predicted_i_1, predicted_c_2, predicted_t_3, predicted_b_4, predicted_e_5, FV_detention_summary_0, predicted_o_6)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_c, WPREDICTED_t, WPREDICTED_b, WPREDICTED_e, WPREDICTED_o):  And(D_varchar_10_(WPREDICTED_c), D_varchar_255_(WPREDICTED_o), P_Detention(WPREDICTED_i, WPREDICTED_c, WPREDICTED_t, WPREDICTED_b, WPREDICTED_e, FV_detention_summary_0, WPREDICTED_o))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 764 lines, 30204 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_706.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_detention_summary_0) <= 255
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, WGOLD_o
+      claim: And(And(Length(WGOLD_d1) <= 10, Length(WGOLD_o) <= 255, Detention(WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, FV_detention_summary_0, WGOLD_o)), Not(Exists([predicted_i_1, predicted_c_2, predicted_t_3, predicted_b_4, predicted_e_5, predicted_o_6], And(Length(predicted_c_2) <= 10, Length(predicted_o_6) <= 255, Detention(predicted_i_1, predicted_c_2, predicted_t_3, predicted_b_4, predicted_e_5, FV_detention_summary_0, predicted_o_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.020 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_c, WPREDICTED_t, WPREDICTED_b, WPREDICTED_e, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_c) <= 10, Length(WPREDICTED_o) <= 255, Detention(WPREDICTED_i, WPREDICTED_c, WPREDICTED_t, WPREDICTED_b, WPREDICTED_e, FV_detention_summary_0, WPREDICTED_o)), Not(Exists([gold_d_1, gold_d1_2, gold_t_3, gold_d2_4, gold_d3_5, gold_o_6], And(Length(gold_d1_2) <= 10, Length(gold_o_6) <= 255, Detention(gold_d_1, gold_d1_2, gold_t_3, gold_d2_4, gold_d3_5, FV_detention_summary_0, gold_o_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3193.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3193.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3276 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of hosts who did not host any party in our record?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        bool -> BoolSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Host_ID = int -> IntSort()
+        Is_Main_in_Charge = bool -> BoolSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Party_ID = int -> IntSort()
+      symbols:
+        host(Host_ID, Name, Nationality, Age)
+        party_host(Party_ID, Host_ID, Is_Main_in_Charge)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n1 : Nationality ∃a : Age ∃h : Host_ID( (host(h,n,n1,a)) ∧ (¬(∃h1 : Host_ID( ((host(h,n,n1,a)) ∧ (∃p : Party_ID ∃i : Is_Main_in_Charge( party_host(p,h1,i) ))) ∧ (h = h1) ))) )
+        tokens: EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Host_ID LPAR:( LPAR:( IDENT:host LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:h1 COLON:: IDENT:Host_ID LPAR:( LPAR:( LPAR:( IDENT:host LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:i COLON:: IDENT:Is_Main_in_Charge LPAR:( IDENT:party_host LPAR:( IDENT:p COMMA:, IDENT:h1 COMMA:, IDENT:i RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h EQ:= IDENT:h1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n1:Nationality
+            EXISTS a:Age
+              EXISTS h:Host_ID
+                AND
+                  PRED host(h, n, n1, a)
+                  NOT
+                    EXISTS h1:Host_ID
+                      AND
+                        AND
+                          PRED host(h, n, n1, a)
+                          EXISTS p:Party_ID
+                            EXISTS i:Is_Main_in_Charge
+                              PRED party_host(p, h1, i)
+                        EQ  h = h1
+      Predicted FOL: ∃h_id : Host_ID ∃h_name : Name ∃h_nat : Nationality ∃h_age : Age (host(h_id, h_name, h_nat, h_age) ∧ ¬∃p_id : Party_ID ∃is_main : Is_Main_in_Charge party_host(p_id, h_id, is_main))
+        tokens: EXISTS:∃ IDENT:h_id COLON:: IDENT:Host_ID EXISTS:∃ IDENT:h_name COLON:: IDENT:Name EXISTS:∃ IDENT:h_nat COLON:: IDENT:Nationality EXISTS:∃ IDENT:h_age COLON:: IDENT:Age LPAR:( IDENT:host LPAR:( IDENT:h_id COMMA:, IDENT:h_name COMMA:, IDENT:h_nat COMMA:, IDENT:h_age RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:p_id COLON:: IDENT:Party_ID EXISTS:∃ IDENT:is_main COLON:: IDENT:Is_Main_in_Charge IDENT:party_host LPAR:( IDENT:p_id COMMA:, IDENT:h_id COMMA:, IDENT:is_main RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h_id:Host_ID
+            EXISTS h_name:Name
+              EXISTS h_nat:Nationality
+                EXISTS h_age:Age
+                  AND
+                    PRED host(h_id, h_name, h_nat, h_age)
+                    NOT
+                      EXISTS p_id:Party_ID
+                        EXISTS is_main:Is_Main_in_Charge
+                          PRED party_host(p_id, h_id, is_main)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        h : local Host_ID, global int -> IntSort()
+        h1 : local Host_ID, global int -> IntSort()
+        i : local Is_Main_in_Charge, global bool -> BoolSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        p : local Party_ID, global int -> IntSort()
+      Predicted FOL:
+        h_age : local Age, global text -> StringSort()
+        h_id : local Host_ID, global int -> IntSort()
+        h_name : local Name, global text -> StringSort()
+        h_nat : local Nationality, global text -> StringSort()
+        is_main : local Is_Main_in_Charge, global bool -> BoolSort()
+        p_id : local Party_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5488 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3193.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

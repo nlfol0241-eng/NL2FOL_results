@@ -1,0 +1,269 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1705.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1705.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3852 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the id and name of the photos for mountains?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Country = text -> StringSort()
+        Height = real -> Float32()
+        Prominence = real -> Float32()
+        Range = text -> StringSort()
+        camera_lens_id = int -> IntSort()
+        color = text -> StringSort()
+        id = int -> IntSort()
+        mountain_id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        mountain(id, name, Height, Prominence, Range, Country)
+        photos(id, camera_lens_id, mountain_id, color, name)
+        constant 4000 : Height
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃h : Height ∃p : Prominence ∃r : Range ∃c : Country ∃i1 : id ∃c1 : camera_lens_id ∃m : mountain_id ∃c2 : color ∃n1 : name ( (((mountain(i,n,h,p,r,c)) ∧ (photos(i1,c1,m,c2,n1))) ∧ (i = m)) ∧ (h > 4000) )
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:Prominence EXISTS:∃ IDENT:r COLON:: IDENT:Range EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:c1 COLON:: IDENT:camera_lens_id EXISTS:∃ IDENT:m COLON:: IDENT:mountain_id EXISTS:∃ IDENT:c2 COLON:: IDENT:color EXISTS:∃ IDENT:n1 COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:mountain LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:photos LPAR:( IDENT:i1 COMMA:, IDENT:c1 COMMA:, IDENT:m COMMA:, IDENT:c2 COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h GT:> NUM:4000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:Height
+            EXISTS p:Prominence
+              EXISTS r:Range
+                EXISTS c:Country
+                  EXISTS i1:id
+                    EXISTS c1:camera_lens_id
+                      EXISTS m:mountain_id
+                        EXISTS c2:color
+                          EXISTS n1:name
+                            AND
+                              AND
+                                AND
+                                  PRED mountain(i, n, h, p, r, c)
+                                  PRED photos(i1, c1, m, c2, n1)
+                                EQ  i = m
+                              CMP  h > 4000
+      Predicted FOL: ∃c : camera_lens_id ∃m : mountain_id ∃k : color ∃n : name ∃h : Height ∃p : Prominence ∃r : Range ∃u : Country (photos(photo_id, c, m, k, photo_name) ∧ mountain(m, n, h, p, r, u))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:camera_lens_id EXISTS:∃ IDENT:m COLON:: IDENT:mountain_id EXISTS:∃ IDENT:k COLON:: IDENT:color EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:Prominence EXISTS:∃ IDENT:r COLON:: IDENT:Range EXISTS:∃ IDENT:u COLON:: IDENT:Country LPAR:( IDENT:photos LPAR:( IDENT:photo_id COMMA:, IDENT:c COMMA:, IDENT:m COMMA:, IDENT:k COMMA:, IDENT:photo_name RPAR:) AND:∧ IDENT:mountain LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:u RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:camera_lens_id
+            EXISTS m:mountain_id
+              EXISTS k:color
+                EXISTS n:name
+                  EXISTS h:Height
+                    EXISTS p:Prominence
+                      EXISTS r:Range
+                        EXISTS u:Country
+                          AND
+                            PRED photos(photo_id, c, m, k, photo_name)
+                            PRED mountain(m, n, h, p, r, u)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_id_0 : id   Gold i <-> Predicted photo_id
+      FV_name_0 : name   Gold n <-> Predicted photo_name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        c1 : local camera_lens_id, global int -> IntSort()
+        c2 : local color, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        i : local id, global int -> IntSort()
+        i1 : local id, global int -> IntSort()
+        m : local mountain_id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+        p : local Prominence, global real -> Float32()
+        r : local Range, global text -> StringSort()
+      Predicted FOL:
+        c : local camera_lens_id, global int -> IntSort()
+        h : local Height, global real -> Float32()
+        k : local color, global text -> StringSort()
+        m : local mountain_id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        p : local Prominence, global real -> Float32()
+        photo_id : local id, global int -> IntSort()
+        photo_name : local name, global text -> StringSort()
+        r : local Range, global text -> StringSort()
+        u : local Country, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_h_1, gold_p_2, gold_r_3, gold_c_4, gold_i1_5, gold_c1_6, gold_m_7, gold_c2_8, gold_n1_9], And(D_real(gold_h_1), D_real(gold_p_2), And(And(And(P_mountain(FV_id_0, FV_name_0, gold_h_1, gold_p_2, gold_r_3, gold_c_4), P_photos(gold_i1_5, gold_c1_6, gold_m_7, gold_c2_8, gold_n1_9)), (FV_id_0 == gold_m_7)), (gold_h_1 > L_v_4000_real))))
+      gold_skolem (witnesses WGOLD_h, WGOLD_p, WGOLD_r, WGOLD_c, WGOLD_i1, WGOLD_c1, WGOLD_m, WGOLD_c2, WGOLD_n1):  And(D_real(WGOLD_h), D_real(WGOLD_p), And(And(And(P_mountain(FV_id_0, FV_name_0, WGOLD_h, WGOLD_p, WGOLD_r, WGOLD_c), P_photos(WGOLD_i1, WGOLD_c1, WGOLD_m, WGOLD_c2, WGOLD_n1)), (FV_id_0 == WGOLD_m)), (WGOLD_h > L_v_4000_real)))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_m_2, predicted_k_3, predicted_n_4, predicted_h_5, predicted_p_6, predicted_r_7, predicted_u_8], And(D_real(predicted_h_5), D_real(predicted_p_6), And(P_photos(FV_id_0, predicted_c_1, predicted_m_2, predicted_k_3, FV_name_0), P_mountain(predicted_m_2, predicted_n_4, predicted_h_5, predicted_p_6, predicted_r_7, predicted_u_8))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_m, WPREDICTED_k, WPREDICTED_n, WPREDICTED_h, WPREDICTED_p, WPREDICTED_r, WPREDICTED_u):  And(D_real(WPREDICTED_h), D_real(WPREDICTED_p), And(P_photos(FV_id_0, WPREDICTED_c, WPREDICTED_m, WPREDICTED_k, FV_name_0), P_mountain(WPREDICTED_m, WPREDICTED_n, WPREDICTED_h, WPREDICTED_p, WPREDICTED_r, WPREDICTED_u)))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '4000' at real -> L_v_4000_real = FPVal(4000.0, Float32())
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 781 lines, 30826 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1705.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_h, WGOLD_p, WGOLD_r, WGOLD_c, WGOLD_i1, WGOLD_c1, WGOLD_m, WGOLD_c2, WGOLD_n1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_h)), Not(And(fpIsZero(WGOLD_h), fpIsNegative(WGOLD_h)))), And(Not(fpIsNaN(WGOLD_p)), Not(And(fpIsZero(WGOLD_p), fpIsNegative(WGOLD_p)))), And(And(And(mountain(FV_id_0, FV_name_0, WGOLD_h, WGOLD_p, WGOLD_r, WGOLD_c), photos(WGOLD_i1, WGOLD_c1, WGOLD_m, WGOLD_c2, WGOLD_n1)), FV_id_0 == WGOLD_m), 1.953125*(2**11) < WGOLD_h)), Not(Exists([predicted_c_1, predicted_m_2, predicted_k_3, predicted_n_4, predicted_h_5, predicted_p_6, predicted_r_7, predicted_u_8], And(And(Not(fpIsNaN(predicted_h_5)), Not(And(fpIsZero(predicted_h_5), fpIsNegative(predicted_h_5)))), And(Not(fpIsNaN(predicted_p_6)), Not(And(fpIsZero(predicted_p_6), fpIsNegative(predicted_p_6)))), And(photos(FV_id_0, predicted_c_1, predicted_m_2, predicted_k_3, FV_name_0), mountain(predicted_m_2, predicted_n_4, predicted_h_5, predicted_p_6, predicted_r_7, predicted_u_8))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.012 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 38 relation tuple(s) listed, 27 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          h : Height = 8000.00048828125
+          p : Prominence = 1.1754943508222875e-38
+          r : Range = '!1!'
+          c : Country = '!2!'
+          i1 : id = 3
+          c1 : camera_lens_id = 4
+          m : mountain_id = 2
+          c2 : color = '!3!'
+          n1 : name = '!4!'
+        free (answer) variables:
+          FV_id_0 : id = 2
+          FV_name_0 : name = '!0!'
+        literals / constants:
+          4000 : Height = 4000.0
+        relations (each value tagged with the local sort of its position):
+          mountain(id, name, Height, Prominence, Range, Country):
+            mountain(id=0, name='', Height=1.1754943508222875e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='!0!')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='!3!')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='!4!')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='!2!', Country='')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='!3!', Country='')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='!4!', Country='')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=4000.0, Range='', Country='')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=8000.00048828125, Range='', Country='')
+            mountain(id=0, name='!1!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=0, name='!2!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=0, name='!3!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=2, name='!0!', Height=4000.0, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=2, name='!0!', Height=8000.00048828125, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=2, name='!4!', Height=4000.0, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=2, name='!4!', Height=8000.00048828125, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=3, name='!0!', Height=4000.0, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=3, name='!0!', Height=8000.00048828125, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=3, name='!4!', Height=4000.0, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=3, name='!4!', Height=8000.00048828125, Prominence=1.1754943508222875e-38, Range='!1!', Country='!2!')
+            mountain(id=4, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='!0!', Country='!1!')
+            mountain(id=5, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          photos(id, camera_lens_id, mountain_id, color, name):
+            photos(id=0, camera_lens_id=0, mountain_id=0, color='', name='')
+            photos(id=0, camera_lens_id=0, mountain_id=0, color='', name='!1!')
+            photos(id=0, camera_lens_id=0, mountain_id=0, color='', name='!2!')
+            photos(id=0, camera_lens_id=0, mountain_id=0, color='', name='!3!')
+            photos(id=2, camera_lens_id=4, mountain_id=2, color='!3!', name='!4!')
+            photos(id=3, camera_lens_id=0, mountain_id=0, color='!1!', name='')
+            photos(id=3, camera_lens_id=0, mountain_id=0, color='!2!', name='')
+            photos(id=3, camera_lens_id=0, mountain_id=0, color='!4!', name='')
+            photos(id=3, camera_lens_id=0, mountain_id=4, color='', name='')
+            photos(id=3, camera_lens_id=0, mountain_id=5, color='', name='')
+            photos(id=3, camera_lens_id=2, mountain_id=0, color='', name='')
+            photos(id=3, camera_lens_id=3, mountain_id=0, color='', name='')
+            photos(id=3, camera_lens_id=4, mountain_id=2, color='!3!', name='!0!')
+            photos(id=3, camera_lens_id=4, mountain_id=2, color='!3!', name='!4!')
+            photos(id=4, camera_lens_id=5, mountain_id=3, color='!0!', name='')
+            photos(id=5, camera_lens_id=0, mountain_id=0, color='', name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Country        : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+          Height         : {1.1754943508222875e-38, 1.175494490952134e-38, 4000.0, 8000.00048828125}
+          Prominence     : {1.1754943508222875e-38, 1.175494490952134e-38, 4000.0, 8000.00048828125}
+          Range          : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+          camera_lens_id : {0, 2, 3, 4, 5}
+          color          : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+          id             : {0, 2, 3, 4, 5}
+          mountain_id    : {0, 2, 3, 4, 5}
+          name           : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+        values shared across local sorts (joins):
+          0 : camera_lens_id, id, mountain_id
+          2 : camera_lens_id, id, mountain_id
+          3 : camera_lens_id, id, mountain_id
+          4 : camera_lens_id, id, mountain_id
+          5 : camera_lens_id, id, mountain_id
+          1.1754943508222875e-38 : Height, Prominence
+          1.175494490952134e-38 : Height, Prominence
+          4000.0 : Height, Prominence
+          8000.00048828125 : Height, Prominence
+          '!0!' : Country, Range, color, name
+          '!1!' : Country, Range, color, name
+          '!2!' : Country, Range, color, name
+          '!3!' : Country, Range, color, name
+          '!4!' : Country, Range, color, name
+          '' : Country, Range, color, name
+   [R2] took 0.316 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_m, WPREDICTED_k, WPREDICTED_n, WPREDICTED_h, WPREDICTED_p, WPREDICTED_r, WPREDICTED_u
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_h)), Not(And(fpIsZero(WPREDICTED_h), fpIsNegative(WPREDICTED_h)))), And(Not(fpIsNaN(WPREDICTED_p)), Not(And(fpIsZero(WPREDICTED_p), fpIsNegative(WPREDICTED_p)))), And(photos(FV_id_0, WPREDICTED_c, WPREDICTED_m, WPREDICTED_k, FV_name_0), mountain(WPREDICTED_m, WPREDICTED_n, WPREDICTED_h, WPREDICTED_p, WPREDICTED_r, WPREDICTED_u))), Not(Exists([gold_h_1, gold_p_2, gold_r_3, gold_c_4, gold_i1_5, gold_c1_6, gold_m_7, gold_c2_8, gold_n1_9], And(And(Not(fpIsNaN(gold_h_1)), Not(And(fpIsZero(gold_h_1), fpIsNegative(gold_h_1)))), And(Not(fpIsNaN(gold_p_2)), Not(And(fpIsZero(gold_p_2), fpIsNegative(gold_p_2)))), And(And(And(mountain(FV_id_0, FV_name_0, gold_h_1, gold_p_2, gold_r_3, gold_c_4), photos(gold_i1_5, gold_c1_6, gold_m_7, gold_c2_8, gold_n1_9)), FV_id_0 == gold_m_7), 1.953125*(2**11) < gold_h_1)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.017 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 11 relation tuple(s) listed, 29 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          c : camera_lens_id = 3
+          m : mountain_id = 4
+          k : color = ''
+          n : name = ''
+          h : Height = 1.0842683469345087e-19
+          p : Prominence = 3.851889276133242e-34
+          r : Range = ''
+          u : Country = ''
+        free (answer) variables:
+          FV_id_0 : id = 2
+          FV_name_0 : name = ''
+        literals / constants:
+          4000 : Height = 4000.0
+        relations (each value tagged with the local sort of its position):
+          mountain(id, name, Height, Prominence, Range, Country):
+            mountain(id=4, name='', Height=-1.175494490952134e-38, Prominence=3.851889276133242e-34, Range='!0!', Country='A')
+            mountain(id=4, name='', Height=1.175494490952134e-38, Prominence=3.851889276133242e-34, Range='', Country='!0!')
+            mountain(id=4, name='', Height=1.175494490952134e-38, Prominence=3.851889276133242e-34, Range='A', Country='')
+            mountain(id=4, name='', Height=3.851889276133242e-34, Prominence=3.851889276133242e-34, Range='', Country='')
+            mountain(id=4, name='', Height=1.0842683469345087e-19, Prominence=3.851889276133242e-34, Range='', Country='')
+            mountain(id=4, name='', Height=4000.0, Prominence=3.851889276133242e-34, Range='', Country='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          photos(id, camera_lens_id, mountain_id, color, name):
+            photos(id=2, camera_lens_id=1, mountain_id=4, color='', name='A')
+            photos(id=2, camera_lens_id=1, mountain_id=4, color='!0!', name='')
+            photos(id=2, camera_lens_id=2, mountain_id=4, color='A', name='!0!')
+            photos(id=2, camera_lens_id=3, mountain_id=4, color='', name='')
+            photos(id=2, camera_lens_id=4, mountain_id=4, color='', name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Country        : {'', '!0!', 'A'}
+          Height         : {-1.175494490952134e-38, 1.175494490952134e-38, 3.851889276133242e-34, 1.0842683469345087e-19, 4000.0}
+          Prominence     : {3.851889276133242e-34}
+          Range          : {'', '!0!', 'A'}
+          camera_lens_id : {1, 2, 3, 4}
+          color          : {'', '!0!', 'A'}
+          id             : {2, 4}
+          mountain_id    : {4}
+          name           : {'', '!0!', 'A'}
+        values shared across local sorts (joins):
+          2 : camera_lens_id, id
+          4 : camera_lens_id, id, mountain_id
+          3.851889276133242e-34 : Height, Prominence
+          '!0!' : Country, Range, color, name
+          '' : Country, Range, color, name
+          'A' : Country, Range, color, name
+   [R3] took 0.177 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1531.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1531.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3966 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names and locations of institutions that are founded after 1990 and have the type "Private".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Enrollment = int -> IntSort()
+        Founded = real -> Float32()
+        Institution = text -> StringSort()
+        Institution_id = text -> StringSort()
+        Location = text -> StringSort()
+        Primary_Conference = text -> StringSort()
+        Team = text -> StringSort()
+        Type = text -> StringSort()
+        building_id = text -> StringSort()
+      symbols:
+        Institution(Institution_id, Institution, Location, Founded, Type, Enrollment, Team, Primary_Conference, building_id)
+        constant 1990 : Founded
+        constant Private : Type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Institution_id ∃f : Founded ∃t : Type ∃e : Enrollment ∃t1 : Team ∃p : Primary_Conference ∃b : building_id ( (Institution(i,i1,l,f,t,e,t1,p,b)) ∧ ((f > 1990) ∧ (t = 'Private')) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Institution_id EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:e COLON:: IDENT:Enrollment EXISTS:∃ IDENT:t1 COLON:: IDENT:Team EXISTS:∃ IDENT:p COLON:: IDENT:Primary_Conference EXISTS:∃ IDENT:b COLON:: IDENT:building_id LPAR:( LPAR:( IDENT:Institution LPAR:( IDENT:i COMMA:, IDENT:i1 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:t COMMA:, IDENT:e COMMA:, IDENT:t1 COMMA:, IDENT:p COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f GT:> NUM:1990 RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Private RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Institution_id
+            EXISTS f:Founded
+              EXISTS t:Type
+                EXISTS e:Enrollment
+                  EXISTS t1:Team
+                    EXISTS p:Primary_Conference
+                      EXISTS b:building_id
+                        AND
+                          PRED Institution(i, i1, l, f, t, e, t1, p, b)
+                          AND
+                            CMP  f > 1990
+                            EQ  t = 'Private'
+      Predicted FOL: ∃x : Institution_id ∃y : Institution ∃z : Location ∃w : Founded ∃v : Type ∃u : Enrollment ∃t : Team ∃s : Primary_Conference ∃r : building_id (Institution(x, y, z, w, v, u, t, s, r) ∧ w > 1990 ∧ v = 'Private')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Institution_id EXISTS:∃ IDENT:y COLON:: IDENT:Institution EXISTS:∃ IDENT:z COLON:: IDENT:Location EXISTS:∃ IDENT:w COLON:: IDENT:Founded EXISTS:∃ IDENT:v COLON:: IDENT:Type EXISTS:∃ IDENT:u COLON:: IDENT:Enrollment EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:s COLON:: IDENT:Primary_Conference EXISTS:∃ IDENT:r COLON:: IDENT:building_id LPAR:( IDENT:Institution LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, IDENT:u COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:r RPAR:) AND:∧ IDENT:w GT:> NUM:1990 AND:∧ IDENT:v EQ:= LIT:Private RPAR:) EOF
+        AST:
+          EXISTS x:Institution_id
+            EXISTS y:Institution
+              EXISTS z:Location
+                EXISTS w:Founded
+                  EXISTS v:Type
+                    EXISTS u:Enrollment
+                      EXISTS t:Team
+                        EXISTS s:Primary_Conference
+                          EXISTS r:building_id
+                            AND
+                              PRED Institution(x, y, z, w, v, u, t, s, r)
+                              CMP  w > 1990
+                              EQ  v = 'Private'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (i1 : Institution, l : Location) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local building_id, global text -> StringSort()
+        e : local Enrollment, global int -> IntSort()
+        f : local Founded, global real -> Float32()
+        i : local Institution_id, global text -> StringSort()
+        i1 : local Institution, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        p : local Primary_Conference, global text -> StringSort()
+        t : local Type, global text -> StringSort()
+        t1 : local Team, global text -> StringSort()
+      Predicted FOL:
+        r : local building_id, global text -> StringSort()
+        s : local Primary_Conference, global text -> StringSort()
+        t : local Team, global text -> StringSort()
+        u : local Enrollment, global int -> IntSort()
+        v : local Type, global text -> StringSort()
+        w : local Founded, global real -> Float32()
+        x : local Institution_id, global text -> StringSort()
+        y : local Institution, global text -> StringSort()
+        z : local Location, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5604 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1531.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (i1 : Institution, l : Location) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

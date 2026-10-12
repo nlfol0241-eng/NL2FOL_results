@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3256.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3256.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3747 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which buildings do not have any company office? Give me the building names.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        City = text -> StringSort()
+        Height = int -> IntSort()
+        Status = text -> StringSort()
+        Stories = int -> IntSort()
+        building_id = int -> IntSort()
+        company_id = int -> IntSort()
+        id = int -> IntSort()
+        move_in_year = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Office_locations(building_id, company_id, move_in_year)
+        buildings(id, name, City, Height, Stories, Status)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : City ∃s1 : Status ∃s : Stories ∃h : Height ∃i : id( (buildings(i,n,c,h,s,s1)) ∧ (¬(∃b : building_id( ((buildings(i,n,c,h,s,s1)) ∧ (∃m : move_in_year ∃c1 : company_id( Office_locations(b,c1,m) ))) ∧ (i = b) ))) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:s1 COLON:: IDENT:Status EXISTS:∃ IDENT:s COLON:: IDENT:Stories EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:i COLON:: IDENT:id LPAR:( LPAR:( IDENT:buildings LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:building_id LPAR:( LPAR:( LPAR:( IDENT:buildings LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:m COLON:: IDENT:move_in_year EXISTS:∃ IDENT:c1 COLON:: IDENT:company_id LPAR:( IDENT:Office_locations LPAR:( IDENT:b COMMA:, IDENT:c1 COMMA:, IDENT:m RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:b RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:City
+            EXISTS s1:Status
+              EXISTS s:Stories
+                EXISTS h:Height
+                  EXISTS i:id
+                    AND
+                      PRED buildings(i, n, c, h, s, s1)
+                      NOT
+                        EXISTS b:building_id
+                          AND
+                            AND
+                              PRED buildings(i, n, c, h, s, s1)
+                              EXISTS m:move_in_year
+                                EXISTS c1:company_id
+                                  PRED Office_locations(b, c1, m)
+                            EQ  i = b
+      Predicted FOL: ∃n:name ∃i:id ∃c:City ∃h:Height ∃s:Stories ∃st:Status ( buildings(i, n, c, h, s, st) ∧ ¬∃cid:company_id ∃y:move_in_year Office_locations(i, cid, y) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:s COLON:: IDENT:Stories EXISTS:∃ IDENT:st COLON:: IDENT:Status LPAR:( IDENT:buildings LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:st RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:cid COLON:: IDENT:company_id EXISTS:∃ IDENT:y COLON:: IDENT:move_in_year IDENT:Office_locations LPAR:( IDENT:i COMMA:, IDENT:cid COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS i:id
+              EXISTS c:City
+                EXISTS h:Height
+                  EXISTS s:Stories
+                    EXISTS st:Status
+                      AND
+                        PRED buildings(i, n, c, h, s, st)
+                        NOT
+                          EXISTS cid:company_id
+                            EXISTS y:move_in_year
+                              PRED Office_locations(i, cid, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local building_id, global int -> IntSort()
+        c : local City, global text -> StringSort()
+        c1 : local company_id, global int -> IntSort()
+        h : local Height, global int -> IntSort()
+        i : local id, global int -> IntSort()
+        m : local move_in_year, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        s : local Stories, global int -> IntSort()
+        s1 : local Status, global text -> StringSort()
+      Predicted FOL:
+        c : local City, global text -> StringSort()
+        cid : local company_id, global int -> IntSort()
+        h : local Height, global int -> IntSort()
+        i : local id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        s : local Stories, global int -> IntSort()
+        st : local Status, global text -> StringSort()
+        y : local move_in_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5511 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3256.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

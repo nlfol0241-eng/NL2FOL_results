@@ -1,0 +1,97 @@
+{
+  "NL": "Which services type had both successful and failure event details?",
+  "Vocabulary": {
+    "Predicates": [
+      "Services",
+      "Events"
+    ],
+    "Functions": [],
+    "Constants": [
+      "Success",
+      "Fail"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "Services": [
+        "Service_ID",
+        "Service_Type_Code"
+      ],
+      "Events": [
+        "Event_ID",
+        "Service_ID",
+        "Event_Details"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "Success": "Event_Details",
+      "Fail": "Event_Details"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a0'∀a1'( Services(a0, a1) ∧ Services(a0', a1') ∧ a0 = a0' ) → ( a1 = a1' )",
+    "axiom2": "∀b0∀b1∀b2∀b0'∀b1'∀b2'( Participants(b0, b1, b2) ∧ Participants(b0', b1', b2') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( Events(c0, c1, c2) ∧ Events(c0', c1', c2') ∧ c0 = c0' ) → ( c1 = c1' ∧ c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( Events(c0, c1, c2) → ∃a0∃a1 ( Services(a0, a1) ∧ a0 = c1 ) )",
+    "axiom5": "∀d0∀d1 ( Participants_in_Events(d0, d1) → ∃c0∃c1∃c2 ( Events(c0, c1, c2) ∧ c0 = d0 ) )",
+    "axiom6": "∀d0∀d1 ( Participants_in_Events(d0, d1) → ∃b0∃b1∃b2 ( Participants(b0, b1, b2) ∧ b0 = d1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Services": {
+        "A": "Services",
+        "A0": "Service_ID",
+        "A1": "Service_Type_Code"
+      },
+      "Events": {
+        "B": "Events",
+        "B0": "Event_ID",
+        "B1": "Service_ID",
+        "B2": "Event_Details"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "Success",
+      "const2": "Fail"
+    }
+  },
+  "Gold FOL": {
+    "string": "(∃e : Event_ID ∃e1 : Event_Details ∃s2 : Service_ID ∃s : Service_ID( (((Services(s,s1)) ∧ (Events(e,s2,e1))) ∧ (s = s2)) ∧ (e1 = 'Success') )) ∧ (¬((∃e : Event_ID ∃e1 : Event_Details ∃s2 : Service_ID ∃s : Service_ID( (((Services(s,s1)) ∧ (Events(e,s2,e1))) ∧ (s = s2)) ∧ (e1 = 'Success') )) ∧ (¬(∃e : Event_ID ∃e1 : Event_Details ∃s2 : Service_ID ∃s : Service_ID( (((Services(s,s1)) ∧ (Events(e,s2,e1))) ∧ (s = s2)) ∧ (e1 = 'Fail') )))))",
+    "free vars": "s1 : Service_Type_Code"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A1](<S>[B2 = 'Success':VARCHAR(255)](<S>[A0 = B1]((A)<X>(B)))))<D>((<P>[A1](<S>[B2 = 'Success':VARCHAR(255)](<S>[A0 = B1]((A)<X>(B)))))<D>(<P>[A1](<S>[B2 = 'Fail':VARCHAR(255)](<S>[A0 = B1]((A)<X>(B))))))",
+    "Processed_RA": "(<P>[A1](<S>[B2 = 'Success'](<S>[A0 = B1]((A)<X>(B)))))<D>((<P>[A1](<S>[B2 = 'Success'](<S>[A0 = B1]((A)<X>(B)))))<D>(<P>[A1](<S>[B2 = 'Fail'](<S>[A0 = B1]((A)<X>(B))))))",
+    "RC": "([E]?B0,?B2,?B1,?A0( (((A(?A0,?A1)) & (B(?B0,?B1,?B2))) & (?A0 = ?B1)) & (?B2 = Success) )) & (~(([E]?B0,?B2,?B1,?A0( (((A(?A0,?A1)) & (B(?B0,?B1,?B2))) & (?A0 = ?B1)) & (?B2 = Success) )) & (~([E]?B0,?B2,?B1,?A0( (((A(?A0,?A1)) & (B(?B0,?B1,?B2))) & (?A0 = ?B1)) & (?B2 = Fail) )))))",
+    "string": "(∃B0 ∃B2 ∃B1 ∃A0( (((A(A0,A1)) ∧ (B(B0,B1,B2))) ∧ (A0 = B1)) ∧ (B2 = 'Success') )) ∧ (¬((∃B0 ∃B2 ∃B1 ∃A0( (((A(A0,A1)) ∧ (B(B0,B1,B2))) ∧ (A0 = B1)) ∧ (B2 = 'Success') )) ∧ (¬(∃B0 ∃B2 ∃B1 ∃A0( (((A(A0,A1)) ∧ (B(B0,B1,B2))) ∧ (A0 = B1)) ∧ (B2 = 'Fail') )))))",
+    "free variables": "A1",
+    "db_id": "local_govt_in_alabama",
+    "processed_sql": "SELECT T1.service_type_code FROM services AS T1 JOIN EVENTS AS T2 ON T1.service_id  =  T2.service_id WHERE T2.event_details  =  'Success' INTERSECT SELECT T1.service_type_code FROM services AS T1 JOIN EVENTS AS T2 ON T1.service_id  =  T2.service_id WHERE T2.event_details  =  'Fail'"
+  },
+  "Global Sorts": [
+    "varchar(255)",
+    "integer",
+    "char(15)"
+  ],
+  "Sort Axioms": {
+    "Services": {
+      "sortaxiom0": "Service_ID = integer",
+      "sortaxiom1": "Service_Type_Code = char(15)"
+    },
+    "Events": {
+      "sortaxiom0": "Event_ID = integer",
+      "sortaxiom1": "Service_ID = integer",
+      "sortaxiom2": "Event_Details = varchar(255)"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT T1.service_type_code FROM services AS T1 JOIN EVENTS AS T2 ON T1.service_id  =  T2.service_id WHERE T2.event_details  =  'Success' INTERSECT SELECT T1.service_type_code FROM services AS T1 JOIN EVENTS AS T2 ON T1.service_id  =  T2.service_id WHERE T2.event_details  =  'Fail'"
+  },
+  "id": 3584,
+  "Predicted FOL": {
+    "string": "(∃s1 : Service_ID ∃e1 : Event_ID (Services(s1, t) ∧ Events(e1, s1, Success))) ∧ (∃s2 : Service_ID ∃e2 : Event_ID (Services(s2, t) ∧ Events(e2, s2, Fail)))",
+    "free vars": "t : Service_Type_Code"
+  }
+}

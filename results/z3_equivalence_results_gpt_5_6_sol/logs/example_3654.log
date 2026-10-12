@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3654.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3953 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the details of the lots which are not used in any transactions?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        investor_id = integer -> IntSort()
+        lot_details = varchar(255) -> StringSort()
+        lot_id = integer -> IntSort()
+        transaction_id = integer -> IntSort()
+      symbols:
+        Lots(lot_id, investor_id, lot_details)
+        Transactions_Lots(transaction_id, lot_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃i : investor_id ∃l : lot_id( Lots(l,i,l1) )) ∧ (¬(∃t : transaction_id ∃i : investor_id ∃l2 : lot_id ∃l : lot_id( ((Lots(l,i,l1)) ∧ (Transactions_Lots(t,l2))) ∧ (l = l2) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:investor_id EXISTS:∃ IDENT:l COLON:: IDENT:lot_id LPAR:( IDENT:Lots LPAR:( IDENT:l COMMA:, IDENT:i COMMA:, IDENT:l1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:t COLON:: IDENT:transaction_id EXISTS:∃ IDENT:i COLON:: IDENT:investor_id EXISTS:∃ IDENT:l2 COLON:: IDENT:lot_id EXISTS:∃ IDENT:l COLON:: IDENT:lot_id LPAR:( LPAR:( LPAR:( IDENT:Lots LPAR:( IDENT:l COMMA:, IDENT:i COMMA:, IDENT:l1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Transactions_Lots LPAR:( IDENT:t COMMA:, IDENT:l2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= IDENT:l2 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS i:investor_id
+              EXISTS l:lot_id
+                PRED Lots(l, i, l1)
+            NOT
+              EXISTS t:transaction_id
+                EXISTS i:investor_id
+                  EXISTS l2:lot_id
+                    EXISTS l:lot_id
+                      AND
+                        AND
+                          PRED Lots(l, i, l1)
+                          PRED Transactions_Lots(t, l2)
+                        EQ  l = l2
+      Predicted FOL: ∃l : lot_id ∃i : investor_id (Lots(l, i, d) ∧ ¬∃t : transaction_id Transactions_Lots(t, l))
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:lot_id EXISTS:∃ IDENT:i COLON:: IDENT:investor_id LPAR:( IDENT:Lots LPAR:( IDENT:l COMMA:, IDENT:i COMMA:, IDENT:d RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:t COLON:: IDENT:transaction_id IDENT:Transactions_Lots LPAR:( IDENT:t COMMA:, IDENT:l RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:lot_id
+            EXISTS i:investor_id
+              AND
+                PRED Lots(l, i, d)
+                NOT
+                  EXISTS t:transaction_id
+                    PRED Transactions_Lots(t, l)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_lot_details_0 : lot_details   Gold l1 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        i : local investor_id, global integer -> IntSort()
+        l : local lot_id, global integer -> IntSort()
+        l1 : local lot_details, global varchar(255) -> StringSort()
+        l2 : local lot_id, global integer -> IntSort()
+        t : local transaction_id, global integer -> IntSort()
+      Predicted FOL:
+        d : local lot_details, global varchar(255) -> StringSort()
+        i : local investor_id, global integer -> IntSort()
+        l : local lot_id, global integer -> IntSort()
+        t : local transaction_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_i_1, gold_l_2], P_Lots(gold_l_2, gold_i_1, FV_lot_details_0)), Not(Exists([gold_t_3, gold_i_4, gold_l2_5, gold_l_6], And(And(P_Lots(gold_l_6, gold_i_4, FV_lot_details_0), P_Transactions_Lots(gold_t_3, gold_l2_5)), (gold_l_6 == gold_l2_5)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_l_1, predicted_i_2], And(P_Lots(predicted_l_1, predicted_i_2, FV_lot_details_0), Not(Exists([predicted_t_3], P_Transactions_Lots(predicted_t_3, predicted_l_1)))))
+      predicted_skolem (witnesses WPREDICTED_l, WPREDICTED_i):  And(P_Lots(WPREDICTED_l, WPREDICTED_i, FV_lot_details_0), Not(Exists([predictedsk_t_1], P_Transactions_Lots(predictedsk_t_1, WPREDICTED_l))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 27425 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_lot_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_i_1, gold_l_2], Lots(gold_l_2, gold_i_1, FV_lot_details_0)), Not(Exists([gold_t_3, gold_i_4, gold_l2_5, gold_l_6], And(And(Lots(gold_l_6, gold_i_4, FV_lot_details_0), Transactions_Lots(gold_t_3, gold_l2_5)), gold_l_6 == gold_l2_5)))), Not(Exists([predicted_l_1, predicted_i_2], And(Lots(predicted_l_1, predicted_i_2, FV_lot_details_0), Not(Exists(predicted_t_3, Transactions_Lots(predicted_t_3, predicted_l_1)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_l, WPREDICTED_i
+      claim: And(And(Lots(WPREDICTED_l, WPREDICTED_i, FV_lot_details_0), Not(Exists(predictedsk_t_1, Transactions_Lots(predictedsk_t_1, WPREDICTED_l)))), Not(And(Exists([gold_i_1, gold_l_2], Lots(gold_l_2, gold_i_1, FV_lot_details_0)), Not(Exists([gold_t_3, gold_i_4, gold_l2_5, gold_l_6], And(And(Lots(gold_l_6, gold_i_4, FV_lot_details_0), Transactions_Lots(gold_t_3, gold_l2_5)), gold_l_6 == gold_l2_5))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.004 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py", line 676, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py", line 707, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py", line 658, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py", line 556, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py", line 480, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py", line 360, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3654.py", line 360, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

@@ -1,0 +1,73 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_798.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_798.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 1973 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: For each classroom report the grade that is taught in it. Report just the classroom number and the grade number.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Classroom = integer -> IntSort()
+        FirstName = text -> StringSort()
+        Grade = integer -> IntSort()
+        LastName = text -> StringSort()
+      symbols:
+        list(LastName, FirstName, Grade, Classroom)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : LastName ∃f : FirstName ( list(l,f,g,c) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:LastName EXISTS:∃ IDENT:f COLON:: IDENT:FirstName LPAR:( IDENT:list LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:LastName
+            EXISTS f:FirstName
+              PRED list(l, f, g, c)
+      Predicted FOL: ∀x0 : Classroom ∀x1 : Grade (list(x0, x1, x2, x3) → ∃y0 : Grade ∃y1 : Classroom (list(y0, y1, x2, x3) ∧ y0 = x1 ∧ y1 = x0))
+        tokens: FORALL:∀ IDENT:x0 COLON:: IDENT:Classroom FORALL:∀ IDENT:x1 COLON:: IDENT:Grade LPAR:( IDENT:list LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) IMPL:→ EXISTS:∃ IDENT:y0 COLON:: IDENT:Grade EXISTS:∃ IDENT:y1 COLON:: IDENT:Classroom LPAR:( IDENT:list LPAR:( IDENT:y0 COMMA:, IDENT:y1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) AND:∧ IDENT:y0 EQ:= IDENT:x1 AND:∧ IDENT:y1 EQ:= IDENT:x0 RPAR:) RPAR:) EOF
+        AST:
+          FORALL x0:Classroom
+            FORALL x1:Grade
+              IMPLIES
+                PRED list(x0, x1, x2, x3)
+                EXISTS y0:Grade
+                  EXISTS y1:Classroom
+                    AND
+                      PRED list(y0, y1, x2, x3)
+                      EQ  y0 = x1
+                      EQ  y1 = x0
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (g : Grade, c : Classroom) -> ['numeric', 'numeric'] vs Predicted (x2 : LastName, x3 : FirstName) -> ['StringSort()', 'StringSort()']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'x0' used at incompatible global sorts integer and text
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 139, in infer
+    infer(node[1], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'x0' used at incompatible global sorts integer and text

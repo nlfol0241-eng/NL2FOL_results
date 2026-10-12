@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3431.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3431.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3086 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all the locations where no cinema has capacity over 800.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Capacity = int -> IntSort()
+        Cinema_ID = int -> IntSort()
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        Openning_year = int -> IntSort()
+      symbols:
+        cinema(Cinema_ID, Name, Openning_year, Capacity, Location)
+        constant 800 : Capacity
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃o : Openning_year ∃n : Name ∃c1 : Capacity ∃c : Cinema_ID( cinema(c,n,o,c1,l) )) ∧ (¬(∃o : Openning_year ∃n : Name ∃c1 : Capacity ∃c : Cinema_ID( (cinema(c,n,o,c1,l)) ∧ (c1 > 800) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:o COLON:: IDENT:Openning_year EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:c1 COLON:: IDENT:Capacity EXISTS:∃ IDENT:c COLON:: IDENT:Cinema_ID LPAR:( IDENT:cinema LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:c1 COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:o COLON:: IDENT:Openning_year EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:c1 COLON:: IDENT:Capacity EXISTS:∃ IDENT:c COLON:: IDENT:Cinema_ID LPAR:( LPAR:( IDENT:cinema LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:c1 COMMA:, IDENT:l RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 GT:> NUM:800 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS o:Openning_year
+              EXISTS n:Name
+                EXISTS c1:Capacity
+                  EXISTS c:Cinema_ID
+                    PRED cinema(c, n, o, c1, l)
+            NOT
+              EXISTS o:Openning_year
+                EXISTS n:Name
+                  EXISTS c1:Capacity
+                    EXISTS c:Cinema_ID
+                      AND
+                        PRED cinema(c, n, o, c1, l)
+                        CMP  c1 > 800
+      Predicted FOL: ∃l : Location (∀c0 : Cinema_ID ∀n : Name ∀y : Openning_year ∀cap : Capacity ∀loc : Location (cinema(c0, n, y, cap, loc) → (loc = l ∧ ¬(cap > 800))))
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:Location LPAR:( FORALL:∀ IDENT:c0 COLON:: IDENT:Cinema_ID FORALL:∀ IDENT:n COLON:: IDENT:Name FORALL:∀ IDENT:y COLON:: IDENT:Openning_year FORALL:∀ IDENT:cap COLON:: IDENT:Capacity FORALL:∀ IDENT:loc COLON:: IDENT:Location LPAR:( IDENT:cinema LPAR:( IDENT:c0 COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:cap COMMA:, IDENT:loc RPAR:) IMPL:→ LPAR:( IDENT:loc EQ:= IDENT:l AND:∧ NOT:¬ LPAR:( IDENT:cap GT:> NUM:800 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:Location
+            FORALL c0:Cinema_ID
+              FORALL n:Name
+                FORALL y:Openning_year
+                  FORALL cap:Capacity
+                    FORALL loc:Location
+                      IMPLIES
+                        PRED cinema(c0, n, y, cap, loc)
+                        AND
+                          EQ  loc = l
+                          NOT
+                            CMP  cap > 800
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (l : Location) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Cinema_ID, global int -> IntSort()
+        c1 : local Capacity, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        o : local Openning_year, global int -> IntSort()
+      Predicted FOL:
+        c0 : local Cinema_ID, global int -> IntSort()
+        cap : local Capacity, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        loc : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        y : local Openning_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5469 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3431.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (l : Location) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

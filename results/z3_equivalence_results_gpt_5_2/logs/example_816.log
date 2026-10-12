@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_816.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_816.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3216 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the headquarters and industries of all companies?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Assets_in_Billion = real -> Float32()
+        Company_ID = real -> Float32()
+        Headquarters = text -> StringSort()
+        Industry = text -> StringSort()
+        Market_Value_in_Billion = real -> Float32()
+        Name = text -> StringSort()
+        Profits_in_Billion = real -> Float32()
+        Sales_in_Billion = real -> Float32()
+      symbols:
+        company(Company_ID, Name, Headquarters, Industry, Sales_in_Billion, Profits_in_Billion, Assets_in_Billion, Market_Value_in_Billion)
+   [G2] took 0.003 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Company_ID ∃n : Name ∃s : Sales_in_Billion ∃p : Profits_in_Billion ∃a : Assets_in_Billion ∃m : Market_Value_in_Billion ( company(c,n,h,i,s,p,a,m) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Company_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:s COLON:: IDENT:Sales_in_Billion EXISTS:∃ IDENT:p COLON:: IDENT:Profits_in_Billion EXISTS:∃ IDENT:a COLON:: IDENT:Assets_in_Billion EXISTS:∃ IDENT:m COLON:: IDENT:Market_Value_in_Billion LPAR:( IDENT:company LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:i COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:m RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Company_ID
+            EXISTS n:Name
+              EXISTS s:Sales_in_Billion
+                EXISTS p:Profits_in_Billion
+                  EXISTS a:Assets_in_Billion
+                    EXISTS m:Market_Value_in_Billion
+                      PRED company(c, n, h, i, s, p, a, m)
+      Predicted FOL: ∀c0:Company_ID ∀c1:Name ∀c2:Headquarters ∀c3:Industry ∀c4:Sales_in_Billion ∀c5:Profits_in_Billion ∀c6:Assets_in_Billion ∀c7:Market_Value_in_Billion ( company(c0, c1, c2, c3, c4, c5, c6, c7) → ∃h:Headquarters ∃i:Industry (h = c2 ∧ i = c3) )
+        tokens: FORALL:∀ IDENT:c0 COLON:: IDENT:Company_ID FORALL:∀ IDENT:c1 COLON:: IDENT:Name FORALL:∀ IDENT:c2 COLON:: IDENT:Headquarters FORALL:∀ IDENT:c3 COLON:: IDENT:Industry FORALL:∀ IDENT:c4 COLON:: IDENT:Sales_in_Billion FORALL:∀ IDENT:c5 COLON:: IDENT:Profits_in_Billion FORALL:∀ IDENT:c6 COLON:: IDENT:Assets_in_Billion FORALL:∀ IDENT:c7 COLON:: IDENT:Market_Value_in_Billion LPAR:( IDENT:company LPAR:( IDENT:c0 COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 COMMA:, IDENT:c4 COMMA:, IDENT:c5 COMMA:, IDENT:c6 COMMA:, IDENT:c7 RPAR:) IMPL:→ EXISTS:∃ IDENT:h COLON:: IDENT:Headquarters EXISTS:∃ IDENT:i COLON:: IDENT:Industry LPAR:( IDENT:h EQ:= IDENT:c2 AND:∧ IDENT:i EQ:= IDENT:c3 RPAR:) RPAR:) EOF
+        AST:
+          FORALL c0:Company_ID
+            FORALL c1:Name
+              FORALL c2:Headquarters
+                FORALL c3:Industry
+                  FORALL c4:Sales_in_Billion
+                    FORALL c5:Profits_in_Billion
+                      FORALL c6:Assets_in_Billion
+                        FORALL c7:Market_Value_in_Billion
+                          IMPLIES
+                            PRED company(c0, c1, c2, c3, c4, c5, c6, c7)
+                            EXISTS h:Headquarters
+                              EXISTS i:Industry
+                                AND
+                                  EQ  h = c2
+                                  EQ  i = c3
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (h : Headquarters, i : Industry) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.005 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Assets_in_Billion, global real -> Float32()
+        c : local Company_ID, global real -> Float32()
+        h : local Headquarters, global text -> StringSort()
+        i : local Industry, global text -> StringSort()
+        m : local Market_Value_in_Billion, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        p : local Profits_in_Billion, global real -> Float32()
+        s : local Sales_in_Billion, global real -> Float32()
+      Predicted FOL:
+        c0 : local Company_ID, global real -> Float32()
+        c1 : local Name, global text -> StringSort()
+        c2 : local Headquarters, global text -> StringSort()
+        c3 : local Industry, global text -> StringSort()
+        c4 : local Sales_in_Billion, global real -> Float32()
+        c5 : local Profits_in_Billion, global real -> Float32()
+        c6 : local Assets_in_Billion, global real -> Float32()
+        c7 : local Market_Value_in_Billion, global real -> Float32()
+        h : local Headquarters, global text -> StringSort()
+        i : local Industry, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5558 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_816.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (h : Headquarters, i : Industry) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

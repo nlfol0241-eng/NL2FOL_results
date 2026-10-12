@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_896.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_896.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4448 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the course names for courses taught on MTW?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+        varchar(11) -> StringSort()   [domain Length(x) <= 11; length <= 11]
+        integer -> IntSort()
+        varchar(7) -> StringSort()   [domain Length(x) <= 7; length <= 7]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+      local sorts:
+        CID = varchar(7) -> StringSort()
+        CName = varchar(40) -> StringSort()
+        Credits = integer -> IntSort()
+        DNO = integer -> IntSort()
+        Days = varchar(5) -> StringSort()
+        Hours = varchar(11) -> StringSort()
+        Instructor = integer -> IntSort()
+      symbols:
+        Course(CID, CName, Credits, Instructor, Days, Hours, DNO)
+        constant MTW : Days
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : CID ∃c2 : Credits ∃i : Instructor ∃d : Days ∃h : Hours ∃d1 : DNO ( (Course(c,c1,c2,i,d,h,d1)) ∧ (d = 'MTW') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:CID EXISTS:∃ IDENT:c2 COLON:: IDENT:Credits EXISTS:∃ IDENT:i COLON:: IDENT:Instructor EXISTS:∃ IDENT:d COLON:: IDENT:Days EXISTS:∃ IDENT:h COLON:: IDENT:Hours EXISTS:∃ IDENT:d1 COLON:: IDENT:DNO LPAR:( LPAR:( IDENT:Course LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:i COMMA:, IDENT:d COMMA:, IDENT:h COMMA:, IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:MTW RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:CID
+            EXISTS c2:Credits
+              EXISTS i:Instructor
+                EXISTS d:Days
+                  EXISTS h:Hours
+                    EXISTS d1:DNO
+                      AND
+                        PRED Course(c, c1, c2, i, d, h, d1)
+                        EQ  d = 'MTW'
+      Predicted FOL: ∃cid : CID ∃credits : Credits ∃instructor : Instructor ∃hours : Hours ∃dno : DNO Course(cid, cname, credits, instructor, 'MTW', hours, dno)
+        tokens: EXISTS:∃ IDENT:cid COLON:: IDENT:CID EXISTS:∃ IDENT:credits COLON:: IDENT:Credits EXISTS:∃ IDENT:instructor COLON:: IDENT:Instructor EXISTS:∃ IDENT:hours COLON:: IDENT:Hours EXISTS:∃ IDENT:dno COLON:: IDENT:DNO IDENT:Course LPAR:( IDENT:cid COMMA:, IDENT:cname COMMA:, IDENT:credits COMMA:, IDENT:instructor COMMA:, LIT:MTW COMMA:, IDENT:hours COMMA:, IDENT:dno RPAR:) EOF
+        AST:
+          EXISTS cid:CID
+            EXISTS credits:Credits
+              EXISTS instructor:Instructor
+                EXISTS hours:Hours
+                  EXISTS dno:DNO
+                    PRED Course(cid, cname, credits, instructor, 'MTW', hours, dno)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_CName_0 : CName   Gold c1 <-> Predicted cname
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CID, global varchar(7) -> StringSort()
+        c1 : local CName, global varchar(40) -> StringSort()
+        c2 : local Credits, global integer -> IntSort()
+        d : local Days, global varchar(5) -> StringSort()
+        d1 : local DNO, global integer -> IntSort()
+        h : local Hours, global varchar(11) -> StringSort()
+        i : local Instructor, global integer -> IntSort()
+      Predicted FOL:
+        cid : local CID, global varchar(7) -> StringSort()
+        cname : local CName, global varchar(40) -> StringSort()
+        credits : local Credits, global integer -> IntSort()
+        dno : local DNO, global integer -> IntSort()
+        hours : local Hours, global varchar(11) -> StringSort()
+        instructor : local Instructor, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c2_2, gold_i_3, gold_d_4, gold_h_5, gold_d1_6], And(D_varchar_7_(gold_c_1), D_varchar_5_(gold_d_4), D_varchar_11_(gold_h_5), And(P_Course(gold_c_1, FV_CName_0, gold_c2_2, gold_i_3, gold_d_4, gold_h_5, gold_d1_6), (gold_d_4 == L_MTW))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c2, WGOLD_i, WGOLD_d, WGOLD_h, WGOLD_d1):  And(D_varchar_7_(WGOLD_c), D_varchar_5_(WGOLD_d), D_varchar_11_(WGOLD_h), And(P_Course(WGOLD_c, FV_CName_0, WGOLD_c2, WGOLD_i, WGOLD_d, WGOLD_h, WGOLD_d1), (WGOLD_d == L_MTW)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_cid_1, predicted_credits_2, predicted_instructor_3, predicted_hours_4, predicted_dno_5], And(D_varchar_7_(predicted_cid_1), D_varchar_11_(predicted_hours_4), And(P_Course(predicted_cid_1, FV_CName_0, predicted_credits_2, predicted_instructor_3, L_MTW, predicted_hours_4, predicted_dno_5), D_varchar_5_(L_MTW))))
+      predicted_skolem (witnesses WPREDICTED_cid, WPREDICTED_credits, WPREDICTED_instructor, WPREDICTED_hours, WPREDICTED_dno):  And(D_varchar_7_(WPREDICTED_cid), D_varchar_11_(WPREDICTED_hours), And(P_Course(WPREDICTED_cid, FV_CName_0, WPREDICTED_credits, WPREDICTED_instructor, L_MTW, WPREDICTED_hours, WPREDICTED_dno), D_varchar_5_(L_MTW)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'MTW' at varchar(5) -> L_MTW = StringVal('MTW')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 768 lines, 29552 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_896.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_CName_0) <= 40
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c2, WGOLD_i, WGOLD_d, WGOLD_h, WGOLD_d1
+      claim: And(And(Length(WGOLD_c) <= 7, Length(WGOLD_d) <= 5, Length(WGOLD_h) <= 11, And(Course(WGOLD_c, FV_CName_0, WGOLD_c2, WGOLD_i, WGOLD_d, WGOLD_h, WGOLD_d1), WGOLD_d == "MTW")), Not(Exists([predicted_cid_1, predicted_credits_2, predicted_instructor_3, predicted_hours_4, predicted_dno_5], And(Length(predicted_cid_1) <= 7, Length(predicted_hours_4) <= 11, And(Course(predicted_cid_1, FV_CName_0, predicted_credits_2, predicted_instructor_3, "MTW", predicted_hours_4, predicted_dno_5), Length("MTW") <= 5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_cid, WPREDICTED_credits, WPREDICTED_instructor, WPREDICTED_hours, WPREDICTED_dno
+      claim: And(And(Length(WPREDICTED_cid) <= 7, Length(WPREDICTED_hours) <= 11, And(Course(WPREDICTED_cid, FV_CName_0, WPREDICTED_credits, WPREDICTED_instructor, "MTW", WPREDICTED_hours, WPREDICTED_dno), Length("MTW") <= 5)), Not(Exists([gold_c_1, gold_c2_2, gold_i_3, gold_d_4, gold_h_5, gold_d1_6], And(Length(gold_c_1) <= 7, Length(gold_d_4) <= 5, Length(gold_h_5) <= 11, And(Course(gold_c_1, FV_CName_0, gold_c2_2, gold_i_3, gold_d_4, gold_h_5, gold_d1_6), gold_d_4 == "MTW")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

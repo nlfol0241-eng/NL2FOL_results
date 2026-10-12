@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_671.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_671.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3147 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who is the delegate of district 1 in the elections?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Committee = text -> StringSort()
+        Counties_Represented = text -> StringSort()
+        Delegate = text -> StringSort()
+        District = int -> IntSort()
+        Election_ID = int -> IntSort()
+        First_Elected = real -> Float32()
+        Party = int -> IntSort()
+      symbols:
+        election(Election_ID, Counties_Represented, District, Delegate, Party, First_Elected, Committee)
+        constant 1 : District
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Election_ID ∃c : Counties_Represented ∃d : District ∃p : Party ∃f : First_Elected ∃c1 : Committee ( (election(e,c,d,d1,p,f,c1)) ∧ (d = 1) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Election_ID EXISTS:∃ IDENT:c COLON:: IDENT:Counties_Represented EXISTS:∃ IDENT:d COLON:: IDENT:District EXISTS:∃ IDENT:p COLON:: IDENT:Party EXISTS:∃ IDENT:f COLON:: IDENT:First_Elected EXISTS:∃ IDENT:c1 COLON:: IDENT:Committee LPAR:( LPAR:( IDENT:election LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:p COMMA:, IDENT:f COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Election_ID
+            EXISTS c:Counties_Represented
+              EXISTS d:District
+                EXISTS p:Party
+                  EXISTS f:First_Elected
+                    EXISTS c1:Committee
+                      AND
+                        PRED election(e, c, d, d1, p, f, c1)
+                        EQ  d = 1
+      Predicted FOL: ∃e : Election_ID ∃c : Counties_Represented ∃p : Party ∃f : First_Elected ∃cm : Committee election(e, c, 1, x, p, f, cm)
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Election_ID EXISTS:∃ IDENT:c COLON:: IDENT:Counties_Represented EXISTS:∃ IDENT:p COLON:: IDENT:Party EXISTS:∃ IDENT:f COLON:: IDENT:First_Elected EXISTS:∃ IDENT:cm COLON:: IDENT:Committee IDENT:election LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, NUM:1 COMMA:, IDENT:x COMMA:, IDENT:p COMMA:, IDENT:f COMMA:, IDENT:cm RPAR:) EOF
+        AST:
+          EXISTS e:Election_ID
+            EXISTS c:Counties_Represented
+              EXISTS p:Party
+                EXISTS f:First_Elected
+                  EXISTS cm:Committee
+                    PRED election(e, c, 1, x, p, f, cm)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Delegate_0 : Delegate   Gold d1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Counties_Represented, global text -> StringSort()
+        c1 : local Committee, global text -> StringSort()
+        d : local District, global int -> IntSort()
+        d1 : local Delegate, global text -> StringSort()
+        e : local Election_ID, global int -> IntSort()
+        f : local First_Elected, global real -> Float32()
+        p : local Party, global int -> IntSort()
+      Predicted FOL:
+        c : local Counties_Represented, global text -> StringSort()
+        cm : local Committee, global text -> StringSort()
+        e : local Election_ID, global int -> IntSort()
+        f : local First_Elected, global real -> Float32()
+        p : local Party, global int -> IntSort()
+        x : local Delegate, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_c_2, gold_d_3, gold_p_4, gold_f_5, gold_c1_6], And(D_real(gold_f_5), And(P_election(gold_e_1, gold_c_2, gold_d_3, FV_Delegate_0, gold_p_4, gold_f_5, gold_c1_6), (gold_d_3 == L_v_1_int))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_c, WGOLD_d, WGOLD_p, WGOLD_f, WGOLD_c1):  And(D_real(WGOLD_f), And(P_election(WGOLD_e, WGOLD_c, WGOLD_d, FV_Delegate_0, WGOLD_p, WGOLD_f, WGOLD_c1), (WGOLD_d == L_v_1_int)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_c_2, predicted_p_3, predicted_f_4, predicted_cm_5], And(D_real(predicted_f_4), P_election(predicted_e_1, predicted_c_2, L_v_1_int, FV_Delegate_0, predicted_p_3, predicted_f_4, predicted_cm_5)))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_c, WPREDICTED_p, WPREDICTED_f, WPREDICTED_cm):  And(D_real(WPREDICTED_f), P_election(WPREDICTED_e, WPREDICTED_c, L_v_1_int, FV_Delegate_0, WPREDICTED_p, WPREDICTED_f, WPREDICTED_cm))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1' at int -> L_v_1_int = IntVal(1)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 754 lines, 28915 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_671.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_c, WGOLD_d, WGOLD_p, WGOLD_f, WGOLD_c1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_f)), Not(And(fpIsZero(WGOLD_f), fpIsNegative(WGOLD_f)))), And(election(WGOLD_e, WGOLD_c, WGOLD_d, FV_Delegate_0, WGOLD_p, WGOLD_f, WGOLD_c1), 1 == WGOLD_d)), Not(Exists([predicted_e_1, predicted_c_2, predicted_p_3, predicted_f_4, predicted_cm_5], And(And(Not(fpIsNaN(predicted_f_4)), Not(And(fpIsZero(predicted_f_4), fpIsNegative(predicted_f_4)))), election(predicted_e_1, predicted_c_2, 1, FV_Delegate_0, predicted_p_3, predicted_f_4, predicted_cm_5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_c, WPREDICTED_p, WPREDICTED_f, WPREDICTED_cm
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_f)), Not(And(fpIsZero(WPREDICTED_f), fpIsNegative(WPREDICTED_f)))), election(WPREDICTED_e, WPREDICTED_c, 1, FV_Delegate_0, WPREDICTED_p, WPREDICTED_f, WPREDICTED_cm)), Not(Exists([gold_e_1, gold_c_2, gold_d_3, gold_p_4, gold_f_5, gold_c1_6], And(And(Not(fpIsNaN(gold_f_5)), Not(And(fpIsZero(gold_f_5), fpIsNegative(gold_f_5)))), And(election(gold_e_1, gold_c_2, gold_d_3, FV_Delegate_0, gold_p_4, gold_f_5, gold_c1_6), 1 == gold_d_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

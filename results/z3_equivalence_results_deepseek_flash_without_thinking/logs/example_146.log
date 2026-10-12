@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_146.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_146.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3764 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is the area of the state with the capital albany
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        state(state_name, population, area, country_name, capital, density)
+        constant albany : capital
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ∃p : population ∃c : country_name ∃c1 : capital ∃d : density ( (state(s,p,a,c,c1,d)) ∧ (c1 = 'albany') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:c1 COLON:: IDENT:capital EXISTS:∃ IDENT:d COLON:: IDENT:density LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:albany RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS p:population
+              EXISTS c:country_name
+                EXISTS c1:capital
+                  EXISTS d:density
+                    AND
+                      PRED state(s, p, a, c, c1, d)
+                      EQ  c1 = 'albany'
+      Predicted FOL: ∃x : state_name ∃y : population ∃z : area ∃w : country_name (state(x, y, z, w, 'albany', v) ∧ ∀x' : state_name ∀y' : population ∀z' : area ∀w' : country_name ∀v' : density (state(x', y', z', w', 'albany', v') → z' = z))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:state_name EXISTS:∃ IDENT:y COLON:: IDENT:population EXISTS:∃ IDENT:z COLON:: IDENT:area EXISTS:∃ IDENT:w COLON:: IDENT:country_name LPAR:( IDENT:state LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, LIT:albany COMMA:, IDENT:v RPAR:) AND:∧ FORALL:∀ IDENT:x' COLON:: IDENT:state_name FORALL:∀ IDENT:y' COLON:: IDENT:population FORALL:∀ IDENT:z' COLON:: IDENT:area FORALL:∀ IDENT:w' COLON:: IDENT:country_name FORALL:∀ IDENT:v' COLON:: IDENT:density LPAR:( IDENT:state LPAR:( IDENT:x' COMMA:, IDENT:y' COMMA:, IDENT:z' COMMA:, IDENT:w' COMMA:, LIT:albany COMMA:, IDENT:v' RPAR:) IMPL:→ IDENT:z' EQ:= IDENT:z RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:state_name
+            EXISTS y:population
+              EXISTS z:area
+                EXISTS w:country_name
+                  AND
+                    PRED state(x, y, z, w, 'albany', v)
+                    FORALL x':state_name
+                      FORALL y':population
+                        FORALL z':area
+                          FORALL w':country_name
+                            FORALL v':density
+                              IMPLIES
+                                PRED state(x', y', z', w', 'albany', v')
+                                EQ  z' = z
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) v occur free in the formula but are not declared in 'free vars'
+   WARNING: Predicted FOL: declared free variable(s) z do not occur free in the formula
+   1 shared answer variable(s)
+      FV_area_0 : area   Gold a <-> Predicted z
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        v : local density, global double -> Float64()
+        v' : local density, global double -> Float64()
+        w : local country_name, global varchar(3) -> StringSort()
+        w' : local country_name, global varchar(3) -> StringSort()
+        x : local state_name, global text -> StringSort()
+        x' : local state_name, global text -> StringSort()
+        y : local population, global integer -> IntSort()
+        y' : local population, global integer -> IntSort()
+        z : local area, global double -> Float64()
+        z' : local area, global double -> Float64()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_p_2, gold_c_3, gold_c1_4, gold_d_5], And(D_varchar_3_(gold_c_3), D_double(gold_d_5), And(P_state(gold_s_1, gold_p_2, FV_area_0, gold_c_3, gold_c1_4, gold_d_5), (gold_c1_4 == L_albany))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_p, WGOLD_c, WGOLD_c1, WGOLD_d):  And(D_varchar_3_(WGOLD_c), D_double(WGOLD_d), And(P_state(WGOLD_s, WGOLD_p, FV_area_0, WGOLD_c, WGOLD_c1, WGOLD_d), (WGOLD_c1 == L_albany)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'v'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in formula
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in <genexpr>
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'v'

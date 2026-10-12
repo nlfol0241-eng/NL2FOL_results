@@ -1,0 +1,128 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1170.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1170.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3381 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the different first names and ages of the students who do have pets?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = varchar(12) -> StringSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        PetID = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Has_Pet(StuID, PetID)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : StuID ∃l : LName ∃s1 : Sex ∃m : Major ∃a1 : Advisor ∃c : city_code ∃s2 : StuID ∃p : PetID ( ((Student(s,l,f,a,s1,m,a1,c)) ∧ (Has_Pet(s2,p))) ∧ (s = s2) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:s2 COLON:: IDENT:StuID EXISTS:∃ IDENT:p COLON:: IDENT:PetID LPAR:( LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Has_Pet LPAR:( IDENT:s2 COMMA:, IDENT:p RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS l:LName
+              EXISTS s1:Sex
+                EXISTS m:Major
+                  EXISTS a1:Advisor
+                    EXISTS c:city_code
+                      EXISTS s2:StuID
+                        EXISTS p:PetID
+                          AND
+                            AND
+                              PRED Student(s, l, f, a, s1, m, a1, c)
+                              PRED Has_Pet(s2, p)
+                            EQ  s = s2
+      Predicted FOL: ∃sid : StuID ∃lname : LName ∃sex : Sex ∃major : Major ∃advisor : Advisor ∃city : city_code ∃pet : PetID (Student(sid, lname, fname, age, sex, major, advisor, city) ∧ Has_Pet(sid, pet))
+        tokens: EXISTS:∃ IDENT:sid COLON:: IDENT:StuID EXISTS:∃ IDENT:lname COLON:: IDENT:LName EXISTS:∃ IDENT:sex COLON:: IDENT:Sex EXISTS:∃ IDENT:major COLON:: IDENT:Major EXISTS:∃ IDENT:advisor COLON:: IDENT:Advisor EXISTS:∃ IDENT:city COLON:: IDENT:city_code EXISTS:∃ IDENT:pet COLON:: IDENT:PetID LPAR:( IDENT:Student LPAR:( IDENT:sid COMMA:, IDENT:lname COMMA:, IDENT:fname COMMA:, IDENT:age COMMA:, IDENT:sex COMMA:, IDENT:major COMMA:, IDENT:advisor COMMA:, IDENT:city RPAR:) AND:∧ IDENT:Has_Pet LPAR:( IDENT:sid COMMA:, IDENT:pet RPAR:) RPAR:) EOF
+        AST:
+          EXISTS sid:StuID
+            EXISTS lname:LName
+              EXISTS sex:Sex
+                EXISTS major:Major
+                  EXISTS advisor:Advisor
+                    EXISTS city:city_code
+                      EXISTS pet:PetID
+                        AND
+                          PRED Student(sid, lname, fname, age, sex, major, advisor, city)
+                          PRED Has_Pet(sid, pet)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Age_0 : Age   Gold a <-> Predicted age
+      FV_Fname_0 : Fname   Gold f <-> Predicted fname
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        p : local PetID, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+        s2 : local StuID, global integer -> IntSort()
+      Predicted FOL:
+        advisor : local Advisor, global integer -> IntSort()
+        age : local Age, global integer -> IntSort()
+        city : local city_code, global varchar(3) -> StringSort()
+        fname : local Fname, global varchar(12) -> StringSort()
+        lname : local LName, global varchar(12) -> StringSort()
+        major : local Major, global integer -> IntSort()
+        pet : local PetID, global integer -> IntSort()
+        sex : local Sex, global varchar(1) -> StringSort()
+        sid : local StuID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_l_2, gold_s1_3, gold_m_4, gold_a1_5, gold_c_6, gold_s2_7, gold_p_8], And(D_varchar_12_(gold_l_2), D_varchar_1_(gold_s1_3), D_varchar_3_(gold_c_6), And(And(P_Student(gold_s_1, gold_l_2, FV_Fname_0, FV_Age_0, gold_s1_3, gold_m_4, gold_a1_5, gold_c_6), P_Has_Pet(gold_s2_7, gold_p_8)), (gold_s_1 == gold_s2_7))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_l, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c, WGOLD_s2, WGOLD_p):  And(D_varchar_12_(WGOLD_l), D_varchar_1_(WGOLD_s1), D_varchar_3_(WGOLD_c), And(And(P_Student(WGOLD_s, WGOLD_l, FV_Fname_0, FV_Age_0, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c), P_Has_Pet(WGOLD_s2, WGOLD_p)), (WGOLD_s == WGOLD_s2)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_sid_1, predicted_lname_2, predicted_sex_3, predicted_major_4, predicted_advisor_5, predicted_city_6, predicted_pet_7], And(D_varchar_12_(predicted_lname_2), D_varchar_1_(predicted_sex_3), D_varchar_3_(predicted_city_6), And(P_Student(predicted_sid_1, predicted_lname_2, FV_Fname_0, FV_Age_0, predicted_sex_3, predicted_major_4, predicted_advisor_5, predicted_city_6), P_Has_Pet(predicted_sid_1, predicted_pet_7))))
+      predicted_skolem (witnesses WPREDICTED_sid, WPREDICTED_lname, WPREDICTED_sex, WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_city, WPREDICTED_pet):  And(D_varchar_12_(WPREDICTED_lname), D_varchar_1_(WPREDICTED_sex), D_varchar_3_(WPREDICTED_city), And(P_Student(WPREDICTED_sid, WPREDICTED_lname, FV_Fname_0, FV_Age_0, WPREDICTED_sex, WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_city), P_Has_Pet(WPREDICTED_sid, WPREDICTED_pet)))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 782 lines, 30887 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1170.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Fname_0) <= 12
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_l, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c, WGOLD_s2, WGOLD_p
+      claim: And(And(Length(WGOLD_l) <= 12, Length(WGOLD_s1) <= 1, Length(WGOLD_c) <= 3, And(And(Student(WGOLD_s, WGOLD_l, FV_Fname_0, FV_Age_0, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c), Has_Pet(WGOLD_s2, WGOLD_p)), WGOLD_s == WGOLD_s2)), Not(Exists([predicted_sid_1, predicted_lname_2, predicted_sex_3, predicted_major_4, predicted_advisor_5, predicted_city_6, predicted_pet_7], And(Length(predicted_lname_2) <= 12, Length(predicted_sex_3) <= 1, Length(predicted_city_6) <= 3, And(Student(predicted_sid_1, predicted_lname_2, FV_Fname_0, FV_Age_0, predicted_sex_3, predicted_major_4, predicted_advisor_5, predicted_city_6), Has_Pet(predicted_sid_1, predicted_pet_7))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_sid, WPREDICTED_lname, WPREDICTED_sex, WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_city, WPREDICTED_pet
+      claim: And(And(Length(WPREDICTED_lname) <= 12, Length(WPREDICTED_sex) <= 1, Length(WPREDICTED_city) <= 3, And(Student(WPREDICTED_sid, WPREDICTED_lname, FV_Fname_0, FV_Age_0, WPREDICTED_sex, WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_city), Has_Pet(WPREDICTED_sid, WPREDICTED_pet))), Not(Exists([gold_s_1, gold_l_2, gold_s1_3, gold_m_4, gold_a1_5, gold_c_6, gold_s2_7, gold_p_8], And(Length(gold_l_2) <= 12, Length(gold_s1_3) <= 1, Length(gold_c_6) <= 3, And(And(Student(gold_s_1, gold_l_2, FV_Fname_0, FV_Age_0, gold_s1_3, gold_m_4, gold_a1_5, gold_c_6), Has_Pet(gold_s2_7, gold_p_8)), gold_s_1 == gold_s2_7)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

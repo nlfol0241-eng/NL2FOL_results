@@ -1,0 +1,101 @@
+{
+  "NL": "Find the id of users who are followed by Mary or Susan.",
+  "Vocabulary": {
+    "Predicates": [
+      "user_profiles",
+      "follows"
+    ],
+    "Functions": [],
+    "Constants": [
+      "Mary",
+      "Susan"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "user_profiles": [
+        "uid",
+        "name",
+        "email",
+        "partitionid",
+        "followers"
+      ],
+      "follows": [
+        "f1",
+        "f2"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "Mary": "name",
+      "Susan": "name"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀b0∀b1∀b2∀b3∀b0'∀b1'∀b2'∀b3'( tweets(b0, b1, b2, b3) ∧ tweets(b0', b1', b2', b3') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' )",
+    "axiom2": "∀c0∀c1∀c2∀c3∀c4∀c0'∀c1'∀c2'∀c3'∀c4'( user_profiles(c0, c1, c2, c3, c4) ∧ user_profiles(c0', c1', c2', c3', c4') ∧ c0 = c0' ) → ( c1 = c1' ∧ c2 = c2' ∧ c3 = c3' ∧ c4 = c4' )",
+    "axiom3": "∀a0∀a1 ( follows(a0, a1) → ∃c0∃c1∃c2∃c3∃c4 ( user_profiles(c0, c1, c2, c3, c4) ∧ c0 = a1 ) )",
+    "axiom4": "∀a0∀a1 ( follows(a0, a1) → ∃c0∃c1∃c2∃c3∃c4 ( user_profiles(c0, c1, c2, c3, c4) ∧ c0 = a0 ) )",
+    "axiom5": "∀b0∀b1∀b2∀b3 ( tweets(b0, b1, b2, b3) → ∃c0∃c1∃c2∃c3∃c4 ( user_profiles(c0, c1, c2, c3, c4) ∧ c0 = b1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "user_profiles": {
+        "A": "user_profiles",
+        "A0": "uid",
+        "A1": "name",
+        "A2": "email",
+        "A3": "partitionid",
+        "A4": "followers"
+      },
+      "follows": {
+        "B": "follows",
+        "B0": "f1",
+        "B1": "f2"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "Mary",
+      "const2": "Susan"
+    }
+  },
+  "Gold FOL": {
+    "string": "∃u : uid ∃n : name ∃e : email ∃p : partitionid ∃f : followers ∃f2 : f2 ( (((user_profiles(u,n,e,p,f)) ∧ (follows(f1,f2))) ∧ (u = f2)) ∧ ((n = 'Mary') ∨ (n = 'Susan')) )",
+    "free vars": "f1 : f1"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[B0](<S>[A1 = 'Mary':VARCHAR(255) | A1 = 'Susan':VARCHAR(255)](<S>[A0 = B1]((A)<X>(B))))",
+    "Processed_RA": "<P>[B0](<S>[A1 = 'Mary' | A1 = 'Susan'](<S>[A0 = B1]((A)<X>(B))))",
+    "RC": "[E]?A2,?A1,?A4,?A3,?B1,?A0( (((A(?A0,?A1,?A2,?A3,?A4)) & (B(?B0,?B1))) & (?A0 = ?B1)) & ((?A1 = Mary) | (?A1 = Susan)) )",
+    "string": "∃A2 ∃A1 ∃A4 ∃A3 ∃B1 ∃A0( (((A(A0,A1,A2,A3,A4)) ∧ (B(B0,B1))) ∧ (A0 = B1)) ∧ ((A1 = 'Mary') ∨ (A1 = 'Susan')) )",
+    "free variables": "B0",
+    "db_id": "twitter_1",
+    "processed_sql": "SELECT T2.f1 FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid  =  T2.f2 WHERE T1.name  =  'Mary' OR T1.name  =  'Susan'"
+  },
+  "Global Sorts": [
+    "int(11)",
+    "varchar(255)"
+  ],
+  "Sort Axioms": {
+    "user_profiles": {
+      "sortaxiom0": "uid = int(11)",
+      "sortaxiom1": "name = varchar(255)",
+      "sortaxiom2": "email = varchar(255)",
+      "sortaxiom3": "partitionid = int(11)",
+      "sortaxiom4": "followers = int(11)"
+    },
+    "follows": {
+      "sortaxiom0": "f1 = int(11)",
+      "sortaxiom1": "f2 = int(11)"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT T2.f1 FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid  =  T2.f2 WHERE T1.name  =  \"Mary\" OR T1.name  =  \"Susan\""
+  },
+  "id": 2284,
+  "Predicted FOL": {
+    "string": "∃ n : name, e : email, p : partitionid, f : followers ( user_profiles(x, n, e, p, f) ∧ ( ∃ m_uid : uid, m_email : email, m_part : partitionid, m_fol : followers ( user_profiles(m_uid, 'Mary', m_email, m_part, m_fol) ∧ follows(m_uid, x) ) ∨ ∃ s_uid : uid, s_email : email, s_part : partitionid, s_fol : followers ( user_profiles(s_uid, 'Susan', s_email, s_part, s_fol) ∧ follows(s_uid, x) ) ) )",
+    "free vars": "x : uid"
+  }
+}

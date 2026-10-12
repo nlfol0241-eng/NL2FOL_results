@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2543.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2543.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3582 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of the students who are in the position of striker and got a yes tryout decision.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+      local sorts:
+        HS = numeric(5,0) -> RealSort()
+        cName = varchar(20) -> StringSort()
+        decision = varchar(3) -> StringSort()
+        pID = numeric(5,0) -> RealSort()
+        pName = varchar(20) -> StringSort()
+        pPos = varchar(8) -> StringSort()
+        yCard = varchar(3) -> StringSort()
+      symbols:
+        Player(pID, pName, yCard, HS)
+        Tryout(pID, cName, pPos, decision)
+        constant striker : pPos
+        constant yes : decision
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : pID ∃y : yCard ∃h : HS ∃p2 : pID ∃c : cName ∃p3 : pPos ∃d : decision ( (((Player(p,p1,y,h)) ∧ (Tryout(p2,c,p3,d))) ∧ (p = p2)) ∧ ((d = 'yes') ∧ (p3 = 'striker')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:y COLON:: IDENT:yCard EXISTS:∃ IDENT:h COLON:: IDENT:HS EXISTS:∃ IDENT:p2 COLON:: IDENT:pID EXISTS:∃ IDENT:c COLON:: IDENT:cName EXISTS:∃ IDENT:p3 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Player LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:y COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Tryout LPAR:( IDENT:p2 COMMA:, IDENT:c COMMA:, IDENT:p3 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:d EQ:= LIT:yes RPAR:) AND:∧ LPAR:( IDENT:p3 EQ:= LIT:striker RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:pID
+            EXISTS y:yCard
+              EXISTS h:HS
+                EXISTS p2:pID
+                  EXISTS c:cName
+                    EXISTS p3:pPos
+                      EXISTS d:decision
+                        AND
+                          AND
+                            AND
+                              PRED Player(p, p1, y, h)
+                              PRED Tryout(p2, c, p3, d)
+                            EQ  p = p2
+                          AND
+                            EQ  d = 'yes'
+                            EQ  p3 = 'striker'
+      Predicted FOL: ∃pID : pID ∃pName : pName ∃yCard : yCard ∃HS : HS ∃cName : cName ∃pPos : pPos ∃decision : decision (Player(pID, pName, yCard, HS) ∧ Tryout(pID, cName, pPos, decision) ∧ pPos = striker ∧ decision = yes)
+        tokens: EXISTS:∃ IDENT:pID COLON:: IDENT:pID EXISTS:∃ IDENT:pName COLON:: IDENT:pName EXISTS:∃ IDENT:yCard COLON:: IDENT:yCard EXISTS:∃ IDENT:HS COLON:: IDENT:HS EXISTS:∃ IDENT:cName COLON:: IDENT:cName EXISTS:∃ IDENT:pPos COLON:: IDENT:pPos EXISTS:∃ IDENT:decision COLON:: IDENT:decision LPAR:( IDENT:Player LPAR:( IDENT:pID COMMA:, IDENT:pName COMMA:, IDENT:yCard COMMA:, IDENT:HS RPAR:) AND:∧ IDENT:Tryout LPAR:( IDENT:pID COMMA:, IDENT:cName COMMA:, IDENT:pPos COMMA:, IDENT:decision RPAR:) AND:∧ IDENT:pPos EQ:= IDENT:striker AND:∧ IDENT:decision EQ:= IDENT:yes RPAR:) EOF
+        AST:
+          EXISTS pID:pID
+            EXISTS pName:pName
+              EXISTS yCard:yCard
+                EXISTS HS:HS
+                  EXISTS cName:cName
+                    EXISTS pPos:pPos
+                      EXISTS decision:decision
+                        AND
+                          PRED Player(pID, pName, yCard, HS)
+                          PRED Tryout(pID, cName, pPos, decision)
+                          EQ  pPos = striker<const>
+                          EQ  decision = yes<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p1 : pName) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        d : local decision, global varchar(3) -> StringSort()
+        h : local HS, global numeric(5,0) -> RealSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pName, global varchar(20) -> StringSort()
+        p2 : local pID, global numeric(5,0) -> RealSort()
+        p3 : local pPos, global varchar(8) -> StringSort()
+        y : local yCard, global varchar(3) -> StringSort()
+      Predicted FOL:
+        HS : local HS, global numeric(5,0) -> RealSort()
+        cName : local cName, global varchar(20) -> StringSort()
+        decision : local decision, global varchar(3) -> StringSort()
+        pID : local pID, global numeric(5,0) -> RealSort()
+        pName : local pName, global varchar(20) -> StringSort()
+        pPos : local pPos, global varchar(8) -> StringSort()
+        yCard : local yCard, global varchar(3) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5540 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2543.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p1 : pName) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

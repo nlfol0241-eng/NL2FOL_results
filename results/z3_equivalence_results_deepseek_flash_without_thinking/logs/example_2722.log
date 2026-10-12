@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2722.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2722.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4659 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: author who wrote papers with Noah A Smith
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        integer -> IntSort()
+      local sorts:
+        authorId = integer -> IntSort()
+        authorName = varchar(50) -> StringSort()
+        paperId = integer -> IntSort()
+      symbols:
+        author(authorId, authorName)
+        writes(paperId, authorId)
+        constant Noah A Smith : authorName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : paperId ∃a : authorId ∃a1 : authorId ∃a2 : authorName ∃p1 : paperId ∃a3 : authorId ∃a4 : authorName ( (((((((writes(p,a)) ∧ (author(a1,a2))) ∧ (a = a1)) ∧ (writes(p1,a3))) ∧ (p1 = p)) ∧ (author(e0,a4))) ∧ (a3 = e0)) ∧ (a2 = 'Noah A Smith') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:paperId EXISTS:∃ IDENT:a COLON:: IDENT:authorId EXISTS:∃ IDENT:a1 COLON:: IDENT:authorId EXISTS:∃ IDENT:a2 COLON:: IDENT:authorName EXISTS:∃ IDENT:p1 COLON:: IDENT:paperId EXISTS:∃ IDENT:a3 COLON:: IDENT:authorId EXISTS:∃ IDENT:a4 COLON:: IDENT:authorName LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:writes LPAR:( IDENT:p1 COMMA:, IDENT:a3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:e0 COMMA:, IDENT:a4 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a3 EQ:= IDENT:e0 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= LIT:Noah A Smith RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:paperId
+            EXISTS a:authorId
+              EXISTS a1:authorId
+                EXISTS a2:authorName
+                  EXISTS p1:paperId
+                    EXISTS a3:authorId
+                      EXISTS a4:authorName
+                        AND
+                          AND
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      PRED writes(p, a)
+                                      PRED author(a1, a2)
+                                    EQ  a = a1
+                                  PRED writes(p1, a3)
+                                EQ  p1 = p
+                              PRED author(e0, a4)
+                            EQ  a3 = e0
+                          EQ  a2 = 'Noah A Smith'
+      Predicted FOL: ∃x : authorId (author(x, 'Noah A Smith') ∧ ∃y : paperId (writes(y, x) ∧ ∃z : authorId (author(z, 'Noah A Smith') ∧ writes(y, z))))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:authorId LPAR:( IDENT:author LPAR:( IDENT:x COMMA:, LIT:Noah A Smith RPAR:) AND:∧ EXISTS:∃ IDENT:y COLON:: IDENT:paperId LPAR:( IDENT:writes LPAR:( IDENT:y COMMA:, IDENT:x RPAR:) AND:∧ EXISTS:∃ IDENT:z COLON:: IDENT:authorId LPAR:( IDENT:author LPAR:( IDENT:z COMMA:, LIT:Noah A Smith RPAR:) AND:∧ IDENT:writes LPAR:( IDENT:y COMMA:, IDENT:z RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:authorId
+            AND
+              PRED author(x, 'Noah A Smith')
+              EXISTS y:paperId
+                AND
+                  PRED writes(y, x)
+                  EXISTS z:authorId
+                    AND
+                      PRED author(z, 'Noah A Smith')
+                      PRED writes(y, z)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (e0 : authorId) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local authorId, global integer -> IntSort()
+        a1 : local authorId, global integer -> IntSort()
+        a2 : local authorName, global varchar(50) -> StringSort()
+        a3 : local authorId, global integer -> IntSort()
+        a4 : local authorName, global varchar(50) -> StringSort()
+        e0 : local authorId, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+        p1 : local paperId, global integer -> IntSort()
+      Predicted FOL:
+        x : local authorId, global integer -> IntSort()
+        y : local paperId, global integer -> IntSort()
+        z : local authorId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5496 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2722.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (e0 : authorId) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

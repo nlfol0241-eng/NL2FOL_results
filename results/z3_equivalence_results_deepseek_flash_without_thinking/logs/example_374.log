@@ -1,0 +1,148 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_374.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_374.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2728 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the emails of the user named "Mary".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int(11) -> IntSort()
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+      local sorts:
+        email = varchar(255) -> StringSort()
+        followers = int(11) -> IntSort()
+        name = varchar(255) -> StringSort()
+        partitionid = int(11) -> IntSort()
+        uid = int(11) -> IntSort()
+      symbols:
+        user_profiles(uid, name, email, partitionid, followers)
+        constant Mary : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃n : name ∃p : partitionid ∃f : followers ( (user_profiles(u,n,e,p,f)) ∧ (n = 'Mary') )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:p COLON:: IDENT:partitionid EXISTS:∃ IDENT:f COLON:: IDENT:followers LPAR:( LPAR:( IDENT:user_profiles LPAR:( IDENT:u COMMA:, IDENT:n COMMA:, IDENT:e COMMA:, IDENT:p COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Mary RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS n:name
+              EXISTS p:partitionid
+                EXISTS f:followers
+                  AND
+                    PRED user_profiles(u, n, e, p, f)
+                    EQ  n = 'Mary'
+      Predicted FOL: ∃x_uid : uid ∃x_name : name ∃x_email : email ∃x_partitionid : partitionid ∃x_followers : followers (user_profiles(x_uid, x_name, x_email, x_partitionid, x_followers) ∧ x_name = 'Mary')
+        tokens: EXISTS:∃ IDENT:x_uid COLON:: IDENT:uid EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:x_email COLON:: IDENT:email EXISTS:∃ IDENT:x_partitionid COLON:: IDENT:partitionid EXISTS:∃ IDENT:x_followers COLON:: IDENT:followers LPAR:( IDENT:user_profiles LPAR:( IDENT:x_uid COMMA:, IDENT:x_name COMMA:, IDENT:x_email COMMA:, IDENT:x_partitionid COMMA:, IDENT:x_followers RPAR:) AND:∧ IDENT:x_name EQ:= LIT:Mary RPAR:) EOF
+        AST:
+          EXISTS x_uid:uid
+            EXISTS x_name:name
+              EXISTS x_email:email
+                EXISTS x_partitionid:partitionid
+                  EXISTS x_followers:followers
+                    AND
+                      PRED user_profiles(x_uid, x_name, x_email, x_partitionid, x_followers)
+                      EQ  x_name = 'Mary'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x_email do not occur free in the formula
+   1 shared answer variable(s)
+      FV_email_0 : email   Gold e <-> Predicted x_email
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local email, global varchar(255) -> StringSort()
+        f : local followers, global int(11) -> IntSort()
+        n : local name, global varchar(255) -> StringSort()
+        p : local partitionid, global int(11) -> IntSort()
+        u : local uid, global int(11) -> IntSort()
+      Predicted FOL:
+        x_email : local email, global varchar(255) -> StringSort()
+        x_followers : local followers, global int(11) -> IntSort()
+        x_name : local name, global varchar(255) -> StringSort()
+        x_partitionid : local partitionid, global int(11) -> IntSort()
+        x_uid : local uid, global int(11) -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_u_1, gold_n_2, gold_p_3, gold_f_4], And(D_varchar_255_(gold_n_2), And(P_user_profiles(gold_u_1, gold_n_2, FV_email_0, gold_p_3, gold_f_4), (gold_n_2 == L_Mary))))
+      gold_skolem (witnesses WGOLD_u, WGOLD_n, WGOLD_p, WGOLD_f):  And(D_varchar_255_(WGOLD_n), And(P_user_profiles(WGOLD_u, WGOLD_n, FV_email_0, WGOLD_p, WGOLD_f), (WGOLD_n == L_Mary)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_uid_1, predicted_x_name_2, predicted_x_email_3, predicted_x_partitionid_4, predicted_x_followers_5], And(D_varchar_255_(predicted_x_name_2), D_varchar_255_(predicted_x_email_3), And(P_user_profiles(predicted_x_uid_1, predicted_x_name_2, predicted_x_email_3, predicted_x_partitionid_4, predicted_x_followers_5), (predicted_x_name_2 == L_Mary))))
+      predicted_skolem (witnesses WPREDICTED_x_uid, WPREDICTED_x_name, WPREDICTED_x_email, WPREDICTED_x_partitionid, WPREDICTED_x_followers):  And(D_varchar_255_(WPREDICTED_x_name), D_varchar_255_(WPREDICTED_x_email), And(P_user_profiles(WPREDICTED_x_uid, WPREDICTED_x_name, WPREDICTED_x_email, WPREDICTED_x_partitionid, WPREDICTED_x_followers), (WPREDICTED_x_name == L_Mary)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Mary' at varchar(255) -> L_Mary = StringVal('Mary')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 743 lines, 28705 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_374.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_email_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_u, WGOLD_n, WGOLD_p, WGOLD_f
+      claim: And(And(Length(WGOLD_n) <= 255, And(user_profiles(WGOLD_u, WGOLD_n, FV_email_0, WGOLD_p, WGOLD_f), WGOLD_n == "Mary")), Not(Exists([predicted_x_uid_1, predicted_x_name_2, predicted_x_email_3, predicted_x_partitionid_4, predicted_x_followers_5], And(Length(predicted_x_name_2) <= 255, Length(predicted_x_email_3) <= 255, And(user_profiles(predicted_x_uid_1, predicted_x_name_2, predicted_x_email_3, predicted_x_partitionid_4, predicted_x_followers_5), predicted_x_name_2 == "Mary")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_x_uid, WPREDICTED_x_name, WPREDICTED_x_email, WPREDICTED_x_partitionid, WPREDICTED_x_followers
+      claim: And(And(Length(WPREDICTED_x_name) <= 255, Length(WPREDICTED_x_email) <= 255, And(user_profiles(WPREDICTED_x_uid, WPREDICTED_x_name, WPREDICTED_x_email, WPREDICTED_x_partitionid, WPREDICTED_x_followers), WPREDICTED_x_name == "Mary")), Not(Exists([gold_u_1, gold_n_2, gold_p_3, gold_f_4], And(Length(gold_n_2) <= 255, And(user_profiles(gold_u_1, gold_n_2, FV_email_0, gold_p_3, gold_f_4), gold_n_2 == "Mary")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 11 relation tuple(s) listed, 10 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x_uid : uid = 2
+          x_name : name = 'Mary'
+          x_email : email = 'A'
+          x_partitionid : partitionid = 3
+          x_followers : followers = 4
+        free (answer) variables:
+          FV_email_0 : email = ''
+        literals / constants:
+          Mary : name = 'Mary'
+        relations (each value tagged with the local sort of its position):
+          user_profiles(uid, name, email, partitionid, followers):
+            user_profiles(uid=0, name='', email='A', partitionid=0, followers=2)
+            user_profiles(uid=0, name='', email='A', partitionid=0, followers=3)
+            user_profiles(uid=0, name='', email='A', partitionid=2, followers=0)
+            user_profiles(uid=0, name='', email='A', partitionid=5, followers=0)
+            user_profiles(uid=0, name='', email='Mary', partitionid=0, followers=0)
+            user_profiles(uid=0, name='A', email='', partitionid=0, followers=0)
+            user_profiles(uid=0, name='B', email='', partitionid=0, followers=0)
+            user_profiles(uid=2, name='Mary', email='A', partitionid=3, followers=4)
+            user_profiles(uid=3, name='', email='B', partitionid=4, followers=5)
+            user_profiles(uid=4, name='', email='A', partitionid=0, followers=0)
+            user_profiles(uid=5, name='', email='A', partitionid=0, followers=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          email       : {'', 'A', 'B', 'Mary'}
+          followers   : {0, 2, 3, 4, 5}
+          name        : {'', 'A', 'B', 'Mary'}
+          partitionid : {0, 2, 3, 4, 5}
+          uid         : {0, 2, 3, 4, 5}
+        values shared across local sorts (joins):
+          0 : followers, partitionid, uid
+          2 : followers, partitionid, uid
+          3 : followers, partitionid, uid
+          4 : followers, partitionid, uid
+          5 : followers, partitionid, uid
+          '' : email, name
+          'A' : email, name
+          'B' : email, name
+          'Mary' : email, name
+   [R3] took 0.089 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

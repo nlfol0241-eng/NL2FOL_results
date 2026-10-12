@@ -1,0 +1,132 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1901.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1901.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5324 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names, color descriptions, and product descriptions for products in the 'Herbs' category?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        color_code = varchar(15) -> StringSort()
+        color_description = varchar(80) -> StringSort()
+        other_product_details = varchar(255) -> StringSort()
+        product_category_code = varchar(15) -> StringSort()
+        product_description = varchar(255) -> StringSort()
+        product_id = integer -> IntSort()
+        product_name = varchar(80) -> StringSort()
+        typical_buying_price = varchar(20) -> StringSort()
+        typical_selling_price = varchar(20) -> StringSort()
+      symbols:
+        Products(product_id, color_code, product_category_code, product_name, typical_buying_price, typical_selling_price, product_description, other_product_details)
+        Ref_Colors(color_code, color_description)
+        constant Herbs : product_category_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃c : color_code ∃p1 : product_category_code ∃t : typical_buying_price ∃t1 : typical_selling_price ∃o : other_product_details ∃c1 : color_code ( (((Products(p,c,p1,p2,t,t1,p3,o)) ∧ (Ref_Colors(c1,c2))) ∧ (c = c1)) ∧ (p1 = 'Herbs') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:c COLON:: IDENT:color_code EXISTS:∃ IDENT:p1 COLON:: IDENT:product_category_code EXISTS:∃ IDENT:t COLON:: IDENT:typical_buying_price EXISTS:∃ IDENT:t1 COLON:: IDENT:typical_selling_price EXISTS:∃ IDENT:o COLON:: IDENT:other_product_details EXISTS:∃ IDENT:c1 COLON:: IDENT:color_code LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:t COMMA:, IDENT:t1 COMMA:, IDENT:p3 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Ref_Colors LPAR:( IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:Herbs RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS c:color_code
+              EXISTS p1:product_category_code
+                EXISTS t:typical_buying_price
+                  EXISTS t1:typical_selling_price
+                    EXISTS o:other_product_details
+                      EXISTS c1:color_code
+                        AND
+                          AND
+                            AND
+                              PRED Products(p, c, p1, p2, t, t1, p3, o)
+                              PRED Ref_Colors(c1, c2)
+                            EQ  c = c1
+                          EQ  p1 = 'Herbs'
+      Predicted FOL: ∃pid : product_id ∃ccode : color_code ∃tbp : typical_buying_price ∃tsp : typical_selling_price ∃opd : other_product_details (Products(pid, ccode, 'Herbs', pname, tbp, tsp, pdesc, opd) ∧ Ref_Colors(ccode, cdesc))
+        tokens: EXISTS:∃ IDENT:pid COLON:: IDENT:product_id EXISTS:∃ IDENT:ccode COLON:: IDENT:color_code EXISTS:∃ IDENT:tbp COLON:: IDENT:typical_buying_price EXISTS:∃ IDENT:tsp COLON:: IDENT:typical_selling_price EXISTS:∃ IDENT:opd COLON:: IDENT:other_product_details LPAR:( IDENT:Products LPAR:( IDENT:pid COMMA:, IDENT:ccode COMMA:, LIT:Herbs COMMA:, IDENT:pname COMMA:, IDENT:tbp COMMA:, IDENT:tsp COMMA:, IDENT:pdesc COMMA:, IDENT:opd RPAR:) AND:∧ IDENT:Ref_Colors LPAR:( IDENT:ccode COMMA:, IDENT:cdesc RPAR:) RPAR:) EOF
+        AST:
+          EXISTS pid:product_id
+            EXISTS ccode:color_code
+              EXISTS tbp:typical_buying_price
+                EXISTS tsp:typical_selling_price
+                  EXISTS opd:other_product_details
+                    AND
+                      PRED Products(pid, ccode, 'Herbs', pname, tbp, tsp, pdesc, opd)
+                      PRED Ref_Colors(ccode, cdesc)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_color_description_0 : color_description   Gold c2 <-> Predicted cdesc
+      FV_product_description_0 : product_description   Gold p3 <-> Predicted pdesc
+      FV_product_name_0 : product_name   Gold p2 <-> Predicted pname
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local color_code, global varchar(15) -> StringSort()
+        c1 : local color_code, global varchar(15) -> StringSort()
+        c2 : local color_description, global varchar(80) -> StringSort()
+        o : local other_product_details, global varchar(255) -> StringSort()
+        p : local product_id, global integer -> IntSort()
+        p1 : local product_category_code, global varchar(15) -> StringSort()
+        p2 : local product_name, global varchar(80) -> StringSort()
+        p3 : local product_description, global varchar(255) -> StringSort()
+        t : local typical_buying_price, global varchar(20) -> StringSort()
+        t1 : local typical_selling_price, global varchar(20) -> StringSort()
+      Predicted FOL:
+        ccode : local color_code, global varchar(15) -> StringSort()
+        cdesc : local color_description, global varchar(80) -> StringSort()
+        opd : local other_product_details, global varchar(255) -> StringSort()
+        pdesc : local product_description, global varchar(255) -> StringSort()
+        pid : local product_id, global integer -> IntSort()
+        pname : local product_name, global varchar(80) -> StringSort()
+        tbp : local typical_buying_price, global varchar(20) -> StringSort()
+        tsp : local typical_selling_price, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_c_2, gold_p1_3, gold_t_4, gold_t1_5, gold_o_6, gold_c1_7], And(D_varchar_15_(gold_c_2), D_varchar_15_(gold_p1_3), D_varchar_20_(gold_t_4), D_varchar_20_(gold_t1_5), D_varchar_255_(gold_o_6), D_varchar_15_(gold_c1_7), And(And(And(P_Products(gold_p_1, gold_c_2, gold_p1_3, FV_product_name_0, gold_t_4, gold_t1_5, FV_product_description_0, gold_o_6), P_Ref_Colors(gold_c1_7, FV_color_description_0)), (gold_c_2 == gold_c1_7)), (gold_p1_3 == L_Herbs))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_c, WGOLD_p1, WGOLD_t, WGOLD_t1, WGOLD_o, WGOLD_c1):  And(D_varchar_15_(WGOLD_c), D_varchar_15_(WGOLD_p1), D_varchar_20_(WGOLD_t), D_varchar_20_(WGOLD_t1), D_varchar_255_(WGOLD_o), D_varchar_15_(WGOLD_c1), And(And(And(P_Products(WGOLD_p, WGOLD_c, WGOLD_p1, FV_product_name_0, WGOLD_t, WGOLD_t1, FV_product_description_0, WGOLD_o), P_Ref_Colors(WGOLD_c1, FV_color_description_0)), (WGOLD_c == WGOLD_c1)), (WGOLD_p1 == L_Herbs)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_pid_1, predicted_ccode_2, predicted_tbp_3, predicted_tsp_4, predicted_opd_5], And(D_varchar_15_(predicted_ccode_2), D_varchar_20_(predicted_tbp_3), D_varchar_20_(predicted_tsp_4), D_varchar_255_(predicted_opd_5), And(And(P_Products(predicted_pid_1, predicted_ccode_2, L_Herbs, FV_product_name_0, predicted_tbp_3, predicted_tsp_4, FV_product_description_0, predicted_opd_5), D_varchar_15_(L_Herbs)), P_Ref_Colors(predicted_ccode_2, FV_color_description_0))))
+      predicted_skolem (witnesses WPREDICTED_pid, WPREDICTED_ccode, WPREDICTED_tbp, WPREDICTED_tsp, WPREDICTED_opd):  And(D_varchar_15_(WPREDICTED_ccode), D_varchar_20_(WPREDICTED_tbp), D_varchar_20_(WPREDICTED_tsp), D_varchar_255_(WPREDICTED_opd), And(And(P_Products(WPREDICTED_pid, WPREDICTED_ccode, L_Herbs, FV_product_name_0, WPREDICTED_tbp, WPREDICTED_tsp, FV_product_description_0, WPREDICTED_opd), D_varchar_15_(L_Herbs)), P_Ref_Colors(WPREDICTED_ccode, FV_color_description_0)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Herbs' at varchar(15) -> L_Herbs = StringVal('Herbs')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 784 lines, 32521 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1901.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   3 assertion(s): 0 sort axiom(s), 3 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_color_description_0) <= 80
+      [1] Length(FV_product_description_0) <= 255
+      [2] Length(FV_product_name_0) <= 80
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 3 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_c, WGOLD_p1, WGOLD_t, WGOLD_t1, WGOLD_o, WGOLD_c1
+      claim: And(And(Length(WGOLD_c) <= 15, Length(WGOLD_p1) <= 15, Length(WGOLD_t) <= 20, Length(WGOLD_t1) <= 20, Length(WGOLD_o) <= 255, Length(WGOLD_c1) <= 15, And(And(And(Products(WGOLD_p, WGOLD_c, WGOLD_p1, FV_product_name_0, WGOLD_t, WGOLD_t1, FV_product_description_0, WGOLD_o), Ref_Colors(WGOLD_c1, FV_color_description_0)), WGOLD_c == WGOLD_c1), WGOLD_p1 == "Herbs")), Not(Exists([predicted_pid_1, predicted_ccode_2, predicted_tbp_3, predicted_tsp_4, predicted_opd_5], And(Length(predicted_ccode_2) <= 15, Length(predicted_tbp_3) <= 20, Length(predicted_tsp_4) <= 20, Length(predicted_opd_5) <= 255, And(And(Products(predicted_pid_1, predicted_ccode_2, "Herbs", FV_product_name_0, predicted_tbp_3, predicted_tsp_4, FV_product_description_0, predicted_opd_5), Length("Herbs") <= 15), Ref_Colors(predicted_ccode_2, FV_color_description_0))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 3 background assertion(s) + claim; witnesses WPREDICTED_pid, WPREDICTED_ccode, WPREDICTED_tbp, WPREDICTED_tsp, WPREDICTED_opd
+      claim: And(And(Length(WPREDICTED_ccode) <= 15, Length(WPREDICTED_tbp) <= 20, Length(WPREDICTED_tsp) <= 20, Length(WPREDICTED_opd) <= 255, And(And(Products(WPREDICTED_pid, WPREDICTED_ccode, "Herbs", FV_product_name_0, WPREDICTED_tbp, WPREDICTED_tsp, FV_product_description_0, WPREDICTED_opd), Length("Herbs") <= 15), Ref_Colors(WPREDICTED_ccode, FV_color_description_0))), Not(Exists([gold_p_1, gold_c_2, gold_p1_3, gold_t_4, gold_t1_5, gold_o_6, gold_c1_7], And(Length(gold_c_2) <= 15, Length(gold_p1_3) <= 15, Length(gold_t_4) <= 20, Length(gold_t1_5) <= 20, Length(gold_o_6) <= 255, Length(gold_c1_7) <= 15, And(And(And(Products(gold_p_1, gold_c_2, gold_p1_3, FV_product_name_0, gold_t_4, gold_t1_5, FV_product_description_0, gold_o_6), Ref_Colors(gold_c1_7, FV_color_description_0)), gold_c_2 == gold_c1_7), gold_p1_3 == "Herbs")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

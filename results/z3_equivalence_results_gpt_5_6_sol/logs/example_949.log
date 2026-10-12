@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_949.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_949.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2071 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Select the names of all the products in the store.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        decimal -> RealSort()   [exact, unbounded]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Code = integer -> IntSort()
+        Manufacturer = integer -> IntSort()
+        Name = varchar(255) -> StringSort()
+        Price = decimal -> RealSort()
+      symbols:
+        Products(Code, Name, Price, Manufacturer)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Code ∃p : Price ∃m : Manufacturer ( Products(c,n,p,m) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:p COLON:: IDENT:Price EXISTS:∃ IDENT:m COLON:: IDENT:Manufacturer LPAR:( IDENT:Products LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:m RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Code
+            EXISTS p:Price
+              EXISTS m:Manufacturer
+                PRED Products(c, n, p, m)
+      Predicted FOL: ∃code : Code ∃price : Price ∃manufacturer : Manufacturer Products(code, name, price, manufacturer)
+        tokens: EXISTS:∃ IDENT:code COLON:: IDENT:Code EXISTS:∃ IDENT:price COLON:: IDENT:Price EXISTS:∃ IDENT:manufacturer COLON:: IDENT:Manufacturer IDENT:Products LPAR:( IDENT:code COMMA:, IDENT:name COMMA:, IDENT:price COMMA:, IDENT:manufacturer RPAR:) EOF
+        AST:
+          EXISTS code:Code
+            EXISTS price:Price
+              EXISTS manufacturer:Manufacturer
+                PRED Products(code, name, price, manufacturer)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        m : local Manufacturer, global integer -> IntSort()
+        n : local Name, global varchar(255) -> StringSort()
+        p : local Price, global decimal -> RealSort()
+      Predicted FOL:
+        code : local Code, global integer -> IntSort()
+        manufacturer : local Manufacturer, global integer -> IntSort()
+        name : local Name, global varchar(255) -> StringSort()
+        price : local Price, global decimal -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_p_2, gold_m_3], P_Products(gold_c_1, FV_Name_0, gold_p_2, gold_m_3))
+      gold_skolem (witnesses WGOLD_c, WGOLD_p, WGOLD_m):  P_Products(WGOLD_c, FV_Name_0, WGOLD_p, WGOLD_m)
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_code_1, predicted_price_2, predicted_manufacturer_3], P_Products(predicted_code_1, FV_Name_0, predicted_price_2, predicted_manufacturer_3))
+      predicted_skolem (witnesses WPREDICTED_code, WPREDICTED_price, WPREDICTED_manufacturer):  P_Products(WPREDICTED_code, FV_Name_0, WPREDICTED_price, WPREDICTED_manufacturer)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 732 lines, 27213 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_949.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_p, WGOLD_m
+      claim: And(Products(WGOLD_c, FV_Name_0, WGOLD_p, WGOLD_m), Not(Exists([predicted_code_1, predicted_price_2, predicted_manufacturer_3], Products(predicted_code_1, FV_Name_0, predicted_price_2, predicted_manufacturer_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_code, WPREDICTED_price, WPREDICTED_manufacturer
+      claim: And(Products(WPREDICTED_code, FV_Name_0, WPREDICTED_price, WPREDICTED_manufacturer), Not(Exists([gold_c_1, gold_p_2, gold_m_3], Products(gold_c_1, FV_Name_0, gold_p_2, gold_m_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

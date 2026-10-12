@@ -1,0 +1,66 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_711.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_711.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6163 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: How many fault status codes are recorded in the fault log parts table?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+      local sorts:
+        fault_log_entry_id = integer -> IntSort()
+        fault_status = varchar(10) -> StringSort()
+        part_fault_id = integer -> IntSort()
+      symbols:
+        Fault_Log_Parts(fault_log_entry_id, part_fault_id, fault_status)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : fault_log_entry_id ∃p : part_fault_id ( Fault_Log_Parts(f,p,f1) )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:fault_log_entry_id EXISTS:∃ IDENT:p COLON:: IDENT:part_fault_id LPAR:( IDENT:Fault_Log_Parts LPAR:( IDENT:f COMMA:, IDENT:p COMMA:, IDENT:f1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:fault_log_entry_id
+            EXISTS p:part_fault_id
+              PRED Fault_Log_Parts(f, p, f1)
+      Predicted FOL: Fault_Log_Parts(m0, m1, m2)
+        tokens: IDENT:Fault_Log_Parts LPAR:( IDENT:m0 COMMA:, IDENT:m1 COMMA:, IDENT:m2 RPAR:) EOF
+        AST:
+          PRED Fault_Log_Parts(m0, m1, m2)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (f1 : fault_status) but Predicted has 3 (m0 : fault_log_entry_id, m1 : part_fault_id, m2 : fault_status): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        f : local fault_log_entry_id, global integer -> IntSort()
+        f1 : local fault_status, global varchar(10) -> StringSort()
+        p : local part_fault_id, global integer -> IntSort()
+      Predicted FOL:
+        m0 : local fault_log_entry_id, global integer -> IntSort()
+        m1 : local part_fault_id, global integer -> IntSort()
+        m2 : local fault_status, global varchar(10) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5334 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_711.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (f1 : fault_status) but Predicted has 3 (m0 : fault_log_entry_id, m1 : part_fault_id, m2 : fault_status): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

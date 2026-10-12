@@ -1,0 +1,150 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2937.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2937.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3107 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the teachers whose courses have not been arranged?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Course_ID = int -> IntSort()
+        Grade = int -> IntSort()
+        Hometown = text -> StringSort()
+        Name = text -> StringSort()
+        Teacher_ID = int -> IntSort()
+      symbols:
+        course_arrange(Course_ID, Teacher_ID, Grade)
+        teacher(Teacher_ID, Name, Age, Hometown)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Age ∃h : Hometown ∃t : Teacher_ID( (teacher(t,n,a,h)) ∧ (¬(∃t1 : Teacher_ID( ((teacher(t,n,a,h)) ∧ (∃c : Course_ID ∃g : Grade( course_arrange(c,t1,g) ))) ∧ (t = t1) ))) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Hometown EXISTS:∃ IDENT:t COLON:: IDENT:Teacher_ID LPAR:( LPAR:( IDENT:teacher LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:t1 COLON:: IDENT:Teacher_ID LPAR:( LPAR:( LPAR:( IDENT:teacher LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Course_ID EXISTS:∃ IDENT:g COLON:: IDENT:Grade LPAR:( IDENT:course_arrange LPAR:( IDENT:c COMMA:, IDENT:t1 COMMA:, IDENT:g RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Age
+            EXISTS h:Hometown
+              EXISTS t:Teacher_ID
+                AND
+                  PRED teacher(t, n, a, h)
+                  NOT
+                    EXISTS t1:Teacher_ID
+                      AND
+                        AND
+                          PRED teacher(t, n, a, h)
+                          EXISTS c:Course_ID
+                            EXISTS g:Grade
+                              PRED course_arrange(c, t1, g)
+                        EQ  t = t1
+      Predicted FOL: ∃t_id : Teacher_ID ∃t_name : Name ∃t_age : Age ∃t_hometown : Hometown (teacher(t_id, t_name, t_age, t_hometown) ∧ ¬∃c_id : Course_ID ∃grade : Grade course_arrange(c_id, t_id, grade))
+        tokens: EXISTS:∃ IDENT:t_id COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:t_name COLON:: IDENT:Name EXISTS:∃ IDENT:t_age COLON:: IDENT:Age EXISTS:∃ IDENT:t_hometown COLON:: IDENT:Hometown LPAR:( IDENT:teacher LPAR:( IDENT:t_id COMMA:, IDENT:t_name COMMA:, IDENT:t_age COMMA:, IDENT:t_hometown RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:c_id COLON:: IDENT:Course_ID EXISTS:∃ IDENT:grade COLON:: IDENT:Grade IDENT:course_arrange LPAR:( IDENT:c_id COMMA:, IDENT:t_id COMMA:, IDENT:grade RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t_id:Teacher_ID
+            EXISTS t_name:Name
+              EXISTS t_age:Age
+                EXISTS t_hometown:Hometown
+                  AND
+                    PRED teacher(t_id, t_name, t_age, t_hometown)
+                    NOT
+                      EXISTS c_id:Course_ID
+                        EXISTS grade:Grade
+                          PRED course_arrange(c_id, t_id, grade)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) t_name do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted t_name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        c : local Course_ID, global int -> IntSort()
+        g : local Grade, global int -> IntSort()
+        h : local Hometown, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        t : local Teacher_ID, global int -> IntSort()
+        t1 : local Teacher_ID, global int -> IntSort()
+      Predicted FOL:
+        c_id : local Course_ID, global int -> IntSort()
+        grade : local Grade, global int -> IntSort()
+        t_age : local Age, global text -> StringSort()
+        t_hometown : local Hometown, global text -> StringSort()
+        t_id : local Teacher_ID, global int -> IntSort()
+        t_name : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_h_2, gold_t_3], And(P_teacher(gold_t_3, FV_Name_0, gold_a_1, gold_h_2), Not(Exists([gold_t1_4], And(And(P_teacher(gold_t_3, FV_Name_0, gold_a_1, gold_h_2), Exists([gold_c_5, gold_g_6], P_course_arrange(gold_c_5, gold_t1_4, gold_g_6))), (gold_t_3 == gold_t1_4))))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_h, WGOLD_t):  And(P_teacher(WGOLD_t, FV_Name_0, WGOLD_a, WGOLD_h), Not(Exists([goldsk_t1_1], And(And(P_teacher(WGOLD_t, FV_Name_0, WGOLD_a, WGOLD_h), Exists([goldsk_c_2, goldsk_g_3], P_course_arrange(goldsk_c_2, goldsk_t1_1, goldsk_g_3))), (WGOLD_t == goldsk_t1_1)))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_t_id_1, predicted_t_name_2, predicted_t_age_3, predicted_t_hometown_4], And(P_teacher(predicted_t_id_1, predicted_t_name_2, predicted_t_age_3, predicted_t_hometown_4), Not(Exists([predicted_c_id_5, predicted_grade_6], P_course_arrange(predicted_c_id_5, predicted_t_id_1, predicted_grade_6)))))
+      predicted_skolem (witnesses WPREDICTED_t_id, WPREDICTED_t_name, WPREDICTED_t_age, WPREDICTED_t_hometown):  And(P_teacher(WPREDICTED_t_id, WPREDICTED_t_name, WPREDICTED_t_age, WPREDICTED_t_hometown), Not(Exists([predictedsk_c_id_1, predictedsk_grade_2], P_course_arrange(predictedsk_c_id_1, WPREDICTED_t_id, predictedsk_grade_2))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 748 lines, 29127 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2937.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_h, WGOLD_t
+      claim: And(And(teacher(WGOLD_t, FV_Name_0, WGOLD_a, WGOLD_h), Not(Exists(goldsk_t1_1, And(And(teacher(WGOLD_t, FV_Name_0, WGOLD_a, WGOLD_h), Exists([goldsk_c_2, goldsk_g_3], course_arrange(goldsk_c_2, goldsk_t1_1, goldsk_g_3))), WGOLD_t == goldsk_t1_1)))), Not(Exists([predicted_t_id_1, predicted_t_name_2, predicted_t_age_3, predicted_t_hometown_4], And(teacher(predicted_t_id_1, predicted_t_name_2, predicted_t_age_3, predicted_t_hometown_4), Not(Exists([predicted_c_id_5, predicted_grade_6], course_arrange(predicted_c_id_5, predicted_t_id_1, predicted_grade_6)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_t_id, WPREDICTED_t_name, WPREDICTED_t_age, WPREDICTED_t_hometown
+      claim: And(And(teacher(WPREDICTED_t_id, WPREDICTED_t_name, WPREDICTED_t_age, WPREDICTED_t_hometown), Not(Exists([predictedsk_c_id_1, predictedsk_grade_2], course_arrange(predictedsk_c_id_1, WPREDICTED_t_id, predictedsk_grade_2)))), Not(Exists([gold_a_1, gold_h_2, gold_t_3], And(teacher(gold_t_3, FV_Name_0, gold_a_1, gold_h_2), Not(Exists(gold_t1_4, And(And(teacher(gold_t_3, FV_Name_0, gold_a_1, gold_h_2), Exists([gold_c_5, gold_g_6], course_arrange(gold_c_5, gold_t1_4, gold_g_6))), gold_t_3 == gold_t1_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 8 relation tuple(s) listed, 8 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          t_id : Teacher_ID = 2
+          t_name : Name = '!0!'
+          t_age : Age = '!1!'
+          t_hometown : Hometown = '!2!'
+        free (answer) variables:
+          FV_Name_0 : Name = '!3!'
+        relations (each value tagged with the local sort of its position):
+          course_arrange(Course_ID, Teacher_ID, Grade):
+            <empty over the values of this model>
+          teacher(Teacher_ID, Name, Age, Hometown):
+            teacher(Teacher_ID=0, Name='', Age='', Hometown='!0!')
+            teacher(Teacher_ID=0, Name='', Age='', Hometown='!3!')
+            teacher(Teacher_ID=0, Name='', Age='!2!', Hometown='')
+            teacher(Teacher_ID=0, Name='', Age='!3!', Hometown='')
+            teacher(Teacher_ID=0, Name='!1!', Age='', Hometown='')
+            teacher(Teacher_ID=0, Name='!2!', Age='', Hometown='')
+            teacher(Teacher_ID=2, Name='!0!', Age='!1!', Hometown='!2!')
+            teacher(Teacher_ID=3, Name='', Age='!0!', Hometown='!1!')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Age        : {'', '!0!', '!1!', '!2!', '!3!'}
+          Hometown   : {'', '!0!', '!1!', '!2!', '!3!'}
+          Name       : {'', '!0!', '!1!', '!2!', '!3!'}
+          Teacher_ID : {0, 2, 3}
+        values shared across local sorts (joins):
+          '!0!' : Age, Hometown, Name
+          '!1!' : Age, Hometown, Name
+          '!2!' : Age, Hometown, Name
+          '!3!' : Age, Hometown, Name
+          '' : Age, Hometown, Name
+   [R3] took 0.043 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

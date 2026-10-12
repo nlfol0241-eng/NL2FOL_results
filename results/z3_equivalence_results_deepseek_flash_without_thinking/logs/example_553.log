@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_553.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_553.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5368 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all product sizes.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        parent_product_id = integer -> IntSort()
+        product_color = varchar(20) -> StringSort()
+        product_id = integer -> IntSort()
+        product_name = varchar(80) -> StringSort()
+        product_size = varchar(20) -> StringSort()
+        production_type_code = varchar(15) -> StringSort()
+        unit_price = decimal(19,4) -> RealSort()
+      symbols:
+        Products(product_id, parent_product_id, production_type_code, unit_price, product_name, product_color, product_size)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃p1 : parent_product_id ∃p2 : production_type_code ∃u : unit_price ∃p3 : product_name ∃p4 : product_color ( Products(p,p1,p2,u,p3,p4,p5) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:p1 COLON:: IDENT:parent_product_id EXISTS:∃ IDENT:p2 COLON:: IDENT:production_type_code EXISTS:∃ IDENT:u COLON:: IDENT:unit_price EXISTS:∃ IDENT:p3 COLON:: IDENT:product_name EXISTS:∃ IDENT:p4 COLON:: IDENT:product_color LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:u COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS p1:parent_product_id
+              EXISTS p2:production_type_code
+                EXISTS u:unit_price
+                  EXISTS p3:product_name
+                    EXISTS p4:product_color
+                      PRED Products(p, p1, p2, u, p3, p4, p5)
+      Predicted FOL: ∃x0 : product_id ∃x1 : parent_product_id ∃x2 : production_type_code ∃x3 : unit_price ∃x4 : product_name ∃x5 : product_color ∃x6 : product_size Products(x0, x1, x2, x3, x4, x5, x6)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:product_id EXISTS:∃ IDENT:x1 COLON:: IDENT:parent_product_id EXISTS:∃ IDENT:x2 COLON:: IDENT:production_type_code EXISTS:∃ IDENT:x3 COLON:: IDENT:unit_price EXISTS:∃ IDENT:x4 COLON:: IDENT:product_name EXISTS:∃ IDENT:x5 COLON:: IDENT:product_color EXISTS:∃ IDENT:x6 COLON:: IDENT:product_size IDENT:Products LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 COMMA:, IDENT:x6 RPAR:) EOF
+        AST:
+          EXISTS x0:product_id
+            EXISTS x1:parent_product_id
+              EXISTS x2:production_type_code
+                EXISTS x3:unit_price
+                  EXISTS x4:product_name
+                    EXISTS x5:product_color
+                      EXISTS x6:product_size
+                        PRED Products(x0, x1, x2, x3, x4, x5, x6)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p5 : product_size) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local product_id, global integer -> IntSort()
+        p1 : local parent_product_id, global integer -> IntSort()
+        p2 : local production_type_code, global varchar(15) -> StringSort()
+        p3 : local product_name, global varchar(80) -> StringSort()
+        p4 : local product_color, global varchar(20) -> StringSort()
+        p5 : local product_size, global varchar(20) -> StringSort()
+        u : local unit_price, global decimal(19,4) -> RealSort()
+      Predicted FOL:
+        x0 : local product_id, global integer -> IntSort()
+        x1 : local parent_product_id, global integer -> IntSort()
+        x2 : local production_type_code, global varchar(15) -> StringSort()
+        x3 : local unit_price, global decimal(19,4) -> RealSort()
+        x4 : local product_name, global varchar(80) -> StringSort()
+        x5 : local product_color, global varchar(20) -> StringSort()
+        x6 : local product_size, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5429 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_553.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p5 : product_size) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

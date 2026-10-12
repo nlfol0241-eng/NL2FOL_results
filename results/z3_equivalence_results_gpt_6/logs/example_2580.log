@@ -1,0 +1,292 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2580.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2580.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5709 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the lot details of lots associated with transactions with share count smaller than 50?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 9 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+      local sorts:
+        amount_of_transaction = decimal(19,4) -> RealSort()
+        date_of_transaction = datetime -> IntSort()
+        investor_id = integer -> IntSort()
+        lot_details = varchar(255) -> StringSort()
+        lot_id = integer -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        share_count = varchar(40) -> StringSort()
+        transaction_id = integer -> IntSort()
+        transaction_type_code = varchar(10) -> StringSort()
+      symbols:
+        Lots(lot_id, investor_id, lot_details)
+        Transactions(transaction_id, investor_id, transaction_type_code, date_of_transaction, amount_of_transaction, share_count, other_details)
+        Transactions_Lots(transaction_id, lot_id)
+        constant 50 : share_count
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : lot_id ∃i : investor_id ∃t : transaction_id ∃l2 : lot_id ∃t1 : transaction_id ∃i1 : investor_id ∃t2 : transaction_type_code ∃d : date_of_transaction ∃a : amount_of_transaction ∃s : share_count ∃o : other_details ( (((((Lots(l,i,l1)) ∧ (Transactions_Lots(t,l2))) ∧ (l = t)) ∧ (Transactions(t1,i1,t2,d,a,s,o))) ∧ (t = t1)) ∧ (s < 50) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:lot_id EXISTS:∃ IDENT:i COLON:: IDENT:investor_id EXISTS:∃ IDENT:t COLON:: IDENT:transaction_id EXISTS:∃ IDENT:l2 COLON:: IDENT:lot_id EXISTS:∃ IDENT:t1 COLON:: IDENT:transaction_id EXISTS:∃ IDENT:i1 COLON:: IDENT:investor_id EXISTS:∃ IDENT:t2 COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:d COLON:: IDENT:date_of_transaction EXISTS:∃ IDENT:a COLON:: IDENT:amount_of_transaction EXISTS:∃ IDENT:s COLON:: IDENT:share_count EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Lots LPAR:( IDENT:l COMMA:, IDENT:i COMMA:, IDENT:l1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Transactions_Lots LPAR:( IDENT:t COMMA:, IDENT:l2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Transactions LPAR:( IDENT:t1 COMMA:, IDENT:i1 COMMA:, IDENT:t2 COMMA:, IDENT:d COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s LT:< NUM:50 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:lot_id
+            EXISTS i:investor_id
+              EXISTS t:transaction_id
+                EXISTS l2:lot_id
+                  EXISTS t1:transaction_id
+                    EXISTS i1:investor_id
+                      EXISTS t2:transaction_type_code
+                        EXISTS d:date_of_transaction
+                          EXISTS a:amount_of_transaction
+                            EXISTS s:share_count
+                              EXISTS o:other_details
+                                AND
+                                  AND
+                                    AND
+                                      AND
+                                        AND
+                                          PRED Lots(l, i, l1)
+                                          PRED Transactions_Lots(t, l2)
+                                        EQ  l = t
+                                      PRED Transactions(t1, i1, t2, d, a, s, o)
+                                    EQ  t = t1
+                                  CMP  s < 50
+      Predicted FOL: ∃l : lot_id ∃i : investor_id ∃t : transaction_id ∃j : investor_id ∃c : transaction_type_code ∃d : date_of_transaction ∃a : amount_of_transaction ∃s : share_count ∃o : other_details (Lots(l, i, details) ∧ Transactions_Lots(t, l) ∧ Transactions(t, j, c, d, a, s, o) ∧ s < 50)
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:lot_id EXISTS:∃ IDENT:i COLON:: IDENT:investor_id EXISTS:∃ IDENT:t COLON:: IDENT:transaction_id EXISTS:∃ IDENT:j COLON:: IDENT:investor_id EXISTS:∃ IDENT:c COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:d COLON:: IDENT:date_of_transaction EXISTS:∃ IDENT:a COLON:: IDENT:amount_of_transaction EXISTS:∃ IDENT:s COLON:: IDENT:share_count EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Lots LPAR:( IDENT:l COMMA:, IDENT:i COMMA:, IDENT:details RPAR:) AND:∧ IDENT:Transactions_Lots LPAR:( IDENT:t COMMA:, IDENT:l RPAR:) AND:∧ IDENT:Transactions LPAR:( IDENT:t COMMA:, IDENT:j COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:o RPAR:) AND:∧ IDENT:s LT:< NUM:50 RPAR:) EOF
+        AST:
+          EXISTS l:lot_id
+            EXISTS i:investor_id
+              EXISTS t:transaction_id
+                EXISTS j:investor_id
+                  EXISTS c:transaction_type_code
+                    EXISTS d:date_of_transaction
+                      EXISTS a:amount_of_transaction
+                        EXISTS s:share_count
+                          EXISTS o:other_details
+                            AND
+                              PRED Lots(l, i, details)
+                              PRED Transactions_Lots(t, l)
+                              PRED Transactions(t, j, c, d, a, s, o)
+                              CMP  s < 50
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_lot_details_0 : lot_details   Gold l1 <-> Predicted details
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 22 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount_of_transaction, global decimal(19,4) -> RealSort()
+        d : local date_of_transaction, global datetime -> IntSort()
+        i : local investor_id, global integer -> IntSort()
+        i1 : local investor_id, global integer -> IntSort()
+        l : local lot_id, global integer -> IntSort()
+        l1 : local lot_details, global varchar(255) -> StringSort()
+        l2 : local lot_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        s : local share_count, global varchar(40) -> StringSort()
+        t : local transaction_id, global integer -> IntSort()
+        t1 : local transaction_id, global integer -> IntSort()
+        t2 : local transaction_type_code, global varchar(10) -> StringSort()
+      Predicted FOL:
+        a : local amount_of_transaction, global decimal(19,4) -> RealSort()
+        c : local transaction_type_code, global varchar(10) -> StringSort()
+        d : local date_of_transaction, global datetime -> IntSort()
+        details : local lot_details, global varchar(255) -> StringSort()
+        i : local investor_id, global integer -> IntSort()
+        j : local investor_id, global integer -> IntSort()
+        l : local lot_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        s : local share_count, global varchar(40) -> StringSort()
+        t : local transaction_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_l_1, gold_i_2, gold_t_3, gold_l2_4, gold_t1_5, gold_i1_6, gold_t2_7, gold_d_8, gold_a_9, gold_s_10, gold_o_11], And(D_varchar_10_(gold_t2_7), D_decimal_19_4_(gold_a_9), D_varchar_40_(gold_s_10), D_varchar_255_(gold_o_11), And(And(And(And(And(P_Lots(gold_l_1, gold_i_2, FV_lot_details_0), P_Transactions_Lots(gold_t_3, gold_l2_4)), (gold_l_1 == gold_t_3)), P_Transactions(gold_t1_5, gold_i1_6, gold_t2_7, gold_d_8, gold_a_9, gold_s_10, gold_o_11)), (gold_t_3 == gold_t1_5)), (gold_s_10 < L_v_50))))
+      gold_skolem (witnesses WGOLD_l, WGOLD_i, WGOLD_t, WGOLD_l2, WGOLD_t1, WGOLD_i1, WGOLD_t2, WGOLD_d, WGOLD_a, WGOLD_s, WGOLD_o):  And(D_varchar_10_(WGOLD_t2), D_decimal_19_4_(WGOLD_a), D_varchar_40_(WGOLD_s), D_varchar_255_(WGOLD_o), And(And(And(And(And(P_Lots(WGOLD_l, WGOLD_i, FV_lot_details_0), P_Transactions_Lots(WGOLD_t, WGOLD_l2)), (WGOLD_l == WGOLD_t)), P_Transactions(WGOLD_t1, WGOLD_i1, WGOLD_t2, WGOLD_d, WGOLD_a, WGOLD_s, WGOLD_o)), (WGOLD_t == WGOLD_t1)), (WGOLD_s < L_v_50)))
+   Gold: 11 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_l_1, predicted_i_2, predicted_t_3, predicted_j_4, predicted_c_5, predicted_d_6, predicted_a_7, predicted_s_8, predicted_o_9], And(D_varchar_10_(predicted_c_5), D_decimal_19_4_(predicted_a_7), D_varchar_40_(predicted_s_8), D_varchar_255_(predicted_o_9), And(P_Lots(predicted_l_1, predicted_i_2, FV_lot_details_0), P_Transactions_Lots(predicted_t_3, predicted_l_1), P_Transactions(predicted_t_3, predicted_j_4, predicted_c_5, predicted_d_6, predicted_a_7, predicted_s_8, predicted_o_9), (predicted_s_8 < L_v_50))))
+      predicted_skolem (witnesses WPREDICTED_l, WPREDICTED_i, WPREDICTED_t, WPREDICTED_j, WPREDICTED_c, WPREDICTED_d, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o):  And(D_varchar_10_(WPREDICTED_c), D_decimal_19_4_(WPREDICTED_a), D_varchar_40_(WPREDICTED_s), D_varchar_255_(WPREDICTED_o), And(P_Lots(WPREDICTED_l, WPREDICTED_i, FV_lot_details_0), P_Transactions_Lots(WPREDICTED_t, WPREDICTED_l), P_Transactions(WPREDICTED_t, WPREDICTED_j, WPREDICTED_c, WPREDICTED_d, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o), (WPREDICTED_s < L_v_50)))
+   Predicted: 9 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '50' at varchar(40) -> L_v_50 = StringVal('50')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 809 lines, 33925 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2580.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_lot_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_l, WGOLD_i, WGOLD_t, WGOLD_l2, WGOLD_t1, WGOLD_i1, WGOLD_t2, WGOLD_d, WGOLD_a, WGOLD_s, WGOLD_o
+      claim: And(And(Length(WGOLD_t2) <= 10, And(IsInt(WGOLD_a*10000), WGOLD_a > -1000000000000000, WGOLD_a < 1000000000000000), Length(WGOLD_s) <= 40, Length(WGOLD_o) <= 255, And(And(And(And(And(Lots(WGOLD_l, WGOLD_i, FV_lot_details_0), Transactions_Lots(WGOLD_t, WGOLD_l2)), WGOLD_l == WGOLD_t), Transactions(WGOLD_t1, WGOLD_i1, WGOLD_t2, WGOLD_d, WGOLD_a, WGOLD_s, WGOLD_o)), WGOLD_t == WGOLD_t1), str.<(WGOLD_s, "50"))), Not(Exists([predicted_l_1, predicted_i_2, predicted_t_3, predicted_j_4, predicted_c_5, predicted_d_6, predicted_a_7, predicted_s_8, predicted_o_9], And(Length(predicted_c_5) <= 10, And(IsInt(predicted_a_7*10000), predicted_a_7 > -1000000000000000, predicted_a_7 < 1000000000000000), Length(predicted_s_8) <= 40, Length(predicted_o_9) <= 255, And(Lots(predicted_l_1, predicted_i_2, FV_lot_details_0), Transactions_Lots(predicted_t_3, predicted_l_1), Transactions(predicted_t_3, predicted_j_4, predicted_c_5, predicted_d_6, predicted_a_7, predicted_s_8, predicted_o_9), str.<(predicted_s_8, "50"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.174 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 28 relation tuple(s) listed, 26 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          l : lot_id = 4
+          i : investor_id = 5
+          t : transaction_id = 4
+          l2 : lot_id = 6
+          t1 : transaction_id = 4
+          i1 : investor_id = 7
+          t2 : transaction_type_code = '5'
+          d : date_of_transaction = 1970-01-01 00:00:08
+          a : amount_of_transaction = 0
+          s : share_count = ''
+          o : other_details = ''
+        free (answer) variables:
+          FV_lot_details_0 : lot_details = ''
+        literals / constants:
+          50 : share_count = '50'
+        relations (each value tagged with the local sort of its position):
+          Lots(lot_id, investor_id, lot_details):
+            Lots(lot_id=0, investor_id=0, lot_details='B')
+            Lots(lot_id=0, investor_id=2, lot_details='A')
+            Lots(lot_id=2, investor_id=0, lot_details='')
+            Lots(lot_id=4, investor_id=5, lot_details='')
+            Lots(lot_id=4, investor_id=7, lot_details='')
+            Lots(lot_id=5, investor_id=0, lot_details='')
+            Lots(lot_id=6, investor_id=0, lot_details='A')
+            Lots(lot_id=7, investor_id=0, lot_details='')
+            Lots(lot_id=7, investor_id=4, lot_details='A')
+            Lots(lot_id=7, investor_id=6, lot_details='A')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Transactions(transaction_id, investor_id, transaction_type_code, date_of_transaction, amount_of_transaction, share_count, other_details):
+            Transactions(transaction_id=0, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=0, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='A')
+            Transactions(transaction_id=0, investor_id=4, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=0, investor_id=6, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=2, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=4, investor_id=5, transaction_type_code='5', date_of_transaction=1970-01-01 00:00:08, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=4, investor_id=5, transaction_type_code='5', date_of_transaction=1970-01-01 00:00:08, amount_of_transaction=0, share_count='50', other_details='')
+            Transactions(transaction_id=4, investor_id=7, transaction_type_code='5', date_of_transaction=1970-01-01 00:00:08, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=4, investor_id=7, transaction_type_code='5', date_of_transaction=1970-01-01 00:00:08, amount_of_transaction=0, share_count='50', other_details='')
+            Transactions(transaction_id=5, investor_id=2, transaction_type_code='', date_of_transaction=1970-01-01 00:00:09, amount_of_transaction=-0.0001 (= -1/10000), share_count='A', other_details='B')
+            Transactions(transaction_id=6, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=7, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Transactions_Lots(transaction_id, lot_id):
+            Transactions_Lots(transaction_id=0, lot_id=6)
+            Transactions_Lots(transaction_id=2, lot_id=6)
+            Transactions_Lots(transaction_id=4, lot_id=6)
+            Transactions_Lots(transaction_id=5, lot_id=6)
+            Transactions_Lots(transaction_id=6, lot_id=6)
+            Transactions_Lots(transaction_id=7, lot_id=6)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          amount_of_transaction : {-0.0001 (= -1/10000), 0}
+          date_of_transaction   : {1970-01-01 00:00:00, 1970-01-01 00:00:08, 1970-01-01 00:00:09}
+          investor_id           : {0, 2, 4, 5, 6, 7}
+          lot_details           : {'', 'A', 'B'}
+          lot_id                : {0, 2, 4, 5, 6, 7}
+          other_details         : {'', 'A', 'B'}
+          share_count           : {'', '50', 'A'}
+          transaction_id        : {0, 2, 4, 5, 6, 7}
+          transaction_type_code : {'', '5'}
+        values shared across local sorts (joins):
+          0 : investor_id, lot_id, transaction_id
+          2 : investor_id, lot_id, transaction_id
+          4 : investor_id, lot_id, transaction_id
+          5 : investor_id, lot_id, transaction_id
+          6 : investor_id, lot_id, transaction_id
+          7 : investor_id, lot_id, transaction_id
+          '' : lot_details, other_details
+          'A' : lot_details, other_details
+          'B' : lot_details, other_details
+   [R2] took 0.402 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_l, WPREDICTED_i, WPREDICTED_t, WPREDICTED_j, WPREDICTED_c, WPREDICTED_d, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_c) <= 10, And(IsInt(WPREDICTED_a*10000), WPREDICTED_a > -1000000000000000, WPREDICTED_a < 1000000000000000), Length(WPREDICTED_s) <= 40, Length(WPREDICTED_o) <= 255, And(Lots(WPREDICTED_l, WPREDICTED_i, FV_lot_details_0), Transactions_Lots(WPREDICTED_t, WPREDICTED_l), Transactions(WPREDICTED_t, WPREDICTED_j, WPREDICTED_c, WPREDICTED_d, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o), str.<(WPREDICTED_s, "50"))), Not(Exists([gold_l_1, gold_i_2, gold_t_3, gold_l2_4, gold_t1_5, gold_i1_6, gold_t2_7, gold_d_8, gold_a_9, gold_s_10, gold_o_11], And(Length(gold_t2_7) <= 10, And(IsInt(gold_a_9*10000), gold_a_9 > -1000000000000000, gold_a_9 < 1000000000000000), Length(gold_s_10) <= 40, Length(gold_o_11) <= 255, And(And(And(And(And(Lots(gold_l_1, gold_i_2, FV_lot_details_0), Transactions_Lots(gold_t_3, gold_l2_4)), gold_l_1 == gold_t_3), Transactions(gold_t1_5, gold_i1_6, gold_t2_7, gold_d_8, gold_a_9, gold_s_10, gold_o_11)), gold_t_3 == gold_t1_5), str.<(gold_s_10, "50"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.148 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 28 relation tuple(s) listed, 25 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          l : lot_id = 3
+          i : investor_id = 4
+          t : transaction_id = 5
+          j : investor_id = 6
+          c : transaction_type_code = ''
+          d : date_of_transaction = 1970-01-01 00:00:07
+          a : amount_of_transaction = 0
+          s : share_count = '5'
+          o : other_details = ''
+        free (answer) variables:
+          FV_lot_details_0 : lot_details = ''
+        literals / constants:
+          50 : share_count = '50'
+        relations (each value tagged with the local sort of its position):
+          Lots(lot_id, investor_id, lot_details):
+            Lots(lot_id=0, investor_id=0, lot_details='B')
+            Lots(lot_id=0, investor_id=2, lot_details='A')
+            Lots(lot_id=2, investor_id=0, lot_details='')
+            Lots(lot_id=3, investor_id=4, lot_details='')
+            Lots(lot_id=3, investor_id=6, lot_details='')
+            Lots(lot_id=4, investor_id=0, lot_details='')
+            Lots(lot_id=5, investor_id=0, lot_details='A')
+            Lots(lot_id=6, investor_id=0, lot_details='')
+            Lots(lot_id=6, investor_id=3, lot_details='A')
+            Lots(lot_id=6, investor_id=5, lot_details='A')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Transactions(transaction_id, investor_id, transaction_type_code, date_of_transaction, amount_of_transaction, share_count, other_details):
+            Transactions(transaction_id=0, investor_id=2, transaction_type_code='A', date_of_transaction=1970-01-01 00:00:08, amount_of_transaction=0.0001 (= 1/10000), share_count='', other_details='B')
+            Transactions(transaction_id=2, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=3, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=4, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=5, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='A')
+            Transactions(transaction_id=5, investor_id=3, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=5, investor_id=4, transaction_type_code='', date_of_transaction=1970-01-01 00:00:07, amount_of_transaction=0, share_count='5', other_details='')
+            Transactions(transaction_id=5, investor_id=4, transaction_type_code='', date_of_transaction=1970-01-01 00:00:07, amount_of_transaction=0, share_count='50', other_details='')
+            Transactions(transaction_id=5, investor_id=5, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            Transactions(transaction_id=5, investor_id=6, transaction_type_code='', date_of_transaction=1970-01-01 00:00:07, amount_of_transaction=0, share_count='5', other_details='')
+            Transactions(transaction_id=5, investor_id=6, transaction_type_code='', date_of_transaction=1970-01-01 00:00:07, amount_of_transaction=0, share_count='50', other_details='')
+            Transactions(transaction_id=6, investor_id=0, transaction_type_code='', date_of_transaction=1970-01-01 00:00:00, amount_of_transaction=0, share_count='', other_details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Transactions_Lots(transaction_id, lot_id):
+            Transactions_Lots(transaction_id=5, lot_id=0)
+            Transactions_Lots(transaction_id=5, lot_id=2)
+            Transactions_Lots(transaction_id=5, lot_id=3)
+            Transactions_Lots(transaction_id=5, lot_id=4)
+            Transactions_Lots(transaction_id=5, lot_id=5)
+            Transactions_Lots(transaction_id=5, lot_id=6)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          amount_of_transaction : {0, 0.0001 (= 1/10000)}
+          date_of_transaction   : {1970-01-01 00:00:00, 1970-01-01 00:00:07, 1970-01-01 00:00:08}
+          investor_id           : {0, 2, 3, 4, 5, 6}
+          lot_details           : {'', 'A', 'B'}
+          lot_id                : {0, 2, 3, 4, 5, 6}
+          other_details         : {'', 'A', 'B'}
+          share_count           : {'', '5', '50'}
+          transaction_id        : {0, 2, 3, 4, 5, 6}
+          transaction_type_code : {'', 'A'}
+        values shared across local sorts (joins):
+          0 : investor_id, lot_id, transaction_id
+          2 : investor_id, lot_id, transaction_id
+          3 : investor_id, lot_id, transaction_id
+          4 : investor_id, lot_id, transaction_id
+          5 : investor_id, lot_id, transaction_id
+          6 : investor_id, lot_id, transaction_id
+          '' : lot_details, other_details
+          'A' : lot_details, other_details
+          'B' : lot_details, other_details
+   [R3] took 0.397 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_719.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_719.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4780 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is the address of history department?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        varchar(4) -> StringSort()   [domain Length(x) <= 4; length <= 4]
+        int -> IntSort()
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+      local sorts:
+        DEPT_ADDRESS = varchar(20) -> StringSort()
+        DEPT_CODE = text -> StringSort()
+        DEPT_EXTENSION = varchar(4) -> StringSort()
+        DEPT_NAME = varchar(30) -> StringSort()
+        EMP_NUM = int -> IntSort()
+        SCHOOL_CODE = varchar(8) -> StringSort()
+      symbols:
+        DEPARTMENT(DEPT_CODE, DEPT_NAME, SCHOOL_CODE, EMP_NUM, DEPT_ADDRESS, DEPT_EXTENSION)
+        constant History : DEPT_NAME
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : DEPT_CODE ∃d1 : DEPT_NAME ∃s : SCHOOL_CODE ∃e : EMP_NUM ∃d3 : DEPT_EXTENSION ( (DEPARTMENT(d,d1,s,e,d2,d3)) ∧ (d1 = 'History') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:DEPT_CODE EXISTS:∃ IDENT:d1 COLON:: IDENT:DEPT_NAME EXISTS:∃ IDENT:s COLON:: IDENT:SCHOOL_CODE EXISTS:∃ IDENT:e COLON:: IDENT:EMP_NUM EXISTS:∃ IDENT:d3 COLON:: IDENT:DEPT_EXTENSION LPAR:( LPAR:( IDENT:DEPARTMENT LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:e COMMA:, IDENT:d2 COMMA:, IDENT:d3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:History RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:DEPT_CODE
+            EXISTS d1:DEPT_NAME
+              EXISTS s:SCHOOL_CODE
+                EXISTS e:EMP_NUM
+                  EXISTS d3:DEPT_EXTENSION
+                    AND
+                      PRED DEPARTMENT(d, d1, s, e, d2, d3)
+                      EQ  d1 = 'History'
+      Predicted FOL: ∃dcode : DEPT_CODE ∃scode : SCHOOL_CODE ∃enum : EMP_NUM ∃dext : DEPT_EXTENSION (DEPARTMENT(dcode, 'History', scode, enum, address, dext))
+        tokens: EXISTS:∃ IDENT:dcode COLON:: IDENT:DEPT_CODE EXISTS:∃ IDENT:scode COLON:: IDENT:SCHOOL_CODE EXISTS:∃ IDENT:enum COLON:: IDENT:EMP_NUM EXISTS:∃ IDENT:dext COLON:: IDENT:DEPT_EXTENSION LPAR:( IDENT:DEPARTMENT LPAR:( IDENT:dcode COMMA:, LIT:History COMMA:, IDENT:scode COMMA:, IDENT:enum COMMA:, IDENT:address COMMA:, IDENT:dext RPAR:) RPAR:) EOF
+        AST:
+          EXISTS dcode:DEPT_CODE
+            EXISTS scode:SCHOOL_CODE
+              EXISTS enum:EMP_NUM
+                EXISTS dext:DEPT_EXTENSION
+                  PRED DEPARTMENT(dcode, 'History', scode, enum, address, dext)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_DEPT_ADDRESS_0 : DEPT_ADDRESS   Gold d2 <-> Predicted address
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local DEPT_CODE, global text -> StringSort()
+        d1 : local DEPT_NAME, global varchar(30) -> StringSort()
+        d2 : local DEPT_ADDRESS, global varchar(20) -> StringSort()
+        d3 : local DEPT_EXTENSION, global varchar(4) -> StringSort()
+        e : local EMP_NUM, global int -> IntSort()
+        s : local SCHOOL_CODE, global varchar(8) -> StringSort()
+      Predicted FOL:
+        address : local DEPT_ADDRESS, global varchar(20) -> StringSort()
+        dcode : local DEPT_CODE, global text -> StringSort()
+        dext : local DEPT_EXTENSION, global varchar(4) -> StringSort()
+        enum : local EMP_NUM, global int -> IntSort()
+        scode : local SCHOOL_CODE, global varchar(8) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_s_3, gold_e_4, gold_d3_5], And(D_varchar_30_(gold_d1_2), D_varchar_8_(gold_s_3), D_varchar_4_(gold_d3_5), And(P_DEPARTMENT(gold_d_1, gold_d1_2, gold_s_3, gold_e_4, FV_DEPT_ADDRESS_0, gold_d3_5), (gold_d1_2 == L_History))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_e, WGOLD_d3):  And(D_varchar_30_(WGOLD_d1), D_varchar_8_(WGOLD_s), D_varchar_4_(WGOLD_d3), And(P_DEPARTMENT(WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_e, FV_DEPT_ADDRESS_0, WGOLD_d3), (WGOLD_d1 == L_History)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_dcode_1, predicted_scode_2, predicted_enum_3, predicted_dext_4], And(D_varchar_8_(predicted_scode_2), D_varchar_4_(predicted_dext_4), And(P_DEPARTMENT(predicted_dcode_1, L_History, predicted_scode_2, predicted_enum_3, FV_DEPT_ADDRESS_0, predicted_dext_4), D_varchar_30_(L_History))))
+      predicted_skolem (witnesses WPREDICTED_dcode, WPREDICTED_scode, WPREDICTED_enum, WPREDICTED_dext):  And(D_varchar_8_(WPREDICTED_scode), D_varchar_4_(WPREDICTED_dext), And(P_DEPARTMENT(WPREDICTED_dcode, L_History, WPREDICTED_scode, WPREDICTED_enum, FV_DEPT_ADDRESS_0, WPREDICTED_dext), D_varchar_30_(L_History)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'History' at varchar(30) -> L_History = StringVal('History')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 762 lines, 29394 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_719.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_DEPT_ADDRESS_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_e, WGOLD_d3
+      claim: And(And(Length(WGOLD_d1) <= 30, Length(WGOLD_s) <= 8, Length(WGOLD_d3) <= 4, And(DEPARTMENT(WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_e, FV_DEPT_ADDRESS_0, WGOLD_d3), WGOLD_d1 == "History")), Not(Exists([predicted_dcode_1, predicted_scode_2, predicted_enum_3, predicted_dext_4], And(Length(predicted_scode_2) <= 8, Length(predicted_dext_4) <= 4, And(DEPARTMENT(predicted_dcode_1, "History", predicted_scode_2, predicted_enum_3, FV_DEPT_ADDRESS_0, predicted_dext_4), Length("History") <= 30)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_dcode, WPREDICTED_scode, WPREDICTED_enum, WPREDICTED_dext
+      claim: And(And(Length(WPREDICTED_scode) <= 8, Length(WPREDICTED_dext) <= 4, And(DEPARTMENT(WPREDICTED_dcode, "History", WPREDICTED_scode, WPREDICTED_enum, FV_DEPT_ADDRESS_0, WPREDICTED_dext), Length("History") <= 30)), Not(Exists([gold_d_1, gold_d1_2, gold_s_3, gold_e_4, gold_d3_5], And(Length(gold_d1_2) <= 30, Length(gold_s_3) <= 8, Length(gold_d3_5) <= 4, And(DEPARTMENT(gold_d_1, gold_d1_2, gold_s_3, gold_e_4, FV_DEPT_ADDRESS_0, gold_d3_5), gold_d1_2 == "History")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

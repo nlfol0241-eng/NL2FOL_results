@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_688.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_688.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5823 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names and emails of customers who payed by Visa card.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+      local sorts:
+        customer_email = varchar(80) -> StringSort()
+        customer_id = integer -> IntSort()
+        customer_name = varchar(80) -> StringSort()
+        customer_phone = varchar(80) -> StringSort()
+        date_became_customer = datetime -> IntSort()
+        payment_method = varchar(10) -> StringSort()
+      symbols:
+        Customers(customer_id, payment_method, customer_name, customer_phone, customer_email, date_became_customer)
+        constant Visa : payment_method
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : customer_id ∃p : payment_method ∃c2 : customer_phone ∃d : date_became_customer ( (Customers(c,p,c1,c2,c3,d)) ∧ (p = 'Visa') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:p COLON:: IDENT:payment_method EXISTS:∃ IDENT:c2 COLON:: IDENT:customer_phone EXISTS:∃ IDENT:d COLON:: IDENT:date_became_customer LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= LIT:Visa RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:customer_id
+            EXISTS p:payment_method
+              EXISTS c2:customer_phone
+                EXISTS d:date_became_customer
+                  AND
+                    PRED Customers(c, p, c1, c2, c3, d)
+                    EQ  p = 'Visa'
+      Predicted FOL: ∃id : customer_id ∃phone : customer_phone ∃date : date_became_customer Customers(id, 'Visa', name, phone, email, date)
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:customer_id EXISTS:∃ IDENT:phone COLON:: IDENT:customer_phone EXISTS:∃ IDENT:date COLON:: IDENT:date_became_customer IDENT:Customers LPAR:( IDENT:id COMMA:, LIT:Visa COMMA:, IDENT:name COMMA:, IDENT:phone COMMA:, IDENT:email COMMA:, IDENT:date RPAR:) EOF
+        AST:
+          EXISTS id:customer_id
+            EXISTS phone:customer_phone
+              EXISTS date:date_became_customer
+                PRED Customers(id, 'Visa', name, phone, email, date)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_customer_email_0 : customer_email   Gold c3 <-> Predicted email
+      FV_customer_name_0 : customer_name   Gold c1 <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local customer_id, global integer -> IntSort()
+        c1 : local customer_name, global varchar(80) -> StringSort()
+        c2 : local customer_phone, global varchar(80) -> StringSort()
+        c3 : local customer_email, global varchar(80) -> StringSort()
+        d : local date_became_customer, global datetime -> IntSort()
+        p : local payment_method, global varchar(10) -> StringSort()
+      Predicted FOL:
+        date : local date_became_customer, global datetime -> IntSort()
+        email : local customer_email, global varchar(80) -> StringSort()
+        id : local customer_id, global integer -> IntSort()
+        name : local customer_name, global varchar(80) -> StringSort()
+        phone : local customer_phone, global varchar(80) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_p_2, gold_c2_3, gold_d_4], And(D_varchar_10_(gold_p_2), D_varchar_80_(gold_c2_3), And(P_Customers(gold_c_1, gold_p_2, FV_customer_name_0, gold_c2_3, FV_customer_email_0, gold_d_4), (gold_p_2 == L_Visa))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_p, WGOLD_c2, WGOLD_d):  And(D_varchar_10_(WGOLD_p), D_varchar_80_(WGOLD_c2), And(P_Customers(WGOLD_c, WGOLD_p, FV_customer_name_0, WGOLD_c2, FV_customer_email_0, WGOLD_d), (WGOLD_p == L_Visa)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_phone_2, predicted_date_3], And(D_varchar_80_(predicted_phone_2), And(P_Customers(predicted_id_1, L_Visa, FV_customer_name_0, predicted_phone_2, FV_customer_email_0, predicted_date_3), D_varchar_10_(L_Visa))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_phone, WPREDICTED_date):  And(D_varchar_80_(WPREDICTED_phone), And(P_Customers(WPREDICTED_id, L_Visa, FV_customer_name_0, WPREDICTED_phone, FV_customer_email_0, WPREDICTED_date), D_varchar_10_(L_Visa)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Visa' at varchar(10) -> L_Visa = StringVal('Visa')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 751 lines, 29092 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_688.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_customer_email_0) <= 80
+      [1] Length(FV_customer_name_0) <= 80
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_p, WGOLD_c2, WGOLD_d
+      claim: And(And(Length(WGOLD_p) <= 10, Length(WGOLD_c2) <= 80, And(Customers(WGOLD_c, WGOLD_p, FV_customer_name_0, WGOLD_c2, FV_customer_email_0, WGOLD_d), WGOLD_p == "Visa")), Not(Exists([predicted_id_1, predicted_phone_2, predicted_date_3], And(Length(predicted_phone_2) <= 80, And(Customers(predicted_id_1, "Visa", FV_customer_name_0, predicted_phone_2, FV_customer_email_0, predicted_date_3), Length("Visa") <= 10)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_phone, WPREDICTED_date
+      claim: And(And(Length(WPREDICTED_phone) <= 80, And(Customers(WPREDICTED_id, "Visa", FV_customer_name_0, WPREDICTED_phone, FV_customer_email_0, WPREDICTED_date), Length("Visa") <= 10)), Not(Exists([gold_c_1, gold_p_2, gold_c2_3, gold_d_4], And(Length(gold_p_2) <= 10, Length(gold_c2_3) <= 80, And(Customers(gold_c_1, gold_p_2, FV_customer_name_0, gold_c2_3, FV_customer_email_0, gold_d_4), gold_p_2 == "Visa")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,99 @@
+{
+  "NL": "Show the names of the drivers without a school bus.",
+  "Vocabulary": {
+    "Predicates": [
+      "driver",
+      "school_bus"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "driver": [
+        "Driver_ID",
+        "Name",
+        "Party",
+        "Home_city",
+        "Age"
+      ],
+      "school_bus": [
+        "School_ID",
+        "Driver_ID",
+        "Years_Working",
+        "If_full_time"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a0'∀a1'∀a2'∀a3'∀a4'( driver(a0, a1, a2, a3, a4) ∧ driver(a0', a1', a2', a3', a4') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( school(b0, b1, b2, b3, b4) ∧ school(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c3∀c0'∀c1'∀c2'∀c3'( school_bus(c0, c1, c2, c3) ∧ school_bus(c0', c1', c2', c3') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' ∧ c3 = c3' )",
+    "axiom4": "∀c0∀c1∀c2∀c3 ( school_bus(c0, c1, c2, c3) → ∃a0∃a1∃a2∃a3∃a4 ( driver(a0, a1, a2, a3, a4) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2∀c3 ( school_bus(c0, c1, c2, c3) → ∃b0∃b1∃b2∃b3∃b4 ( school(b0, b1, b2, b3, b4) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "driver": {
+        "A": "driver",
+        "A0": "Driver_ID",
+        "A1": "Name",
+        "A2": "Party",
+        "A3": "Home_city",
+        "A4": "Age"
+      },
+      "school_bus": {
+        "B": "school_bus",
+        "B0": "School_ID",
+        "B1": "Driver_ID",
+        "B2": "Years_Working",
+        "B3": "If_full_time"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃p : Party ∃a : Age ∃h : Home_city ∃d : Driver_ID( (driver(d,n,p,h,a)) ∧ (¬(∃d1 : Driver_ID( ((driver(d,n,p,h,a)) ∧ (∃s : School_ID ∃i : If_full_time ∃y : Years_Working( school_bus(s,d1,y,i) ))) ∧ (d = d1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A2,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3,?A4)) & ([E]?B0,?B3,?B2( B(?B0,?B1,?B2,?B3) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A2 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3,A4)) ∧ (∃B0 ∃B3 ∃B2( B(B0,B1,B2,B3) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A1",
+    "db_id": "school_bus",
+    "processed_sql": "SELECT name FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM school_bus)"
+  },
+  "Global Sorts": [
+    "int",
+    "bool",
+    "text"
+  ],
+  "Sort Axioms": {
+    "driver": {
+      "sortaxiom0": "Driver_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Party = text",
+      "sortaxiom3": "Home_city = text",
+      "sortaxiom4": "Age = int"
+    },
+    "school_bus": {
+      "sortaxiom0": "School_ID = int",
+      "sortaxiom1": "Driver_ID = int",
+      "sortaxiom2": "Years_Working = int",
+      "sortaxiom3": "If_full_time = bool"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT name FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM school_bus)"
+  },
+  "id": 3324,
+  "Predicted FOL": {
+    "string": "∃n:Name (∃d:Driver_ID ∃p:Party ∃h:Home_city ∃a:Age (driver(d,n,p,h,a) ∧ ¬∃s:School_ID ∃y:Years_Working ∃f:If_full_time school_bus(s,d,y,f)))",
+    "free vars": ""
+  }
+}

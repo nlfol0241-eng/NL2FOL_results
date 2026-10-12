@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1490.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1490.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3099 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the attendances of the performances at location "TD Garden" or "Bell Centre"
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Attendance = int -> IntSort()
+        Date = text -> StringSort()
+        Host = text -> StringSort()
+        Location = text -> StringSort()
+        Performance_ID = real -> Float32()
+      symbols:
+        performance(Performance_ID, Date, Host, Location, Attendance)
+        constant Bell Centre : Location
+        constant TD Garden : Location
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Performance_ID ∃d : Date ∃h : Host ∃l : Location ( (performance(p,d,h,l,a)) ∧ ((l = 'TD Garden') ∨ (l = 'Bell Centre')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Performance_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:h COLON:: IDENT:Host EXISTS:∃ IDENT:l COLON:: IDENT:Location LPAR:( LPAR:( IDENT:performance LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:h COMMA:, IDENT:l COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:l EQ:= LIT:TD Garden RPAR:) OR:∨ LPAR:( IDENT:l EQ:= LIT:Bell Centre RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Performance_ID
+            EXISTS d:Date
+              EXISTS h:Host
+                EXISTS l:Location
+                  AND
+                    PRED performance(p, d, h, l, a)
+                    OR
+                      EQ  l = 'TD Garden'
+                      EQ  l = 'Bell Centre'
+      Predicted FOL: ∃p : Performance_ID ∃d : Date ∃h : Host ∃l : Location (performance(p, d, h, l, a) ∧ (l = 'TD Garden' ∨ l = 'Bell Centre'))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Performance_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:h COLON:: IDENT:Host EXISTS:∃ IDENT:l COLON:: IDENT:Location LPAR:( IDENT:performance LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:h COMMA:, IDENT:l COMMA:, IDENT:a RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:TD Garden OR:∨ IDENT:l EQ:= LIT:Bell Centre RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Performance_ID
+            EXISTS d:Date
+              EXISTS h:Host
+                EXISTS l:Location
+                  AND
+                    PRED performance(p, d, h, l, a)
+                    OR
+                      EQ  l = 'TD Garden'
+                      EQ  l = 'Bell Centre'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Attendance_0 : Attendance   Gold a <-> Predicted a
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Attendance, global int -> IntSort()
+        d : local Date, global text -> StringSort()
+        h : local Host, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        p : local Performance_ID, global real -> Float32()
+      Predicted FOL:
+        a : local Attendance, global int -> IntSort()
+        d : local Date, global text -> StringSort()
+        h : local Host, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        p : local Performance_ID, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_d_2, gold_h_3, gold_l_4], And(D_real(gold_p_1), And(P_performance(gold_p_1, gold_d_2, gold_h_3, gold_l_4, FV_Attendance_0), Or((gold_l_4 == L_TD_Garden), (gold_l_4 == L_Bell_Centre)))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_d, WGOLD_h, WGOLD_l):  And(D_real(WGOLD_p), And(P_performance(WGOLD_p, WGOLD_d, WGOLD_h, WGOLD_l, FV_Attendance_0), Or((WGOLD_l == L_TD_Garden), (WGOLD_l == L_Bell_Centre))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_d_2, predicted_h_3, predicted_l_4], And(D_real(predicted_p_1), And(P_performance(predicted_p_1, predicted_d_2, predicted_h_3, predicted_l_4, FV_Attendance_0), Or((predicted_l_4 == L_TD_Garden), (predicted_l_4 == L_Bell_Centre)))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_d, WPREDICTED_h, WPREDICTED_l):  And(D_real(WPREDICTED_p), And(P_performance(WPREDICTED_p, WPREDICTED_d, WPREDICTED_h, WPREDICTED_l, FV_Attendance_0), Or((WPREDICTED_l == L_TD_Garden), (WPREDICTED_l == L_Bell_Centre))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Bell Centre' at text -> L_Bell_Centre = StringVal('Bell Centre')
+      literal 'TD Garden' at text -> L_TD_Garden = StringVal('TD Garden')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 743 lines, 28294 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1490.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_d, WGOLD_h, WGOLD_l
+      claim: And(And(And(Not(fpIsNaN(WGOLD_p)), Not(And(fpIsZero(WGOLD_p), fpIsNegative(WGOLD_p)))), And(performance(WGOLD_p, WGOLD_d, WGOLD_h, WGOLD_l, FV_Attendance_0), Or(WGOLD_l == "TD Garden", WGOLD_l == "Bell Centre"))), Not(Exists([predicted_p_1, predicted_d_2, predicted_h_3, predicted_l_4], And(And(Not(fpIsNaN(predicted_p_1)), Not(And(fpIsZero(predicted_p_1), fpIsNegative(predicted_p_1)))), And(performance(predicted_p_1, predicted_d_2, predicted_h_3, predicted_l_4, FV_Attendance_0), Or(predicted_l_4 == "TD Garden", predicted_l_4 == "Bell Centre"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_d, WPREDICTED_h, WPREDICTED_l
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_p)), Not(And(fpIsZero(WPREDICTED_p), fpIsNegative(WPREDICTED_p)))), And(performance(WPREDICTED_p, WPREDICTED_d, WPREDICTED_h, WPREDICTED_l, FV_Attendance_0), Or(WPREDICTED_l == "TD Garden", WPREDICTED_l == "Bell Centre"))), Not(Exists([gold_p_1, gold_d_2, gold_h_3, gold_l_4], And(And(Not(fpIsNaN(gold_p_1)), Not(And(fpIsZero(gold_p_1), fpIsNegative(gold_p_1)))), And(performance(gold_p_1, gold_d_2, gold_h_3, gold_l_4, FV_Attendance_0), Or(gold_l_4 == "TD Garden", gold_l_4 == "Bell Centre"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

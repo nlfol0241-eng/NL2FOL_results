@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_449.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_449.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3029 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the other account details for the account with the name 338?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        account_id = integer -> IntSort()
+        account_name = varchar(50) -> StringSort()
+        customer_id = integer -> IntSort()
+        other_account_details = varchar(255) -> StringSort()
+      symbols:
+        Accounts(account_id, customer_id, account_name, other_account_details)
+        constant 338 : account_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : account_id ∃c : customer_id ∃a1 : account_name ( (Accounts(a,c,a1,o)) ∧ (a1 = '338') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:account_id EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:a1 COLON:: IDENT:account_name LPAR:( LPAR:( IDENT:Accounts LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:a1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:338 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:account_id
+            EXISTS c:customer_id
+              EXISTS a1:account_name
+                AND
+                  PRED Accounts(a, c, a1, o)
+                  EQ  a1 = '338'
+      Predicted FOL: ∃a : account_id ∃c : customer_id Accounts(a, c, 338, other_account_details)
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:account_id EXISTS:∃ IDENT:c COLON:: IDENT:customer_id IDENT:Accounts LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, NUM:338 COMMA:, IDENT:other_account_details RPAR:) EOF
+        AST:
+          EXISTS a:account_id
+            EXISTS c:customer_id
+              PRED Accounts(a, c, 338, other_account_details)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_other_account_details_0 : other_account_details   Gold o <-> Predicted other_account_details
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local account_id, global integer -> IntSort()
+        a1 : local account_name, global varchar(50) -> StringSort()
+        c : local customer_id, global integer -> IntSort()
+        o : local other_account_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        a : local account_id, global integer -> IntSort()
+        c : local customer_id, global integer -> IntSort()
+        other_account_details : local other_account_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_a1_3], And(D_varchar_50_(gold_a1_3), And(P_Accounts(gold_a_1, gold_c_2, gold_a1_3, FV_other_account_details_0), (gold_a1_3 == L_v_338))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_a1):  And(D_varchar_50_(WGOLD_a1), And(P_Accounts(WGOLD_a, WGOLD_c, WGOLD_a1, FV_other_account_details_0), (WGOLD_a1 == L_v_338)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_c_2], And(P_Accounts(predicted_a_1, predicted_c_2, L_v_338, FV_other_account_details_0), D_varchar_50_(L_v_338)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_c):  And(P_Accounts(WPREDICTED_a, WPREDICTED_c, L_v_338, FV_other_account_details_0), D_varchar_50_(L_v_338))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '338' at varchar(50) -> L_v_338 = StringVal('338')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 734 lines, 27587 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_449.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_other_account_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_a1
+      claim: And(And(Length(WGOLD_a1) <= 50, And(Accounts(WGOLD_a, WGOLD_c, WGOLD_a1, FV_other_account_details_0), WGOLD_a1 == "338")), Not(Exists([predicted_a_1, predicted_c_2], And(Accounts(predicted_a_1, predicted_c_2, "338", FV_other_account_details_0), Length("338") <= 50))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_c
+      claim: And(And(Accounts(WPREDICTED_a, WPREDICTED_c, "338", FV_other_account_details_0), Length("338") <= 50), Not(Exists([gold_a_1, gold_c_2, gold_a1_3], And(Length(gold_a1_3) <= 50, And(Accounts(gold_a_1, gold_c_2, gold_a1_3, FV_other_account_details_0), gold_a1_3 == "338")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

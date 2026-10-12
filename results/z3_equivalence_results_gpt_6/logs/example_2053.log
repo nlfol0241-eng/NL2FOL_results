@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2053.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2053.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3306 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the location of the bridge named 'Kolob Arch' or 'Rainbow Bridge'?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        architect_id = text -> StringSort()
+        id = text -> StringSort()
+        length_feet = real -> Float32()
+        length_meters = real -> Float32()
+        location = text -> StringSort()
+        name = text -> StringSort()
+      symbols:
+        bridge(architect_id, id, name, location, length_meters, length_feet)
+        constant Kolob Arch : name
+        constant Rainbow Bridge : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : architect_id ∃i : id ∃n : name ∃l1 : length_meters ∃l2 : length_feet ( (bridge(a,i,n,l,l1,l2)) ∧ ((n = 'Kolob Arch') ∨ (n = 'Rainbow Bridge')) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:architect_id EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:l1 COLON:: IDENT:length_meters EXISTS:∃ IDENT:l2 COLON:: IDENT:length_feet LPAR:( LPAR:( IDENT:bridge LPAR:( IDENT:a COMMA:, IDENT:i COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:l1 COMMA:, IDENT:l2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n EQ:= LIT:Kolob Arch RPAR:) OR:∨ LPAR:( IDENT:n EQ:= LIT:Rainbow Bridge RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:architect_id
+            EXISTS i:id
+              EXISTS n:name
+                EXISTS l1:length_meters
+                  EXISTS l2:length_feet
+                    AND
+                      PRED bridge(a, i, n, l, l1, l2)
+                      OR
+                        EQ  n = 'Kolob Arch'
+                        EQ  n = 'Rainbow Bridge'
+      Predicted FOL: ∃a : architect_id ∃i : id ∃n : name ∃m : length_meters ∃f : length_feet (bridge(a, i, n, l, m, f) ∧ (n = 'Kolob Arch' ∨ n = 'Rainbow Bridge'))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:architect_id EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:m COLON:: IDENT:length_meters EXISTS:∃ IDENT:f COLON:: IDENT:length_feet LPAR:( IDENT:bridge LPAR:( IDENT:a COMMA:, IDENT:i COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:m COMMA:, IDENT:f RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Kolob Arch OR:∨ IDENT:n EQ:= LIT:Rainbow Bridge RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:architect_id
+            EXISTS i:id
+              EXISTS n:name
+                EXISTS m:length_meters
+                  EXISTS f:length_feet
+                    AND
+                      PRED bridge(a, i, n, l, m, f)
+                      OR
+                        EQ  n = 'Kolob Arch'
+                        EQ  n = 'Rainbow Bridge'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_location_0 : location   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local architect_id, global text -> StringSort()
+        i : local id, global text -> StringSort()
+        l : local location, global text -> StringSort()
+        l1 : local length_meters, global real -> Float32()
+        l2 : local length_feet, global real -> Float32()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        a : local architect_id, global text -> StringSort()
+        f : local length_feet, global real -> Float32()
+        i : local id, global text -> StringSort()
+        l : local location, global text -> StringSort()
+        m : local length_meters, global real -> Float32()
+        n : local name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_i_2, gold_n_3, gold_l1_4, gold_l2_5], And(D_real(gold_l1_4), D_real(gold_l2_5), And(P_bridge(gold_a_1, gold_i_2, gold_n_3, FV_location_0, gold_l1_4, gold_l2_5), Or((gold_n_3 == L_Kolob_Arch), (gold_n_3 == L_Rainbow_Bridge)))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_i, WGOLD_n, WGOLD_l1, WGOLD_l2):  And(D_real(WGOLD_l1), D_real(WGOLD_l2), And(P_bridge(WGOLD_a, WGOLD_i, WGOLD_n, FV_location_0, WGOLD_l1, WGOLD_l2), Or((WGOLD_n == L_Kolob_Arch), (WGOLD_n == L_Rainbow_Bridge))))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_i_2, predicted_n_3, predicted_m_4, predicted_f_5], And(D_real(predicted_m_4), D_real(predicted_f_5), And(P_bridge(predicted_a_1, predicted_i_2, predicted_n_3, FV_location_0, predicted_m_4, predicted_f_5), Or((predicted_n_3 == L_Kolob_Arch), (predicted_n_3 == L_Rainbow_Bridge)))))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_i, WPREDICTED_n, WPREDICTED_m, WPREDICTED_f):  And(D_real(WPREDICTED_m), D_real(WPREDICTED_f), And(P_bridge(WPREDICTED_a, WPREDICTED_i, WPREDICTED_n, FV_location_0, WPREDICTED_m, WPREDICTED_f), Or((WPREDICTED_n == L_Kolob_Arch), (WPREDICTED_n == L_Rainbow_Bridge))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Kolob Arch' at text -> L_Kolob_Arch = StringVal('Kolob Arch')
+      literal 'Rainbow Bridge' at text -> L_Rainbow_Bridge = StringVal('Rainbow Bridge')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 749 lines, 28926 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2053.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_i, WGOLD_n, WGOLD_l1, WGOLD_l2
+      claim: And(And(And(Not(fpIsNaN(WGOLD_l1)), Not(And(fpIsZero(WGOLD_l1), fpIsNegative(WGOLD_l1)))), And(Not(fpIsNaN(WGOLD_l2)), Not(And(fpIsZero(WGOLD_l2), fpIsNegative(WGOLD_l2)))), And(bridge(WGOLD_a, WGOLD_i, WGOLD_n, FV_location_0, WGOLD_l1, WGOLD_l2), Or(WGOLD_n == "Kolob Arch", WGOLD_n == "Rainbow Bridge"))), Not(Exists([predicted_a_1, predicted_i_2, predicted_n_3, predicted_m_4, predicted_f_5], And(And(Not(fpIsNaN(predicted_m_4)), Not(And(fpIsZero(predicted_m_4), fpIsNegative(predicted_m_4)))), And(Not(fpIsNaN(predicted_f_5)), Not(And(fpIsZero(predicted_f_5), fpIsNegative(predicted_f_5)))), And(bridge(predicted_a_1, predicted_i_2, predicted_n_3, FV_location_0, predicted_m_4, predicted_f_5), Or(predicted_n_3 == "Kolob Arch", predicted_n_3 == "Rainbow Bridge"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_i, WPREDICTED_n, WPREDICTED_m, WPREDICTED_f
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_m)), Not(And(fpIsZero(WPREDICTED_m), fpIsNegative(WPREDICTED_m)))), And(Not(fpIsNaN(WPREDICTED_f)), Not(And(fpIsZero(WPREDICTED_f), fpIsNegative(WPREDICTED_f)))), And(bridge(WPREDICTED_a, WPREDICTED_i, WPREDICTED_n, FV_location_0, WPREDICTED_m, WPREDICTED_f), Or(WPREDICTED_n == "Kolob Arch", WPREDICTED_n == "Rainbow Bridge"))), Not(Exists([gold_a_1, gold_i_2, gold_n_3, gold_l1_4, gold_l2_5], And(And(Not(fpIsNaN(gold_l1_4)), Not(And(fpIsZero(gold_l1_4), fpIsNegative(gold_l1_4)))), And(Not(fpIsNaN(gold_l2_5)), Not(And(fpIsZero(gold_l2_5), fpIsNegative(gold_l2_5)))), And(bridge(gold_a_1, gold_i_2, gold_n_3, FV_location_0, gold_l1_4, gold_l2_5), Or(gold_n_3 == "Kolob Arch", gold_n_3 == "Rainbow Bridge"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

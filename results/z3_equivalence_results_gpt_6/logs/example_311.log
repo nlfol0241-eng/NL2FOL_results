@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_311.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_311.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5249 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me the papers after 2000 .
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        abstract = text -> StringSort()
+        cid = text -> StringSort()
+        citation_num = int -> IntSort()
+        jid = int -> IntSort()
+        pid = int -> IntSort()
+        reference_num = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        publication(abstract, cid, citation_num, jid, pid, reference_num, title, year)
+        constant 2000 : year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : abstract ∃c : cid ∃c1 : citation_num ∃j : jid ∃p : pid ∃r : reference_num ∃y : year ( (publication(a,c,c1,j,p,r,t,y)) ∧ (y > 2000) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:abstract EXISTS:∃ IDENT:c COLON:: IDENT:cid EXISTS:∃ IDENT:c1 COLON:: IDENT:citation_num EXISTS:∃ IDENT:j COLON:: IDENT:jid EXISTS:∃ IDENT:p COLON:: IDENT:pid EXISTS:∃ IDENT:r COLON:: IDENT:reference_num EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( IDENT:publication LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:j COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:t COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y GT:> NUM:2000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:abstract
+            EXISTS c:cid
+              EXISTS c1:citation_num
+                EXISTS j:jid
+                  EXISTS p:pid
+                    EXISTS r:reference_num
+                      EXISTS y:year
+                        AND
+                          PRED publication(a, c, c1, j, p, r, t, y)
+                          CMP  y > 2000
+      Predicted FOL: ∃a : abstract ∃c : cid ∃n : citation_num ∃j : jid ∃p : pid ∃r : reference_num ∃y : year (publication(a, c, n, j, p, r, t, y) ∧ y > 2000)
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:abstract EXISTS:∃ IDENT:c COLON:: IDENT:cid EXISTS:∃ IDENT:n COLON:: IDENT:citation_num EXISTS:∃ IDENT:j COLON:: IDENT:jid EXISTS:∃ IDENT:p COLON:: IDENT:pid EXISTS:∃ IDENT:r COLON:: IDENT:reference_num EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( IDENT:publication LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:n COMMA:, IDENT:j COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:t COMMA:, IDENT:y RPAR:) AND:∧ IDENT:y GT:> NUM:2000 RPAR:) EOF
+        AST:
+          EXISTS a:abstract
+            EXISTS c:cid
+              EXISTS n:citation_num
+                EXISTS j:jid
+                  EXISTS p:pid
+                    EXISTS r:reference_num
+                      EXISTS y:year
+                        AND
+                          PRED publication(a, c, n, j, p, r, t, y)
+                          CMP  y > 2000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local abstract, global text -> StringSort()
+        c : local cid, global text -> StringSort()
+        c1 : local citation_num, global int -> IntSort()
+        j : local jid, global int -> IntSort()
+        p : local pid, global int -> IntSort()
+        r : local reference_num, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        a : local abstract, global text -> StringSort()
+        c : local cid, global text -> StringSort()
+        j : local jid, global int -> IntSort()
+        n : local citation_num, global int -> IntSort()
+        p : local pid, global int -> IntSort()
+        r : local reference_num, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_c1_3, gold_j_4, gold_p_5, gold_r_6, gold_y_7], And(P_publication(gold_a_1, gold_c_2, gold_c1_3, gold_j_4, gold_p_5, gold_r_6, FV_title_0, gold_y_7), (gold_y_7 > L_v_2000_int)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_j, WGOLD_p, WGOLD_r, WGOLD_y):  And(P_publication(WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_j, WGOLD_p, WGOLD_r, FV_title_0, WGOLD_y), (WGOLD_y > L_v_2000_int))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_c_2, predicted_n_3, predicted_j_4, predicted_p_5, predicted_r_6, predicted_y_7], And(P_publication(predicted_a_1, predicted_c_2, predicted_n_3, predicted_j_4, predicted_p_5, predicted_r_6, FV_title_0, predicted_y_7), (predicted_y_7 > L_v_2000_int)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_n, WPREDICTED_j, WPREDICTED_p, WPREDICTED_r, WPREDICTED_y):  And(P_publication(WPREDICTED_a, WPREDICTED_c, WPREDICTED_n, WPREDICTED_j, WPREDICTED_p, WPREDICTED_r, FV_title_0, WPREDICTED_y), (WPREDICTED_y > L_v_2000_int))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2000' at int -> L_v_2000_int = IntVal(2000)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 762 lines, 29156 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_311.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_j, WGOLD_p, WGOLD_r, WGOLD_y
+      claim: And(And(publication(WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_j, WGOLD_p, WGOLD_r, FV_title_0, WGOLD_y), 2000 < WGOLD_y), Not(Exists([predicted_a_1, predicted_c_2, predicted_n_3, predicted_j_4, predicted_p_5, predicted_r_6, predicted_y_7], And(publication(predicted_a_1, predicted_c_2, predicted_n_3, predicted_j_4, predicted_p_5, predicted_r_6, FV_title_0, predicted_y_7), 2000 < predicted_y_7))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_n, WPREDICTED_j, WPREDICTED_p, WPREDICTED_r, WPREDICTED_y
+      claim: And(And(publication(WPREDICTED_a, WPREDICTED_c, WPREDICTED_n, WPREDICTED_j, WPREDICTED_p, WPREDICTED_r, FV_title_0, WPREDICTED_y), 2000 < WPREDICTED_y), Not(Exists([gold_a_1, gold_c_2, gold_c1_3, gold_j_4, gold_p_5, gold_r_6, gold_y_7], And(publication(gold_a_1, gold_c_2, gold_c1_3, gold_j_4, gold_p_5, gold_r_6, FV_title_0, gold_y_7), 2000 < gold_y_7))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

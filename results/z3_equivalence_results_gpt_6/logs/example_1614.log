@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1614.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1614.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4380 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Wat is the tax source system code and master customer id of the taxes related to each parking fine id?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        cmi_cross_ref_id = integer -> IntSort()
+        council_tax_id = integer -> IntSort()
+        master_customer_id = integer -> IntSort()
+        source_system_code = char(15) -> StringSort()
+      symbols:
+        CMI_Cross_References(cmi_cross_ref_id, master_customer_id, source_system_code)
+        Parking_Fines(council_tax_id, cmi_cross_ref_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : cmi_cross_ref_id ∃c2 : cmi_cross_ref_id ( ((CMI_Cross_References(c,m,s)) ∧ (Parking_Fines(c1,c2))) ∧ (c = c2) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:cmi_cross_ref_id EXISTS:∃ IDENT:c2 COLON:: IDENT:cmi_cross_ref_id LPAR:( LPAR:( LPAR:( IDENT:CMI_Cross_References LPAR:( IDENT:c COMMA:, IDENT:m COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Parking_Fines LPAR:( IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:cmi_cross_ref_id
+            EXISTS c2:cmi_cross_ref_id
+              AND
+                AND
+                  PRED CMI_Cross_References(c, m, s)
+                  PRED Parking_Fines(c1, c2)
+                EQ  c = c2
+      Predicted FOL: ∃r : cmi_cross_ref_id (Parking_Fines(p, r) ∧ CMI_Cross_References(r, m, s))
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:cmi_cross_ref_id LPAR:( IDENT:Parking_Fines LPAR:( IDENT:p COMMA:, IDENT:r RPAR:) AND:∧ IDENT:CMI_Cross_References LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:cmi_cross_ref_id
+            AND
+              PRED Parking_Fines(p, r)
+              PRED CMI_Cross_References(r, m, s)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_council_tax_id_0 : council_tax_id   Gold c1 <-> Predicted p
+      FV_master_customer_id_0 : master_customer_id   Gold m <-> Predicted m
+      FV_source_system_code_0 : source_system_code   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cmi_cross_ref_id, global integer -> IntSort()
+        c1 : local council_tax_id, global integer -> IntSort()
+        c2 : local cmi_cross_ref_id, global integer -> IntSort()
+        m : local master_customer_id, global integer -> IntSort()
+        s : local source_system_code, global char(15) -> StringSort()
+      Predicted FOL:
+        m : local master_customer_id, global integer -> IntSort()
+        p : local council_tax_id, global integer -> IntSort()
+        r : local cmi_cross_ref_id, global integer -> IntSort()
+        s : local source_system_code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c2_2], And(And(P_CMI_Cross_References(gold_c_1, FV_master_customer_id_0, FV_source_system_code_0), P_Parking_Fines(FV_council_tax_id_0, gold_c2_2)), (gold_c_1 == gold_c2_2)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c2):  And(And(P_CMI_Cross_References(WGOLD_c, FV_master_customer_id_0, FV_source_system_code_0), P_Parking_Fines(FV_council_tax_id_0, WGOLD_c2)), (WGOLD_c == WGOLD_c2))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1], And(P_Parking_Fines(FV_council_tax_id_0, predicted_r_1), P_CMI_Cross_References(predicted_r_1, FV_master_customer_id_0, FV_source_system_code_0)))
+      predicted_skolem (witnesses WPREDICTED_r):  And(P_Parking_Fines(FV_council_tax_id_0, WPREDICTED_r), P_CMI_Cross_References(WPREDICTED_r, FV_master_customer_id_0, FV_source_system_code_0))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 27792 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1614.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_source_system_code_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c2
+      claim: And(And(And(CMI_Cross_References(WGOLD_c, FV_master_customer_id_0, FV_source_system_code_0), Parking_Fines(FV_council_tax_id_0, WGOLD_c2)), WGOLD_c == WGOLD_c2), Not(Exists(predicted_r_1, And(Parking_Fines(FV_council_tax_id_0, predicted_r_1), CMI_Cross_References(predicted_r_1, FV_master_customer_id_0, FV_source_system_code_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_r
+      claim: And(And(Parking_Fines(FV_council_tax_id_0, WPREDICTED_r), CMI_Cross_References(WPREDICTED_r, FV_master_customer_id_0, FV_source_system_code_0)), Not(Exists([gold_c_1, gold_c2_2], And(And(CMI_Cross_References(gold_c_1, FV_master_customer_id_0, FV_source_system_code_0), Parking_Fines(FV_council_tax_id_0, gold_c2_2)), gold_c_1 == gold_c2_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

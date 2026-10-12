@@ -1,0 +1,131 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1929.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1929.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5275 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the transaction type descriptions and dates if the share count is smaller than 10.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   7 global sorts, 8 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        amount_of_transaction = decimal(19,4) -> RealSort()
+        date_of_transaction = datetime -> IntSort()
+        investor_id = integer -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        share_count = varchar(40) -> StringSort()
+        transaction_id = integer -> IntSort()
+        transaction_type_code = varchar(10) -> StringSort()
+        transaction_type_description = varchar(80) -> StringSort()
+      symbols:
+        Ref_Transaction_Types(transaction_type_code, transaction_type_description)
+        Transactions(transaction_id, investor_id, transaction_type_code, date_of_transaction, amount_of_transaction, share_count, other_details)
+        constant 10 : share_count
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : transaction_type_code ∃t2 : transaction_id ∃i : investor_id ∃t3 : transaction_type_code ∃a : amount_of_transaction ∃s : share_count ∃o : other_details ( (((Ref_Transaction_Types(t,t1)) ∧ (Transactions(t2,i,t3,d,a,s,o))) ∧ (t = t3)) ∧ (s < 10) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:t2 COLON:: IDENT:transaction_id EXISTS:∃ IDENT:i COLON:: IDENT:investor_id EXISTS:∃ IDENT:t3 COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:a COLON:: IDENT:amount_of_transaction EXISTS:∃ IDENT:s COLON:: IDENT:share_count EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Ref_Transaction_Types LPAR:( IDENT:t COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Transactions LPAR:( IDENT:t2 COMMA:, IDENT:i COMMA:, IDENT:t3 COMMA:, IDENT:d COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s LT:< NUM:10 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:transaction_type_code
+            EXISTS t2:transaction_id
+              EXISTS i:investor_id
+                EXISTS t3:transaction_type_code
+                  EXISTS a:amount_of_transaction
+                    EXISTS s:share_count
+                      EXISTS o:other_details
+                        AND
+                          AND
+                            AND
+                              PRED Ref_Transaction_Types(t, t1)
+                              PRED Transactions(t2, i, t3, d, a, s, o)
+                            EQ  t = t3
+                          CMP  s < 10
+      Predicted FOL: ∃t : transaction_id ∃i : investor_id ∃c : transaction_type_code ∃a : amount_of_transaction ∃s : share_count ∃o : other_details (Transactions(t, i, c, d, a, s, o) ∧ Ref_Transaction_Types(c, description) ∧ s < '10')
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:transaction_id EXISTS:∃ IDENT:i COLON:: IDENT:investor_id EXISTS:∃ IDENT:c COLON:: IDENT:transaction_type_code EXISTS:∃ IDENT:a COLON:: IDENT:amount_of_transaction EXISTS:∃ IDENT:s COLON:: IDENT:share_count EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Transactions LPAR:( IDENT:t COMMA:, IDENT:i COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:o RPAR:) AND:∧ IDENT:Ref_Transaction_Types LPAR:( IDENT:c COMMA:, IDENT:description RPAR:) AND:∧ IDENT:s LT:< LIT:10 RPAR:) EOF
+        AST:
+          EXISTS t:transaction_id
+            EXISTS i:investor_id
+              EXISTS c:transaction_type_code
+                EXISTS a:amount_of_transaction
+                  EXISTS s:share_count
+                    EXISTS o:other_details
+                      AND
+                        PRED Transactions(t, i, c, d, a, s, o)
+                        PRED Ref_Transaction_Types(c, description)
+                        CMP  s < '10'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_date_of_transaction_0 : date_of_transaction   Gold d <-> Predicted d
+      FV_transaction_type_description_0 : transaction_type_description   Gold t1 <-> Predicted description
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount_of_transaction, global decimal(19,4) -> RealSort()
+        d : local date_of_transaction, global datetime -> IntSort()
+        i : local investor_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        s : local share_count, global varchar(40) -> StringSort()
+        t : local transaction_type_code, global varchar(10) -> StringSort()
+        t1 : local transaction_type_description, global varchar(80) -> StringSort()
+        t2 : local transaction_id, global integer -> IntSort()
+        t3 : local transaction_type_code, global varchar(10) -> StringSort()
+      Predicted FOL:
+        a : local amount_of_transaction, global decimal(19,4) -> RealSort()
+        c : local transaction_type_code, global varchar(10) -> StringSort()
+        d : local date_of_transaction, global datetime -> IntSort()
+        description : local transaction_type_description, global varchar(80) -> StringSort()
+        i : local investor_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        s : local share_count, global varchar(40) -> StringSort()
+        t : local transaction_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_t2_2, gold_i_3, gold_t3_4, gold_a_5, gold_s_6, gold_o_7], And(D_varchar_10_(gold_t_1), D_varchar_10_(gold_t3_4), D_decimal_19_4_(gold_a_5), D_varchar_40_(gold_s_6), D_varchar_255_(gold_o_7), And(And(And(P_Ref_Transaction_Types(gold_t_1, FV_transaction_type_description_0), P_Transactions(gold_t2_2, gold_i_3, gold_t3_4, FV_date_of_transaction_0, gold_a_5, gold_s_6, gold_o_7)), (gold_t_1 == gold_t3_4)), (gold_s_6 < L_v_10))))
+      gold_skolem (witnesses WGOLD_t, WGOLD_t2, WGOLD_i, WGOLD_t3, WGOLD_a, WGOLD_s, WGOLD_o):  And(D_varchar_10_(WGOLD_t), D_varchar_10_(WGOLD_t3), D_decimal_19_4_(WGOLD_a), D_varchar_40_(WGOLD_s), D_varchar_255_(WGOLD_o), And(And(And(P_Ref_Transaction_Types(WGOLD_t, FV_transaction_type_description_0), P_Transactions(WGOLD_t2, WGOLD_i, WGOLD_t3, FV_date_of_transaction_0, WGOLD_a, WGOLD_s, WGOLD_o)), (WGOLD_t == WGOLD_t3)), (WGOLD_s < L_v_10)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_t_1, predicted_i_2, predicted_c_3, predicted_a_4, predicted_s_5, predicted_o_6], And(D_varchar_10_(predicted_c_3), D_decimal_19_4_(predicted_a_4), D_varchar_40_(predicted_s_5), D_varchar_255_(predicted_o_6), And(P_Transactions(predicted_t_1, predicted_i_2, predicted_c_3, FV_date_of_transaction_0, predicted_a_4, predicted_s_5, predicted_o_6), P_Ref_Transaction_Types(predicted_c_3, FV_transaction_type_description_0), (predicted_s_5 < L_v_10))))
+      predicted_skolem (witnesses WPREDICTED_t, WPREDICTED_i, WPREDICTED_c, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o):  And(D_varchar_10_(WPREDICTED_c), D_decimal_19_4_(WPREDICTED_a), D_varchar_40_(WPREDICTED_s), D_varchar_255_(WPREDICTED_o), And(P_Transactions(WPREDICTED_t, WPREDICTED_i, WPREDICTED_c, FV_date_of_transaction_0, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o), P_Ref_Transaction_Types(WPREDICTED_c, FV_transaction_type_description_0), (WPREDICTED_s < L_v_10)))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '10' at varchar(40) -> L_v_10 = StringVal('10')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 790 lines, 32625 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1929.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_transaction_type_description_0) <= 80
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_t2, WGOLD_i, WGOLD_t3, WGOLD_a, WGOLD_s, WGOLD_o
+      claim: And(And(Length(WGOLD_t) <= 10, Length(WGOLD_t3) <= 10, And(IsInt(WGOLD_a*10000), WGOLD_a > -1000000000000000, WGOLD_a < 1000000000000000), Length(WGOLD_s) <= 40, Length(WGOLD_o) <= 255, And(And(And(Ref_Transaction_Types(WGOLD_t, FV_transaction_type_description_0), Transactions(WGOLD_t2, WGOLD_i, WGOLD_t3, FV_date_of_transaction_0, WGOLD_a, WGOLD_s, WGOLD_o)), WGOLD_t == WGOLD_t3), str.<(WGOLD_s, "10"))), Not(Exists([predicted_t_1, predicted_i_2, predicted_c_3, predicted_a_4, predicted_s_5, predicted_o_6], And(Length(predicted_c_3) <= 10, And(IsInt(predicted_a_4*10000), predicted_a_4 > -1000000000000000, predicted_a_4 < 1000000000000000), Length(predicted_s_5) <= 40, Length(predicted_o_6) <= 255, And(Transactions(predicted_t_1, predicted_i_2, predicted_c_3, FV_date_of_transaction_0, predicted_a_4, predicted_s_5, predicted_o_6), Ref_Transaction_Types(predicted_c_3, FV_transaction_type_description_0), str.<(predicted_s_5, "10"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_t, WPREDICTED_i, WPREDICTED_c, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_c) <= 10, And(IsInt(WPREDICTED_a*10000), WPREDICTED_a > -1000000000000000, WPREDICTED_a < 1000000000000000), Length(WPREDICTED_s) <= 40, Length(WPREDICTED_o) <= 255, And(Transactions(WPREDICTED_t, WPREDICTED_i, WPREDICTED_c, FV_date_of_transaction_0, WPREDICTED_a, WPREDICTED_s, WPREDICTED_o), Ref_Transaction_Types(WPREDICTED_c, FV_transaction_type_description_0), str.<(WPREDICTED_s, "10"))), Not(Exists([gold_t_1, gold_t2_2, gold_i_3, gold_t3_4, gold_a_5, gold_s_6, gold_o_7], And(Length(gold_t_1) <= 10, Length(gold_t3_4) <= 10, And(IsInt(gold_a_5*10000), gold_a_5 > -1000000000000000, gold_a_5 < 1000000000000000), Length(gold_s_6) <= 40, Length(gold_o_7) <= 255, And(And(And(Ref_Transaction_Types(gold_t_1, FV_transaction_type_description_0), Transactions(gold_t2_2, gold_i_3, gold_t3_4, FV_date_of_transaction_0, gold_a_5, gold_s_6, gold_o_7)), gold_t_1 == gold_t3_4), str.<(gold_s_6, "10"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

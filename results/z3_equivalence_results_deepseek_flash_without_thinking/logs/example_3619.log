@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3619.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3619.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9540 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of all procedures such that the cost is less than 5000 and physician John Wen was trained in.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 3 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+      local sorts:
+        CertificationDate = datetime -> IntSort()
+        CertificationExpires = datetime -> IntSort()
+        Code = integer -> IntSort()
+        Cost = real -> Float32()
+        EmployeeID = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        SSN = integer -> IntSort()
+        Treatment = integer -> IntSort()
+      symbols:
+        Physician(EmployeeID, Name, Position, SSN)
+        Procedures(Code, Name, Cost)
+        Trained_In(Physician, Treatment, CertificationDate, CertificationExpires)
+        constant 5000 : Cost
+        constant John Wen : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c1 : Cost ∃c : Code( (Procedures(c,n,c1)) ∧ (c1 < 5000) )) ∧ (¬((∃c1 : Cost ∃c : Code( (Procedures(c,n,c1)) ∧ (c1 < 5000) )) ∧ (¬(∃e : EmployeeID ∃s : SSN ∃c2 : CertificationDate ∃c1 : Cost ∃p : Position ∃c3 : CertificationExpires ∃p1 : Physician ∃n1 : Name ∃c : Code ∃t : Treatment( (((((Physician(e,n1,p,s)) ∧ (Trained_In(p1,t,c2,c3))) ∧ (e = p1)) ∧ (Procedures(c,n,c1))) ∧ (c = t)) ∧ (n1 = 'John Wen') )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Cost EXISTS:∃ IDENT:c COLON:: IDENT:Code LPAR:( LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 LT:< NUM:5000 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Cost EXISTS:∃ IDENT:c COLON:: IDENT:Code LPAR:( LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 LT:< NUM:5000 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:c2 COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:c1 COLON:: IDENT:Cost EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:c3 COLON:: IDENT:CertificationExpires EXISTS:∃ IDENT:p1 COLON:: IDENT:Physician EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:t COLON:: IDENT:Treatment LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n1 COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Trained_In LPAR:( IDENT:p1 COMMA:, IDENT:t COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:John Wen RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c1:Cost
+              EXISTS c:Code
+                AND
+                  PRED Procedures(c, n, c1)
+                  CMP  c1 < 5000
+            NOT
+              AND
+                EXISTS c1:Cost
+                  EXISTS c:Code
+                    AND
+                      PRED Procedures(c, n, c1)
+                      CMP  c1 < 5000
+                NOT
+                  EXISTS e:EmployeeID
+                    EXISTS s:SSN
+                      EXISTS c2:CertificationDate
+                        EXISTS c1:Cost
+                          EXISTS p:Position
+                            EXISTS c3:CertificationExpires
+                              EXISTS p1:Physician
+                                EXISTS n1:Name
+                                  EXISTS c:Code
+                                    EXISTS t:Treatment
+                                      AND
+                                        AND
+                                          AND
+                                            AND
+                                              AND
+                                                PRED Physician(e, n1, p, s)
+                                                PRED Trained_In(p1, t, c2, c3)
+                                              EQ  e = p1
+                                            PRED Procedures(c, n, c1)
+                                          EQ  c = t
+                                        EQ  n1 = 'John Wen'
+      Predicted FOL: ∃p : Physician ∃n : Name ∃pos : Position ∃ssn : SSN ( Physician(p, n, pos, ssn) ∧ n = 'John Wen' ∧ ∃pr : Procedures ∃pn : Name ∃pc : Cost ( Procedures(pr, pn, pc) ∧ pc < 5000 ∧ Trained_In(p, pr, cd, ce) ) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Physician EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:pos COLON:: IDENT:Position EXISTS:∃ IDENT:ssn COLON:: IDENT:SSN LPAR:( IDENT:Physician LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:pos COMMA:, IDENT:ssn RPAR:) AND:∧ IDENT:n EQ:= LIT:John Wen AND:∧ EXISTS:∃ IDENT:pr COLON:: IDENT:Procedures EXISTS:∃ IDENT:pn COLON:: IDENT:Name EXISTS:∃ IDENT:pc COLON:: IDENT:Cost LPAR:( IDENT:Procedures LPAR:( IDENT:pr COMMA:, IDENT:pn COMMA:, IDENT:pc RPAR:) AND:∧ IDENT:pc LT:< NUM:5000 AND:∧ IDENT:Trained_In LPAR:( IDENT:p COMMA:, IDENT:pr COMMA:, IDENT:cd COMMA:, IDENT:ce RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Physician
+            EXISTS n:Name
+              EXISTS pos:Position
+                EXISTS ssn:SSN
+                  AND
+                    PRED Physician(p, n, pos, ssn)
+                    EQ  n = 'John Wen'
+                    EXISTS pr:Procedures
+                      EXISTS pn:Name
+                        EXISTS pc:Cost
+                          AND
+                            PRED Procedures(pr, pn, pc)
+                            CMP  pc < 5000
+                            PRED Trained_In(p, pr, cd, ce)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) cd, ce occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: unknown sort 'Procedures'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 1 more time]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 131, in infer
+    env.assign(node[2], sig.g(node[3]))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\signature.py", line 97, in g
+    raise ValueError(f"unknown sort {local_sort!r}")
+ValueError: unknown sort 'Procedures'

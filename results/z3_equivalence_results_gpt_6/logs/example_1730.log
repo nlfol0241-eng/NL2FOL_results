@@ -1,0 +1,135 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1730.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1730.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8168 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of nurses who are nursing an undergoing treatment.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 11 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        boolean -> BoolSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        AssistingNurse = integer -> IntSort()
+        DateUndergoes = datetime -> IntSort()
+        EmployeeID = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Patient = integer -> IntSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        Procedures = integer -> IntSort()
+        Registered = boolean -> BoolSort()
+        SSN = integer -> IntSort()
+        Stay = integer -> IntSort()
+      symbols:
+        Nurse(EmployeeID, Name, Position, Registered, SSN)
+        Undergoes(Patient, Procedures, Stay, DateUndergoes, Physician, AssistingNurse)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Patient ∃p1 : Procedures ∃s : Stay ∃d : DateUndergoes ∃p2 : Physician ∃a : AssistingNurse ∃e : EmployeeID ∃p3 : Position ∃r : Registered ∃s1 : SSN ( ((Undergoes(p,p1,s,d,p2,a)) ∧ (Nurse(e,n,p3,r,s1))) ∧ (a = e) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Patient EXISTS:∃ IDENT:p1 COLON:: IDENT:Procedures EXISTS:∃ IDENT:s COLON:: IDENT:Stay EXISTS:∃ IDENT:d COLON:: IDENT:DateUndergoes EXISTS:∃ IDENT:p2 COLON:: IDENT:Physician EXISTS:∃ IDENT:a COLON:: IDENT:AssistingNurse EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p3 COLON:: IDENT:Position EXISTS:∃ IDENT:r COLON:: IDENT:Registered EXISTS:∃ IDENT:s1 COLON:: IDENT:SSN LPAR:( LPAR:( LPAR:( IDENT:Undergoes LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:p2 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Nurse LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p3 COMMA:, IDENT:r COMMA:, IDENT:s1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:e RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Patient
+            EXISTS p1:Procedures
+              EXISTS s:Stay
+                EXISTS d:DateUndergoes
+                  EXISTS p2:Physician
+                    EXISTS a:AssistingNurse
+                      EXISTS e:EmployeeID
+                        EXISTS p3:Position
+                          EXISTS r:Registered
+                            EXISTS s1:SSN
+                              AND
+                                AND
+                                  PRED Undergoes(p, p1, s, d, p2, a)
+                                  PRED Nurse(e, n, p3, r, s1)
+                                EQ  a = e
+      Predicted FOL: ∃e : EmployeeID ∃p : Position ∃r : Registered ∃s : SSN ∃u : Patient ∃t : Procedures ∃h : Stay ∃d : DateUndergoes ∃v : Physician (Nurse(e, n, p, r, s) ∧ Undergoes(u, t, h, d, v, e))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:r COLON:: IDENT:Registered EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:u COLON:: IDENT:Patient EXISTS:∃ IDENT:t COLON:: IDENT:Procedures EXISTS:∃ IDENT:h COLON:: IDENT:Stay EXISTS:∃ IDENT:d COLON:: IDENT:DateUndergoes EXISTS:∃ IDENT:v COLON:: IDENT:Physician LPAR:( IDENT:Nurse LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:s RPAR:) AND:∧ IDENT:Undergoes LPAR:( IDENT:u COMMA:, IDENT:t COMMA:, IDENT:h COMMA:, IDENT:d COMMA:, IDENT:v COMMA:, IDENT:e RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:EmployeeID
+            EXISTS p:Position
+              EXISTS r:Registered
+                EXISTS s:SSN
+                  EXISTS u:Patient
+                    EXISTS t:Procedures
+                      EXISTS h:Stay
+                        EXISTS d:DateUndergoes
+                          EXISTS v:Physician
+                            AND
+                              PRED Nurse(e, n, p, r, s)
+                              PRED Undergoes(u, t, h, d, v, e)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local AssistingNurse, global integer -> IntSort()
+        d : local DateUndergoes, global datetime -> IntSort()
+        e : local EmployeeID, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Patient, global integer -> IntSort()
+        p1 : local Procedures, global integer -> IntSort()
+        p2 : local Physician, global integer -> IntSort()
+        p3 : local Position, global varchar(30) -> StringSort()
+        r : local Registered, global boolean -> BoolSort()
+        s : local Stay, global integer -> IntSort()
+        s1 : local SSN, global integer -> IntSort()
+      Predicted FOL:
+        d : local DateUndergoes, global datetime -> IntSort()
+        e : local EmployeeID, global integer -> IntSort()
+        h : local Stay, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        r : local Registered, global boolean -> BoolSort()
+        s : local SSN, global integer -> IntSort()
+        t : local Procedures, global integer -> IntSort()
+        u : local Patient, global integer -> IntSort()
+        v : local Physician, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6, gold_e_7, gold_p3_8, gold_r_9, gold_s1_10], And(D_varchar_30_(gold_p3_8), And(And(P_Undergoes(gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6), P_Nurse(gold_e_7, FV_Name_0, gold_p3_8, gold_r_9, gold_s1_10)), (gold_a_6 == gold_e_7))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a, WGOLD_e, WGOLD_p3, WGOLD_r, WGOLD_s1):  And(D_varchar_30_(WGOLD_p3), And(And(P_Undergoes(WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a), P_Nurse(WGOLD_e, FV_Name_0, WGOLD_p3, WGOLD_r, WGOLD_s1)), (WGOLD_a == WGOLD_e)))
+   Gold: 10 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_p_2, predicted_r_3, predicted_s_4, predicted_u_5, predicted_t_6, predicted_h_7, predicted_d_8, predicted_v_9], And(D_varchar_30_(predicted_p_2), And(P_Nurse(predicted_e_1, FV_Name_0, predicted_p_2, predicted_r_3, predicted_s_4), P_Undergoes(predicted_u_5, predicted_t_6, predicted_h_7, predicted_d_8, predicted_v_9, predicted_e_1))))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_p, WPREDICTED_r, WPREDICTED_s, WPREDICTED_u, WPREDICTED_t, WPREDICTED_h, WPREDICTED_d, WPREDICTED_v):  And(D_varchar_30_(WPREDICTED_p), And(P_Nurse(WPREDICTED_e, FV_Name_0, WPREDICTED_p, WPREDICTED_r, WPREDICTED_s), P_Undergoes(WPREDICTED_u, WPREDICTED_t, WPREDICTED_h, WPREDICTED_d, WPREDICTED_v, WPREDICTED_e)))
+   Predicted: 9 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 792 lines, 31477 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1730.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 30
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a, WGOLD_e, WGOLD_p3, WGOLD_r, WGOLD_s1
+      claim: And(And(Length(WGOLD_p3) <= 30, And(And(Undergoes(WGOLD_p, WGOLD_p1, WGOLD_s, WGOLD_d, WGOLD_p2, WGOLD_a), Nurse(WGOLD_e, FV_Name_0, WGOLD_p3, WGOLD_r, WGOLD_s1)), WGOLD_a == WGOLD_e)), Not(Exists([predicted_e_1, predicted_p_2, predicted_r_3, predicted_s_4, predicted_u_5, predicted_t_6, predicted_h_7, predicted_d_8, predicted_v_9], And(Length(predicted_p_2) <= 30, And(Nurse(predicted_e_1, FV_Name_0, predicted_p_2, predicted_r_3, predicted_s_4), Undergoes(predicted_u_5, predicted_t_6, predicted_h_7, predicted_d_8, predicted_v_9, predicted_e_1))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_p, WPREDICTED_r, WPREDICTED_s, WPREDICTED_u, WPREDICTED_t, WPREDICTED_h, WPREDICTED_d, WPREDICTED_v
+      claim: And(And(Length(WPREDICTED_p) <= 30, And(Nurse(WPREDICTED_e, FV_Name_0, WPREDICTED_p, WPREDICTED_r, WPREDICTED_s), Undergoes(WPREDICTED_u, WPREDICTED_t, WPREDICTED_h, WPREDICTED_d, WPREDICTED_v, WPREDICTED_e))), Not(Exists([gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6, gold_e_7, gold_p3_8, gold_r_9, gold_s1_10], And(Length(gold_p3_8) <= 30, And(And(Undergoes(gold_p_1, gold_p1_2, gold_s_3, gold_d_4, gold_p2_5, gold_a_6), Nurse(gold_e_7, FV_Name_0, gold_p3_8, gold_r_9, gold_s1_10)), gold_a_6 == gold_e_7)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

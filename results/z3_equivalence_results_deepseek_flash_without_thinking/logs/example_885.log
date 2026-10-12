@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_885.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_885.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3373 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of companies whose headquarters are not "USA"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Assets_billion = real -> Float32()
+        Headquarters = text -> StringSort()
+        Industry = text -> StringSort()
+        Market_Value_billion = text -> StringSort()
+        Profits_billion = real -> Float32()
+        Sales_billion = real -> Float32()
+        id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Companies(id, name, Headquarters, Industry, Sales_billion, Profits_billion, Assets_billion, Market_Value_billion)
+        constant USA : Headquarters
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃h : Headquarters ∃i1 : Industry ∃s : Sales_billion ∃p : Profits_billion ∃a : Assets_billion ∃m : Market_Value_billion ( (Companies(i,n,h,i1,s,p,a,m)) ∧ (h <> 'USA') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:h COLON:: IDENT:Headquarters EXISTS:∃ IDENT:i1 COLON:: IDENT:Industry EXISTS:∃ IDENT:s COLON:: IDENT:Sales_billion EXISTS:∃ IDENT:p COLON:: IDENT:Profits_billion EXISTS:∃ IDENT:a COLON:: IDENT:Assets_billion EXISTS:∃ IDENT:m COLON:: IDENT:Market_Value_billion LPAR:( LPAR:( IDENT:Companies LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:i1 COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h NEQ:<> LIT:USA RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS h:Headquarters
+              EXISTS i1:Industry
+                EXISTS s:Sales_billion
+                  EXISTS p:Profits_billion
+                    EXISTS a:Assets_billion
+                      EXISTS m:Market_Value_billion
+                        AND
+                          PRED Companies(i, n, h, i1, s, p, a, m)
+                          NEQ  h != 'USA'
+      Predicted FOL: ∃x_name : name ∃x_headquarters : Headquarters (Companies(x_id, x_name, x_headquarters, x_industry, x_sales, x_profits, x_assets, x_market) ∧ x_headquarters ≠ 'USA')
+        tokens: EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:x_headquarters COLON:: IDENT:Headquarters LPAR:( IDENT:Companies LPAR:( IDENT:x_id COMMA:, IDENT:x_name COMMA:, IDENT:x_headquarters COMMA:, IDENT:x_industry COMMA:, IDENT:x_sales COMMA:, IDENT:x_profits COMMA:, IDENT:x_assets COMMA:, IDENT:x_market RPAR:) AND:∧ IDENT:x_headquarters NEQ:≠ LIT:USA RPAR:) EOF
+        AST:
+          EXISTS x_name:name
+            EXISTS x_headquarters:Headquarters
+              AND
+                PRED Companies(x_id, x_name, x_headquarters, x_industry, x_sales, x_profits, x_assets, x_market)
+                NEQ  x_headquarters != 'USA'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) x_id, x_industry, x_sales, x_profits, x_assets, x_market occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Assets_billion, global real -> Float32()
+        h : local Headquarters, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        i1 : local Industry, global text -> StringSort()
+        m : local Market_Value_billion, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        p : local Profits_billion, global real -> Float32()
+        s : local Sales_billion, global real -> Float32()
+      Predicted FOL:
+        x_assets : local Assets_billion, global real -> Float32()
+        x_headquarters : local Headquarters, global text -> StringSort()
+        x_id : local id, global int -> IntSort()
+        x_industry : local Industry, global text -> StringSort()
+        x_market : local Market_Value_billion, global text -> StringSort()
+        x_name : local name, global text -> StringSort()
+        x_profits : local Profits_billion, global real -> Float32()
+        x_sales : local Sales_billion, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5610 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_885.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) x_id, x_industry, x_sales, x_profits, x_assets, x_market occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

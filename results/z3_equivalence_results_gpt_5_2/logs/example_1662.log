@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1662.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1662.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3381 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the number and time of the train that goes from Chennai to Guruvayur.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        destination = text -> StringSort()
+        id = int -> IntSort()
+        interval = text -> StringSort()
+        name = text -> StringSort()
+        origin = text -> StringSort()
+        time = text -> StringSort()
+        train_number = int -> IntSort()
+      symbols:
+        train(id, train_number, name, origin, destination, time, interval)
+        constant Chennai : origin
+        constant Guruvayur : destination
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃n : name ∃o : origin ∃d : destination ∃i1 : interval ( (train(i,t,n,o,d,t1,i1)) ∧ ((o = 'Chennai') ∧ (d = 'Guruvayur')) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:o COLON:: IDENT:origin EXISTS:∃ IDENT:d COLON:: IDENT:destination EXISTS:∃ IDENT:i1 COLON:: IDENT:interval LPAR:( LPAR:( IDENT:train LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:d COMMA:, IDENT:t1 COMMA:, IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:o EQ:= LIT:Chennai RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Guruvayur RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS n:name
+              EXISTS o:origin
+                EXISTS d:destination
+                  EXISTS i1:interval
+                    AND
+                      PRED train(i, t, n, o, d, t1, i1)
+                      AND
+                        EQ  o = 'Chennai'
+                        EQ  d = 'Guruvayur'
+      Predicted FOL: ∃i:id ∃n:train_number ∃nm:name (train(i,n,nm,Chennai,Guruvayur,t,iv))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:train_number EXISTS:∃ IDENT:nm COLON:: IDENT:name LPAR:( IDENT:train LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:nm COMMA:, IDENT:Chennai COMMA:, IDENT:Guruvayur COMMA:, IDENT:t COMMA:, IDENT:iv RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS n:train_number
+              EXISTS nm:name
+                PRED train(i, n, nm, Chennai<const>, Guruvayur<const>, t, iv)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (t : train_number, t1 : time) -> ['StringSort()', 'numeric'] vs Predicted (t : time, iv : interval) -> ['StringSort()', 'StringSort()']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local destination, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        i1 : local interval, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        o : local origin, global text -> StringSort()
+        t : local train_number, global int -> IntSort()
+        t1 : local time, global text -> StringSort()
+      Predicted FOL:
+        i : local id, global int -> IntSort()
+        iv : local interval, global text -> StringSort()
+        n : local train_number, global int -> IntSort()
+        nm : local name, global text -> StringSort()
+        t : local time, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5444 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1662.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: the free variables have different value types: Gold (t : train_number, t1 : time) -> ['StringSort()', 'numeric'] vs Predicted (t : time, iv : interval) -> ['StringSort()', 'StringSort()']
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

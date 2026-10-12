@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3150.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3150.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3176 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the hometowns shared by people older than 23 and younger than 20.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = real -> Float32()
+        Height = real -> Float32()
+        Hometown = text -> StringSort()
+        Name = text -> StringSort()
+        People_ID = int -> IntSort()
+      symbols:
+        people(People_ID, Name, Age, Height, Hometown)
+        constant 20 : Age
+        constant 23 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃a : Age ∃n : Name ∃h : Height ∃p : People_ID( (people(p,n,a,h,h1)) ∧ (a > 23) )) ∧ (¬((∃a : Age ∃n : Name ∃h : Height ∃p : People_ID( (people(p,n,a,h,h1)) ∧ (a > 23) )) ∧ (¬(∃a : Age ∃n : Name ∃h : Height ∃p : People_ID( (people(p,n,a,h,h1)) ∧ (a < 20) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:People_ID LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h COMMA:, IDENT:h1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:23 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:People_ID LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h COMMA:, IDENT:h1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:23 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:People_ID LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h COMMA:, IDENT:h1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a LT:< NUM:20 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS a:Age
+              EXISTS n:Name
+                EXISTS h:Height
+                  EXISTS p:People_ID
+                    AND
+                      PRED people(p, n, a, h, h1)
+                      CMP  a > 23
+            NOT
+              AND
+                EXISTS a:Age
+                  EXISTS n:Name
+                    EXISTS h:Height
+                      EXISTS p:People_ID
+                        AND
+                          PRED people(p, n, a, h, h1)
+                          CMP  a > 23
+                NOT
+                  EXISTS a:Age
+                    EXISTS n:Name
+                      EXISTS h:Height
+                        EXISTS p:People_ID
+                          AND
+                            PRED people(p, n, a, h, h1)
+                            CMP  a < 20
+      Predicted FOL: ∃x : People_ID ∃n : Name ∃a : Age ∃h : Height ∃t : Hometown (people(x, n, a, h, t) ∧ a > 23 ∧ a < 20)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:People_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:t COLON:: IDENT:Hometown LPAR:( IDENT:people LPAR:( IDENT:x COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h COMMA:, IDENT:t RPAR:) AND:∧ IDENT:a GT:> NUM:23 AND:∧ IDENT:a LT:< NUM:20 RPAR:) EOF
+        AST:
+          EXISTS x:People_ID
+            EXISTS n:Name
+              EXISTS a:Age
+                EXISTS h:Height
+                  EXISTS t:Hometown
+                    AND
+                      PRED people(x, n, a, h, t)
+                      CMP  a > 23
+                      CMP  a < 20
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (h1 : Hometown) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global real -> Float32()
+        h : local Height, global real -> Float32()
+        h1 : local Hometown, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local People_ID, global int -> IntSort()
+      Predicted FOL:
+        a : local Age, global real -> Float32()
+        h : local Height, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        t : local Hometown, global text -> StringSort()
+        x : local People_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5520 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3150.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (h1 : Hometown) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

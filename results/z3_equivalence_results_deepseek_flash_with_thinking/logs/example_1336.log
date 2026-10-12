@@ -1,0 +1,125 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1336.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1336.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3853 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name and number of employees for the departments managed by heads whose temporary acting value is 'Yes'?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Budget_in_Billions = real -> Float32()
+        Creation = text -> StringSort()
+        Department_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Num_Employees = real -> Float32()
+        Ranking = int -> IntSort()
+        department_ID = int -> IntSort()
+        head_ID = int -> IntSort()
+        temporary_acting = text -> StringSort()
+      symbols:
+        department(Department_ID, Name, Creation, Ranking, Budget_in_Billions, Num_Employees)
+        management(department_ID, head_ID, temporary_acting)
+        constant Yes : temporary_acting
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Department_ID ∃c : Creation ∃r : Ranking ∃b : Budget_in_Billions ∃d1 : department_ID ∃h : head_ID ∃t : temporary_acting ( (((department(d,n,c,r,b,n1)) ∧ (management(d1,h,t))) ∧ (d = d1)) ∧ (t = 'Yes') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Department_ID EXISTS:∃ IDENT:c COLON:: IDENT:Creation EXISTS:∃ IDENT:r COLON:: IDENT:Ranking EXISTS:∃ IDENT:b COLON:: IDENT:Budget_in_Billions EXISTS:∃ IDENT:d1 COLON:: IDENT:department_ID EXISTS:∃ IDENT:h COLON:: IDENT:head_ID EXISTS:∃ IDENT:t COLON:: IDENT:temporary_acting LPAR:( LPAR:( LPAR:( LPAR:( IDENT:department LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:r COMMA:, IDENT:b COMMA:, IDENT:n1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:management LPAR:( IDENT:d1 COMMA:, IDENT:h COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Department_ID
+            EXISTS c:Creation
+              EXISTS r:Ranking
+                EXISTS b:Budget_in_Billions
+                  EXISTS d1:department_ID
+                    EXISTS h:head_ID
+                      EXISTS t:temporary_acting
+                        AND
+                          AND
+                            AND
+                              PRED department(d, n, c, r, b, n1)
+                              PRED management(d1, h, t)
+                            EQ  d = d1
+                          EQ  t = 'Yes'
+      Predicted FOL: ∃dID : Department_ID ∃c : Creation ∃r : Ranking ∃b : Budget_in_Billions ∃hID : head_ID ( department(dID, n, c, r, b, ne) ∧ management(dID, hID, 'Yes') )
+        tokens: EXISTS:∃ IDENT:dID COLON:: IDENT:Department_ID EXISTS:∃ IDENT:c COLON:: IDENT:Creation EXISTS:∃ IDENT:r COLON:: IDENT:Ranking EXISTS:∃ IDENT:b COLON:: IDENT:Budget_in_Billions EXISTS:∃ IDENT:hID COLON:: IDENT:head_ID LPAR:( IDENT:department LPAR:( IDENT:dID COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:r COMMA:, IDENT:b COMMA:, IDENT:ne RPAR:) AND:∧ IDENT:management LPAR:( IDENT:dID COMMA:, IDENT:hID COMMA:, LIT:Yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS dID:Department_ID
+            EXISTS c:Creation
+              EXISTS r:Ranking
+                EXISTS b:Budget_in_Billions
+                  EXISTS hID:head_ID
+                    AND
+                      PRED department(dID, n, c, r, b, ne)
+                      PRED management(dID, hID, 'Yes')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+      FV_Num_Employees_0 : Num_Employees   Gold n1 <-> Predicted ne
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Budget_in_Billions, global real -> Float32()
+        c : local Creation, global text -> StringSort()
+        d : local Department_ID, global int -> IntSort()
+        d1 : local department_ID, global int -> IntSort()
+        h : local head_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_Employees, global real -> Float32()
+        r : local Ranking, global int -> IntSort()
+        t : local temporary_acting, global text -> StringSort()
+      Predicted FOL:
+        b : local Budget_in_Billions, global real -> Float32()
+        c : local Creation, global text -> StringSort()
+        dID : local Department_ID, global int -> IntSort()
+        hID : local head_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        ne : local Num_Employees, global real -> Float32()
+        r : local Ranking, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_c_2, gold_r_3, gold_b_4, gold_d1_5, gold_h_6, gold_t_7], And(D_real(gold_b_4), And(And(And(P_department(gold_d_1, FV_Name_0, gold_c_2, gold_r_3, gold_b_4, FV_Num_Employees_0), P_management(gold_d1_5, gold_h_6, gold_t_7)), (gold_d_1 == gold_d1_5)), (gold_t_7 == L_Yes))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_c, WGOLD_r, WGOLD_b, WGOLD_d1, WGOLD_h, WGOLD_t):  And(D_real(WGOLD_b), And(And(And(P_department(WGOLD_d, FV_Name_0, WGOLD_c, WGOLD_r, WGOLD_b, FV_Num_Employees_0), P_management(WGOLD_d1, WGOLD_h, WGOLD_t)), (WGOLD_d == WGOLD_d1)), (WGOLD_t == L_Yes)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_dID_1, predicted_c_2, predicted_r_3, predicted_b_4, predicted_hID_5], And(D_real(predicted_b_4), And(P_department(predicted_dID_1, FV_Name_0, predicted_c_2, predicted_r_3, predicted_b_4, FV_Num_Employees_0), P_management(predicted_dID_1, predicted_hID_5, L_Yes))))
+      predicted_skolem (witnesses WPREDICTED_dID, WPREDICTED_c, WPREDICTED_r, WPREDICTED_b, WPREDICTED_hID):  And(D_real(WPREDICTED_b), And(P_department(WPREDICTED_dID, FV_Name_0, WPREDICTED_c, WPREDICTED_r, WPREDICTED_b, FV_Num_Employees_0), P_management(WPREDICTED_dID, WPREDICTED_hID, L_Yes)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Yes' at text -> L_Yes = StringVal('Yes')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 767 lines, 30055 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1336.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Num_Employees_0)), Not(And(fpIsZero(FV_Num_Employees_0), fpIsNegative(FV_Num_Employees_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_c, WGOLD_r, WGOLD_b, WGOLD_d1, WGOLD_h, WGOLD_t
+      claim: And(And(And(Not(fpIsNaN(WGOLD_b)), Not(And(fpIsZero(WGOLD_b), fpIsNegative(WGOLD_b)))), And(And(And(department(WGOLD_d, FV_Name_0, WGOLD_c, WGOLD_r, WGOLD_b, FV_Num_Employees_0), management(WGOLD_d1, WGOLD_h, WGOLD_t)), WGOLD_d == WGOLD_d1), WGOLD_t == "Yes")), Not(Exists([predicted_dID_1, predicted_c_2, predicted_r_3, predicted_b_4, predicted_hID_5], And(And(Not(fpIsNaN(predicted_b_4)), Not(And(fpIsZero(predicted_b_4), fpIsNegative(predicted_b_4)))), And(department(predicted_dID_1, FV_Name_0, predicted_c_2, predicted_r_3, predicted_b_4, FV_Num_Employees_0), management(predicted_dID_1, predicted_hID_5, "Yes"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_dID, WPREDICTED_c, WPREDICTED_r, WPREDICTED_b, WPREDICTED_hID
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_b)), Not(And(fpIsZero(WPREDICTED_b), fpIsNegative(WPREDICTED_b)))), And(department(WPREDICTED_dID, FV_Name_0, WPREDICTED_c, WPREDICTED_r, WPREDICTED_b, FV_Num_Employees_0), management(WPREDICTED_dID, WPREDICTED_hID, "Yes"))), Not(Exists([gold_d_1, gold_c_2, gold_r_3, gold_b_4, gold_d1_5, gold_h_6, gold_t_7], And(And(Not(fpIsNaN(gold_b_4)), Not(And(fpIsZero(gold_b_4), fpIsNegative(gold_b_4)))), And(And(And(department(gold_d_1, FV_Name_0, gold_c_2, gold_r_3, gold_b_4, FV_Num_Employees_0), management(gold_d1_5, gold_h_6, gold_t_7)), gold_d_1 == gold_d1_5), gold_t_7 == "Yes")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

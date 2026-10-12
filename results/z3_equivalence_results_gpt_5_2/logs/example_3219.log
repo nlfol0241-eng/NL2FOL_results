@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3219.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3219.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4540 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: which countries did participated in both Friendly and Tournament type competitions.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Competition_ID = int -> IntSort()
+        Competition_type = text -> StringSort()
+        Country = text -> StringSort()
+        Year = real -> Float32()
+      symbols:
+        competition(Competition_ID, Year, Competition_type, Country)
+        constant Friendly : Competition_type
+        constant Tournament : Competition_type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c1 : Competition_type ∃y : Year ∃c : Competition_ID( (competition(c,y,c1,c2)) ∧ (c1 = 'Friendly') )) ∧ (¬((∃c1 : Competition_type ∃y : Year ∃c : Competition_ID( (competition(c,y,c1,c2)) ∧ (c1 = 'Friendly') )) ∧ (¬(∃c1 : Competition_type ∃y : Year ∃c : Competition_ID( (competition(c,y,c1,c2)) ∧ (c1 = 'Tournament') )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Competition_type EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c COLON:: IDENT:Competition_ID LPAR:( LPAR:( IDENT:competition LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Friendly RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Competition_type EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c COLON:: IDENT:Competition_ID LPAR:( LPAR:( IDENT:competition LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Friendly RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Competition_type EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c COLON:: IDENT:Competition_ID LPAR:( LPAR:( IDENT:competition LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Tournament RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c1:Competition_type
+              EXISTS y:Year
+                EXISTS c:Competition_ID
+                  AND
+                    PRED competition(c, y, c1, c2)
+                    EQ  c1 = 'Friendly'
+            NOT
+              AND
+                EXISTS c1:Competition_type
+                  EXISTS y:Year
+                    EXISTS c:Competition_ID
+                      AND
+                        PRED competition(c, y, c1, c2)
+                        EQ  c1 = 'Friendly'
+                NOT
+                  EXISTS c1:Competition_type
+                    EXISTS y:Year
+                      EXISTS c:Competition_ID
+                        AND
+                          PRED competition(c, y, c1, c2)
+                          EQ  c1 = 'Tournament'
+      Predicted FOL: ∃c1:Competition_ID ∃y1:Year (competition(c1, y1, Friendly, Country) ∧ ∃c2:Competition_ID ∃y2:Year competition(c2, y2, Tournament, Country))
+        tokens: EXISTS:∃ IDENT:c1 COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:y1 COLON:: IDENT:Year LPAR:( IDENT:competition LPAR:( IDENT:c1 COMMA:, IDENT:y1 COMMA:, IDENT:Friendly COMMA:, IDENT:Country RPAR:) AND:∧ EXISTS:∃ IDENT:c2 COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:y2 COLON:: IDENT:Year IDENT:competition LPAR:( IDENT:c2 COMMA:, IDENT:y2 COMMA:, IDENT:Tournament COMMA:, IDENT:Country RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c1:Competition_ID
+            EXISTS y1:Year
+              AND
+                PRED competition(c1, y1, Friendly<const>, Country)
+                EXISTS c2:Competition_ID
+                  EXISTS y2:Year
+                    PRED competition(c2, y2, Tournament<const>, Country)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Country_0 : Country   Gold c2 <-> Predicted Country
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Competition_ID, global int -> IntSort()
+        c1 : local Competition_type, global text -> StringSort()
+        c2 : local Country, global text -> StringSort()
+        y : local Year, global real -> Float32()
+      Predicted FOL:
+        Country : local Country, global text -> StringSort()
+        c1 : local Competition_ID, global int -> IntSort()
+        c2 : local Competition_ID, global int -> IntSort()
+        y1 : local Year, global real -> Float32()
+        y2 : local Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_c1_1, gold_y_2, gold_c_3], And(D_real(gold_y_2), And(P_competition(gold_c_3, gold_y_2, gold_c1_1, FV_Country_0), (gold_c1_1 == L_Friendly)))), Not(And(Exists([gold_c1_4, gold_y_5, gold_c_6], And(D_real(gold_y_5), And(P_competition(gold_c_6, gold_y_5, gold_c1_4, FV_Country_0), (gold_c1_4 == L_Friendly)))), Not(Exists([gold_c1_7, gold_y_8, gold_c_9], And(D_real(gold_y_8), And(P_competition(gold_c_9, gold_y_8, gold_c1_7, FV_Country_0), (gold_c1_7 == L_Tournament))))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c1_1, predicted_y1_2], And(D_real(predicted_y1_2), And(P_competition(predicted_c1_1, predicted_y1_2, L_Friendly, FV_Country_0), Exists([predicted_c2_3, predicted_y2_4], And(D_real(predicted_y2_4), P_competition(predicted_c2_3, predicted_y2_4, L_Tournament, FV_Country_0))))))
+      predicted_skolem (witnesses WPREDICTED_c1, WPREDICTED_y1):  And(D_real(WPREDICTED_y1), And(P_competition(WPREDICTED_c1, WPREDICTED_y1, L_Friendly, FV_Country_0), Exists([predictedsk_c2_1, predictedsk_y2_2], And(D_real(predictedsk_y2_2), P_competition(predictedsk_c2_1, predictedsk_y2_2, L_Tournament, FV_Country_0)))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Friendly' at text -> L_Friendly = StringVal('Friendly')
+      literal 'Tournament' at text -> L_Tournament = StringVal('Tournament')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 735 lines, 28443 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3219.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_c1_1, gold_y_2, gold_c_3], And(And(Not(fpIsNaN(gold_y_2)), Not(And(fpIsZero(gold_y_2), fpIsNegative(gold_y_2)))), And(competition(gold_c_3, gold_y_2, gold_c1_1, FV_Country_0), gold_c1_1 == "Friendly"))), Not(And(Exists([gold_c1_4, gold_y_5, gold_c_6], And(And(Not(fpIsNaN(gold_y_5)), Not(And(fpIsZero(gold_y_5), fpIsNegative(gold_y_5)))), And(competition(gold_c_6, gold_y_5, gold_c1_4, FV_Country_0), gold_c1_4 == "Friendly"))), Not(Exists([gold_c1_7, gold_y_8, gold_c_9], And(And(Not(fpIsNaN(gold_y_8)), Not(And(fpIsZero(gold_y_8), fpIsNegative(gold_y_8)))), And(competition(gold_c_9, gold_y_8, gold_c1_7, FV_Country_0), gold_c1_7 == "Tournament"))))))), Not(Exists([predicted_c1_1, predicted_y1_2], And(And(Not(fpIsNaN(predicted_y1_2)), Not(And(fpIsZero(predicted_y1_2), fpIsNegative(predicted_y1_2)))), And(competition(predicted_c1_1, predicted_y1_2, "Friendly", FV_Country_0), Exists([predicted_c2_3, predicted_y2_4], And(And(Not(fpIsNaN(predicted_y2_4)), Not(And(fpIsZero(predicted_y2_4), fpIsNegative(predicted_y2_4)))), competition(predicted_c2_3, predicted_y2_4, "Tournament", FV_Country_0))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c1, WPREDICTED_y1
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_y1)), Not(And(fpIsZero(WPREDICTED_y1), fpIsNegative(WPREDICTED_y1)))), And(competition(WPREDICTED_c1, WPREDICTED_y1, "Friendly", FV_Country_0), Exists([predictedsk_c2_1, predictedsk_y2_2], And(And(Not(fpIsNaN(predictedsk_y2_2)), Not(And(fpIsZero(predictedsk_y2_2), fpIsNegative(predictedsk_y2_2)))), competition(predictedsk_c2_1, predictedsk_y2_2, "Tournament", FV_Country_0))))), Not(And(Exists([gold_c1_1, gold_y_2, gold_c_3], And(And(Not(fpIsNaN(gold_y_2)), Not(And(fpIsZero(gold_y_2), fpIsNegative(gold_y_2)))), And(competition(gold_c_3, gold_y_2, gold_c1_1, FV_Country_0), gold_c1_1 == "Friendly"))), Not(And(Exists([gold_c1_4, gold_y_5, gold_c_6], And(And(Not(fpIsNaN(gold_y_5)), Not(And(fpIsZero(gold_y_5), fpIsNegative(gold_y_5)))), And(competition(gold_c_6, gold_y_5, gold_c1_4, FV_Country_0), gold_c1_4 == "Friendly"))), Not(Exists([gold_c1_7, gold_y_8, gold_c_9], And(And(Not(fpIsNaN(gold_y_8)), Not(And(fpIsZero(gold_y_8), fpIsNegative(gold_y_8)))), And(competition(gold_c_9, gold_y_8, gold_c1_7, FV_Country_0), gold_c1_7 == "Tournament")))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

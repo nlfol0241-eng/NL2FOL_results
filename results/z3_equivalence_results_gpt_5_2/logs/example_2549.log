@@ -1,0 +1,174 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2549.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2549.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 12164 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the order dates of orders with price higher than 1000?
+   [G1] took 0.006 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 15 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        decimal(20,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -10000000000000000, x < 10000000000000000); 20 digits, 4 after the point]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Actual_Delivery_Date = datetime -> IntSort()
+        Customer_ID = text -> StringSort()
+        Order_Date = datetime -> IntSort()
+        Order_ID = integer -> IntSort()
+        Order_Item_ID = integer -> IntSort()
+        Order_Quantity = text -> StringSort()
+        Other_Item_Details = varchar(255) -> StringSort()
+        Other_Order_Details = varchar(255) -> StringSort()
+        Other_Product_Service_Details = varchar(255) -> StringSort()
+        Planned_Delivery_Date = datetime -> IntSort()
+        Product_Description = varchar(255) -> StringSort()
+        Product_ID = text -> StringSort()
+        Product_Name = varchar(255) -> StringSort()
+        Product_Price = decimal(20,4) -> RealSort()
+        Store_ID = text -> StringSort()
+      symbols:
+        Customer_Orders(Order_ID, Customer_ID, Store_ID, Order_Date, Planned_Delivery_Date, Actual_Delivery_Date, Other_Order_Details)
+        Order_Items(Order_Item_ID, Order_ID, Product_ID, Order_Quantity, Other_Item_Details)
+        Products(Product_ID, Product_Name, Product_Price, Product_Description, Other_Product_Service_Details)
+        constant 1000 : Product_Price
+   [G2] took 0.003 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : Order_ID ∃c : Customer_ID ∃s : Store_ID ∃p : Planned_Delivery_Date ∃a : Actual_Delivery_Date ∃o2 : Other_Order_Details ∃o3 : Order_Item_ID ∃o4 : Order_ID ∃p1 : Product_ID ∃o5 : Order_Quantity ∃o6 : Other_Item_Details ∃p2 : Product_ID ∃p3 : Product_Name ∃p4 : Product_Price ∃p5 : Product_Description ∃o7 : Other_Product_Service_Details ( (((((Customer_Orders(o,c,s,o1,p,a,o2)) ∧ (Order_Items(o3,o4,p1,o5,o6))) ∧ (o = o4)) ∧ (Products(p2,p3,p4,p5,o7))) ∧ (p1 = p2)) ∧ (p4 > 1000) )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:Order_ID EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:s COLON:: IDENT:Store_ID EXISTS:∃ IDENT:p COLON:: IDENT:Planned_Delivery_Date EXISTS:∃ IDENT:a COLON:: IDENT:Actual_Delivery_Date EXISTS:∃ IDENT:o2 COLON:: IDENT:Other_Order_Details EXISTS:∃ IDENT:o3 COLON:: IDENT:Order_Item_ID EXISTS:∃ IDENT:o4 COLON:: IDENT:Order_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Product_ID EXISTS:∃ IDENT:o5 COLON:: IDENT:Order_Quantity EXISTS:∃ IDENT:o6 COLON:: IDENT:Other_Item_Details EXISTS:∃ IDENT:p2 COLON:: IDENT:Product_ID EXISTS:∃ IDENT:p3 COLON:: IDENT:Product_Name EXISTS:∃ IDENT:p4 COLON:: IDENT:Product_Price EXISTS:∃ IDENT:p5 COLON:: IDENT:Product_Description EXISTS:∃ IDENT:o7 COLON:: IDENT:Other_Product_Service_Details LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Customer_Orders LPAR:( IDENT:o COMMA:, IDENT:c COMMA:, IDENT:s COMMA:, IDENT:o1 COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:o2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Order_Items LPAR:( IDENT:o3 COMMA:, IDENT:o4 COMMA:, IDENT:p1 COMMA:, IDENT:o5 COMMA:, IDENT:o6 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= IDENT:o4 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Products LPAR:( IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 COMMA:, IDENT:o7 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= IDENT:p2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p4 GT:> NUM:1000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:Order_ID
+            EXISTS c:Customer_ID
+              EXISTS s:Store_ID
+                EXISTS p:Planned_Delivery_Date
+                  EXISTS a:Actual_Delivery_Date
+                    EXISTS o2:Other_Order_Details
+                      EXISTS o3:Order_Item_ID
+                        EXISTS o4:Order_ID
+                          EXISTS p1:Product_ID
+                            EXISTS o5:Order_Quantity
+                              EXISTS o6:Other_Item_Details
+                                EXISTS p2:Product_ID
+                                  EXISTS p3:Product_Name
+                                    EXISTS p4:Product_Price
+                                      EXISTS p5:Product_Description
+                                        EXISTS o7:Other_Product_Service_Details
+                                          AND
+                                            AND
+                                              AND
+                                                AND
+                                                  AND
+                                                    PRED Customer_Orders(o, c, s, o1, p, a, o2)
+                                                    PRED Order_Items(o3, o4, p1, o5, o6)
+                                                  EQ  o = o4
+                                                PRED Products(p2, p3, p4, p5, o7)
+                                              EQ  p1 = p2
+                                            CMP  p4 > 1000
+      Predicted FOL: ∃oId:Order_ID ∃cId:Customer_ID ∃sId:Store_ID ∃pd:Planned_Delivery_Date ∃ad:Actual_Delivery_Date ∃ood:Other_Order_Details ( Customer_Orders(oId, cId, sId, orderDate, pd, ad, ood) ∧ ∃oiId:Order_Item_ID ∃pId:Product_ID ∃oq:Order_Quantity ∃oid:Other_Item_Details ( Order_Items(oiId, oId, pId, oq, oid) ∧ ∃pName:Product_Name ∃price:Product_Price ∃pDesc:Product_Description ∃opd:Other_Product_Service_Details ( Products(pId, pName, price, pDesc, opd) ∧ price > 1000 ) ) )
+        tokens: EXISTS:∃ IDENT:oId COLON:: IDENT:Order_ID EXISTS:∃ IDENT:cId COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:sId COLON:: IDENT:Store_ID EXISTS:∃ IDENT:pd COLON:: IDENT:Planned_Delivery_Date EXISTS:∃ IDENT:ad COLON:: IDENT:Actual_Delivery_Date EXISTS:∃ IDENT:ood COLON:: IDENT:Other_Order_Details LPAR:( IDENT:Customer_Orders LPAR:( IDENT:oId COMMA:, IDENT:cId COMMA:, IDENT:sId COMMA:, IDENT:orderDate COMMA:, IDENT:pd COMMA:, IDENT:ad COMMA:, IDENT:ood RPAR:) AND:∧ EXISTS:∃ IDENT:oiId COLON:: IDENT:Order_Item_ID EXISTS:∃ IDENT:pId COLON:: IDENT:Product_ID EXISTS:∃ IDENT:oq COLON:: IDENT:Order_Quantity EXISTS:∃ IDENT:oid COLON:: IDENT:Other_Item_Details LPAR:( IDENT:Order_Items LPAR:( IDENT:oiId COMMA:, IDENT:oId COMMA:, IDENT:pId COMMA:, IDENT:oq COMMA:, IDENT:oid RPAR:) AND:∧ EXISTS:∃ IDENT:pName COLON:: IDENT:Product_Name EXISTS:∃ IDENT:price COLON:: IDENT:Product_Price EXISTS:∃ IDENT:pDesc COLON:: IDENT:Product_Description EXISTS:∃ IDENT:opd COLON:: IDENT:Other_Product_Service_Details LPAR:( IDENT:Products LPAR:( IDENT:pId COMMA:, IDENT:pName COMMA:, IDENT:price COMMA:, IDENT:pDesc COMMA:, IDENT:opd RPAR:) AND:∧ IDENT:price GT:> NUM:1000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS oId:Order_ID
+            EXISTS cId:Customer_ID
+              EXISTS sId:Store_ID
+                EXISTS pd:Planned_Delivery_Date
+                  EXISTS ad:Actual_Delivery_Date
+                    EXISTS ood:Other_Order_Details
+                      AND
+                        PRED Customer_Orders(oId, cId, sId, orderDate, pd, ad, ood)
+                        EXISTS oiId:Order_Item_ID
+                          EXISTS pId:Product_ID
+                            EXISTS oq:Order_Quantity
+                              EXISTS oid:Other_Item_Details
+                                AND
+                                  PRED Order_Items(oiId, oId, pId, oq, oid)
+                                  EXISTS pName:Product_Name
+                                    EXISTS price:Product_Price
+                                      EXISTS pDesc:Product_Description
+                                        EXISTS opd:Other_Product_Service_Details
+                                          AND
+                                            PRED Products(pId, pName, price, pDesc, opd)
+                                            CMP  price > 1000
+   [G3] took 0.035 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Order_Date_0 : Order_Date   Gold o1 <-> Predicted orderDate
+   [G4] took 0.002 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 32 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Actual_Delivery_Date, global datetime -> IntSort()
+        c : local Customer_ID, global text -> StringSort()
+        o : local Order_ID, global integer -> IntSort()
+        o1 : local Order_Date, global datetime -> IntSort()
+        o2 : local Other_Order_Details, global varchar(255) -> StringSort()
+        o3 : local Order_Item_ID, global integer -> IntSort()
+        o4 : local Order_ID, global integer -> IntSort()
+        o5 : local Order_Quantity, global text -> StringSort()
+        o6 : local Other_Item_Details, global varchar(255) -> StringSort()
+        o7 : local Other_Product_Service_Details, global varchar(255) -> StringSort()
+        p : local Planned_Delivery_Date, global datetime -> IntSort()
+        p1 : local Product_ID, global text -> StringSort()
+        p2 : local Product_ID, global text -> StringSort()
+        p3 : local Product_Name, global varchar(255) -> StringSort()
+        p4 : local Product_Price, global decimal(20,4) -> RealSort()
+        p5 : local Product_Description, global varchar(255) -> StringSort()
+        s : local Store_ID, global text -> StringSort()
+      Predicted FOL:
+        ad : local Actual_Delivery_Date, global datetime -> IntSort()
+        cId : local Customer_ID, global text -> StringSort()
+        oId : local Order_ID, global integer -> IntSort()
+        oiId : local Order_Item_ID, global integer -> IntSort()
+        oid : local Other_Item_Details, global varchar(255) -> StringSort()
+        ood : local Other_Order_Details, global varchar(255) -> StringSort()
+        opd : local Other_Product_Service_Details, global varchar(255) -> StringSort()
+        oq : local Order_Quantity, global text -> StringSort()
+        orderDate : local Order_Date, global datetime -> IntSort()
+        pDesc : local Product_Description, global varchar(255) -> StringSort()
+        pId : local Product_ID, global text -> StringSort()
+        pName : local Product_Name, global varchar(255) -> StringSort()
+        pd : local Planned_Delivery_Date, global datetime -> IntSort()
+        price : local Product_Price, global decimal(20,4) -> RealSort()
+        sId : local Store_ID, global text -> StringSort()
+   [G5] took 0.004 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_o_1, gold_c_2, gold_s_3, gold_p_4, gold_a_5, gold_o2_6, gold_o3_7, gold_o4_8, gold_p1_9, gold_o5_10, gold_o6_11, gold_p2_12, gold_p3_13, gold_p4_14, gold_p5_15, gold_o7_16], And(D_varchar_255_(gold_o2_6), D_varchar_255_(gold_o6_11), D_varchar_255_(gold_p3_13), D_decimal_20_4_(gold_p4_14), D_varchar_255_(gold_p5_15), D_varchar_255_(gold_o7_16), And(And(And(And(And(P_Customer_Orders(gold_o_1, gold_c_2, gold_s_3, FV_Order_Date_0, gold_p_4, gold_a_5, gold_o2_6), P_Order_Items(gold_o3_7, gold_o4_8, gold_p1_9, gold_o5_10, gold_o6_11)), (gold_o_1 == gold_o4_8)), P_Products(gold_p2_12, gold_p3_13, gold_p4_14, gold_p5_15, gold_o7_16)), (gold_p1_9 == gold_p2_12)), (gold_p4_14 > L_v_1000_decimal_20_4_))))
+      gold_skolem (witnesses WGOLD_o, WGOLD_c, WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_o2, WGOLD_o3, WGOLD_o4, WGOLD_p1, WGOLD_o5, WGOLD_o6, WGOLD_p2, WGOLD_p3, WGOLD_p4, WGOLD_p5, WGOLD_o7):  And(D_varchar_255_(WGOLD_o2), D_varchar_255_(WGOLD_o6), D_varchar_255_(WGOLD_p3), D_decimal_20_4_(WGOLD_p4), D_varchar_255_(WGOLD_p5), D_varchar_255_(WGOLD_o7), And(And(And(And(And(P_Customer_Orders(WGOLD_o, WGOLD_c, WGOLD_s, FV_Order_Date_0, WGOLD_p, WGOLD_a, WGOLD_o2), P_Order_Items(WGOLD_o3, WGOLD_o4, WGOLD_p1, WGOLD_o5, WGOLD_o6)), (WGOLD_o == WGOLD_o4)), P_Products(WGOLD_p2, WGOLD_p3, WGOLD_p4, WGOLD_p5, WGOLD_o7)), (WGOLD_p1 == WGOLD_p2)), (WGOLD_p4 > L_v_1000_decimal_20_4_)))
+   Gold: 16 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_oId_1, predicted_cId_2, predicted_sId_3, predicted_pd_4, predicted_ad_5, predicted_ood_6], And(D_varchar_255_(predicted_ood_6), And(P_Customer_Orders(predicted_oId_1, predicted_cId_2, predicted_sId_3, FV_Order_Date_0, predicted_pd_4, predicted_ad_5, predicted_ood_6), Exists([predicted_oiId_7, predicted_pId_8, predicted_oq_9, predicted_oid_10], And(D_varchar_255_(predicted_oid_10), And(P_Order_Items(predicted_oiId_7, predicted_oId_1, predicted_pId_8, predicted_oq_9, predicted_oid_10), Exists([predicted_pName_11, predicted_price_12, predicted_pDesc_13, predicted_opd_14], And(D_varchar_255_(predicted_pName_11), D_decimal_20_4_(predicted_price_12), D_varchar_255_(predicted_pDesc_13), D_varchar_255_(predicted_opd_14), And(P_Products(predicted_pId_8, predicted_pName_11, predicted_price_12, predicted_pDesc_13, predicted_opd_14), (predicted_price_12 > L_v_1000_decimal_20_4_))))))))))
+      predicted_skolem (witnesses WPREDICTED_oId, WPREDICTED_cId, WPREDICTED_sId, WPREDICTED_pd, WPREDICTED_ad, WPREDICTED_ood):  And(D_varchar_255_(WPREDICTED_ood), And(P_Customer_Orders(WPREDICTED_oId, WPREDICTED_cId, WPREDICTED_sId, FV_Order_Date_0, WPREDICTED_pd, WPREDICTED_ad, WPREDICTED_ood), Exists([predictedsk_oiId_1, predictedsk_pId_2, predictedsk_oq_3, predictedsk_oid_4], And(D_varchar_255_(predictedsk_oid_4), And(P_Order_Items(predictedsk_oiId_1, WPREDICTED_oId, predictedsk_pId_2, predictedsk_oq_3, predictedsk_oid_4), Exists([predictedsk_pName_5, predictedsk_price_6, predictedsk_pDesc_7, predictedsk_opd_8], And(D_varchar_255_(predictedsk_pName_5), D_decimal_20_4_(predictedsk_price_6), D_varchar_255_(predictedsk_pDesc_7), D_varchar_255_(predictedsk_opd_8), And(P_Products(predictedsk_pId_2, predictedsk_pName_5, predictedsk_price_6, predictedsk_pDesc_7, predictedsk_opd_8), (predictedsk_price_6 > L_v_1000_decimal_20_4_)))))))))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.007 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1000' at decimal(20,4) -> L_v_1000_decimal_20_4_ = RealVal('1000')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 836 lines, 37993 bytes
+   [G7] took 0.005 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2549.py
+   [G8] took 0.038 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_o, WGOLD_c, WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_o2, WGOLD_o3, WGOLD_o4, WGOLD_p1, WGOLD_o5, WGOLD_o6, WGOLD_p2, WGOLD_p3, WGOLD_p4, WGOLD_p5, WGOLD_o7
+      claim: And(And(Length(WGOLD_o2) <= 255, Length(WGOLD_o6) <= 255, Length(WGOLD_p3) <= 255, And(IsInt(WGOLD_p4*10000), WGOLD_p4 > -10000000000000000, WGOLD_p4 < 10000000000000000), Length(WGOLD_p5) <= 255, Length(WGOLD_o7) <= 255, And(And(And(And(And(Customer_Orders(WGOLD_o, WGOLD_c, WGOLD_s, FV_Order_Date_0, WGOLD_p, WGOLD_a, WGOLD_o2), Order_Items(WGOLD_o3, WGOLD_o4, WGOLD_p1, WGOLD_o5, WGOLD_o6)), WGOLD_o == WGOLD_o4), Products(WGOLD_p2, WGOLD_p3, WGOLD_p4, WGOLD_p5, WGOLD_o7)), WGOLD_p1 == WGOLD_p2), 1000 < WGOLD_p4)), Not(Exists([predicted_oId_1, predicted_cId_2, predicted_sId_3, predicted_pd_4, predicted_ad_5, predicted_ood_6], And(Length(predicted_ood_6) <= 255, And(Customer_Orders(predicted_oId_1, predicted_cId_2, predicted_sId_3, FV_Order_Date_0, predicted_pd_4, predicted_ad_5, predicted_ood_6), Exists([predicted_oiId_7, predicted_pId_8, predicted_oq_9, predicted_oid_10], And(Length(predicted_oid_10) <= 255, And(Order_Items(predicted_oiId_7, predicted_oId_1, predicted_pId_8, predicted_oq_9, predicted_oid_10), Exists([predicted_pName_11, predicted_price_12, predicted_pDesc_13, predicted_opd_14], And(Length(predicted_pName_11) <= 255, And(IsInt(predicted_price_12* 10000), predicted_price_12 > -10000000000000000, predicted_price_12 < 10000000000000000), Length(predicted_pDesc_13) <= 255, Length(predicted_opd_14) <= 255, And(Products(predicted_pId_8, predicted_pName_11, predicted_price_12, predicted_pDesc_13, predicted_opd_14), 1000 < predicted_price_12)))))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.048 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.265 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_oId, WPREDICTED_cId, WPREDICTED_sId, WPREDICTED_pd, WPREDICTED_ad, WPREDICTED_ood
+      claim: And(And(Length(WPREDICTED_ood) <= 255, And(Customer_Orders(WPREDICTED_oId, WPREDICTED_cId, WPREDICTED_sId, FV_Order_Date_0, WPREDICTED_pd, WPREDICTED_ad, WPREDICTED_ood), Exists([predictedsk_oiId_1, predictedsk_pId_2, predictedsk_oq_3, predictedsk_oid_4], And(Length(predictedsk_oid_4) <= 255, And(Order_Items(predictedsk_oiId_1, WPREDICTED_oId, predictedsk_pId_2, predictedsk_oq_3, predictedsk_oid_4), Exists([predictedsk_pName_5, predictedsk_price_6, predictedsk_pDesc_7, predictedsk_opd_8], And(Length(predictedsk_pName_5) <= 255, And(IsInt(predictedsk_price_6* 10000), predictedsk_price_6 > -10000000000000000, predictedsk_price_6 < 10000000000000000), Length(predictedsk_pDesc_7) <= 255, Length(predictedsk_opd_8) <= 255, And(Products(predictedsk_pId_2, predictedsk_pName_5, predictedsk_price_6, predictedsk_pDesc_7, predictedsk_opd_8), 1000 < predictedsk_price_6)))))))), Not(Exists([gold_o_1, gold_c_2, gold_s_3, gold_p_4, gold_a_5, gold_o2_6, gold_o3_7, gold_o4_8, gold_p1_9, gold_o5_10, gold_o6_11, gold_p2_12, gold_p3_13, gold_p4_14, gold_p5_15, gold_o7_16], And(Length(gold_o2_6) <= 255, Length(gold_o6_11) <= 255, Length(gold_p3_13) <= 255, And(IsInt(gold_p4_14*10000), gold_p4_14 > -10000000000000000, gold_p4_14 < 10000000000000000), Length(gold_p5_15) <= 255, Length(gold_o7_16) <= 255, And(And(And(And(And(Customer_Orders(gold_o_1, gold_c_2, gold_s_3, FV_Order_Date_0, gold_p_4, gold_a_5, gold_o2_6), Order_Items(gold_o3_7, gold_o4_8, gold_p1_9, gold_o5_10, gold_o6_11)), gold_o_1 == gold_o4_8), Products(gold_p2_12, gold_p3_13, gold_p4_14, gold_p5_15, gold_o7_16)), gold_p1_9 == gold_p2_12), 1000 < gold_p4_14)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.030 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.201 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

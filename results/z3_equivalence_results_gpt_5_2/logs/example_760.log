@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_760.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_760.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3088 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: find the names of programs whose origin is not in Beijing.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Launch = real -> Float32()
+        Name = text -> StringSort()
+        Origin = text -> StringSort()
+        Owner = text -> StringSort()
+        Program_ID = int -> IntSort()
+      symbols:
+        program(Program_ID, Name, Origin, Launch, Owner)
+        constant Beijing : Origin
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Program_ID ∃o : Origin ∃l : Launch ∃o1 : Owner ( (program(p,n,o,l,o1)) ∧ (o <> 'Beijing') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID EXISTS:∃ IDENT:o COLON:: IDENT:Origin EXISTS:∃ IDENT:l COLON:: IDENT:Launch EXISTS:∃ IDENT:o1 COLON:: IDENT:Owner LPAR:( LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o NEQ:<> LIT:Beijing RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Program_ID
+            EXISTS o:Origin
+              EXISTS l:Launch
+                EXISTS o1:Owner
+                  AND
+                    PRED program(p, n, o, l, o1)
+                    NEQ  o != 'Beijing'
+      Predicted FOL: ∃pid:Program_ID ∃orig:Origin ∃launch:Launch ∃owner:Owner ( program(pid, n, orig, launch, owner) ∧ orig ≠ Beijing )
+        tokens: EXISTS:∃ IDENT:pid COLON:: IDENT:Program_ID EXISTS:∃ IDENT:orig COLON:: IDENT:Origin EXISTS:∃ IDENT:launch COLON:: IDENT:Launch EXISTS:∃ IDENT:owner COLON:: IDENT:Owner LPAR:( IDENT:program LPAR:( IDENT:pid COMMA:, IDENT:n COMMA:, IDENT:orig COMMA:, IDENT:launch COMMA:, IDENT:owner RPAR:) AND:∧ IDENT:orig NEQ:≠ IDENT:Beijing RPAR:) EOF
+        AST:
+          EXISTS pid:Program_ID
+            EXISTS orig:Origin
+              EXISTS launch:Launch
+                EXISTS owner:Owner
+                  AND
+                    PRED program(pid, n, orig, launch, owner)
+                    NEQ  orig != Beijing<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Origin, global text -> StringSort()
+        o1 : local Owner, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+      Predicted FOL:
+        launch : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        orig : local Origin, global text -> StringSort()
+        owner : local Owner, global text -> StringSort()
+        pid : local Program_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_o_2, gold_l_3, gold_o1_4], And(D_real(gold_l_3), And(P_program(gold_p_1, FV_Name_0, gold_o_2, gold_l_3, gold_o1_4), (gold_o_2 != L_Beijing))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_o, WGOLD_l, WGOLD_o1):  And(D_real(WGOLD_l), And(P_program(WGOLD_p, FV_Name_0, WGOLD_o, WGOLD_l, WGOLD_o1), (WGOLD_o != L_Beijing)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_pid_1, predicted_orig_2, predicted_launch_3, predicted_owner_4], And(D_real(predicted_launch_3), And(P_program(predicted_pid_1, FV_Name_0, predicted_orig_2, predicted_launch_3, predicted_owner_4), (predicted_orig_2 != L_Beijing))))
+      predicted_skolem (witnesses WPREDICTED_pid, WPREDICTED_orig, WPREDICTED_launch, WPREDICTED_owner):  And(D_real(WPREDICTED_launch), And(P_program(WPREDICTED_pid, FV_Name_0, WPREDICTED_orig, WPREDICTED_launch, WPREDICTED_owner), (WPREDICTED_orig != L_Beijing)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Beijing' at text -> L_Beijing = StringVal('Beijing')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 741 lines, 27981 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_760.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_o, WGOLD_l, WGOLD_o1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_l)), Not(And(fpIsZero(WGOLD_l), fpIsNegative(WGOLD_l)))), And(program(WGOLD_p, FV_Name_0, WGOLD_o, WGOLD_l, WGOLD_o1), WGOLD_o != "Beijing")), Not(Exists([predicted_pid_1, predicted_orig_2, predicted_launch_3, predicted_owner_4], And(And(Not(fpIsNaN(predicted_launch_3)), Not(And(fpIsZero(predicted_launch_3), fpIsNegative(predicted_launch_3)))), And(program(predicted_pid_1, FV_Name_0, predicted_orig_2, predicted_launch_3, predicted_owner_4), predicted_orig_2 != "Beijing")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_pid, WPREDICTED_orig, WPREDICTED_launch, WPREDICTED_owner
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_launch)), Not(And(fpIsZero(WPREDICTED_launch), fpIsNegative(WPREDICTED_launch)))), And(program(WPREDICTED_pid, FV_Name_0, WPREDICTED_orig, WPREDICTED_launch, WPREDICTED_owner), WPREDICTED_orig != "Beijing")), Not(Exists([gold_p_1, gold_o_2, gold_l_3, gold_o1_4], And(And(Not(fpIsNaN(gold_l_3)), Not(And(fpIsZero(gold_l_3), fpIsNegative(gold_l_3)))), And(program(gold_p_1, FV_Name_0, gold_o_2, gold_l_3, gold_o1_4), gold_o_2 != "Beijing")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

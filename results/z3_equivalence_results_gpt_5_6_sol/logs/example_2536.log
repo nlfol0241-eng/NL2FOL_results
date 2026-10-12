@@ -1,0 +1,131 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2536.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2536.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6885 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct id and type of the thing that has the status 'Close' or has a status record before the date '2017-06-19 02:59:21'
+   [G1] took 0.003 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        Date_and_Date = datetime -> IntSort()
+        Status_of_Thing_Code = char(15) -> StringSort()
+        Type_of_Thing_Code = char(15) -> StringSort()
+        organization_id = integer -> IntSort()
+        service_details = varchar(255) -> StringSort()
+        service_type_code = text -> StringSort()
+        thing_id = integer -> IntSort()
+      symbols:
+        Things(thing_id, organization_id, Type_of_Thing_Code, service_type_code, service_details)
+        Timed_Status_of_Things(thing_id, Date_and_Date, Status_of_Thing_Code)
+        constant 2017-06-19 02:59:21 : Date_and_Date
+        constant Close : Status_of_Thing_Code
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : thing_id ∃d : Date_and_Date ∃s : Status_of_Thing_Code ∃o : organization_id ∃s1 : service_type_code ∃s2 : service_details ( (((Timed_Status_of_Things(t,d,s)) ∧ (Things(t1,o,t2,s1,s2))) ∧ (t = t1)) ∧ ((s = 'Close') ∨ (d < '2017-06-19 02:59:21')) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:thing_id EXISTS:∃ IDENT:d COLON:: IDENT:Date_and_Date EXISTS:∃ IDENT:s COLON:: IDENT:Status_of_Thing_Code EXISTS:∃ IDENT:o COLON:: IDENT:organization_id EXISTS:∃ IDENT:s1 COLON:: IDENT:service_type_code EXISTS:∃ IDENT:s2 COLON:: IDENT:service_details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Timed_Status_of_Things LPAR:( IDENT:t COMMA:, IDENT:d COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Things LPAR:( IDENT:t1 COMMA:, IDENT:o COMMA:, IDENT:t2 COMMA:, IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s EQ:= LIT:Close RPAR:) OR:∨ LPAR:( IDENT:d LT:< LIT:2017-06-19 02:59:21 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:thing_id
+            EXISTS d:Date_and_Date
+              EXISTS s:Status_of_Thing_Code
+                EXISTS o:organization_id
+                  EXISTS s1:service_type_code
+                    EXISTS s2:service_details
+                      AND
+                        AND
+                          AND
+                            PRED Timed_Status_of_Things(t, d, s)
+                            PRED Things(t1, o, t2, s1, s2)
+                          EQ  t = t1
+                        OR
+                          EQ  s = 'Close'
+                          CMP  d < '2017-06-19 02:59:21'
+      Predicted FOL: ∃o : organization_id ∃s : service_type_code ∃d : service_details (Things(x, o, t, s, d) ∧ ∃dt : Date_and_Date ∃st : Status_of_Thing_Code (Timed_Status_of_Things(x, dt, st) ∧ (st = 'Close' ∨ dt < '2017-06-19 02:59:21')))
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:organization_id EXISTS:∃ IDENT:s COLON:: IDENT:service_type_code EXISTS:∃ IDENT:d COLON:: IDENT:service_details LPAR:( IDENT:Things LPAR:( IDENT:x COMMA:, IDENT:o COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) AND:∧ EXISTS:∃ IDENT:dt COLON:: IDENT:Date_and_Date EXISTS:∃ IDENT:st COLON:: IDENT:Status_of_Thing_Code LPAR:( IDENT:Timed_Status_of_Things LPAR:( IDENT:x COMMA:, IDENT:dt COMMA:, IDENT:st RPAR:) AND:∧ LPAR:( IDENT:st EQ:= LIT:Close OR:∨ IDENT:dt LT:< LIT:2017-06-19 02:59:21 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:organization_id
+            EXISTS s:service_type_code
+              EXISTS d:service_details
+                AND
+                  PRED Things(x, o, t, s, d)
+                  EXISTS dt:Date_and_Date
+                    EXISTS st:Status_of_Thing_Code
+                      AND
+                        PRED Timed_Status_of_Things(x, dt, st)
+                        OR
+                          EQ  st = 'Close'
+                          CMP  dt < '2017-06-19 02:59:21'
+   [G3] took 0.010 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Type_of_Thing_Code_0 : Type_of_Thing_Code   Gold t2 <-> Predicted t
+      FV_thing_id_0 : thing_id   Gold t1 <-> Predicted x
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Date_and_Date, global datetime -> IntSort()
+        o : local organization_id, global integer -> IntSort()
+        s : local Status_of_Thing_Code, global char(15) -> StringSort()
+        s1 : local service_type_code, global text -> StringSort()
+        s2 : local service_details, global varchar(255) -> StringSort()
+        t : local thing_id, global integer -> IntSort()
+        t1 : local thing_id, global integer -> IntSort()
+        t2 : local Type_of_Thing_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        d : local service_details, global varchar(255) -> StringSort()
+        dt : local Date_and_Date, global datetime -> IntSort()
+        o : local organization_id, global integer -> IntSort()
+        s : local service_type_code, global text -> StringSort()
+        st : local Status_of_Thing_Code, global char(15) -> StringSort()
+        t : local Type_of_Thing_Code, global char(15) -> StringSort()
+        x : local thing_id, global integer -> IntSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_d_2, gold_s_3, gold_o_4, gold_s1_5, gold_s2_6], And(D_char_15_(gold_s_3), D_varchar_255_(gold_s2_6), And(And(And(P_Timed_Status_of_Things(gold_t_1, gold_d_2, gold_s_3), P_Things(FV_thing_id_0, gold_o_4, FV_Type_of_Thing_Code_0, gold_s1_5, gold_s2_6)), (gold_t_1 == FV_thing_id_0)), Or((gold_s_3 == L_Close), (gold_d_2 < L_v_2017_06_19_02_59_21_datetime)))))
+      gold_skolem (witnesses WGOLD_t, WGOLD_d, WGOLD_s, WGOLD_o, WGOLD_s1, WGOLD_s2):  And(D_char_15_(WGOLD_s), D_varchar_255_(WGOLD_s2), And(And(And(P_Timed_Status_of_Things(WGOLD_t, WGOLD_d, WGOLD_s), P_Things(FV_thing_id_0, WGOLD_o, FV_Type_of_Thing_Code_0, WGOLD_s1, WGOLD_s2)), (WGOLD_t == FV_thing_id_0)), Or((WGOLD_s == L_Close), (WGOLD_d < L_v_2017_06_19_02_59_21_datetime))))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_o_1, predicted_s_2, predicted_d_3], And(D_varchar_255_(predicted_d_3), And(P_Things(FV_thing_id_0, predicted_o_1, FV_Type_of_Thing_Code_0, predicted_s_2, predicted_d_3), Exists([predicted_dt_4, predicted_st_5], And(D_char_15_(predicted_st_5), And(P_Timed_Status_of_Things(FV_thing_id_0, predicted_dt_4, predicted_st_5), Or((predicted_st_5 == L_Close), (predicted_dt_4 < L_v_2017_06_19_02_59_21_datetime))))))))
+      predicted_skolem (witnesses WPREDICTED_o, WPREDICTED_s, WPREDICTED_d):  And(D_varchar_255_(WPREDICTED_d), And(P_Things(FV_thing_id_0, WPREDICTED_o, FV_Type_of_Thing_Code_0, WPREDICTED_s, WPREDICTED_d), Exists([predictedsk_dt_1, predictedsk_st_2], And(D_char_15_(predictedsk_st_2), And(P_Timed_Status_of_Things(FV_thing_id_0, predictedsk_dt_1, predictedsk_st_2), Or((predictedsk_st_2 == L_Close), (predictedsk_dt_1 < L_v_2017_06_19_02_59_21_datetime)))))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.002 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Close' at char(15) -> L_Close = StringVal('Close')
+      literal '2017-06-19 02:59:21' at datetime -> L_v_2017_06_19_02_59_21_datetime = IntVal(1497841161)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 769 lines, 31217 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2536.py
+   [G8] took 0.014 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Type_of_Thing_Code_0) <= 15
+   [R1] took 0.004 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_d, WGOLD_s, WGOLD_o, WGOLD_s1, WGOLD_s2
+      claim: And(And(Length(WGOLD_s) <= 15, Length(WGOLD_s2) <= 255, And(And(And(Timed_Status_of_Things(WGOLD_t, WGOLD_d, WGOLD_s), Things(FV_thing_id_0, WGOLD_o, FV_Type_of_Thing_Code_0, WGOLD_s1, WGOLD_s2)), WGOLD_t == FV_thing_id_0), Or(WGOLD_s == "Close", 1497841161 > WGOLD_d))), Not(Exists([predicted_o_1, predicted_s_2, predicted_d_3], And(Length(predicted_d_3) <= 255, And(Things(FV_thing_id_0, predicted_o_1, FV_Type_of_Thing_Code_0, predicted_s_2, predicted_d_3), Exists([predicted_dt_4, predicted_st_5], And(Length(predicted_st_5) <= 15, And(Timed_Status_of_Things(FV_thing_id_0, predicted_dt_4, predicted_st_5), Or(predicted_st_5 == "Close", 1497841161 > predicted_dt_4)))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.019 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.060 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_o, WPREDICTED_s, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_d) <= 255, And(Things(FV_thing_id_0, WPREDICTED_o, FV_Type_of_Thing_Code_0, WPREDICTED_s, WPREDICTED_d), Exists([predictedsk_dt_1, predictedsk_st_2], And(Length(predictedsk_st_2) <= 15, And(Timed_Status_of_Things(FV_thing_id_0, predictedsk_dt_1, predictedsk_st_2), Or(predictedsk_st_2 == "Close", 1497841161 > predictedsk_dt_1)))))), Not(Exists([gold_t_1, gold_d_2, gold_s_3, gold_o_4, gold_s1_5, gold_s2_6], And(Length(gold_s_3) <= 15, Length(gold_s2_6) <= 255, And(And(And(Timed_Status_of_Things(gold_t_1, gold_d_2, gold_s_3), Things(FV_thing_id_0, gold_o_4, FV_Type_of_Thing_Code_0, gold_s1_5, gold_s2_6)), gold_t_1 == FV_thing_id_0), Or(gold_s_3 == "Close", 1497841161 > gold_d_2))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.014 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.044 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_850.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_850.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5238 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which employees have the role with code "HR"? Find their names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Date_of_Birth = datetime -> IntSort()
+        Employee_ID = integer -> IntSort()
+        Employee_Name = varchar(255) -> StringSort()
+        Gender_MFU = char(1) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Role_Code = char(15) -> StringSort()
+      symbols:
+        Employees(Employee_ID, Role_Code, Employee_Name, Gender_MFU, Date_of_Birth, Other_Details)
+        constant HR : Role_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Employee_ID ∃r : Role_Code ∃g : Gender_MFU ∃d : Date_of_Birth ∃o : Other_Details ( (Employees(e,r,e1,g,d,o)) ∧ (r = 'HR') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Employee_ID EXISTS:∃ IDENT:r COLON:: IDENT:Role_Code EXISTS:∃ IDENT:g COLON:: IDENT:Gender_MFU EXISTS:∃ IDENT:d COLON:: IDENT:Date_of_Birth EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( LPAR:( IDENT:Employees LPAR:( IDENT:e COMMA:, IDENT:r COMMA:, IDENT:e1 COMMA:, IDENT:g COMMA:, IDENT:d COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:HR RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Employee_ID
+            EXISTS r:Role_Code
+              EXISTS g:Gender_MFU
+                EXISTS d:Date_of_Birth
+                  EXISTS o:Other_Details
+                    AND
+                      PRED Employees(e, r, e1, g, d, o)
+                      EQ  r = 'HR'
+      Predicted FOL: ∃i : Employee_ID ∃g : Gender_MFU ∃b : Date_of_Birth ∃d : Other_Details (Employees(i, 'HR', n, g, b, d))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Employee_ID EXISTS:∃ IDENT:g COLON:: IDENT:Gender_MFU EXISTS:∃ IDENT:b COLON:: IDENT:Date_of_Birth EXISTS:∃ IDENT:d COLON:: IDENT:Other_Details LPAR:( IDENT:Employees LPAR:( IDENT:i COMMA:, LIT:HR COMMA:, IDENT:n COMMA:, IDENT:g COMMA:, IDENT:b COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Employee_ID
+            EXISTS g:Gender_MFU
+              EXISTS b:Date_of_Birth
+                EXISTS d:Other_Details
+                  PRED Employees(i, 'HR', n, g, b, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Employee_Name_0 : Employee_Name   Gold e1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Date_of_Birth, global datetime -> IntSort()
+        e : local Employee_ID, global integer -> IntSort()
+        e1 : local Employee_Name, global varchar(255) -> StringSort()
+        g : local Gender_MFU, global char(1) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        r : local Role_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        b : local Date_of_Birth, global datetime -> IntSort()
+        d : local Other_Details, global varchar(255) -> StringSort()
+        g : local Gender_MFU, global char(1) -> StringSort()
+        i : local Employee_ID, global integer -> IntSort()
+        n : local Employee_Name, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_r_2, gold_g_3, gold_d_4, gold_o_5], And(D_char_15_(gold_r_2), D_char_1_(gold_g_3), D_varchar_255_(gold_o_5), And(P_Employees(gold_e_1, gold_r_2, FV_Employee_Name_0, gold_g_3, gold_d_4, gold_o_5), (gold_r_2 == L_HR))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_r, WGOLD_g, WGOLD_d, WGOLD_o):  And(D_char_15_(WGOLD_r), D_char_1_(WGOLD_g), D_varchar_255_(WGOLD_o), And(P_Employees(WGOLD_e, WGOLD_r, FV_Employee_Name_0, WGOLD_g, WGOLD_d, WGOLD_o), (WGOLD_r == L_HR)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_g_2, predicted_b_3, predicted_d_4], And(D_char_1_(predicted_g_2), D_varchar_255_(predicted_d_4), And(P_Employees(predicted_i_1, L_HR, FV_Employee_Name_0, predicted_g_2, predicted_b_3, predicted_d_4), D_char_15_(L_HR))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_g, WPREDICTED_b, WPREDICTED_d):  And(D_char_1_(WPREDICTED_g), D_varchar_255_(WPREDICTED_d), And(P_Employees(WPREDICTED_i, L_HR, FV_Employee_Name_0, WPREDICTED_g, WPREDICTED_b, WPREDICTED_d), D_char_15_(L_HR)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'HR' at char(15) -> L_HR = StringVal('HR')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 759 lines, 29206 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_850.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Employee_Name_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_r, WGOLD_g, WGOLD_d, WGOLD_o
+      claim: And(And(Length(WGOLD_r) <= 15, Length(WGOLD_g) <= 1, Length(WGOLD_o) <= 255, And(Employees(WGOLD_e, WGOLD_r, FV_Employee_Name_0, WGOLD_g, WGOLD_d, WGOLD_o), WGOLD_r == "HR")), Not(Exists([predicted_i_1, predicted_g_2, predicted_b_3, predicted_d_4], And(Length(predicted_g_2) <= 1, Length(predicted_d_4) <= 255, And(Employees(predicted_i_1, "HR", FV_Employee_Name_0, predicted_g_2, predicted_b_3, predicted_d_4), Length("HR") <= 15)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_g, WPREDICTED_b, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_g) <= 1, Length(WPREDICTED_d) <= 255, And(Employees(WPREDICTED_i, "HR", FV_Employee_Name_0, WPREDICTED_g, WPREDICTED_b, WPREDICTED_d), Length("HR") <= 15)), Not(Exists([gold_e_1, gold_r_2, gold_g_3, gold_d_4, gold_o_5], And(Length(gold_r_2) <= 15, Length(gold_g_3) <= 1, Length(gold_o_5) <= 255, And(Employees(gold_e_1, gold_r_2, FV_Employee_Name_0, gold_g_3, gold_d_4, gold_o_5), gold_r_2 == "HR")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

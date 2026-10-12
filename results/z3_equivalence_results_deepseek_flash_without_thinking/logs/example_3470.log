@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3470.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3470.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3601 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which countries do not have a stadium that was opened after 2006?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Capacity = int -> IntSort()
+        City = text -> StringSort()
+        Country = text -> StringSort()
+        ID = int -> IntSort()
+        Opening_year = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        stadium(ID, name, Capacity, City, Country, Opening_year)
+        constant 2006 : Opening_year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c : Capacity ∃o : Opening_year ∃n : name ∃c1 : City ∃i : ID( stadium(i,n,c,c1,c2,o) )) ∧ (¬(∃c : Capacity ∃o : Opening_year ∃n : name ∃c1 : City ∃i : ID( (stadium(i,n,c,c1,c2,o)) ∧ (o > 2006) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Capacity EXISTS:∃ IDENT:o COLON:: IDENT:Opening_year EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c1 COLON:: IDENT:City EXISTS:∃ IDENT:i COLON:: IDENT:ID LPAR:( IDENT:stadium LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Capacity EXISTS:∃ IDENT:o COLON:: IDENT:Opening_year EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c1 COLON:: IDENT:City EXISTS:∃ IDENT:i COLON:: IDENT:ID LPAR:( LPAR:( IDENT:stadium LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o GT:> NUM:2006 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c:Capacity
+              EXISTS o:Opening_year
+                EXISTS n:name
+                  EXISTS c1:City
+                    EXISTS i:ID
+                      PRED stadium(i, n, c, c1, c2, o)
+            NOT
+              EXISTS c:Capacity
+                EXISTS o:Opening_year
+                  EXISTS n:name
+                    EXISTS c1:City
+                      EXISTS i:ID
+                        AND
+                          PRED stadium(i, n, c, c1, c2, o)
+                          CMP  o > 2006
+      Predicted FOL: ∃c : Country (∀i : ID ∀n : name ∀cap : Capacity ∀ci : City ∀co : Country ∀oy : Opening_year (stadium(i, n, cap, ci, co, oy) → (co ≠ c ∨ oy ≤ 2006)))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( FORALL:∀ IDENT:i COLON:: IDENT:ID FORALL:∀ IDENT:n COLON:: IDENT:name FORALL:∀ IDENT:cap COLON:: IDENT:Capacity FORALL:∀ IDENT:ci COLON:: IDENT:City FORALL:∀ IDENT:co COLON:: IDENT:Country FORALL:∀ IDENT:oy COLON:: IDENT:Opening_year LPAR:( IDENT:stadium LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:cap COMMA:, IDENT:ci COMMA:, IDENT:co COMMA:, IDENT:oy RPAR:) IMPL:→ LPAR:( IDENT:co NEQ:≠ IDENT:c OR:∨ IDENT:oy LE:≤ NUM:2006 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Country
+            FORALL i:ID
+              FORALL n:name
+                FORALL cap:Capacity
+                  FORALL ci:City
+                    FORALL co:Country
+                      FORALL oy:Opening_year
+                        IMPLIES
+                          PRED stadium(i, n, cap, ci, co, oy)
+                          OR
+                            NEQ  co != c
+                            CMP  oy <= 2006
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c2 : Country) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Capacity, global int -> IntSort()
+        c1 : local City, global text -> StringSort()
+        c2 : local Country, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        o : local Opening_year, global int -> IntSort()
+      Predicted FOL:
+        c : local Country, global text -> StringSort()
+        cap : local Capacity, global int -> IntSort()
+        ci : local City, global text -> StringSort()
+        co : local Country, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        oy : local Opening_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5494 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3470.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c2 : Country) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

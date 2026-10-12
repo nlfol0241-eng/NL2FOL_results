@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_24.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_24.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2543 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are flight numbers of flights arriving at Airport "APG"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Airline = text -> StringSort()
+        DestAirport = text -> StringSort()
+        FlightNo = integer -> IntSort()
+        SourceAirport = text -> StringSort()
+      symbols:
+        flights(Airline, FlightNo, SourceAirport, DestAirport)
+        constant APG : DestAirport
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Airline ∃s : SourceAirport ∃d : DestAirport ( (flights(a,f,s,d)) ∧ (d = 'APG') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Airline EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:d COLON:: IDENT:DestAirport LPAR:( LPAR:( IDENT:flights LPAR:( IDENT:a COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:APG RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Airline
+            EXISTS s:SourceAirport
+              EXISTS d:DestAirport
+                AND
+                  PRED flights(a, f, s, d)
+                  EQ  d = 'APG'
+      Predicted FOL: ∃a : Airline ∃s : SourceAirport (flights(a, n, s, 'APG'))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Airline EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport LPAR:( IDENT:flights LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:s COMMA:, LIT:APG RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Airline
+            EXISTS s:SourceAirport
+              PRED flights(a, n, s, 'APG')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_FlightNo_0 : FlightNo   Gold f <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Airline, global text -> StringSort()
+        d : local DestAirport, global text -> StringSort()
+        f : local FlightNo, global integer -> IntSort()
+        s : local SourceAirport, global text -> StringSort()
+      Predicted FOL:
+        a : local Airline, global text -> StringSort()
+        n : local FlightNo, global integer -> IntSort()
+        s : local SourceAirport, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_s_2, gold_d_3], And(P_flights(gold_a_1, FV_FlightNo_0, gold_s_2, gold_d_3), (gold_d_3 == L_APG)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_s, WGOLD_d):  And(P_flights(WGOLD_a, FV_FlightNo_0, WGOLD_s, WGOLD_d), (WGOLD_d == L_APG))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_s_2], P_flights(predicted_a_1, FV_FlightNo_0, predicted_s_2, L_APG))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_s):  P_flights(WPREDICTED_a, FV_FlightNo_0, WPREDICTED_s, L_APG)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'APG' at text -> L_APG = StringVal('APG')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 727 lines, 26837 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_24.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_s, WGOLD_d
+      claim: And(And(flights(WGOLD_a, FV_FlightNo_0, WGOLD_s, WGOLD_d), WGOLD_d == "APG"), Not(Exists([predicted_a_1, predicted_s_2], flights(predicted_a_1, FV_FlightNo_0, predicted_s_2, "APG"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_s
+      claim: And(flights(WPREDICTED_a, FV_FlightNo_0, WPREDICTED_s, "APG"), Not(Exists([gold_a_1, gold_s_2, gold_d_3], And(flights(gold_a_1, FV_FlightNo_0, gold_s_2, gold_d_3), gold_d_3 == "APG"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

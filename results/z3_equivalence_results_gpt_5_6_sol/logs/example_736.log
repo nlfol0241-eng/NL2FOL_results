@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_736.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_736.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4292 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Display all the information about the department Marketing.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        decimal(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+        decimal(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+      local sorts:
+        DEPARTMENT_ID = decimal(4,0) -> RealSort()
+        DEPARTMENT_NAME = varchar(30) -> StringSort()
+        LOCATION_ID = decimal(4,0) -> RealSort()
+        MANAGER_ID = decimal(6,0) -> RealSort()
+      symbols:
+        departments(DEPARTMENT_ID, DEPARTMENT_NAME, MANAGER_ID, LOCATION_ID)
+        constant Marketing : DEPARTMENT_NAME
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (departments(d,d1,m,l)) ∧ (d1 = 'Marketing')
+        tokens: LPAR:( IDENT:departments LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:m COMMA:, IDENT:l RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:Marketing RPAR:) EOF
+        AST:
+          AND
+            PRED departments(d, d1, m, l)
+            EQ  d1 = 'Marketing'
+      Predicted FOL: departments(d0, d1, d2, d3) ∧ d1 = 'Marketing'
+        tokens: IDENT:departments LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 RPAR:) AND:∧ IDENT:d1 EQ:= LIT:Marketing EOF
+        AST:
+          AND
+            PRED departments(d0, d1, d2, d3)
+            EQ  d1 = 'Marketing'
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   4 shared answer variable(s)
+      FV_DEPARTMENT_ID_0 : DEPARTMENT_ID   Gold d <-> Predicted d0
+      FV_DEPARTMENT_NAME_0 : DEPARTMENT_NAME   Gold d1 <-> Predicted d1
+      FV_LOCATION_ID_0 : LOCATION_ID   Gold l <-> Predicted d3
+      FV_MANAGER_ID_0 : MANAGER_ID   Gold m <-> Predicted d2
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        d1 : local DEPARTMENT_NAME, global varchar(30) -> StringSort()
+        l : local LOCATION_ID, global decimal(4,0) -> RealSort()
+        m : local MANAGER_ID, global decimal(6,0) -> RealSort()
+      Predicted FOL:
+        d0 : local DEPARTMENT_ID, global decimal(4,0) -> RealSort()
+        d1 : local DEPARTMENT_NAME, global varchar(30) -> StringSort()
+        d2 : local MANAGER_ID, global decimal(6,0) -> RealSort()
+        d3 : local LOCATION_ID, global decimal(4,0) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(P_departments(FV_DEPARTMENT_ID_0, FV_DEPARTMENT_NAME_0, FV_MANAGER_ID_0, FV_LOCATION_ID_0), (FV_DEPARTMENT_NAME_0 == L_Marketing))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_departments(FV_DEPARTMENT_ID_0, FV_DEPARTMENT_NAME_0, FV_MANAGER_ID_0, FV_LOCATION_ID_0), (FV_DEPARTMENT_NAME_0 == L_Marketing))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Marketing' at varchar(30) -> L_Marketing = StringVal('Marketing')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 729 lines, 26872 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_736.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   4 assertion(s): 0 sort axiom(s), 4 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_DEPARTMENT_ID_0), FV_DEPARTMENT_ID_0 > -10000, FV_DEPARTMENT_ID_0 < 10000)
+      [1] Length(FV_DEPARTMENT_NAME_0) <= 30
+      [2] And(IsInt(FV_LOCATION_ID_0), FV_LOCATION_ID_0 > -10000, FV_LOCATION_ID_0 < 10000)
+      [3] And(IsInt(FV_MANAGER_ID_0), FV_MANAGER_ID_0 > -1000000, FV_MANAGER_ID_0 < 1000000)
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 4 background assertion(s) + claim; witnesses -
+      claim: And(And(departments(FV_DEPARTMENT_ID_0, FV_DEPARTMENT_NAME_0, FV_MANAGER_ID_0, FV_LOCATION_ID_0), FV_DEPARTMENT_NAME_0 == "Marketing"), Not(And(departments(FV_DEPARTMENT_ID_0, FV_DEPARTMENT_NAME_0, FV_MANAGER_ID_0, FV_LOCATION_ID_0), FV_DEPARTMENT_NAME_0 == "Marketing")))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 4 background assertion(s) + claim; witnesses -
+      claim: And(And(departments(FV_DEPARTMENT_ID_0, FV_DEPARTMENT_NAME_0, FV_MANAGER_ID_0, FV_LOCATION_ID_0), FV_DEPARTMENT_NAME_0 == "Marketing"), Not(And(departments(FV_DEPARTMENT_ID_0, FV_DEPARTMENT_NAME_0, FV_MANAGER_ID_0, FV_LOCATION_ID_0), FV_DEPARTMENT_NAME_0 == "Marketing")))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

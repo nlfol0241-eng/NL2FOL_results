@@ -1,0 +1,66 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_895.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_895.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4381 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which courses are taught on days MTW?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+        varchar(11) -> StringSort()   [domain Length(x) <= 11; length <= 11]
+        integer -> IntSort()
+        varchar(7) -> StringSort()   [domain Length(x) <= 7; length <= 7]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+      local sorts:
+        CID = varchar(7) -> StringSort()
+        CName = varchar(40) -> StringSort()
+        Credits = integer -> IntSort()
+        DNO = integer -> IntSort()
+        Days = varchar(5) -> StringSort()
+        Hours = varchar(11) -> StringSort()
+        Instructor = integer -> IntSort()
+      symbols:
+        Course(CID, CName, Credits, Instructor, Days, Hours, DNO)
+        constant MTW : Days
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : CID ∃c2 : Credits ∃i : Instructor ∃d : Days ∃h : Hours ∃d1 : DNO ( (Course(c,c1,c2,i,d,h,d1)) ∧ (d = 'MTW') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:CID EXISTS:∃ IDENT:c2 COLON:: IDENT:Credits EXISTS:∃ IDENT:i COLON:: IDENT:Instructor EXISTS:∃ IDENT:d COLON:: IDENT:Days EXISTS:∃ IDENT:h COLON:: IDENT:Hours EXISTS:∃ IDENT:d1 COLON:: IDENT:DNO LPAR:( LPAR:( IDENT:Course LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:i COMMA:, IDENT:d COMMA:, IDENT:h COMMA:, IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:MTW RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:CID
+            EXISTS c2:Credits
+              EXISTS i:Instructor
+                EXISTS d:Days
+                  EXISTS h:Hours
+                    EXISTS d1:DNO
+                      AND
+                        PRED Course(c, c1, c2, i, d, h, d1)
+                        EQ  d = 'MTW'
+      Predicted FOL: ∃n : CName ∃c : Credits ∃i : Instructor ∃h : Hours ∃d : DNO (Course(x, n, c, i, 'MTW', h, d))
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:CName EXISTS:∃ IDENT:c COLON:: IDENT:Credits EXISTS:∃ IDENT:i COLON:: IDENT:Instructor EXISTS:∃ IDENT:h COLON:: IDENT:Hours EXISTS:∃ IDENT:d COLON:: IDENT:DNO LPAR:( IDENT:Course LPAR:( IDENT:x COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:i COMMA:, LIT:MTW COMMA:, IDENT:h COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:CName
+            EXISTS c:Credits
+              EXISTS i:Instructor
+                EXISTS h:Hours
+                  EXISTS d:DNO
+                    PRED Course(x, n, c, i, 'MTW', h, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['CName'] vs Predicted ['CID']
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['CName'] vs Predicted ['CID']

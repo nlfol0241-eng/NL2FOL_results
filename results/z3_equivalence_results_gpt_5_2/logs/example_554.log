@@ -1,0 +1,165 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_554.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_554.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5548 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the different product sizes?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+      local sorts:
+        parent_product_id = integer -> IntSort()
+        product_color = varchar(20) -> StringSort()
+        product_id = integer -> IntSort()
+        product_name = varchar(80) -> StringSort()
+        product_size = varchar(20) -> StringSort()
+        production_type_code = varchar(15) -> StringSort()
+        unit_price = decimal(19,4) -> RealSort()
+      symbols:
+        Products(product_id, parent_product_id, production_type_code, unit_price, product_name, product_color, product_size)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃p1 : parent_product_id ∃p2 : production_type_code ∃u : unit_price ∃p3 : product_name ∃p4 : product_color ( Products(p,p1,p2,u,p3,p4,p5) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:p1 COLON:: IDENT:parent_product_id EXISTS:∃ IDENT:p2 COLON:: IDENT:production_type_code EXISTS:∃ IDENT:u COLON:: IDENT:unit_price EXISTS:∃ IDENT:p3 COLON:: IDENT:product_name EXISTS:∃ IDENT:p4 COLON:: IDENT:product_color LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:u COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS p1:parent_product_id
+              EXISTS p2:production_type_code
+                EXISTS u:unit_price
+                  EXISTS p3:product_name
+                    EXISTS p4:product_color
+                      PRED Products(p, p1, p2, u, p3, p4, p5)
+      Predicted FOL: ∃p0:product_id ∃p1:parent_product_id ∃p2:production_type_code ∃p3:unit_price ∃p4:product_name ∃p5:product_color ( Products(p0, p1, p2, p3, p4, p5, s) ∧ ∀t:product_size ( (∃q0:product_id ∃q1:parent_product_id ∃q2:production_type_code ∃q3:unit_price ∃q4:product_name ∃q5:product_color Products(q0, q1, q2, q3, q4, q5, t)) → t = s ) )
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:product_id EXISTS:∃ IDENT:p1 COLON:: IDENT:parent_product_id EXISTS:∃ IDENT:p2 COLON:: IDENT:production_type_code EXISTS:∃ IDENT:p3 COLON:: IDENT:unit_price EXISTS:∃ IDENT:p4 COLON:: IDENT:product_name EXISTS:∃ IDENT:p5 COLON:: IDENT:product_color LPAR:( IDENT:Products LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 COMMA:, IDENT:s RPAR:) AND:∧ FORALL:∀ IDENT:t COLON:: IDENT:product_size LPAR:( LPAR:( EXISTS:∃ IDENT:q0 COLON:: IDENT:product_id EXISTS:∃ IDENT:q1 COLON:: IDENT:parent_product_id EXISTS:∃ IDENT:q2 COLON:: IDENT:production_type_code EXISTS:∃ IDENT:q3 COLON:: IDENT:unit_price EXISTS:∃ IDENT:q4 COLON:: IDENT:product_name EXISTS:∃ IDENT:q5 COLON:: IDENT:product_color IDENT:Products LPAR:( IDENT:q0 COMMA:, IDENT:q1 COMMA:, IDENT:q2 COMMA:, IDENT:q3 COMMA:, IDENT:q4 COMMA:, IDENT:q5 COMMA:, IDENT:t RPAR:) RPAR:) IMPL:→ IDENT:t EQ:= IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p0:product_id
+            EXISTS p1:parent_product_id
+              EXISTS p2:production_type_code
+                EXISTS p3:unit_price
+                  EXISTS p4:product_name
+                    EXISTS p5:product_color
+                      AND
+                        PRED Products(p0, p1, p2, p3, p4, p5, s)
+                        FORALL t:product_size
+                          IMPLIES
+                            EXISTS q0:product_id
+                              EXISTS q1:parent_product_id
+                                EXISTS q2:production_type_code
+                                  EXISTS q3:unit_price
+                                    EXISTS q4:product_name
+                                      EXISTS q5:product_color
+                                        PRED Products(q0, q1, q2, q3, q4, q5, t)
+                            EQ  t = s
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_product_size_0 : product_size   Gold p5 <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local product_id, global integer -> IntSort()
+        p1 : local parent_product_id, global integer -> IntSort()
+        p2 : local production_type_code, global varchar(15) -> StringSort()
+        p3 : local product_name, global varchar(80) -> StringSort()
+        p4 : local product_color, global varchar(20) -> StringSort()
+        p5 : local product_size, global varchar(20) -> StringSort()
+        u : local unit_price, global decimal(19,4) -> RealSort()
+      Predicted FOL:
+        p0 : local product_id, global integer -> IntSort()
+        p1 : local parent_product_id, global integer -> IntSort()
+        p2 : local production_type_code, global varchar(15) -> StringSort()
+        p3 : local unit_price, global decimal(19,4) -> RealSort()
+        p4 : local product_name, global varchar(80) -> StringSort()
+        p5 : local product_color, global varchar(20) -> StringSort()
+        q0 : local product_id, global integer -> IntSort()
+        q1 : local parent_product_id, global integer -> IntSort()
+        q2 : local production_type_code, global varchar(15) -> StringSort()
+        q3 : local unit_price, global decimal(19,4) -> RealSort()
+        q4 : local product_name, global varchar(80) -> StringSort()
+        q5 : local product_color, global varchar(20) -> StringSort()
+        s : local product_size, global varchar(20) -> StringSort()
+        t : local product_size, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6], And(D_varchar_15_(gold_p2_3), D_decimal_19_4_(gold_u_4), D_varchar_80_(gold_p3_5), D_varchar_20_(gold_p4_6), P_Products(gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6, FV_product_size_0)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4):  And(D_varchar_15_(WGOLD_p2), D_decimal_19_4_(WGOLD_u), D_varchar_80_(WGOLD_p3), D_varchar_20_(WGOLD_p4), P_Products(WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4, FV_product_size_0))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5, predicted_p5_6], And(D_varchar_15_(predicted_p2_3), D_decimal_19_4_(predicted_p3_4), D_varchar_80_(predicted_p4_5), D_varchar_20_(predicted_p5_6), And(P_Products(predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5, predicted_p5_6, FV_product_size_0), ForAll([predicted_t_7], Implies(And(D_varchar_20_(predicted_t_7)), Implies(Exists([predicted_q0_8, predicted_q1_9, predicted_q2_10, predicted_q3_11, predicted_q4_12, predicted_q5_13], And(D_varchar_15_(predicted_q2_10), D_decimal_19_4_(predicted_q3_11), D_varchar_80_(predicted_q4_12), D_varchar_20_(predicted_q5_13), P_Products(predicted_q0_8, predicted_q1_9, predicted_q2_10, predicted_q3_11, predicted_q4_12, predicted_q5_13, predicted_t_7))), (predicted_t_7 == FV_product_size_0)))))))
+      predicted_skolem (witnesses WPREDICTED_p0, WPREDICTED_p1, WPREDICTED_p2, WPREDICTED_p3, WPREDICTED_p4, WPREDICTED_p5):  And(D_varchar_15_(WPREDICTED_p2), D_decimal_19_4_(WPREDICTED_p3), D_varchar_80_(WPREDICTED_p4), D_varchar_20_(WPREDICTED_p5), And(P_Products(WPREDICTED_p0, WPREDICTED_p1, WPREDICTED_p2, WPREDICTED_p3, WPREDICTED_p4, WPREDICTED_p5, FV_product_size_0), ForAll([predictedsk_t_1], Implies(And(D_varchar_20_(predictedsk_t_1)), Implies(Exists([predictedsk_q0_2, predictedsk_q1_3, predictedsk_q2_4, predictedsk_q3_5, predictedsk_q4_6, predictedsk_q5_7], And(D_varchar_15_(predictedsk_q2_4), D_decimal_19_4_(predictedsk_q3_5), D_varchar_80_(predictedsk_q4_6), D_varchar_20_(predictedsk_q5_7), P_Products(predictedsk_q0_2, predictedsk_q1_3, predictedsk_q2_4, predictedsk_q3_5, predictedsk_q4_6, predictedsk_q5_7, predictedsk_t_1))), (predictedsk_t_1 == FV_product_size_0))))))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 783 lines, 32859 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_554.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_product_size_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4
+      claim: And(And(Length(WGOLD_p2) <= 15, And(IsInt(WGOLD_u*10000), WGOLD_u > -1000000000000000, WGOLD_u < 1000000000000000), Length(WGOLD_p3) <= 80, Length(WGOLD_p4) <= 20, Products(WGOLD_p, WGOLD_p1, WGOLD_p2, WGOLD_u, WGOLD_p3, WGOLD_p4, FV_product_size_0)), Not(Exists([predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5, predicted_p5_6], And(Length(predicted_p2_3) <= 15, And(IsInt(predicted_p3_4*10000), predicted_p3_4 > -1000000000000000, predicted_p3_4 < 1000000000000000), Length(predicted_p4_5) <= 80, Length(predicted_p5_6) <= 20, And(Products(predicted_p0_1, predicted_p1_2, predicted_p2_3, predicted_p3_4, predicted_p4_5, predicted_p5_6, FV_product_size_0), ForAll(predicted_t_7, Implies(And(Length(predicted_t_7) <= 20), Implies(Exists([predicted_q0_8, predicted_q1_9, predicted_q2_10, predicted_q3_11, predicted_q4_12, predicted_q5_13], And(Length(predicted_q2_10) <= 15, And(IsInt(predicted_q3_11* 10000), predicted_q3_11 > -1000000000000000, predicted_q3_11 < 1000000000000000), Length(predicted_q4_12) <= 80, Length(predicted_q5_13) <= 20, Products(predicted_q0_8, predicted_q1_9, predicted_q2_10, predicted_q3_11, predicted_q4_12, predicted_q5_13, predicted_t_7))), predicted_t_7 == FV_product_size_0))))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.007 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 6 relation tuple(s) listed, 5 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          p : product_id = 2
+          p1 : parent_product_id = 3
+          p2 : production_type_code = ''
+          u : unit_price = 0
+          p3 : product_name = ''
+          p4 : product_color = ''
+        free (answer) variables:
+          FV_product_size_0 : product_size = ''
+        relations (each value tagged with the local sort of its position):
+          Products(product_id, parent_product_id, production_type_code, unit_price, product_name, product_color, product_size):
+            Products(product_id=0, parent_product_id=0, production_type_code='', unit_price=0, product_name='', product_color='', product_size='C')
+            Products(product_id=0, parent_product_id=0, production_type_code='', unit_price=0, product_name='', product_color='D', product_size='')
+            Products(product_id=0, parent_product_id=2, production_type_code='', unit_price=0, product_name='', product_color='', product_size='')
+            Products(product_id=2, parent_product_id=3, production_type_code='', unit_price=0, product_name='', product_color='', product_size='')
+            Products(product_id=3, parent_product_id=4, production_type_code='A', unit_price=-0.0001 (= -1/10000), product_name='B', product_color='C', product_size='D')
+            Products(product_id=4, parent_product_id=0, production_type_code='', unit_price=0, product_name='', product_color='', product_size='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          parent_product_id    : {0, 2, 3, 4}
+          product_color        : {'', 'C', 'D'}
+          product_id           : {0, 2, 3, 4}
+          product_name         : {'', 'B'}
+          product_size         : {'', 'C', 'D'}
+          production_type_code : {'', 'A'}
+          unit_price           : {-0.0001 (= -1/10000), 0}
+        values shared across local sorts (joins):
+          0 : parent_product_id, product_id
+          2 : parent_product_id, product_id
+          3 : parent_product_id, product_id
+          4 : parent_product_id, product_id
+          '' : product_color, product_size
+          'C' : product_color, product_size
+          'D' : product_color, product_size
+   [R2] took 0.061 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_p0, WPREDICTED_p1, WPREDICTED_p2, WPREDICTED_p3, WPREDICTED_p4, WPREDICTED_p5
+      claim: And(And(Length(WPREDICTED_p2) <= 15, And(IsInt(WPREDICTED_p3*10000), WPREDICTED_p3 > -1000000000000000, WPREDICTED_p3 < 1000000000000000), Length(WPREDICTED_p4) <= 80, Length(WPREDICTED_p5) <= 20, And(Products(WPREDICTED_p0, WPREDICTED_p1, WPREDICTED_p2, WPREDICTED_p3, WPREDICTED_p4, WPREDICTED_p5, FV_product_size_0), ForAll(predictedsk_t_1, Implies(And(Length(predictedsk_t_1) <= 20), Implies(Exists([predictedsk_q0_2, predictedsk_q1_3, predictedsk_q2_4, predictedsk_q3_5, predictedsk_q4_6, predictedsk_q5_7], And(Length(predictedsk_q2_4) <= 15, And(IsInt(predictedsk_q3_5* 10000), predictedsk_q3_5 > -1000000000000000, predictedsk_q3_5 < 1000000000000000), Length(predictedsk_q4_6) <= 80, Length(predictedsk_q5_7) <= 20, Products(predictedsk_q0_2, predictedsk_q1_3, predictedsk_q2_4, predictedsk_q3_5, predictedsk_q4_6, predictedsk_q5_7, predictedsk_t_1))), predictedsk_t_1 == FV_product_size_0))))), Not(Exists([gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6], And(Length(gold_p2_3) <= 15, And(IsInt(gold_u_4*10000), gold_u_4 > -1000000000000000, gold_u_4 < 1000000000000000), Length(gold_p3_5) <= 80, Length(gold_p4_6) <= 20, Products(gold_p_1, gold_p1_2, gold_p2_3, gold_u_4, gold_p3_5, gold_p4_6, FV_product_size_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

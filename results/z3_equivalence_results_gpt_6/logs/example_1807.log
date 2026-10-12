@@ -1,0 +1,132 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1807.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1807.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7584 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give me the product type, name and price for all the products supplied by supplier id 3.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 9 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        date_supplied_from = datetime -> IntSort()
+        date_supplied_to = datetime -> IntSort()
+        product_id = integer -> IntSort()
+        product_name = varchar(80) -> StringSort()
+        product_price = decimal(19,4) -> RealSort()
+        product_type_code = varchar(10) -> StringSort()
+        supplier_id = integer -> IntSort()
+        total_amount_purchased = varchar(80) -> StringSort()
+        total_value_purchased = decimal(19,4) -> RealSort()
+      symbols:
+        Product_Suppliers(product_id, supplier_id, date_supplied_from, date_supplied_to, total_amount_purchased, total_value_purchased)
+        Products(product_id, product_type_code, product_name, product_price)
+        constant 3 : supplier_id
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃s : supplier_id ∃d : date_supplied_from ∃d1 : date_supplied_to ∃t : total_amount_purchased ∃t1 : total_value_purchased ∃p1 : product_id ( (((Product_Suppliers(p,s,d,d1,t,t1)) ∧ (Products(p1,p2,p3,p4))) ∧ (p = p1)) ∧ (s = 3) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:s COLON:: IDENT:supplier_id EXISTS:∃ IDENT:d COLON:: IDENT:date_supplied_from EXISTS:∃ IDENT:d1 COLON:: IDENT:date_supplied_to EXISTS:∃ IDENT:t COLON:: IDENT:total_amount_purchased EXISTS:∃ IDENT:t1 COLON:: IDENT:total_value_purchased EXISTS:∃ IDENT:p1 COLON:: IDENT:product_id LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Product_Suppliers LPAR:( IDENT:p COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:t COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Products LPAR:( IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= NUM:3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS s:supplier_id
+              EXISTS d:date_supplied_from
+                EXISTS d1:date_supplied_to
+                  EXISTS t:total_amount_purchased
+                    EXISTS t1:total_value_purchased
+                      EXISTS p1:product_id
+                        AND
+                          AND
+                            AND
+                              PRED Product_Suppliers(p, s, d, d1, t, t1)
+                              PRED Products(p1, p2, p3, p4)
+                            EQ  p = p1
+                          EQ  s = 3
+      Predicted FOL: ∃i : product_id ∃f : date_supplied_from ∃u : date_supplied_to ∃a : total_amount_purchased ∃v : total_value_purchased (Products(i, t, n, p) ∧ Product_Suppliers(i, 3, f, u, a, v))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:product_id EXISTS:∃ IDENT:f COLON:: IDENT:date_supplied_from EXISTS:∃ IDENT:u COLON:: IDENT:date_supplied_to EXISTS:∃ IDENT:a COLON:: IDENT:total_amount_purchased EXISTS:∃ IDENT:v COLON:: IDENT:total_value_purchased LPAR:( IDENT:Products LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:n COMMA:, IDENT:p RPAR:) AND:∧ IDENT:Product_Suppliers LPAR:( IDENT:i COMMA:, NUM:3 COMMA:, IDENT:f COMMA:, IDENT:u COMMA:, IDENT:a COMMA:, IDENT:v RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:product_id
+            EXISTS f:date_supplied_from
+              EXISTS u:date_supplied_to
+                EXISTS a:total_amount_purchased
+                  EXISTS v:total_value_purchased
+                    AND
+                      PRED Products(i, t, n, p)
+                      PRED Product_Suppliers(i, 3, f, u, a, v)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_product_name_0 : product_name   Gold p3 <-> Predicted n
+      FV_product_price_0 : product_price   Gold p4 <-> Predicted p
+      FV_product_type_code_0 : product_type_code   Gold p2 <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_supplied_from, global datetime -> IntSort()
+        d1 : local date_supplied_to, global datetime -> IntSort()
+        p : local product_id, global integer -> IntSort()
+        p1 : local product_id, global integer -> IntSort()
+        p2 : local product_type_code, global varchar(10) -> StringSort()
+        p3 : local product_name, global varchar(80) -> StringSort()
+        p4 : local product_price, global decimal(19,4) -> RealSort()
+        s : local supplier_id, global integer -> IntSort()
+        t : local total_amount_purchased, global varchar(80) -> StringSort()
+        t1 : local total_value_purchased, global decimal(19,4) -> RealSort()
+      Predicted FOL:
+        a : local total_amount_purchased, global varchar(80) -> StringSort()
+        f : local date_supplied_from, global datetime -> IntSort()
+        i : local product_id, global integer -> IntSort()
+        n : local product_name, global varchar(80) -> StringSort()
+        p : local product_price, global decimal(19,4) -> RealSort()
+        t : local product_type_code, global varchar(10) -> StringSort()
+        u : local date_supplied_to, global datetime -> IntSort()
+        v : local total_value_purchased, global decimal(19,4) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_s_2, gold_d_3, gold_d1_4, gold_t_5, gold_t1_6, gold_p1_7], And(D_varchar_80_(gold_t_5), D_decimal_19_4_(gold_t1_6), And(And(And(P_Product_Suppliers(gold_p_1, gold_s_2, gold_d_3, gold_d1_4, gold_t_5, gold_t1_6), P_Products(gold_p1_7, FV_product_type_code_0, FV_product_name_0, FV_product_price_0)), (gold_p_1 == gold_p1_7)), (gold_s_2 == L_v_3_integer))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_s, WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_t1, WGOLD_p1):  And(D_varchar_80_(WGOLD_t), D_decimal_19_4_(WGOLD_t1), And(And(And(P_Product_Suppliers(WGOLD_p, WGOLD_s, WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_t1), P_Products(WGOLD_p1, FV_product_type_code_0, FV_product_name_0, FV_product_price_0)), (WGOLD_p == WGOLD_p1)), (WGOLD_s == L_v_3_integer)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_f_2, predicted_u_3, predicted_a_4, predicted_v_5], And(D_varchar_80_(predicted_a_4), D_decimal_19_4_(predicted_v_5), And(P_Products(predicted_i_1, FV_product_type_code_0, FV_product_name_0, FV_product_price_0), P_Product_Suppliers(predicted_i_1, L_v_3_integer, predicted_f_2, predicted_u_3, predicted_a_4, predicted_v_5))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_u, WPREDICTED_a, WPREDICTED_v):  And(D_varchar_80_(WPREDICTED_a), D_decimal_19_4_(WPREDICTED_v), And(P_Products(WPREDICTED_i, FV_product_type_code_0, FV_product_name_0, FV_product_price_0), P_Product_Suppliers(WPREDICTED_i, L_v_3_integer, WPREDICTED_f, WPREDICTED_u, WPREDICTED_a, WPREDICTED_v)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '3' at integer -> L_v_3_integer = IntVal(3)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 784 lines, 31871 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1807.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   3 assertion(s): 0 sort axiom(s), 3 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_product_name_0) <= 80
+      [1] And(IsInt(FV_product_price_0*10000), FV_product_price_0 > -1000000000000000, FV_product_price_0 < 1000000000000000)
+      [2] Length(FV_product_type_code_0) <= 10
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 3 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_s, WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_t1, WGOLD_p1
+      claim: And(And(Length(WGOLD_t) <= 80, And(IsInt(WGOLD_t1*10000), WGOLD_t1 > -1000000000000000, WGOLD_t1 < 1000000000000000), And(And(And(Product_Suppliers(WGOLD_p, WGOLD_s, WGOLD_d, WGOLD_d1, WGOLD_t, WGOLD_t1), Products(WGOLD_p1, FV_product_type_code_0, FV_product_name_0, FV_product_price_0)), WGOLD_p == WGOLD_p1), 3 == WGOLD_s)), Not(Exists([predicted_i_1, predicted_f_2, predicted_u_3, predicted_a_4, predicted_v_5], And(Length(predicted_a_4) <= 80, And(IsInt(predicted_v_5*10000), predicted_v_5 > -1000000000000000, predicted_v_5 < 1000000000000000), And(Products(predicted_i_1, FV_product_type_code_0, FV_product_name_0, FV_product_price_0), Product_Suppliers(predicted_i_1, 3, predicted_f_2, predicted_u_3, predicted_a_4, predicted_v_5))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 3 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_u, WPREDICTED_a, WPREDICTED_v
+      claim: And(And(Length(WPREDICTED_a) <= 80, And(IsInt(WPREDICTED_v*10000), WPREDICTED_v > -1000000000000000, WPREDICTED_v < 1000000000000000), And(Products(WPREDICTED_i, FV_product_type_code_0, FV_product_name_0, FV_product_price_0), Product_Suppliers(WPREDICTED_i, 3, WPREDICTED_f, WPREDICTED_u, WPREDICTED_a, WPREDICTED_v))), Not(Exists([gold_p_1, gold_s_2, gold_d_3, gold_d1_4, gold_t_5, gold_t1_6, gold_p1_7], And(Length(gold_t_5) <= 80, And(IsInt(gold_t1_6*10000), gold_t1_6 > -1000000000000000, gold_t1_6 < 1000000000000000), And(And(And(Product_Suppliers(gold_p_1, gold_s_2, gold_d_3, gold_d1_4, gold_t_5, gold_t1_6), Products(gold_p1_7, FV_product_type_code_0, FV_product_name_0, FV_product_price_0)), gold_p_1 == gold_p1_7), 3 == gold_s_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

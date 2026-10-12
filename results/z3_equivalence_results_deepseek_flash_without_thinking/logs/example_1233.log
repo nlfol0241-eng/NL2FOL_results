@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1233.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1233.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6178 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the cost of each treatment and the corresponding treatment type description.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        cost_of_treatment = decimal(19,4) -> RealSort()
+        date_of_treatment = datetime -> IntSort()
+        dog_id = integer -> IntSort()
+        professional_id = integer -> IntSort()
+        treatment_id = integer -> IntSort()
+        treatment_type_code = varchar(10) -> StringSort()
+        treatment_type_description = varchar(80) -> StringSort()
+      symbols:
+        Treatment_Types(treatment_type_code, treatment_type_description)
+        Treatments(treatment_id, dog_id, professional_id, treatment_type_code, date_of_treatment, cost_of_treatment)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : treatment_id ∃d : dog_id ∃p : professional_id ∃t1 : treatment_type_code ∃d1 : date_of_treatment ∃t2 : treatment_type_code ( ((Treatments(t,d,p,t1,d1,c)) ∧ (Treatment_Types(t2,t3))) ∧ (t1 = t2) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:treatment_id EXISTS:∃ IDENT:d COLON:: IDENT:dog_id EXISTS:∃ IDENT:p COLON:: IDENT:professional_id EXISTS:∃ IDENT:t1 COLON:: IDENT:treatment_type_code EXISTS:∃ IDENT:d1 COLON:: IDENT:date_of_treatment EXISTS:∃ IDENT:t2 COLON:: IDENT:treatment_type_code LPAR:( LPAR:( LPAR:( IDENT:Treatments LPAR:( IDENT:t COMMA:, IDENT:d COMMA:, IDENT:p COMMA:, IDENT:t1 COMMA:, IDENT:d1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Treatment_Types LPAR:( IDENT:t2 COMMA:, IDENT:t3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t1 EQ:= IDENT:t2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:treatment_id
+            EXISTS d:dog_id
+              EXISTS p:professional_id
+                EXISTS t1:treatment_type_code
+                  EXISTS d1:date_of_treatment
+                    EXISTS t2:treatment_type_code
+                      AND
+                        AND
+                          PRED Treatments(t, d, p, t1, d1, c)
+                          PRED Treatment_Types(t2, t3)
+                        EQ  t1 = t2
+      Predicted FOL: ∀t0 : treatment_id ∀t1 : dog_id ∀t2 : professional_id ∀t3 : treatment_type_code ∀t4 : date_of_treatment ∀t5 : cost_of_treatment ∀d0 : treatment_type_code ∀d1 : treatment_type_description ((Treatments(t0, t1, t2, t3, t4, t5) ∧ Treatment_Types(d0, d1) ∧ t3 = d0) → True)
+        tokens: FORALL:∀ IDENT:t0 COLON:: IDENT:treatment_id FORALL:∀ IDENT:t1 COLON:: IDENT:dog_id FORALL:∀ IDENT:t2 COLON:: IDENT:professional_id FORALL:∀ IDENT:t3 COLON:: IDENT:treatment_type_code FORALL:∀ IDENT:t4 COLON:: IDENT:date_of_treatment FORALL:∀ IDENT:t5 COLON:: IDENT:cost_of_treatment FORALL:∀ IDENT:d0 COLON:: IDENT:treatment_type_code FORALL:∀ IDENT:d1 COLON:: IDENT:treatment_type_description LPAR:( LPAR:( IDENT:Treatments LPAR:( IDENT:t0 COMMA:, IDENT:t1 COMMA:, IDENT:t2 COMMA:, IDENT:t3 COMMA:, IDENT:t4 COMMA:, IDENT:t5 RPAR:) AND:∧ IDENT:Treatment_Types LPAR:( IDENT:d0 COMMA:, IDENT:d1 RPAR:) AND:∧ IDENT:t3 EQ:= IDENT:d0 RPAR:) IMPL:→ TRUE:True RPAR:) EOF
+        AST:
+          FORALL t0:treatment_id
+            FORALL t1:dog_id
+              FORALL t2:professional_id
+                FORALL t3:treatment_type_code
+                  FORALL t4:date_of_treatment
+                    FORALL t5:cost_of_treatment
+                      FORALL d0:treatment_type_code
+                        FORALL d1:treatment_type_description
+                          IMPLIES
+                            AND
+                              PRED Treatments(t0, t1, t2, t3, t4, t5)
+                              PRED Treatment_Types(d0, d1)
+                              EQ  t3 = d0
+                            TRUE
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (c : cost_of_treatment, t3 : treatment_type_description) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cost_of_treatment, global decimal(19,4) -> RealSort()
+        d : local dog_id, global integer -> IntSort()
+        d1 : local date_of_treatment, global datetime -> IntSort()
+        p : local professional_id, global integer -> IntSort()
+        t : local treatment_id, global integer -> IntSort()
+        t1 : local treatment_type_code, global varchar(10) -> StringSort()
+        t2 : local treatment_type_code, global varchar(10) -> StringSort()
+        t3 : local treatment_type_description, global varchar(80) -> StringSort()
+      Predicted FOL:
+        d0 : local treatment_type_code, global varchar(10) -> StringSort()
+        d1 : local treatment_type_description, global varchar(80) -> StringSort()
+        t0 : local treatment_id, global integer -> IntSort()
+        t1 : local dog_id, global integer -> IntSort()
+        t2 : local professional_id, global integer -> IntSort()
+        t3 : local treatment_type_code, global varchar(10) -> StringSort()
+        t4 : local date_of_treatment, global datetime -> IntSort()
+        t5 : local cost_of_treatment, global decimal(19,4) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5707 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1233.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (c : cost_of_treatment, t3 : treatment_type_description) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

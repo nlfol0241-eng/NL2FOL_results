@@ -1,0 +1,78 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_804.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_804.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 1984 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which classrooms are used by grade 4?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Classroom = integer -> IntSort()
+        FirstName = text -> StringSort()
+        Grade = integer -> IntSort()
+        LastName = text -> StringSort()
+      symbols:
+        list(LastName, FirstName, Grade, Classroom)
+        constant 4 : Grade
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : LastName ∃f : FirstName ∃g : Grade ( (list(l,f,g,c)) ∧ (g = 4) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:LastName EXISTS:∃ IDENT:f COLON:: IDENT:FirstName EXISTS:∃ IDENT:g COLON:: IDENT:Grade LPAR:( LPAR:( IDENT:list LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:g EQ:= NUM:4 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:LastName
+            EXISTS f:FirstName
+              EXISTS g:Grade
+                AND
+                  PRED list(l, f, g, c)
+                  EQ  g = 4
+      Predicted FOL: ∃x_Classroom : Classroom (list(x_LastName, x_FirstName, 4, x_Classroom))
+        tokens: EXISTS:∃ IDENT:x_Classroom COLON:: IDENT:Classroom LPAR:( IDENT:list LPAR:( IDENT:x_LastName COMMA:, IDENT:x_FirstName COMMA:, NUM:4 COMMA:, IDENT:x_Classroom RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x_Classroom:Classroom
+            PRED list(x_LastName, x_FirstName, 4, x_Classroom)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) x_LastName, x_FirstName occur free in the formula but are not declared in 'free vars'
+   WARNING: Predicted FOL: declared free variable(s) x_Classroom do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Classroom_0 : Classroom   Gold c <-> Predicted x_Classroom
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Classroom, global integer -> IntSort()
+        f : local FirstName, global text -> StringSort()
+        g : local Grade, global integer -> IntSort()
+        l : local LastName, global text -> StringSort()
+      Predicted FOL:
+        x_Classroom : local Classroom, global integer -> IntSort()
+        x_FirstName : local FirstName, global text -> StringSort()
+        x_LastName : local LastName, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_l_1, gold_f_2, gold_g_3], And(P_list(gold_l_1, gold_f_2, gold_g_3, FV_Classroom_0), (gold_g_3 == L_v_4_integer)))
+      gold_skolem (witnesses WGOLD_l, WGOLD_f, WGOLD_g):  And(P_list(WGOLD_l, WGOLD_f, WGOLD_g, FV_Classroom_0), (WGOLD_g == L_v_4_integer))
+   Gold: 3 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'x_LastName'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'x_LastName'

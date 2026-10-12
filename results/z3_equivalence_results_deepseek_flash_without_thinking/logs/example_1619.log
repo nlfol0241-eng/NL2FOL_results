@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1619.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1619.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4019 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the delegate and name of the county they belong to, for each county?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 11 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Committee = text -> StringSort()
+        Counties_Represented = text -> StringSort()
+        County_Id = int -> IntSort()
+        County_name = text -> StringSort()
+        Delegate = text -> StringSort()
+        District = int -> IntSort()
+        Election_ID = int -> IntSort()
+        First_Elected = real -> Float32()
+        Party = int -> IntSort()
+        Population = real -> Float32()
+        Zip_code = text -> StringSort()
+      symbols:
+        county(County_Id, County_name, Population, Zip_code)
+        election(Election_ID, Counties_Represented, District, Delegate, Party, First_Elected, Committee)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : County_Id ∃p : Population ∃z : Zip_code ∃e : Election_ID ∃c2 : Counties_Represented ∃d : District ∃p1 : Party ∃f : First_Elected ∃c3 : Committee ( ((county(c,c1,p,z)) ∧ (election(e,c2,d,d1,p1,f,c3))) ∧ (c = d) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:County_Id EXISTS:∃ IDENT:p COLON:: IDENT:Population EXISTS:∃ IDENT:z COLON:: IDENT:Zip_code EXISTS:∃ IDENT:e COLON:: IDENT:Election_ID EXISTS:∃ IDENT:c2 COLON:: IDENT:Counties_Represented EXISTS:∃ IDENT:d COLON:: IDENT:District EXISTS:∃ IDENT:p1 COLON:: IDENT:Party EXISTS:∃ IDENT:f COLON:: IDENT:First_Elected EXISTS:∃ IDENT:c3 COLON:: IDENT:Committee LPAR:( LPAR:( LPAR:( IDENT:county LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:p COMMA:, IDENT:z RPAR:) RPAR:) AND:∧ LPAR:( IDENT:election LPAR:( IDENT:e COMMA:, IDENT:c2 COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:p1 COMMA:, IDENT:f COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:County_Id
+            EXISTS p:Population
+              EXISTS z:Zip_code
+                EXISTS e:Election_ID
+                  EXISTS c2:Counties_Represented
+                    EXISTS d:District
+                      EXISTS p1:Party
+                        EXISTS f:First_Elected
+                          EXISTS c3:Committee
+                            AND
+                              AND
+                                PRED county(c, c1, p, z)
+                                PRED election(e, c2, d, d1, p1, f, c3)
+                              EQ  c = d
+      Predicted FOL: ∀x0 : County_Id ∀x1 : County_name ∀x2 : Population ∀x3 : Zip_code ( county(x0, x1, x2, x3) → ∃y0 : Election_ID ∃y1 : Counties_Represented ∃y2 : District ∃y3 : Delegate ∃y4 : Party ∃y5 : First_Elected ∃y6 : Committee ( election(y0, y1, y2, y3, y4, y5, y6) ∧ y2 = x0 ) )
+        tokens: FORALL:∀ IDENT:x0 COLON:: IDENT:County_Id FORALL:∀ IDENT:x1 COLON:: IDENT:County_name FORALL:∀ IDENT:x2 COLON:: IDENT:Population FORALL:∀ IDENT:x3 COLON:: IDENT:Zip_code LPAR:( IDENT:county LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) IMPL:→ EXISTS:∃ IDENT:y0 COLON:: IDENT:Election_ID EXISTS:∃ IDENT:y1 COLON:: IDENT:Counties_Represented EXISTS:∃ IDENT:y2 COLON:: IDENT:District EXISTS:∃ IDENT:y3 COLON:: IDENT:Delegate EXISTS:∃ IDENT:y4 COLON:: IDENT:Party EXISTS:∃ IDENT:y5 COLON:: IDENT:First_Elected EXISTS:∃ IDENT:y6 COLON:: IDENT:Committee LPAR:( IDENT:election LPAR:( IDENT:y0 COMMA:, IDENT:y1 COMMA:, IDENT:y2 COMMA:, IDENT:y3 COMMA:, IDENT:y4 COMMA:, IDENT:y5 COMMA:, IDENT:y6 RPAR:) AND:∧ IDENT:y2 EQ:= IDENT:x0 RPAR:) RPAR:) EOF
+        AST:
+          FORALL x0:County_Id
+            FORALL x1:County_name
+              FORALL x2:Population
+                FORALL x3:Zip_code
+                  IMPLIES
+                    PRED county(x0, x1, x2, x3)
+                    EXISTS y0:Election_ID
+                      EXISTS y1:Counties_Represented
+                        EXISTS y2:District
+                          EXISTS y3:Delegate
+                            EXISTS y4:Party
+                              EXISTS y5:First_Elected
+                                EXISTS y6:Committee
+                                  AND
+                                    PRED election(y0, y1, y2, y3, y4, y5, y6)
+                                    EQ  y2 = x0
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (c1 : County_name, d1 : Delegate) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 22 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local County_Id, global int -> IntSort()
+        c1 : local County_name, global text -> StringSort()
+        c2 : local Counties_Represented, global text -> StringSort()
+        c3 : local Committee, global text -> StringSort()
+        d : local District, global int -> IntSort()
+        d1 : local Delegate, global text -> StringSort()
+        e : local Election_ID, global int -> IntSort()
+        f : local First_Elected, global real -> Float32()
+        p : local Population, global real -> Float32()
+        p1 : local Party, global int -> IntSort()
+        z : local Zip_code, global text -> StringSort()
+      Predicted FOL:
+        x0 : local County_Id, global int -> IntSort()
+        x1 : local County_name, global text -> StringSort()
+        x2 : local Population, global real -> Float32()
+        x3 : local Zip_code, global text -> StringSort()
+        y0 : local Election_ID, global int -> IntSort()
+        y1 : local Counties_Represented, global text -> StringSort()
+        y2 : local District, global int -> IntSort()
+        y3 : local Delegate, global text -> StringSort()
+        y4 : local Party, global int -> IntSort()
+        y5 : local First_Elected, global real -> Float32()
+        y6 : local Committee, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5684 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1619.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (c1 : County_name, d1 : Delegate) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

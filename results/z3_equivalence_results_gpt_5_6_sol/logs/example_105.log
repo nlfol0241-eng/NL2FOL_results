@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_105.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_105.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2054 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all high schoolers in grade 10?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        ID = int -> IntSort()
+        grade = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Highschooler(ID, name, grade)
+        constant 10 : grade
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃g : grade ( (Highschooler(i,n,g)) ∧ (g = 10) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:g COLON:: IDENT:grade LPAR:( LPAR:( IDENT:Highschooler LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:g EQ:= NUM:10 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS g:grade
+              AND
+                PRED Highschooler(i, n, g)
+                EQ  g = 10
+      Predicted FOL: ∃i:ID Highschooler(i, n, 10)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID IDENT:Highschooler LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, NUM:10 RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            PRED Highschooler(i, n, 10)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local grade, global int -> IntSort()
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_g_2], And(P_Highschooler(gold_i_1, FV_name_0, gold_g_2), (gold_g_2 == L_v_10_int)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_g):  And(P_Highschooler(WGOLD_i, FV_name_0, WGOLD_g), (WGOLD_g == L_v_10_int))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1], P_Highschooler(predicted_i_1, FV_name_0, L_v_10_int))
+      predicted_skolem (witnesses WPREDICTED_i):  P_Highschooler(WPREDICTED_i, FV_name_0, L_v_10_int)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '10' at int -> L_v_10_int = IntVal(10)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 719 lines, 26044 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_105.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_g
+      claim: And(And(Highschooler(WGOLD_i, FV_name_0, WGOLD_g), 10 == WGOLD_g), Not(Exists(predicted_i_1, Highschooler(predicted_i_1, FV_name_0, 10))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i
+      claim: And(Highschooler(WPREDICTED_i, FV_name_0, 10), Not(Exists([gold_i_1, gold_g_2], And(Highschooler(gold_i_1, FV_name_0, gold_g_2), 10 == gold_g_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

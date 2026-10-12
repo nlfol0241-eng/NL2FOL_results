@@ -1,0 +1,114 @@
+{
+  "NL": "Find all the papers published by the institution \"Google\".",
+  "Vocabulary": {
+    "Predicates": [
+      "Papers",
+      "Authorship",
+      "Inst"
+    ],
+    "Functions": [],
+    "Constants": [
+      "Google"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "Papers": [
+        "paperID",
+        "title"
+      ],
+      "Authorship": [
+        "authID",
+        "instID",
+        "paperID",
+        "authOrder"
+      ],
+      "Inst": [
+        "instID",
+        "name",
+        "country"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "Google": "name"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a0'∀a1'∀a2'( Inst(a0, a1, a2) ∧ Inst(a0', a1', a2') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' )",
+    "axiom2": "∀b0∀b1∀b2∀b0'∀b1'∀b2'( Authors(b0, b1, b2) ∧ Authors(b0', b1', b2') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' )",
+    "axiom3": "∀c0∀c1∀c0'∀c1'( Papers(c0, c1) ∧ Papers(c0', c1') ∧ c0 = c0' ) → ( c1 = c1' )",
+    "axiom4": "∀d0∀d1∀d2∀d3∀d0'∀d1'∀d2'∀d3'( Authorship(d0, d1, d2, d3) ∧ Authorship(d0', d1', d2', d3') ∧ d0 = d0' ∧ d1 = d1' ∧ d2 = d2' ) → ( d3 = d3' )",
+    "axiom5": "∀d0∀d1∀d2∀d3 ( Authorship(d0, d1, d2, d3) → ∃c0∃c1 ( Papers(c0, c1) ∧ c0 = d2 ) )",
+    "axiom6": "∀d0∀d1∀d2∀d3 ( Authorship(d0, d1, d2, d3) → ∃a0∃a1∃a2 ( Inst(a0, a1, a2) ∧ a0 = d1 ) )",
+    "axiom7": "∀d0∀d1∀d2∀d3 ( Authorship(d0, d1, d2, d3) → ∃b0∃b1∃b2 ( Authors(b0, b1, b2) ∧ b0 = d0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Papers": {
+        "A": "Papers",
+        "A0": "paperID",
+        "A1": "title"
+      },
+      "Authorship": {
+        "B": "Authorship",
+        "B0": "authID",
+        "B1": "instID",
+        "B2": "paperID",
+        "B3": "authOrder"
+      },
+      "Inst": {
+        "C": "Inst",
+        "C0": "instID",
+        "C1": "name",
+        "C2": "country"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "Google"
+    }
+  },
+  "Gold FOL": {
+    "string": "∃p : paperID ∃a : authID ∃i : instID ∃p1 : paperID ∃a1 : authOrder ∃i1 : instID ∃n : name ∃c : country ( (((((Papers(p,t)) ∧ (Authorship(a,i,p1,a1))) ∧ (p = p1)) ∧ (Inst(i1,n,c))) ∧ (i = i1)) ∧ (n = 'Google') )",
+    "free vars": "t : title"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1](<S>[C1 = 'Google':VARCHAR(65536)](<S>[B1 = C0]((<S>[A0 = B2]((A)<X>(B)))<X>(C))))",
+    "Processed_RA": "<P>[A1](<S>[C1 = 'Google'](<S>[B1 = C0]((<S>[A0 = B2]((A)<X>(B)))<X>(C))))",
+    "RC": "[E]?B0,?B3,?C2,?B2,?C0,?B1,?A0,?C1( (((((A(?A0,?A1)) & (B(?B0,?B1,?B2,?B3))) & (?A0 = ?B2)) & (C(?C0,?C1,?C2))) & (?B1 = ?C0)) & (?C1 = Google) )",
+    "string": "∃B0 ∃B3 ∃C2 ∃B2 ∃C0 ∃B1 ∃A0 ∃C1( (((((A(A0,A1)) ∧ (B(B0,B1,B2,B3))) ∧ (A0 = B2)) ∧ (C(C0,C1,C2))) ∧ (B1 = C0)) ∧ (C1 = 'Google') )",
+    "free variables": "A1",
+    "db_id": "icfp_1",
+    "processed_sql": "SELECT  t1.title FROM papers AS t1 JOIN authorship AS t2 ON t1.paperid  =  t2.paperid JOIN inst AS t3 ON t2.instid  =  t3.instid WHERE t3.name  =  'Google'"
+  },
+  "Global Sorts": [
+    "integer",
+    "text"
+  ],
+  "Sort Axioms": {
+    "Papers": {
+      "sortaxiom0": "paperID = integer",
+      "sortaxiom1": "title = text"
+    },
+    "Authorship": {
+      "sortaxiom0": "authID = integer",
+      "sortaxiom1": "instID = integer",
+      "sortaxiom2": "paperID = integer",
+      "sortaxiom3": "authOrder = integer"
+    },
+    "Inst": {
+      "sortaxiom0": "instID = integer",
+      "sortaxiom1": "name = text",
+      "sortaxiom2": "country = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT DISTINCT t1.title FROM papers AS t1 JOIN authorship AS t2 ON t1.paperid  =  t2.paperid JOIN inst AS t3 ON t2.instid  =  t3.instid WHERE t3.name  =  \"Google\""
+  },
+  "id": 2429,
+  "Predicted FOL": {
+    "string": "∃i : instID ∃c : country ∃a : authID ∃o : authOrder ( Papers(p, t) ∧ Inst(i, 'Google', c) ∧ Authorship(a, i, p, o) )",
+    "free vars": "p : paperID, t : title"
+  }
+}

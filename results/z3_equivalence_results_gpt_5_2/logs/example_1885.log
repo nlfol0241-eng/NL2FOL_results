@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1885.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1885.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3615 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the cities that have a branch that opened in 2001 and a branch with more than 100 members?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 6 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        Address_road = text -> StringSort()
+        Branch_ID = text -> StringSort()
+        City = text -> StringSort()
+        Name = text -> StringSort()
+        Open_year = text -> StringSort()
+        membership_amount = text -> StringSort()
+      symbols:
+        branch(Branch_ID, Name, Open_year, Address_road, City, membership_amount)
+        constant 100 : membership_amount
+        constant 2001 : Open_year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : Branch_ID ∃n : Name ∃o : Open_year ∃a : Address_road ∃m : membership_amount ( (branch(b,n,o,a,c,m)) ∧ ((o = 2001) ∧ (m > 100)) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:o COLON:: IDENT:Open_year EXISTS:∃ IDENT:a COLON:: IDENT:Address_road EXISTS:∃ IDENT:m COLON:: IDENT:membership_amount LPAR:( LPAR:( IDENT:branch LPAR:( IDENT:b COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:o EQ:= NUM:2001 RPAR:) AND:∧ LPAR:( IDENT:m GT:> NUM:100 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Branch_ID
+            EXISTS n:Name
+              EXISTS o:Open_year
+                EXISTS a:Address_road
+                  EXISTS m:membership_amount
+                    AND
+                      PRED branch(b, n, o, a, c, m)
+                      AND
+                        EQ  o = 2001
+                        CMP  m > 100
+      Predicted FOL: ∃c:City (c = c ∧ ∃b0:Branch_ID∃n0:Name∃y0:Open_year∃r0:Address_road∃m0:membership_amount (branch(b0,n0,y0,r0,c,m0) ∧ y0 = 2001) ∧ ∃b1:Branch_ID∃n1:Name∃y1:Open_year∃r1:Address_road∃m1:membership_amount (branch(b1,n1,y1,r1,c,m1) ∧ m1 > 100))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:City LPAR:( IDENT:c EQ:= IDENT:c AND:∧ EXISTS:∃ IDENT:b0 COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:n0 COLON:: IDENT:Name EXISTS:∃ IDENT:y0 COLON:: IDENT:Open_year EXISTS:∃ IDENT:r0 COLON:: IDENT:Address_road EXISTS:∃ IDENT:m0 COLON:: IDENT:membership_amount LPAR:( IDENT:branch LPAR:( IDENT:b0 COMMA:, IDENT:n0 COMMA:, IDENT:y0 COMMA:, IDENT:r0 COMMA:, IDENT:c COMMA:, IDENT:m0 RPAR:) AND:∧ IDENT:y0 EQ:= NUM:2001 RPAR:) AND:∧ EXISTS:∃ IDENT:b1 COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:y1 COLON:: IDENT:Open_year EXISTS:∃ IDENT:r1 COLON:: IDENT:Address_road EXISTS:∃ IDENT:m1 COLON:: IDENT:membership_amount LPAR:( IDENT:branch LPAR:( IDENT:b1 COMMA:, IDENT:n1 COMMA:, IDENT:y1 COMMA:, IDENT:r1 COMMA:, IDENT:c COMMA:, IDENT:m1 RPAR:) AND:∧ IDENT:m1 GT:> NUM:100 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:City
+            AND
+              EQ  c = c
+              EXISTS b0:Branch_ID
+                EXISTS n0:Name
+                  EXISTS y0:Open_year
+                    EXISTS r0:Address_road
+                      EXISTS m0:membership_amount
+                        AND
+                          AND
+                            PRED branch(b0, n0, y0, r0, c, m0)
+                            EQ  y0 = 2001
+                          EXISTS b1:Branch_ID
+                            EXISTS n1:Name
+                              EXISTS y1:Open_year
+                                EXISTS r1:Address_road
+                                  EXISTS m1:membership_amount
+                                    AND
+                                      PRED branch(b1, n1, y1, r1, c, m1)
+                                      CMP  m1 > 100
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : City) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address_road, global text -> StringSort()
+        b : local Branch_ID, global text -> StringSort()
+        c : local City, global text -> StringSort()
+        m : local membership_amount, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        o : local Open_year, global text -> StringSort()
+      Predicted FOL:
+        b0 : local Branch_ID, global text -> StringSort()
+        b1 : local Branch_ID, global text -> StringSort()
+        c : local City, global text -> StringSort()
+        m0 : local membership_amount, global text -> StringSort()
+        m1 : local membership_amount, global text -> StringSort()
+        n0 : local Name, global text -> StringSort()
+        n1 : local Name, global text -> StringSort()
+        r0 : local Address_road, global text -> StringSort()
+        r1 : local Address_road, global text -> StringSort()
+        y0 : local Open_year, global text -> StringSort()
+        y1 : local Open_year, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5545 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1885.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : City) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

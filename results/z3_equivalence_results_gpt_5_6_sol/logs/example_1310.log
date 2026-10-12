@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1310.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1310.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5579 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all Apple Store in " Los Angeles "
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 11 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        bid = int -> IntSort()
+        business_id = text -> StringSort()
+        city = text -> StringSort()
+        full_address = text -> StringSort()
+        is_open = int -> IntSort()
+        latitude = text -> StringSort()
+        longitude = text -> StringSort()
+        name = text -> StringSort()
+        rating = real -> Float32()
+        review_count = int -> IntSort()
+        state = text -> StringSort()
+      symbols:
+        business(bid, business_id, name, full_address, city, latitude, longitude, review_count, is_open, rating, state)
+        constant Apple Store : name
+        constant Los Angeles : city
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : bid ∃s : state ∃n : name ∃f : full_address ∃c : city ∃l : latitude ∃l1 : longitude ∃r : review_count ∃i : is_open ∃r1 : rating ( (business(b,b1,n,f,c,l,l1,r,i,r1,s)) ∧ ((c = 'Los Angeles') ∧ (n = 'Apple Store')) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:bid EXISTS:∃ IDENT:s COLON:: IDENT:state EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:f COLON:: IDENT:full_address EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:l COLON:: IDENT:latitude EXISTS:∃ IDENT:l1 COLON:: IDENT:longitude EXISTS:∃ IDENT:r COLON:: IDENT:review_count EXISTS:∃ IDENT:i COLON:: IDENT:is_open EXISTS:∃ IDENT:r1 COLON:: IDENT:rating LPAR:( LPAR:( IDENT:business LPAR:( IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:l1 COMMA:, IDENT:r COMMA:, IDENT:i COMMA:, IDENT:r1 COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:Los Angeles RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Apple Store RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:bid
+            EXISTS s:state
+              EXISTS n:name
+                EXISTS f:full_address
+                  EXISTS c:city
+                    EXISTS l:latitude
+                      EXISTS l1:longitude
+                        EXISTS r:review_count
+                          EXISTS i:is_open
+                            EXISTS r1:rating
+                              AND
+                                PRED business(b, b1, n, f, c, l, l1, r, i, r1, s)
+                                AND
+                                  EQ  c = 'Los Angeles'
+                                  EQ  n = 'Apple Store'
+      Predicted FOL: ∃business_id : business_id ∃full_address : full_address ∃latitude : latitude ∃longitude : longitude ∃review_count : review_count ∃is_open : is_open ∃rating : rating ∃state : state business(bid, business_id, 'Apple Store', full_address, 'Los Angeles', latitude, longitude, review_count, is_open, rating, state)
+        tokens: EXISTS:∃ IDENT:business_id COLON:: IDENT:business_id EXISTS:∃ IDENT:full_address COLON:: IDENT:full_address EXISTS:∃ IDENT:latitude COLON:: IDENT:latitude EXISTS:∃ IDENT:longitude COLON:: IDENT:longitude EXISTS:∃ IDENT:review_count COLON:: IDENT:review_count EXISTS:∃ IDENT:is_open COLON:: IDENT:is_open EXISTS:∃ IDENT:rating COLON:: IDENT:rating EXISTS:∃ IDENT:state COLON:: IDENT:state IDENT:business LPAR:( IDENT:bid COMMA:, IDENT:business_id COMMA:, LIT:Apple Store COMMA:, IDENT:full_address COMMA:, LIT:Los Angeles COMMA:, IDENT:latitude COMMA:, IDENT:longitude COMMA:, IDENT:review_count COMMA:, IDENT:is_open COMMA:, IDENT:rating COMMA:, IDENT:state RPAR:) EOF
+        AST:
+          EXISTS business_id:business_id
+            EXISTS full_address:full_address
+              EXISTS latitude:latitude
+                EXISTS longitude:longitude
+                  EXISTS review_count:review_count
+                    EXISTS is_open:is_open
+                      EXISTS rating:rating
+                        EXISTS state:state
+                          PRED business(bid, business_id, 'Apple Store', full_address, 'Los Angeles', latitude, longitude, review_count, is_open, rating, state)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (b1 : business_id) -> ['StringSort()'] vs Predicted (bid : bid) -> ['numeric']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local bid, global int -> IntSort()
+        b1 : local business_id, global text -> StringSort()
+        c : local city, global text -> StringSort()
+        f : local full_address, global text -> StringSort()
+        i : local is_open, global int -> IntSort()
+        l : local latitude, global text -> StringSort()
+        l1 : local longitude, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        r : local review_count, global int -> IntSort()
+        r1 : local rating, global real -> Float32()
+        s : local state, global text -> StringSort()
+      Predicted FOL:
+        bid : local bid, global int -> IntSort()
+        business_id : local business_id, global text -> StringSort()
+        full_address : local full_address, global text -> StringSort()
+        is_open : local is_open, global int -> IntSort()
+        latitude : local latitude, global text -> StringSort()
+        longitude : local longitude, global text -> StringSort()
+        rating : local rating, global real -> Float32()
+        review_count : local review_count, global int -> IntSort()
+        state : local state, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5675 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1310.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: the free variables have different value types: Gold (b1 : business_id) -> ['StringSort()'] vs Predicted (bid : bid) -> ['numeric']
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

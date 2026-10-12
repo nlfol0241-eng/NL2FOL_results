@@ -1,0 +1,122 @@
+{
+  "NL": "where can we find some restaurants in the bay area ?",
+  "Vocabulary": {
+    "Predicates": [
+      "LOCATION",
+      "RESTAURANT",
+      "GEOGRAPHIC"
+    ],
+    "Functions": [],
+    "Constants": [
+      "bay area"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "LOCATION": [
+        "RESTAURANT_ID",
+        "HOUSE_NUMBER",
+        "STREET_NAME",
+        "CITY_NAME"
+      ],
+      "RESTAURANT": [
+        "ID",
+        "NAME",
+        "FOOD_TYPE",
+        "CITY_NAME",
+        "RATING"
+      ],
+      "GEOGRAPHIC": [
+        "CITY_NAME",
+        "COUNTY",
+        "REGION"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "bay area": "REGION"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a0'∀a1'∀a2'( GEOGRAPHIC(a0, a1, a2) ∧ GEOGRAPHIC(a0', a1', a2') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( RESTAURANT(b0, b1, b2, b3, b4) ∧ RESTAURANT(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c3∀c0'∀c1'∀c2'∀c3'( LOCATION(c0, c1, c2, c3) ∧ LOCATION(c0', c1', c2', c3') ∧ c0 = c0' ) → ( c1 = c1' ∧ c2 = c2' ∧ c3 = c3' )",
+    "axiom4": "∀b0∀b1∀b2∀b3∀b4 ( RESTAURANT(b0, b1, b2, b3, b4) → ∃a0∃a1∃a2 ( GEOGRAPHIC(a0, a1, a2) ∧ a0 = b3 ) )",
+    "axiom5": "∀c0∀c1∀c2∀c3 ( LOCATION(c0, c1, c2, c3) → ∃a0∃a1∃a2 ( GEOGRAPHIC(a0, a1, a2) ∧ a0 = c3 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "LOCATION": {
+        "A": "LOCATION",
+        "A0": "RESTAURANT_ID",
+        "A1": "HOUSE_NUMBER",
+        "A2": "STREET_NAME",
+        "A3": "CITY_NAME"
+      },
+      "RESTAURANT": {
+        "B": "RESTAURANT",
+        "B0": "ID",
+        "B1": "NAME",
+        "B2": "FOOD_TYPE",
+        "B3": "CITY_NAME",
+        "B4": "RATING"
+      },
+      "GEOGRAPHIC": {
+        "C": "GEOGRAPHIC",
+        "C0": "CITY_NAME",
+        "C1": "COUNTY",
+        "C2": "REGION"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "bay area"
+    }
+  },
+  "Gold FOL": {
+    "string": "∃i : ID ∃c1 : CITY_NAME ∃s : STREET_NAME ∃f : FOOD_TYPE ∃c : CITY_NAME ∃r : RESTAURANT_ID ∃r1 : RATING( ∃c2 : CITY_NAME( ((((LOCATION(r,h,s,c)) ∧ (RESTAURANT(i,n,f,c1,r1))) ∧ (i = r)) ∧ (∃r2 : REGION ∃c3 : COUNTY( (GEOGRAPHIC(c2,c3,r2)) ∧ (r2 = 'bay area') ))) ∧ (c1 = c2) ) )",
+    "free vars": "h : HOUSE_NUMBER, n : NAME"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1,B1](<P>[A0,A1,A2,A3,B0,B1,B2,B3,B4](<S>[B3 = C0]((<S>[B0 = A0]((A)<X>(B)))<X>(<P>[C0](<S>[C2 = 'bay area':VARCHAR(65536)](C))))))",
+    "Processed_RA": "<P>[A1,B1](<P>[A0,A1,A2,A3,B0,B1,B2,B3,B4](<S>[B3 = C0]((<S>[B0 = A0]((A)<X>(B)))<X>(<P>[C0](<S>[C2 = 'bay area'](C))))))",
+    "RC": "[E]?B0,?B3,?A2,?B2,?A3,?A0,?B4( [E]?C0( ((((A(?A0,?A1,?A2,?A3)) & (B(?B0,?B1,?B2,?B3,?B4))) & (?B0 = ?A0)) & ([E]?C2,?C1( (C(?C0,?C1,?C2)) & (?C2 = bay area) ))) & (?B3 = ?C0) ) )",
+    "string": "∃B0 ∃B3 ∃A2 ∃B2 ∃A3 ∃A0 ∃B4( ∃C0( ((((A(A0,A1,A2,A3)) ∧ (B(B0,B1,B2,B3,B4))) ∧ (B0 = A0)) ∧ (∃C2 ∃C1( (C(C0,C1,C2)) ∧ (C2 = 'bay area') ))) ∧ (B3 = C0) ) )",
+    "free variables": "A1, B1",
+    "db_id": "restaurants",
+    "processed_sql": "SELECT t2.house_number  ,  t1.name FROM LOCATION AS t2 JOIN restaurant AS t1 ON t1.id  =  t2.restaurant_id WHERE t1.city_name IN ( SELECT city_name FROM geographic WHERE region  =  'bay area' )"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "LOCATION": {
+      "sortaxiom0": "RESTAURANT_ID = int",
+      "sortaxiom1": "HOUSE_NUMBER = int",
+      "sortaxiom2": "STREET_NAME = text",
+      "sortaxiom3": "CITY_NAME = text"
+    },
+    "RESTAURANT": {
+      "sortaxiom0": "ID = int",
+      "sortaxiom1": "NAME = text",
+      "sortaxiom2": "FOOD_TYPE = text",
+      "sortaxiom3": "CITY_NAME = text",
+      "sortaxiom4": "RATING = real"
+    },
+    "GEOGRAPHIC": {
+      "sortaxiom0": "CITY_NAME = text",
+      "sortaxiom1": "COUNTY = text",
+      "sortaxiom2": "REGION = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT t2.house_number  ,  t1.name FROM LOCATION AS t2 JOIN restaurant AS t1 ON t1.id  =  t2.restaurant_id WHERE t1.city_name IN ( SELECT city_name FROM geographic WHERE region  =  \"bay area\" );"
+  },
+  "id": 3079,
+  "Predicted FOL": {
+    "string": "∃id : ID ∃name : NAME ∃food : FOOD_TYPE ∃rating : RATING ∃county : COUNTY. (RESTAURANT(id, name, food, city, rating) ∧ LOCATION(id, house, street, city) ∧ GEOGRAPHIC(city, county, 'bay area'))",
+    "free vars": "house : HOUSE_NUMBER, street : STREET_NAME, city : CITY_NAME"
+  }
+}

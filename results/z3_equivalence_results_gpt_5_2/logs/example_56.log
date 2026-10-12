@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_56.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_56.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5603 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the descriptions for all the math courses?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        course_description = varchar(255) -> StringSort()
+        course_id = integer -> IntSort()
+        course_name = varchar(255) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+      symbols:
+        Courses(course_id, course_name, course_description, other_details)
+        constant math : course_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : course_id ∃c1 : course_name ∃o : other_details ( (Courses(c,c1,c2,o)) ∧ (c1 = 'math') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:c1 COLON:: IDENT:course_name EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( IDENT:Courses LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:math RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:course_id
+            EXISTS c1:course_name
+              EXISTS o:other_details
+                AND
+                  PRED Courses(c, c1, c2, o)
+                  EQ  c1 = 'math'
+      Predicted FOL: ∃b0:course_id ∃b1:course_name ∃b3:other_details (Courses(b0, b1, x, b3) ∧ b1 = math)
+        tokens: EXISTS:∃ IDENT:b0 COLON:: IDENT:course_id EXISTS:∃ IDENT:b1 COLON:: IDENT:course_name EXISTS:∃ IDENT:b3 COLON:: IDENT:other_details LPAR:( IDENT:Courses LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:x COMMA:, IDENT:b3 RPAR:) AND:∧ IDENT:b1 EQ:= IDENT:math RPAR:) EOF
+        AST:
+          EXISTS b0:course_id
+            EXISTS b1:course_name
+              EXISTS b3:other_details
+                AND
+                  PRED Courses(b0, b1, x, b3)
+                  EQ  b1 = math<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_course_description_0 : course_description   Gold c2 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global integer -> IntSort()
+        c1 : local course_name, global varchar(255) -> StringSort()
+        c2 : local course_description, global varchar(255) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        b0 : local course_id, global integer -> IntSort()
+        b1 : local course_name, global varchar(255) -> StringSort()
+        b3 : local other_details, global varchar(255) -> StringSort()
+        x : local course_description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_o_3], And(D_varchar_255_(gold_c1_2), D_varchar_255_(gold_o_3), And(P_Courses(gold_c_1, gold_c1_2, FV_course_description_0, gold_o_3), (gold_c1_2 == L_math))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_o):  And(D_varchar_255_(WGOLD_c1), D_varchar_255_(WGOLD_o), And(P_Courses(WGOLD_c, WGOLD_c1, FV_course_description_0, WGOLD_o), (WGOLD_c1 == L_math)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_b0_1, predicted_b1_2, predicted_b3_3], And(D_varchar_255_(predicted_b1_2), D_varchar_255_(predicted_b3_3), And(P_Courses(predicted_b0_1, predicted_b1_2, FV_course_description_0, predicted_b3_3), (predicted_b1_2 == L_math))))
+      predicted_skolem (witnesses WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b3):  And(D_varchar_255_(WPREDICTED_b1), D_varchar_255_(WPREDICTED_b3), And(P_Courses(WPREDICTED_b0, WPREDICTED_b1, FV_course_description_0, WPREDICTED_b3), (WPREDICTED_b1 == L_math)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'math' at varchar(255) -> L_math = StringVal('math')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 732 lines, 27885 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_56.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_course_description_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_o
+      claim: And(And(Length(WGOLD_c1) <= 255, Length(WGOLD_o) <= 255, And(Courses(WGOLD_c, WGOLD_c1, FV_course_description_0, WGOLD_o), WGOLD_c1 == "math")), Not(Exists([predicted_b0_1, predicted_b1_2, predicted_b3_3], And(Length(predicted_b1_2) <= 255, Length(predicted_b3_3) <= 255, And(Courses(predicted_b0_1, predicted_b1_2, FV_course_description_0, predicted_b3_3), predicted_b1_2 == "math")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.040 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b3
+      claim: And(And(Length(WPREDICTED_b1) <= 255, Length(WPREDICTED_b3) <= 255, And(Courses(WPREDICTED_b0, WPREDICTED_b1, FV_course_description_0, WPREDICTED_b3), WPREDICTED_b1 == "math")), Not(Exists([gold_c_1, gold_c1_2, gold_o_3], And(Length(gold_c1_2) <= 255, Length(gold_o_3) <= 255, And(Courses(gold_c_1, gold_c1_2, FV_course_description_0, gold_o_3), gold_c1_2 == "math")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

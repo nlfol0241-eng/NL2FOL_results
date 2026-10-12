@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2185.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2185.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5677 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me all the keywords in Databases area .
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        did = int -> IntSort()
+        keyword = text -> StringSort()
+        kid = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        domain(did, name)
+        domain_keyword(did, kid)
+        keyword(keyword, kid)
+        constant Databases : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : did ∃n : name ∃d1 : did ∃k : kid ∃k2 : kid ( (((((domain(d,n)) ∧ (domain_keyword(d1,k))) ∧ (d = d1)) ∧ (keyword(k1,k2))) ∧ (k2 = k)) ∧ (n = 'Databases') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:did EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:d1 COLON:: IDENT:did EXISTS:∃ IDENT:k COLON:: IDENT:kid EXISTS:∃ IDENT:k2 COLON:: IDENT:kid LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:domain LPAR:( IDENT:d COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:domain_keyword LPAR:( IDENT:d1 COMMA:, IDENT:k RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:keyword LPAR:( IDENT:k1 COMMA:, IDENT:k2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k2 EQ:= IDENT:k RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Databases RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:did
+            EXISTS n:name
+              EXISTS d1:did
+                EXISTS k:kid
+                  EXISTS k2:kid
+                    AND
+                      AND
+                        AND
+                          AND
+                            AND
+                              PRED domain(d, n)
+                              PRED domain_keyword(d1, k)
+                            EQ  d = d1
+                          PRED keyword(k1, k2)
+                        EQ  k2 = k
+                      EQ  n = 'Databases'
+      Predicted FOL: ∃d : did (domain(d, 'Databases') ∧ ∀k : keyword (domain_keyword(d, k) → keyword(k, k)))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:did LPAR:( IDENT:domain LPAR:( IDENT:d COMMA:, LIT:Databases RPAR:) AND:∧ FORALL:∀ IDENT:k COLON:: IDENT:keyword LPAR:( IDENT:domain_keyword LPAR:( IDENT:d COMMA:, IDENT:k RPAR:) IMPL:→ IDENT:keyword LPAR:( IDENT:k COMMA:, IDENT:k RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:did
+            AND
+              PRED domain(d, 'Databases')
+              FORALL k:keyword
+                IMPLIES
+                  PRED domain_keyword(d, k)
+                  PRED keyword(k, k)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (k1 : keyword) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'k' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 139, in infer
+    infer(node[1], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'k' used at incompatible global sorts text and int

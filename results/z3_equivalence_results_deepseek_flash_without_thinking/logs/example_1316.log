@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1316.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1316.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5744 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me all the researchers in " University of Michigan " .
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        aid = int -> IntSort()
+        continent = text -> StringSort()
+        homepage = text -> StringSort()
+        name = text -> StringSort()
+        oid = int -> IntSort()
+      symbols:
+        author(aid, homepage, name, oid)
+        organization(continent, homepage, name, oid)
+        constant University of Michigan : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : continent ∃h : homepage ∃n : name ∃o : oid ∃a : aid ∃h1 : homepage ∃o1 : oid ( (((organization(c,h,n,o)) ∧ (author(a,h1,n1,o1))) ∧ (o = o1)) ∧ (n = 'University of Michigan') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:continent EXISTS:∃ IDENT:h COLON:: IDENT:homepage EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:o COLON:: IDENT:oid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:h1 COLON:: IDENT:homepage EXISTS:∃ IDENT:o1 COLON:: IDENT:oid LPAR:( LPAR:( LPAR:( LPAR:( IDENT:organization LPAR:( IDENT:c COMMA:, IDENT:h COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a COMMA:, IDENT:h1 COMMA:, IDENT:n1 COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:University of Michigan RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:continent
+            EXISTS h:homepage
+              EXISTS n:name
+                EXISTS o:oid
+                  EXISTS a:aid
+                    EXISTS h1:homepage
+                      EXISTS o1:oid
+                        AND
+                          AND
+                            AND
+                              PRED organization(c, h, n, o)
+                              PRED author(a, h1, n1, o1)
+                            EQ  o = o1
+                          EQ  n = 'University of Michigan'
+      Predicted FOL: ∃a0 : aid ∃a1 : homepage ∃a2 : name ∃a3 : oid (author(a0, a1, a2, a3) ∧ a2 = 'University of Michigan')
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:aid EXISTS:∃ IDENT:a1 COLON:: IDENT:homepage EXISTS:∃ IDENT:a2 COLON:: IDENT:name EXISTS:∃ IDENT:a3 COLON:: IDENT:oid LPAR:( IDENT:author LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 RPAR:) AND:∧ IDENT:a2 EQ:= LIT:University of Michigan RPAR:) EOF
+        AST:
+          EXISTS a0:aid
+            EXISTS a1:homepage
+              EXISTS a2:name
+                EXISTS a3:oid
+                  AND
+                    PRED author(a0, a1, a2, a3)
+                    EQ  a2 = 'University of Michigan'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global int -> IntSort()
+        c : local continent, global text -> StringSort()
+        h : local homepage, global text -> StringSort()
+        h1 : local homepage, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+        o : local oid, global int -> IntSort()
+        o1 : local oid, global int -> IntSort()
+      Predicted FOL:
+        a0 : local aid, global int -> IntSort()
+        a1 : local homepage, global text -> StringSort()
+        a2 : local name, global text -> StringSort()
+        a3 : local oid, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5404 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1316.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

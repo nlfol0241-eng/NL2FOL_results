@@ -1,0 +1,74 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_364.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_364.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 1953 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the title and issues of the books?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Book_ID = int -> IntSort()
+        Issues = real -> Float32()
+        Title = text -> StringSort()
+        Writer = text -> StringSort()
+      symbols:
+        book(Book_ID, Title, Issues, Writer)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : Book_ID ∃w : Writer ( book(b,t,i,w) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Book_ID EXISTS:∃ IDENT:w COLON:: IDENT:Writer LPAR:( IDENT:book LPAR:( IDENT:b COMMA:, IDENT:t COMMA:, IDENT:i COMMA:, IDENT:w RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Book_ID
+            EXISTS w:Writer
+              PRED book(b, t, i, w)
+      Predicted FOL: ∃b0:Book_ID ∃b1:Title ∃b2:Issues ∃b3:Writer ( book(b0, b1, b2, b3) )
+        tokens: EXISTS:∃ IDENT:b0 COLON:: IDENT:Book_ID EXISTS:∃ IDENT:b1 COLON:: IDENT:Title EXISTS:∃ IDENT:b2 COLON:: IDENT:Issues EXISTS:∃ IDENT:b3 COLON:: IDENT:Writer LPAR:( IDENT:book LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:b3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b0:Book_ID
+            EXISTS b1:Title
+              EXISTS b2:Issues
+                EXISTS b3:Writer
+                  PRED book(b0, b1, b2, b3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (t : Title, i : Issues) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Book_ID, global int -> IntSort()
+        i : local Issues, global real -> Float32()
+        t : local Title, global text -> StringSort()
+        w : local Writer, global text -> StringSort()
+      Predicted FOL:
+        b0 : local Book_ID, global int -> IntSort()
+        b1 : local Title, global text -> StringSort()
+        b2 : local Issues, global real -> Float32()
+        b3 : local Writer, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5220 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_364.py
+   [G8] took 0.029 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (t : Title, i : Issues) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,93 @@
+{
+  "NL": "Find the market shares and names of furnitures which no any company is producing in our records.",
+  "Vocabulary": {
+    "Predicates": [
+      "furniture",
+      "furniture_manufacte"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "furniture": [
+        "Furniture_ID",
+        "Name",
+        "Num_of_Component",
+        "Market_Rate"
+      ],
+      "furniture_manufacte": [
+        "Manufacturer_ID",
+        "Furniture_ID",
+        "Price_in_Dollar"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a0'∀a1'∀a2'∀a3'∀a4'( manufacturer(a0, a1, a2, a3, a4) ∧ manufacturer(a0', a1', a2', a3', a4') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b0'∀b1'∀b2'∀b3'( furniture(b0, b1, b2, b3) ∧ furniture(b0', b1', b2', b3') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( furniture_manufacte(c0, c1, c2) ∧ furniture_manufacte(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( furniture_manufacte(c0, c1, c2) → ∃b0∃b1∃b2∃b3 ( furniture(b0, b1, b2, b3) ∧ b0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( furniture_manufacte(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4 ( manufacturer(a0, a1, a2, a3, a4) ∧ a0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "furniture": {
+        "A": "furniture",
+        "A0": "Furniture_ID",
+        "A1": "Name",
+        "A2": "Num_of_Component",
+        "A3": "Market_Rate"
+      },
+      "furniture_manufacte": {
+        "B": "furniture_manufacte",
+        "B0": "Manufacturer_ID",
+        "B1": "Furniture_ID",
+        "B2": "Price_in_Dollar"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃n1 : Num_of_Component ∃f : Furniture_ID( (furniture(f,n,n1,m)) ∧ (¬(∃f1 : Furniture_ID( ((furniture(f,n,n1,m)) ∧ (∃m1 : Manufacturer_ID ∃p : Price_in_Dollar( furniture_manufacte(m1,f1,p) ))) ∧ (f = f1) ))) )",
+    "free vars": "n : Name, m : Market_Rate"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A3,A1]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A3,A1]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A2,?A0( (A(?A0,?A1,?A2,?A3)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3)) & ([E]?B0,?B2( B(?B0,?B1,?B2) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A2 ∃A0( (A(A0,A1,A2,A3)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3)) ∧ (∃B0 ∃B2( B(B0,B1,B2) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A1, A3",
+    "db_id": "manufacturer",
+    "processed_sql": "SELECT Market_Rate ,  name FROM furniture WHERE Furniture_ID NOT IN (SELECT Furniture_ID FROM furniture_manufacte)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "furniture": {
+      "sortaxiom0": "Furniture_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Num_of_Component = int",
+      "sortaxiom3": "Market_Rate = real"
+    },
+    "furniture_manufacte": {
+      "sortaxiom0": "Manufacturer_ID = int",
+      "sortaxiom1": "Furniture_ID = int",
+      "sortaxiom2": "Price_in_Dollar = real"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Market_Rate ,  name FROM furniture WHERE Furniture_ID NOT IN (SELECT Furniture_ID FROM furniture_manufacte)"
+  },
+  "id": 3221,
+  "Predicted FOL": {
+    "string": "∃f : Furniture_ID ∃c : Num_of_Component (furniture(f, n, c, m) ∧ ¬∃u : Manufacturer_ID ∃p : Price_in_Dollar furniture_manufacte(u, f, p))",
+    "free vars": "m : Market_Rate, n : Name"
+  }
+}

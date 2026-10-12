@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1527.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1527.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2992 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the times of elimination by "Punk" or "Orton".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        Eliminated_By = text -> StringSort()
+        Elimination_ID = text -> StringSort()
+        Elimination_Move = text -> StringSort()
+        Team = text -> StringSort()
+        Time = text -> StringSort()
+        Wrestler_ID = text -> StringSort()
+      symbols:
+        Elimination(Elimination_ID, Wrestler_ID, Team, Eliminated_By, Elimination_Move, Time)
+        constant Orton : Eliminated_By
+        constant Punk : Eliminated_By
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Elimination_ID ∃w : Wrestler_ID ∃t : Team ∃e1 : Eliminated_By ∃e2 : Elimination_Move ( (Elimination(e,w,t,e1,e2,t1)) ∧ ((e1 = 'Punk') ∨ (e1 = 'Orton')) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Elimination_ID EXISTS:∃ IDENT:w COLON:: IDENT:Wrestler_ID EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:e1 COLON:: IDENT:Eliminated_By EXISTS:∃ IDENT:e2 COLON:: IDENT:Elimination_Move LPAR:( LPAR:( IDENT:Elimination LPAR:( IDENT:e COMMA:, IDENT:w COMMA:, IDENT:t COMMA:, IDENT:e1 COMMA:, IDENT:e2 COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:e1 EQ:= LIT:Punk RPAR:) OR:∨ LPAR:( IDENT:e1 EQ:= LIT:Orton RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Elimination_ID
+            EXISTS w:Wrestler_ID
+              EXISTS t:Team
+                EXISTS e1:Eliminated_By
+                  EXISTS e2:Elimination_Move
+                    AND
+                      PRED Elimination(e, w, t, e1, e2, t1)
+                      OR
+                        EQ  e1 = 'Punk'
+                        EQ  e1 = 'Orton'
+      Predicted FOL: ∃e : Elimination_ID ∃w : Wrestler_ID ∃g : Team ∃b : Eliminated_By ∃m : Elimination_Move (Elimination(e, w, g, b, m, t) ∧ (b = 'Punk' ∨ b = 'Orton'))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Elimination_ID EXISTS:∃ IDENT:w COLON:: IDENT:Wrestler_ID EXISTS:∃ IDENT:g COLON:: IDENT:Team EXISTS:∃ IDENT:b COLON:: IDENT:Eliminated_By EXISTS:∃ IDENT:m COLON:: IDENT:Elimination_Move LPAR:( IDENT:Elimination LPAR:( IDENT:e COMMA:, IDENT:w COMMA:, IDENT:g COMMA:, IDENT:b COMMA:, IDENT:m COMMA:, IDENT:t RPAR:) AND:∧ LPAR:( IDENT:b EQ:= LIT:Punk OR:∨ IDENT:b EQ:= LIT:Orton RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Elimination_ID
+            EXISTS w:Wrestler_ID
+              EXISTS g:Team
+                EXISTS b:Eliminated_By
+                  EXISTS m:Elimination_Move
+                    AND
+                      PRED Elimination(e, w, g, b, m, t)
+                      OR
+                        EQ  b = 'Punk'
+                        EQ  b = 'Orton'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Time_0 : Time   Gold t1 <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local Elimination_ID, global text -> StringSort()
+        e1 : local Eliminated_By, global text -> StringSort()
+        e2 : local Elimination_Move, global text -> StringSort()
+        t : local Team, global text -> StringSort()
+        t1 : local Time, global text -> StringSort()
+        w : local Wrestler_ID, global text -> StringSort()
+      Predicted FOL:
+        b : local Eliminated_By, global text -> StringSort()
+        e : local Elimination_ID, global text -> StringSort()
+        g : local Team, global text -> StringSort()
+        m : local Elimination_Move, global text -> StringSort()
+        t : local Time, global text -> StringSort()
+        w : local Wrestler_ID, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_w_2, gold_t_3, gold_e1_4, gold_e2_5], And(P_Elimination(gold_e_1, gold_w_2, gold_t_3, gold_e1_4, gold_e2_5, FV_Time_0), Or((gold_e1_4 == L_Punk), (gold_e1_4 == L_Orton))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, WGOLD_e2):  And(P_Elimination(WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, WGOLD_e2, FV_Time_0), Or((WGOLD_e1 == L_Punk), (WGOLD_e1 == L_Orton)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_w_2, predicted_g_3, predicted_b_4, predicted_m_5], And(P_Elimination(predicted_e_1, predicted_w_2, predicted_g_3, predicted_b_4, predicted_m_5, FV_Time_0), Or((predicted_b_4 == L_Punk), (predicted_b_4 == L_Orton))))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_w, WPREDICTED_g, WPREDICTED_b, WPREDICTED_m):  And(P_Elimination(WPREDICTED_e, WPREDICTED_w, WPREDICTED_g, WPREDICTED_b, WPREDICTED_m, FV_Time_0), Or((WPREDICTED_b == L_Punk), (WPREDICTED_b == L_Orton)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Orton' at text -> L_Orton = StringVal('Orton')
+      literal 'Punk' at text -> L_Punk = StringVal('Punk')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 746 lines, 28656 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1527.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, WGOLD_e2
+      claim: And(And(Elimination(WGOLD_e, WGOLD_w, WGOLD_t, WGOLD_e1, WGOLD_e2, FV_Time_0), Or(WGOLD_e1 == "Punk", WGOLD_e1 == "Orton")), Not(Exists([predicted_e_1, predicted_w_2, predicted_g_3, predicted_b_4, predicted_m_5], And(Elimination(predicted_e_1, predicted_w_2, predicted_g_3, predicted_b_4, predicted_m_5, FV_Time_0), Or(predicted_b_4 == "Punk", predicted_b_4 == "Orton")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_w, WPREDICTED_g, WPREDICTED_b, WPREDICTED_m
+      claim: And(And(Elimination(WPREDICTED_e, WPREDICTED_w, WPREDICTED_g, WPREDICTED_b, WPREDICTED_m, FV_Time_0), Or(WPREDICTED_b == "Punk", WPREDICTED_b == "Orton")), Not(Exists([gold_e_1, gold_w_2, gold_t_3, gold_e1_4, gold_e2_5], And(Elimination(gold_e_1, gold_w_2, gold_t_3, gold_e1_4, gold_e2_5, FV_Time_0), Or(gold_e1_4 == "Punk", gold_e1_4 == "Orton")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

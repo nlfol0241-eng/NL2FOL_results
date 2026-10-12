@@ -1,0 +1,167 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_964.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_964.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3304 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the different cities that have more than 100 memberships?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        Address_road = text -> StringSort()
+        Branch_ID = text -> StringSort()
+        City = text -> StringSort()
+        Name = text -> StringSort()
+        Open_year = text -> StringSort()
+        membership_amount = text -> StringSort()
+      symbols:
+        branch(Branch_ID, Name, Open_year, Address_road, City, membership_amount)
+        constant 100 : membership_amount
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : Branch_ID ∃n : Name ∃o : Open_year ∃a : Address_road ∃m : membership_amount ( (branch(b,n,o,a,c,m)) ∧ (m >= 100) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:o COLON:: IDENT:Open_year EXISTS:∃ IDENT:a COLON:: IDENT:Address_road EXISTS:∃ IDENT:m COLON:: IDENT:membership_amount LPAR:( LPAR:( IDENT:branch LPAR:( IDENT:b COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m GE:>= NUM:100 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Branch_ID
+            EXISTS n:Name
+              EXISTS o:Open_year
+                EXISTS a:Address_road
+                  EXISTS m:membership_amount
+                    AND
+                      PRED branch(b, n, o, a, c, m)
+                      CMP  m >= 100
+      Predicted FOL: ∃b0:Branch_ID ∃b1:Name ∃b2:Open_year ∃b3:Address_road ∃b5:membership_amount ( branch(b0,b1,b2,b3,city,b5) ∧ b5 > 100 )
+        tokens: EXISTS:∃ IDENT:b0 COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:b1 COLON:: IDENT:Name EXISTS:∃ IDENT:b2 COLON:: IDENT:Open_year EXISTS:∃ IDENT:b3 COLON:: IDENT:Address_road EXISTS:∃ IDENT:b5 COLON:: IDENT:membership_amount LPAR:( IDENT:branch LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:b3 COMMA:, IDENT:city COMMA:, IDENT:b5 RPAR:) AND:∧ IDENT:b5 GT:> NUM:100 RPAR:) EOF
+        AST:
+          EXISTS b0:Branch_ID
+            EXISTS b1:Name
+              EXISTS b2:Open_year
+                EXISTS b3:Address_road
+                  EXISTS b5:membership_amount
+                    AND
+                      PRED branch(b0, b1, b2, b3, city, b5)
+                      CMP  b5 > 100
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_City_0 : City   Gold c <-> Predicted city
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address_road, global text -> StringSort()
+        b : local Branch_ID, global text -> StringSort()
+        c : local City, global text -> StringSort()
+        m : local membership_amount, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        o : local Open_year, global text -> StringSort()
+      Predicted FOL:
+        b0 : local Branch_ID, global text -> StringSort()
+        b1 : local Name, global text -> StringSort()
+        b2 : local Open_year, global text -> StringSort()
+        b3 : local Address_road, global text -> StringSort()
+        b5 : local membership_amount, global text -> StringSort()
+        city : local City, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_n_2, gold_o_3, gold_a_4, gold_m_5], And(P_branch(gold_b_1, gold_n_2, gold_o_3, gold_a_4, FV_City_0, gold_m_5), (gold_m_5 >= L_v_100)))
+      gold_skolem (witnesses WGOLD_b, WGOLD_n, WGOLD_o, WGOLD_a, WGOLD_m):  And(P_branch(WGOLD_b, WGOLD_n, WGOLD_o, WGOLD_a, FV_City_0, WGOLD_m), (WGOLD_m >= L_v_100))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, predicted_b5_5], And(P_branch(predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, FV_City_0, predicted_b5_5), (predicted_b5_5 > L_v_100)))
+      predicted_skolem (witnesses WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, WPREDICTED_b5):  And(P_branch(WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, FV_City_0, WPREDICTED_b5), (WPREDICTED_b5 > L_v_100))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '100' at text -> L_v_100 = StringVal('100')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 744 lines, 28325 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_964.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_n, WGOLD_o, WGOLD_a, WGOLD_m
+      claim: And(And(branch(WGOLD_b, WGOLD_n, WGOLD_o, WGOLD_a, FV_City_0, WGOLD_m), str.<=("100", WGOLD_m)), Not(Exists([predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, predicted_b5_5], And(branch(predicted_b0_1, predicted_b1_2, predicted_b2_3, predicted_b3_4, FV_City_0, predicted_b5_5), str.<("100", predicted_b5_5)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 1.568 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 28 relation tuple(s) listed, 43 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          b : Branch_ID = ''
+          n : Name = '\x81'
+          o : Open_year = '\x81'
+          a : Address_road = '\x81'
+          m : membership_amount = '100'
+        free (answer) variables:
+          FV_City_0 : City = '\x81'
+        literals / constants:
+          100 : membership_amount = '100'
+        relations (each value tagged with the local sort of its position):
+          branch(Branch_ID, Name, Open_year, Address_road, City, membership_amount):
+            branch(Branch_ID='', Name='', Open_year='', Address_road='!0!', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='', Address_road='!1!', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='', Address_road='100', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='', Address_road='4', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='', Address_road='A', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='', Address_road='\\u{1018}', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='', Address_road='\\u{20012}', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='!0!', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='100', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='4', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='A', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='\\u{1018}', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='', Open_year='\\u{20012}', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='!1!', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='100', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='4', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='A', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='\\u{1018}', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='\\u{20012}', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='', Name='\x81', Open_year='\x81', Address_road='\x81', City='\x81', membership_amount='100')
+            branch(Branch_ID='!0!', Name='', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='!1!', Name='', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='100', Name='', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='4', Name='', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='A', Name='!0!', Open_year='!1!', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='\\u{1018}', Name='', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='\\u{20012}', Name='', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            branch(Branch_ID='\x81', Name='', Open_year='', Address_road='', City='\x81', membership_amount='100')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Address_road      : {'', '!0!', '!1!', '100', '4', 'A', '\\u{1018}', '\\u{20012}', '\x81'}
+          Branch_ID         : {'', '!0!', '!1!', '100', '4', 'A', '\\u{1018}', '\\u{20012}', '\x81'}
+          City              : {'\x81'}
+          Name              : {'', '!0!', '!1!', '100', '4', 'A', '\\u{1018}', '\\u{20012}', '\x81'}
+          Open_year         : {'', '!0!', '!1!', '100', '4', 'A', '\\u{1018}', '\\u{20012}', '\x81'}
+          membership_amount : {'100'}
+        values shared across local sorts (joins):
+          '!0!' : Address_road, Branch_ID, Name, Open_year
+          '!1!' : Address_road, Branch_ID, Name, Open_year
+          '' : Address_road, Branch_ID, Name, Open_year
+          '100' : Address_road, Branch_ID, Name, Open_year, membership_amount
+          '4' : Address_road, Branch_ID, Name, Open_year
+          'A' : Address_road, Branch_ID, Name, Open_year
+          '\\u{1018}' : Address_road, Branch_ID, Name, Open_year
+          '\\u{20012}' : Address_road, Branch_ID, Name, Open_year
+          '\x81' : Address_road, Branch_ID, City, Name, Open_year
+   [R2] took 1.849 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, WPREDICTED_b5
+      claim: And(And(branch(WPREDICTED_b0, WPREDICTED_b1, WPREDICTED_b2, WPREDICTED_b3, FV_City_0, WPREDICTED_b5), str.<("100", WPREDICTED_b5)), Not(Exists([gold_b_1, gold_n_2, gold_o_3, gold_a_4, gold_m_5], And(branch(gold_b_1, gold_n_2, gold_o_3, gold_a_4, FV_City_0, gold_m_5), str.<=("100", gold_m_5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

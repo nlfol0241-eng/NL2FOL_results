@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3168.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3168.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3719 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the member names which are in both the party with id 3 and the party with id 1.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        In_office = text -> StringSort()
+        Member_ID = int -> IntSort()
+        Member_Name = text -> StringSort()
+        Party_ID = text -> StringSort()
+      symbols:
+        member(Member_ID, Member_Name, Party_ID, In_office)
+        constant 1 : Party_ID
+        constant 3 : Party_ID
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃p : Party_ID ∃i : In_office ∃m : Member_ID( (member(m,m1,p,i)) ∧ (p = 3) )) ∧ (¬((∃p : Party_ID ∃i : In_office ∃m : Member_ID( (member(m,m1,p,i)) ∧ (p = 3) )) ∧ (¬(∃p : Party_ID ∃i : In_office ∃m : Member_ID( (member(m,m1,p,i)) ∧ (p = 1) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:i COLON:: IDENT:In_office EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:p COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= NUM:3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:i COLON:: IDENT:In_office EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:p COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= NUM:3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:i COLON:: IDENT:In_office EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:p COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= NUM:1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p:Party_ID
+              EXISTS i:In_office
+                EXISTS m:Member_ID
+                  AND
+                    PRED member(m, m1, p, i)
+                    EQ  p = 3
+            NOT
+              AND
+                EXISTS p:Party_ID
+                  EXISTS i:In_office
+                    EXISTS m:Member_ID
+                      AND
+                        PRED member(m, m1, p, i)
+                        EQ  p = 3
+                NOT
+                  EXISTS p:Party_ID
+                    EXISTS i:In_office
+                      EXISTS m:Member_ID
+                        AND
+                          PRED member(m, m1, p, i)
+                          EQ  p = 1
+      Predicted FOL: ∃x : Member_ID ∃y : Member_Name (member(x, y, 3, z) ∧ member(x, y, 1, w))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Member_ID EXISTS:∃ IDENT:y COLON:: IDENT:Member_Name LPAR:( IDENT:member LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, NUM:3 COMMA:, IDENT:z RPAR:) AND:∧ IDENT:member LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, NUM:1 COMMA:, IDENT:w RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Member_ID
+            EXISTS y:Member_Name
+              AND
+                PRED member(x, y, 3, z)
+                PRED member(x, y, 1, w)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (m1 : Member_Name) but Predicted has 2 (z : In_office, w : In_office): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        i : local In_office, global text -> StringSort()
+        m : local Member_ID, global int -> IntSort()
+        m1 : local Member_Name, global text -> StringSort()
+        p : local Party_ID, global text -> StringSort()
+      Predicted FOL:
+        w : local In_office, global text -> StringSort()
+        x : local Member_ID, global int -> IntSort()
+        y : local Member_Name, global text -> StringSort()
+        z : local In_office, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5531 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3168.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (m1 : Member_Name) but Predicted has 2 (z : In_office, w : In_office): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

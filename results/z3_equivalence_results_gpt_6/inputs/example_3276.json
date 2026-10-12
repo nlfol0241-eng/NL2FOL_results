@@ -1,0 +1,95 @@
+{
+  "NL": "List the names of shops that have no devices in stock.",
+  "Vocabulary": {
+    "Predicates": [
+      "shop",
+      "stock"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "shop": [
+        "Shop_ID",
+        "Shop_Name",
+        "Location",
+        "Open_Date",
+        "Open_Year"
+      ],
+      "stock": [
+        "Shop_ID",
+        "Device_ID",
+        "Quantity"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'( device(a0, a1, a2, a3, a4, a5) ∧ device(a0', a1', a2', a3', a4', a5') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( shop(b0, b1, b2, b3, b4) ∧ shop(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( stock(c0, c1, c2) ∧ stock(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( stock(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4∃a5 ( device(a0, a1, a2, a3, a4, a5) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( stock(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4 ( shop(b0, b1, b2, b3, b4) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "shop": {
+        "A": "shop",
+        "A0": "Shop_ID",
+        "A1": "Shop_Name",
+        "A2": "Location",
+        "A3": "Open_Date",
+        "A4": "Open_Year"
+      },
+      "stock": {
+        "B": "stock",
+        "B0": "Shop_ID",
+        "B1": "Device_ID",
+        "B2": "Quantity"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃l : Location ∃o1 : Open_Year ∃o : Open_Date ∃s : Shop_ID( (shop(s,s1,l,o,o1)) ∧ (¬(∃s2 : Shop_ID( ((shop(s,s1,l,o,o1)) ∧ (∃q : Quantity ∃d : Device_ID( stock(s2,d,q) ))) ∧ (s = s2) ))) )",
+    "free vars": "s1 : Shop_Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "RC": "[E]?A2,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (~([E]?B0( ((A(?A0,?A1,?A2,?A3,?A4)) & ([E]?B2,?B1( B(?B0,?B1,?B2) ))) & (?A0 = ?B0) ))) )",
+    "string": "∃A2 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (¬(∃B0( ((A(A0,A1,A2,A3,A4)) ∧ (∃B2 ∃B1( B(B0,B1,B2) ))) ∧ (A0 = B0) ))) )",
+    "free variables": "A1",
+    "db_id": "device",
+    "processed_sql": "SELECT Shop_Name FROM shop WHERE Shop_ID NOT IN (SELECT Shop_ID FROM stock)"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "shop": {
+      "sortaxiom0": "Shop_ID = int",
+      "sortaxiom1": "Shop_Name = text",
+      "sortaxiom2": "Location = text",
+      "sortaxiom3": "Open_Date = text",
+      "sortaxiom4": "Open_Year = int"
+    },
+    "stock": {
+      "sortaxiom0": "Shop_ID = int",
+      "sortaxiom1": "Device_ID = int",
+      "sortaxiom2": "Quantity = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Shop_Name FROM shop WHERE Shop_ID NOT IN (SELECT Shop_ID FROM stock)"
+  },
+  "id": 3276,
+  "Predicted FOL": {
+    "string": "∃s : Shop_ID ∃l : Location ∃d : Open_Date ∃y : Open_Year (shop(s, n, l, d, y) ∧ ¬∃v : Device_ID ∃q : Quantity stock(s, v, q))",
+    "free vars": "n : Shop_Name"
+  }
+}

@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_345.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_345.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3319 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the hosts of competitions whose theme is not "Aliens"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Competition_ID = int -> IntSort()
+        Host_city_ID = int -> IntSort()
+        Hosts = text -> StringSort()
+        Theme = text -> StringSort()
+        Year = int -> IntSort()
+      symbols:
+        farm_competition(Competition_ID, Year, Theme, Host_city_ID, Hosts)
+        constant Aliens : Theme
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Competition_ID ∃y : Year ∃t : Theme ∃h : Host_city_ID ( (farm_competition(c,y,t,h,h1)) ∧ (t <> 'Aliens') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:t COLON:: IDENT:Theme EXISTS:∃ IDENT:h COLON:: IDENT:Host_city_ID LPAR:( LPAR:( IDENT:farm_competition LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:t COMMA:, IDENT:h COMMA:, IDENT:h1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t NEQ:<> LIT:Aliens RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Competition_ID
+            EXISTS y:Year
+              EXISTS t:Theme
+                EXISTS h:Host_city_ID
+                  AND
+                    PRED farm_competition(c, y, t, h, h1)
+                    NEQ  t != 'Aliens'
+      Predicted FOL: ∃c0:Competition_ID ∃c1:Year ∃c2:Theme ∃c3:Host_city_ID (farm_competition(c0, c1, c2, c3, Hosts) ∧ ¬(c2 = 'Aliens'))
+        tokens: EXISTS:∃ IDENT:c0 COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Year EXISTS:∃ IDENT:c2 COLON:: IDENT:Theme EXISTS:∃ IDENT:c3 COLON:: IDENT:Host_city_ID LPAR:( IDENT:farm_competition LPAR:( IDENT:c0 COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 COMMA:, IDENT:Hosts RPAR:) AND:∧ NOT:¬ LPAR:( IDENT:c2 EQ:= LIT:Aliens RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c0:Competition_ID
+            EXISTS c1:Year
+              EXISTS c2:Theme
+                EXISTS c3:Host_city_ID
+                  AND
+                    PRED farm_competition(c0, c1, c2, c3, Hosts)
+                    NOT
+                      EQ  c2 = 'Aliens'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Hosts_0 : Hosts   Gold h1 <-> Predicted Hosts
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Competition_ID, global int -> IntSort()
+        h : local Host_city_ID, global int -> IntSort()
+        h1 : local Hosts, global text -> StringSort()
+        t : local Theme, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        Hosts : local Hosts, global text -> StringSort()
+        c0 : local Competition_ID, global int -> IntSort()
+        c1 : local Year, global int -> IntSort()
+        c2 : local Theme, global text -> StringSort()
+        c3 : local Host_city_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_y_2, gold_t_3, gold_h_4], And(P_farm_competition(gold_c_1, gold_y_2, gold_t_3, gold_h_4, FV_Hosts_0), (gold_t_3 != L_Aliens)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_y, WGOLD_t, WGOLD_h):  And(P_farm_competition(WGOLD_c, WGOLD_y, WGOLD_t, WGOLD_h, FV_Hosts_0), (WGOLD_t != L_Aliens))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c0_1, predicted_c1_2, predicted_c2_3, predicted_c3_4], And(P_farm_competition(predicted_c0_1, predicted_c1_2, predicted_c2_3, predicted_c3_4, FV_Hosts_0), Not((predicted_c2_3 == L_Aliens))))
+      predicted_skolem (witnesses WPREDICTED_c0, WPREDICTED_c1, WPREDICTED_c2, WPREDICTED_c3):  And(P_farm_competition(WPREDICTED_c0, WPREDICTED_c1, WPREDICTED_c2, WPREDICTED_c3, FV_Hosts_0), Not((WPREDICTED_c2 == L_Aliens)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Aliens' at text -> L_Aliens = StringVal('Aliens')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 738 lines, 27768 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_345.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_y, WGOLD_t, WGOLD_h
+      claim: And(And(farm_competition(WGOLD_c, WGOLD_y, WGOLD_t, WGOLD_h, FV_Hosts_0), WGOLD_t != "Aliens"), Not(Exists([predicted_c0_1, predicted_c1_2, predicted_c2_3, predicted_c3_4], And(farm_competition(predicted_c0_1, predicted_c1_2, predicted_c2_3, predicted_c3_4, FV_Hosts_0), Not(predicted_c2_3 == "Aliens")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c0, WPREDICTED_c1, WPREDICTED_c2, WPREDICTED_c3
+      claim: And(And(farm_competition(WPREDICTED_c0, WPREDICTED_c1, WPREDICTED_c2, WPREDICTED_c3, FV_Hosts_0), Not(WPREDICTED_c2 == "Aliens")), Not(Exists([gold_c_1, gold_y_2, gold_t_3, gold_h_4], And(farm_competition(gold_c_1, gold_y_2, gold_t_3, gold_h_4, FV_Hosts_0), gold_t_3 != "Aliens"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

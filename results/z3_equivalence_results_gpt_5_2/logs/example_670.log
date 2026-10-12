@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_670.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_670.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3146 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the delegate from district 1 in election.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Committee = text -> StringSort()
+        Counties_Represented = text -> StringSort()
+        Delegate = text -> StringSort()
+        District = int -> IntSort()
+        Election_ID = int -> IntSort()
+        First_Elected = real -> Float32()
+        Party = int -> IntSort()
+      symbols:
+        election(Election_ID, Counties_Represented, District, Delegate, Party, First_Elected, Committee)
+        constant 1 : District
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Election_ID ∃c : Counties_Represented ∃d : District ∃p : Party ∃f : First_Elected ∃c1 : Committee ( (election(e,c,d,d1,p,f,c1)) ∧ (d = 1) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Election_ID EXISTS:∃ IDENT:c COLON:: IDENT:Counties_Represented EXISTS:∃ IDENT:d COLON:: IDENT:District EXISTS:∃ IDENT:p COLON:: IDENT:Party EXISTS:∃ IDENT:f COLON:: IDENT:First_Elected EXISTS:∃ IDENT:c1 COLON:: IDENT:Committee LPAR:( LPAR:( IDENT:election LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:p COMMA:, IDENT:f COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Election_ID
+            EXISTS c:Counties_Represented
+              EXISTS d:District
+                EXISTS p:Party
+                  EXISTS f:First_Elected
+                    EXISTS c1:Committee
+                      AND
+                        PRED election(e, c, d, d1, p, f, c1)
+                        EQ  d = 1
+      Predicted FOL: ∃c0:Election_ID ∃c1:Counties_Represented ∃c3:Delegate ∃c4:Party ∃c5:First_Elected ∃c6:Committee ( election(c0, c1, 1, c3, c4, c5, c6) )
+        tokens: EXISTS:∃ IDENT:c0 COLON:: IDENT:Election_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Counties_Represented EXISTS:∃ IDENT:c3 COLON:: IDENT:Delegate EXISTS:∃ IDENT:c4 COLON:: IDENT:Party EXISTS:∃ IDENT:c5 COLON:: IDENT:First_Elected EXISTS:∃ IDENT:c6 COLON:: IDENT:Committee LPAR:( IDENT:election LPAR:( IDENT:c0 COMMA:, IDENT:c1 COMMA:, NUM:1 COMMA:, IDENT:c3 COMMA:, IDENT:c4 COMMA:, IDENT:c5 COMMA:, IDENT:c6 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c0:Election_ID
+            EXISTS c1:Counties_Represented
+              EXISTS c3:Delegate
+                EXISTS c4:Party
+                  EXISTS c5:First_Elected
+                    EXISTS c6:Committee
+                      PRED election(c0, c1, 1, c3, c4, c5, c6)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d1 : Delegate) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Counties_Represented, global text -> StringSort()
+        c1 : local Committee, global text -> StringSort()
+        d : local District, global int -> IntSort()
+        d1 : local Delegate, global text -> StringSort()
+        e : local Election_ID, global int -> IntSort()
+        f : local First_Elected, global real -> Float32()
+        p : local Party, global int -> IntSort()
+      Predicted FOL:
+        c0 : local Election_ID, global int -> IntSort()
+        c1 : local Counties_Represented, global text -> StringSort()
+        c3 : local Delegate, global text -> StringSort()
+        c4 : local Party, global int -> IntSort()
+        c5 : local First_Elected, global real -> Float32()
+        c6 : local Committee, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5390 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_670.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d1 : Delegate) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

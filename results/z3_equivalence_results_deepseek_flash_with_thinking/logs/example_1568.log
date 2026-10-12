@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1568.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1568.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3001 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the technicians aged either 36 or 37?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Name = text -> StringSort()
+        Starting_Year = real -> Float32()
+        Team = text -> StringSort()
+        technician_id = real -> Float32()
+      symbols:
+        technician(technician_id, Name, Team, Starting_Year, Age)
+        constant 36 : Age
+        constant 37 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : technician_id ∃t1 : Team ∃s : Starting_Year ∃a : Age ( (technician(t,n,t1,s,a)) ∧ ((a = 36) ∨ (a = 37)) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:technician_id EXISTS:∃ IDENT:t1 COLON:: IDENT:Team EXISTS:∃ IDENT:s COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( LPAR:( IDENT:technician LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a EQ:= NUM:36 RPAR:) OR:∨ LPAR:( IDENT:a EQ:= NUM:37 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:technician_id
+            EXISTS t1:Team
+              EXISTS s:Starting_Year
+                EXISTS a:Age
+                  AND
+                    PRED technician(t, n, t1, s, a)
+                    OR
+                      EQ  a = 36
+                      EQ  a = 37
+      Predicted FOL: ∃id : technician_id ∃team : Team ∃year : Starting_Year ∃age : Age (technician(id, n, team, year, age) ∧ (age = 36 ∨ age = 37))
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:technician_id EXISTS:∃ IDENT:team COLON:: IDENT:Team EXISTS:∃ IDENT:year COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:age COLON:: IDENT:Age LPAR:( IDENT:technician LPAR:( IDENT:id COMMA:, IDENT:n COMMA:, IDENT:team COMMA:, IDENT:year COMMA:, IDENT:age RPAR:) AND:∧ LPAR:( IDENT:age EQ:= NUM:36 OR:∨ IDENT:age EQ:= NUM:37 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:technician_id
+            EXISTS team:Team
+              EXISTS year:Starting_Year
+                EXISTS age:Age
+                  AND
+                    PRED technician(id, n, team, year, age)
+                    OR
+                      EQ  age = 36
+                      EQ  age = 37
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        s : local Starting_Year, global real -> Float32()
+        t : local technician_id, global real -> Float32()
+        t1 : local Team, global text -> StringSort()
+      Predicted FOL:
+        age : local Age, global int -> IntSort()
+        id : local technician_id, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        team : local Team, global text -> StringSort()
+        year : local Starting_Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_t1_2, gold_s_3, gold_a_4], And(D_real(gold_t_1), D_real(gold_s_3), And(P_technician(gold_t_1, FV_Name_0, gold_t1_2, gold_s_3, gold_a_4), Or((gold_a_4 == L_v_36_int), (gold_a_4 == L_v_37_int)))))
+      gold_skolem (witnesses WGOLD_t, WGOLD_t1, WGOLD_s, WGOLD_a):  And(D_real(WGOLD_t), D_real(WGOLD_s), And(P_technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Or((WGOLD_a == L_v_36_int), (WGOLD_a == L_v_37_int))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_team_2, predicted_year_3, predicted_age_4], And(D_real(predicted_id_1), D_real(predicted_year_3), And(P_technician(predicted_id_1, FV_Name_0, predicted_team_2, predicted_year_3, predicted_age_4), Or((predicted_age_4 == L_v_36_int), (predicted_age_4 == L_v_37_int)))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_team, WPREDICTED_year, WPREDICTED_age):  And(D_real(WPREDICTED_id), D_real(WPREDICTED_year), And(P_technician(WPREDICTED_id, FV_Name_0, WPREDICTED_team, WPREDICTED_year, WPREDICTED_age), Or((WPREDICTED_age == L_v_36_int), (WPREDICTED_age == L_v_37_int))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '36' at int -> L_v_36_int = IntVal(36)
+      literal '37' at int -> L_v_37_int = IntVal(37)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 743 lines, 28288 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1568.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_t1, WGOLD_s, WGOLD_a
+      claim: And(And(And(Not(fpIsNaN(WGOLD_t)), Not(And(fpIsZero(WGOLD_t), fpIsNegative(WGOLD_t)))), And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Or(36 == WGOLD_a, 37 == WGOLD_a))), Not(Exists([predicted_id_1, predicted_team_2, predicted_year_3, predicted_age_4], And(And(Not(fpIsNaN(predicted_id_1)), Not(And(fpIsZero(predicted_id_1), fpIsNegative(predicted_id_1)))), And(Not(fpIsNaN(predicted_year_3)), Not(And(fpIsZero(predicted_year_3), fpIsNegative(predicted_year_3)))), And(technician(predicted_id_1, FV_Name_0, predicted_team_2, predicted_year_3, predicted_age_4), Or(36 == predicted_age_4, 37 == predicted_age_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.031 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.039 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_team, WPREDICTED_year, WPREDICTED_age
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_id)), Not(And(fpIsZero(WPREDICTED_id), fpIsNegative(WPREDICTED_id)))), And(Not(fpIsNaN(WPREDICTED_year)), Not(And(fpIsZero(WPREDICTED_year), fpIsNegative(WPREDICTED_year)))), And(technician(WPREDICTED_id, FV_Name_0, WPREDICTED_team, WPREDICTED_year, WPREDICTED_age), Or(36 == WPREDICTED_age, 37 == WPREDICTED_age))), Not(Exists([gold_t_1, gold_t1_2, gold_s_3, gold_a_4], And(And(Not(fpIsNaN(gold_t_1)), Not(And(fpIsZero(gold_t_1), fpIsNegative(gold_t_1)))), And(Not(fpIsNaN(gold_s_3)), Not(And(fpIsZero(gold_s_3), fpIsNegative(gold_s_3)))), And(technician(gold_t_1, FV_Name_0, gold_t1_2, gold_s_3, gold_a_4), Or(36 == gold_a_4, 37 == gold_a_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2201.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2201.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6719 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all movies about nuclear weapons
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        budget = text -> StringSort()
+        id = int -> IntSort()
+        keyword = text -> StringSort()
+        kid = int -> IntSort()
+        mid = int -> IntSort()
+        msid = int -> IntSort()
+        release_year = int -> IntSort()
+        title = text -> StringSort()
+        title_aka = text -> StringSort()
+      symbols:
+        keyword(id, keyword)
+        movie(mid, title, release_year, title_aka, budget)
+        tags(id, msid, kid)
+        constant nuclear weapons : keyword
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃m : msid ∃k : kid ∃i1 : id ∃k1 : keyword ∃m1 : mid ∃r : release_year ∃t1 : title_aka ∃b : budget ( (((((tags(i,m,k)) ∧ (keyword(i1,k1))) ∧ (k = i1)) ∧ (movie(m1,t,r,t1,b))) ∧ (m = m1)) ∧ (k1 = 'nuclear weapons') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:m COLON:: IDENT:msid EXISTS:∃ IDENT:k COLON:: IDENT:kid EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:k1 COLON:: IDENT:keyword EXISTS:∃ IDENT:m1 COLON:: IDENT:mid EXISTS:∃ IDENT:r COLON:: IDENT:release_year EXISTS:∃ IDENT:t1 COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:tags LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:k RPAR:) RPAR:) AND:∧ LPAR:( IDENT:keyword LPAR:( IDENT:i1 COMMA:, IDENT:k1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:movie LPAR:( IDENT:m1 COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:t1 COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k1 EQ:= LIT:nuclear weapons RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS m:msid
+              EXISTS k:kid
+                EXISTS i1:id
+                  EXISTS k1:keyword
+                    EXISTS m1:mid
+                      EXISTS r:release_year
+                        EXISTS t1:title_aka
+                          EXISTS b:budget
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      PRED tags(i, m, k)
+                                      PRED keyword(i1, k1)
+                                    EQ  k = i1
+                                  PRED movie(m1, t, r, t1, b)
+                                EQ  m = m1
+                              EQ  k1 = 'nuclear weapons'
+      Predicted FOL: ∃k : keyword (keyword(k, 'nuclear weapons') ∧ ∃m : mid ∃t : title ∃r : release_year ∃ta : title_aka ∃b : budget (movie(m, t, r, ta, b) ∧ tags(m, m, k)))
+        tokens: EXISTS:∃ IDENT:k COLON:: IDENT:keyword LPAR:( IDENT:keyword LPAR:( IDENT:k COMMA:, LIT:nuclear weapons RPAR:) AND:∧ EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:r COLON:: IDENT:release_year EXISTS:∃ IDENT:ta COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:ta COMMA:, IDENT:b RPAR:) AND:∧ IDENT:tags LPAR:( IDENT:m COMMA:, IDENT:m COMMA:, IDENT:k RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS k:keyword
+            AND
+              PRED keyword(k, 'nuclear weapons')
+              EXISTS m:mid
+                EXISTS t:title
+                  EXISTS r:release_year
+                    EXISTS ta:title_aka
+                      EXISTS b:budget
+                        AND
+                          PRED movie(m, t, r, ta, b)
+                          PRED tags(m, m, k)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'k' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'k' used at incompatible global sorts text and int

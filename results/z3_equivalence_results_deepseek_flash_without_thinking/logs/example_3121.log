@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3121.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3121.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3381 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of members who did not attend any performance.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Member_ID = text -> StringSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Num_of_Pieces = int -> IntSort()
+        Performance_ID = real -> Float32()
+        Role = text -> StringSort()
+      symbols:
+        member(Member_ID, Name, Nationality, Role)
+        member_attendance(Member_ID, Performance_ID, Num_of_Pieces)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n1 : Nationality ∃r : Role ∃m : Member_ID( (member(m,n,n1,r)) ∧ (¬(∃m1 : Member_ID( ((member(m,n,n1,r)) ∧ (∃n2 : Num_of_Pieces ∃p : Performance_ID( member_attendance(m1,p,n2) ))) ∧ (m = m1) ))) )
+        tokens: EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:r COLON:: IDENT:Role EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:Member_ID LPAR:( LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:n2 COLON:: IDENT:Num_of_Pieces EXISTS:∃ IDENT:p COLON:: IDENT:Performance_ID LPAR:( IDENT:member_attendance LPAR:( IDENT:m1 COMMA:, IDENT:p COMMA:, IDENT:n2 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n1:Nationality
+            EXISTS r:Role
+              EXISTS m:Member_ID
+                AND
+                  PRED member(m, n, n1, r)
+                  NOT
+                    EXISTS m1:Member_ID
+                      AND
+                        AND
+                          PRED member(m, n, n1, r)
+                          EXISTS n2:Num_of_Pieces
+                            EXISTS p:Performance_ID
+                              PRED member_attendance(m1, p, n2)
+                        EQ  m = m1
+      Predicted FOL: ∃m : Member_ID ∃n : Name ∃nat : Nationality ∃r : Role (member(m, n, nat, r) ∧ ¬∃p : Performance_ID ∃k : Num_of_Pieces member_attendance(m, p, k))
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:nat COLON:: IDENT:Nationality EXISTS:∃ IDENT:r COLON:: IDENT:Role LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:nat COMMA:, IDENT:r RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:p COLON:: IDENT:Performance_ID EXISTS:∃ IDENT:k COLON:: IDENT:Num_of_Pieces IDENT:member_attendance LPAR:( IDENT:m COMMA:, IDENT:p COMMA:, IDENT:k RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS n:Name
+              EXISTS nat:Nationality
+                EXISTS r:Role
+                  AND
+                    PRED member(m, n, nat, r)
+                    NOT
+                      EXISTS p:Performance_ID
+                        EXISTS k:Num_of_Pieces
+                          PRED member_attendance(m, p, k)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local Member_ID, global text -> StringSort()
+        m1 : local Member_ID, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        n2 : local Num_of_Pieces, global int -> IntSort()
+        p : local Performance_ID, global real -> Float32()
+        r : local Role, global text -> StringSort()
+      Predicted FOL:
+        k : local Num_of_Pieces, global int -> IntSort()
+        m : local Member_ID, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        nat : local Nationality, global text -> StringSort()
+        p : local Performance_ID, global real -> Float32()
+        r : local Role, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5465 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3121.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

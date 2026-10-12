@@ -1,0 +1,96 @@
+{
+  "NL": "List the names of people that are not employed by any company",
+  "Vocabulary": {
+    "Predicates": [
+      "people",
+      "employment"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "people": [
+        "People_ID",
+        "Age",
+        "Name",
+        "Nationality",
+        "Graduation_College"
+      ],
+      "employment": [
+        "Company_ID",
+        "People_ID",
+        "Year_working"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a0'∀a1'∀a2'∀a3'∀a4'( people(a0, a1, a2, a3, a4) ∧ people(a0', a1', a2', a3', a4') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b5∀b6∀b7∀b0'∀b1'∀b2'∀b3'∀b4'∀b5'∀b6'∀b7'( company(b0, b1, b2, b3, b4, b5, b6, b7) ∧ company(b0', b1', b2', b3', b4', b5', b6', b7') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' ∧ b5 = b5' ∧ b6 = b6' ∧ b7 = b7' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( employment(c0, c1, c2) ∧ employment(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( employment(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4 ( people(a0, a1, a2, a3, a4) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( employment(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4∃b5∃b6∃b7 ( company(b0, b1, b2, b3, b4, b5, b6, b7) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "people": {
+        "A": "people",
+        "A0": "People_ID",
+        "A1": "Age",
+        "A2": "Name",
+        "A3": "Nationality",
+        "A4": "Graduation_College"
+      },
+      "employment": {
+        "B": "employment",
+        "B0": "Company_ID",
+        "B1": "People_ID",
+        "B2": "Year_working"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃a : Age ∃g : Graduation_College ∃n1 : Nationality ∃p : People_ID( (people(p,a,n,n1,g)) ∧ (¬(∃p1 : People_ID( ((people(p,a,n,n1,g)) ∧ (∃c : Company_ID ∃y : Year_working( employment(c,p1,y) ))) ∧ (p = p1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A2]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A2]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A1,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3,?A4)) & ([E]?B0,?B2( B(?B0,?B1,?B2) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A1 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3,A4)) ∧ (∃B0 ∃B2( B(B0,B1,B2) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A2",
+    "db_id": "company_employee",
+    "processed_sql": "SELECT Name FROM people WHERE People_ID NOT IN (SELECT People_ID FROM employment)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "people": {
+      "sortaxiom0": "People_ID = int",
+      "sortaxiom1": "Age = int",
+      "sortaxiom2": "Name = text",
+      "sortaxiom3": "Nationality = text",
+      "sortaxiom4": "Graduation_College = text"
+    },
+    "employment": {
+      "sortaxiom0": "Company_ID = real",
+      "sortaxiom1": "People_ID = int",
+      "sortaxiom2": "Year_working = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Name FROM people WHERE People_ID NOT IN (SELECT People_ID FROM employment)"
+  },
+  "id": 3239,
+  "Predicted FOL": {
+    "string": "∃p : People_ID ∃a : Age ∃t : Nationality ∃g : Graduation_College (people(p, a, n, t, g) ∧ ¬∃c : Company_ID ∃y : Year_working employment(c, p, y))",
+    "free vars": "n : Name"
+  }
+}

@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1329.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1329.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6255 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which movie had the character " Daffy Duck "
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        aid = int -> IntSort()
+        budget = text -> StringSort()
+        id = int -> IntSort()
+        mid = int -> IntSort()
+        msid = int -> IntSort()
+        release_year = int -> IntSort()
+        role = text -> StringSort()
+        title = text -> StringSort()
+        title_aka = text -> StringSort()
+      symbols:
+        cast(id, msid, aid, role)
+        movie(mid, title, release_year, title_aka, budget)
+        constant Daffy Duck : role
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mid ∃r : release_year ∃t1 : title_aka ∃b : budget ∃i : id ∃m1 : msid ∃a : aid ∃r1 : role ( (((movie(m,t,r,t1,b)) ∧ (cast(i,m1,a,r1))) ∧ (m = m1)) ∧ (r1 = 'Daffy Duck') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:r COLON:: IDENT:release_year EXISTS:∃ IDENT:t1 COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:m1 COLON:: IDENT:msid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:r1 COLON:: IDENT:role LPAR:( LPAR:( LPAR:( LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:t1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:cast LPAR:( IDENT:i COMMA:, IDENT:m1 COMMA:, IDENT:a COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r1 EQ:= LIT:Daffy Duck RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS r:release_year
+              EXISTS t1:title_aka
+                EXISTS b:budget
+                  EXISTS i:id
+                    EXISTS m1:msid
+                      EXISTS a:aid
+                        EXISTS r1:role
+                          AND
+                            AND
+                              AND
+                                PRED movie(m, t, r, t1, b)
+                                PRED cast(i, m1, a, r1)
+                              EQ  m = m1
+                            EQ  r1 = 'Daffy Duck'
+      Predicted FOL: ∃m:mid ∃t:title ∃y:release_year ∃ta:title_aka ∃b:budget ( movie(m, t, y, ta, b) ∧ ∃cid:id ∃ms:msid ∃aid:aid ( cast(cid, ms, aid, 'Daffy Duck') ∧ ms = m ) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:y COLON:: IDENT:release_year EXISTS:∃ IDENT:ta COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:ta COMMA:, IDENT:b RPAR:) AND:∧ EXISTS:∃ IDENT:cid COLON:: IDENT:id EXISTS:∃ IDENT:ms COLON:: IDENT:msid EXISTS:∃ IDENT:aid COLON:: IDENT:aid LPAR:( IDENT:cast LPAR:( IDENT:cid COMMA:, IDENT:ms COMMA:, IDENT:aid COMMA:, LIT:Daffy Duck RPAR:) AND:∧ IDENT:ms EQ:= IDENT:m RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS t:title
+              EXISTS y:release_year
+                EXISTS ta:title_aka
+                  EXISTS b:budget
+                    AND
+                      PRED movie(m, t, y, ta, b)
+                      EXISTS cid:id
+                        EXISTS ms:msid
+                          EXISTS aid:aid
+                            AND
+                              PRED cast(cid, ms, aid, 'Daffy Duck')
+                              EQ  ms = m
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global int -> IntSort()
+        b : local budget, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        m : local mid, global int -> IntSort()
+        m1 : local msid, global int -> IntSort()
+        r : local release_year, global int -> IntSort()
+        r1 : local role, global text -> StringSort()
+        t : local title, global text -> StringSort()
+        t1 : local title_aka, global text -> StringSort()
+      Predicted FOL:
+        aid : local aid, global int -> IntSort()
+        b : local budget, global text -> StringSort()
+        cid : local id, global int -> IntSort()
+        m : local mid, global int -> IntSort()
+        ms : local msid, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        ta : local title_aka, global text -> StringSort()
+        y : local release_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5446 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1329.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,127 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1537.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1537.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5939 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the payment date of the payment with amount paid higher than 300 or with payment type is 'Check'
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 8 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        amount_due = decimal(19,4) -> RealSort()
+        amount_paid = decimal(19,4) -> RealSort()
+        amount_paid_in_full_yn = varchar(1) -> StringSort()
+        booking_id = integer -> IntSort()
+        customer_id = integer -> IntSort()
+        payment_date = datetime -> IntSort()
+        payment_id = integer -> IntSort()
+        payment_type_code = varchar(15) -> StringSort()
+      symbols:
+        Payments(payment_id, booking_id, customer_id, payment_type_code, amount_paid_in_full_yn, payment_date, amount_due, amount_paid)
+        constant 300 : amount_paid
+        constant Check : payment_type_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : payment_id ∃b : booking_id ∃c : customer_id ∃p1 : payment_type_code ∃a : amount_paid_in_full_yn ∃a1 : amount_due ∃a2 : amount_paid ( (Payments(p,b,c,p1,a,p2,a1,a2)) ∧ ((a2 > 300) ∨ (p1 = 'Check')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:payment_id EXISTS:∃ IDENT:b COLON:: IDENT:booking_id EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:p1 COLON:: IDENT:payment_type_code EXISTS:∃ IDENT:a COLON:: IDENT:amount_paid_in_full_yn EXISTS:∃ IDENT:a1 COLON:: IDENT:amount_due EXISTS:∃ IDENT:a2 COLON:: IDENT:amount_paid LPAR:( LPAR:( IDENT:Payments LPAR:( IDENT:p COMMA:, IDENT:b COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:a COMMA:, IDENT:p2 COMMA:, IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a2 GT:> NUM:300 RPAR:) OR:∨ LPAR:( IDENT:p1 EQ:= LIT:Check RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:payment_id
+            EXISTS b:booking_id
+              EXISTS c:customer_id
+                EXISTS p1:payment_type_code
+                  EXISTS a:amount_paid_in_full_yn
+                    EXISTS a1:amount_due
+                      EXISTS a2:amount_paid
+                        AND
+                          PRED Payments(p, b, c, p1, a, p2, a1, a2)
+                          OR
+                            CMP  a2 > 300
+                            EQ  p1 = 'Check'
+      Predicted FOL: ∃p : payment_id ∃b : booking_id ∃c : customer_id ∃t : payment_type_code ∃f : amount_paid_in_full_yn ∃u : amount_due ∃a : amount_paid (Payments(p, b, c, t, f, d, u, a) ∧ (a > 300 ∨ t = 'Check'))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:payment_id EXISTS:∃ IDENT:b COLON:: IDENT:booking_id EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:t COLON:: IDENT:payment_type_code EXISTS:∃ IDENT:f COLON:: IDENT:amount_paid_in_full_yn EXISTS:∃ IDENT:u COLON:: IDENT:amount_due EXISTS:∃ IDENT:a COLON:: IDENT:amount_paid LPAR:( IDENT:Payments LPAR:( IDENT:p COMMA:, IDENT:b COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:f COMMA:, IDENT:d COMMA:, IDENT:u COMMA:, IDENT:a RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:300 OR:∨ IDENT:t EQ:= LIT:Check RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:payment_id
+            EXISTS b:booking_id
+              EXISTS c:customer_id
+                EXISTS t:payment_type_code
+                  EXISTS f:amount_paid_in_full_yn
+                    EXISTS u:amount_due
+                      EXISTS a:amount_paid
+                        AND
+                          PRED Payments(p, b, c, t, f, d, u, a)
+                          OR
+                            CMP  a > 300
+                            EQ  t = 'Check'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_payment_date_0 : payment_date   Gold p2 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount_paid_in_full_yn, global varchar(1) -> StringSort()
+        a1 : local amount_due, global decimal(19,4) -> RealSort()
+        a2 : local amount_paid, global decimal(19,4) -> RealSort()
+        b : local booking_id, global integer -> IntSort()
+        c : local customer_id, global integer -> IntSort()
+        p : local payment_id, global integer -> IntSort()
+        p1 : local payment_type_code, global varchar(15) -> StringSort()
+        p2 : local payment_date, global datetime -> IntSort()
+      Predicted FOL:
+        a : local amount_paid, global decimal(19,4) -> RealSort()
+        b : local booking_id, global integer -> IntSort()
+        c : local customer_id, global integer -> IntSort()
+        d : local payment_date, global datetime -> IntSort()
+        f : local amount_paid_in_full_yn, global varchar(1) -> StringSort()
+        p : local payment_id, global integer -> IntSort()
+        t : local payment_type_code, global varchar(15) -> StringSort()
+        u : local amount_due, global decimal(19,4) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_b_2, gold_c_3, gold_p1_4, gold_a_5, gold_a1_6, gold_a2_7], And(D_varchar_15_(gold_p1_4), D_varchar_1_(gold_a_5), D_decimal_19_4_(gold_a1_6), D_decimal_19_4_(gold_a2_7), And(P_Payments(gold_p_1, gold_b_2, gold_c_3, gold_p1_4, gold_a_5, FV_payment_date_0, gold_a1_6, gold_a2_7), Or((gold_a2_7 > L_v_300_decimal_19_4_), (gold_p1_4 == L_Check)))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_b, WGOLD_c, WGOLD_p1, WGOLD_a, WGOLD_a1, WGOLD_a2):  And(D_varchar_15_(WGOLD_p1), D_varchar_1_(WGOLD_a), D_decimal_19_4_(WGOLD_a1), D_decimal_19_4_(WGOLD_a2), And(P_Payments(WGOLD_p, WGOLD_b, WGOLD_c, WGOLD_p1, WGOLD_a, FV_payment_date_0, WGOLD_a1, WGOLD_a2), Or((WGOLD_a2 > L_v_300_decimal_19_4_), (WGOLD_p1 == L_Check))))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_b_2, predicted_c_3, predicted_t_4, predicted_f_5, predicted_u_6, predicted_a_7], And(D_varchar_15_(predicted_t_4), D_varchar_1_(predicted_f_5), D_decimal_19_4_(predicted_u_6), D_decimal_19_4_(predicted_a_7), And(P_Payments(predicted_p_1, predicted_b_2, predicted_c_3, predicted_t_4, predicted_f_5, FV_payment_date_0, predicted_u_6, predicted_a_7), Or((predicted_a_7 > L_v_300_decimal_19_4_), (predicted_t_4 == L_Check)))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_b, WPREDICTED_c, WPREDICTED_t, WPREDICTED_f, WPREDICTED_u, WPREDICTED_a):  And(D_varchar_15_(WPREDICTED_t), D_varchar_1_(WPREDICTED_f), D_decimal_19_4_(WPREDICTED_u), D_decimal_19_4_(WPREDICTED_a), And(P_Payments(WPREDICTED_p, WPREDICTED_b, WPREDICTED_c, WPREDICTED_t, WPREDICTED_f, FV_payment_date_0, WPREDICTED_u, WPREDICTED_a), Or((WPREDICTED_a > L_v_300_decimal_19_4_), (WPREDICTED_t == L_Check))))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Check' at varchar(15) -> L_Check = StringVal('Check')
+      literal '300' at decimal(19,4) -> L_v_300_decimal_19_4_ = RealVal('300')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 779 lines, 31491 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1537.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_b, WGOLD_c, WGOLD_p1, WGOLD_a, WGOLD_a1, WGOLD_a2
+      claim: And(And(Length(WGOLD_p1) <= 15, Length(WGOLD_a) <= 1, And(IsInt(WGOLD_a1*10000), WGOLD_a1 > -1000000000000000, WGOLD_a1 < 1000000000000000), And(IsInt(WGOLD_a2*10000), WGOLD_a2 > -1000000000000000, WGOLD_a2 < 1000000000000000), And(Payments(WGOLD_p, WGOLD_b, WGOLD_c, WGOLD_p1, WGOLD_a, FV_payment_date_0, WGOLD_a1, WGOLD_a2), Or(300 < WGOLD_a2, WGOLD_p1 == "Check"))), Not(Exists([predicted_p_1, predicted_b_2, predicted_c_3, predicted_t_4, predicted_f_5, predicted_u_6, predicted_a_7], And(Length(predicted_t_4) <= 15, Length(predicted_f_5) <= 1, And(IsInt(predicted_u_6*10000), predicted_u_6 > -1000000000000000, predicted_u_6 < 1000000000000000), And(IsInt(predicted_a_7*10000), predicted_a_7 > -1000000000000000, predicted_a_7 < 1000000000000000), And(Payments(predicted_p_1, predicted_b_2, predicted_c_3, predicted_t_4, predicted_f_5, FV_payment_date_0, predicted_u_6, predicted_a_7), Or(300 < predicted_a_7, predicted_t_4 == "Check"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_b, WPREDICTED_c, WPREDICTED_t, WPREDICTED_f, WPREDICTED_u, WPREDICTED_a
+      claim: And(And(Length(WPREDICTED_t) <= 15, Length(WPREDICTED_f) <= 1, And(IsInt(WPREDICTED_u*10000), WPREDICTED_u > -1000000000000000, WPREDICTED_u < 1000000000000000), And(IsInt(WPREDICTED_a*10000), WPREDICTED_a > -1000000000000000, WPREDICTED_a < 1000000000000000), And(Payments(WPREDICTED_p, WPREDICTED_b, WPREDICTED_c, WPREDICTED_t, WPREDICTED_f, FV_payment_date_0, WPREDICTED_u, WPREDICTED_a), Or(300 < WPREDICTED_a, WPREDICTED_t == "Check"))), Not(Exists([gold_p_1, gold_b_2, gold_c_3, gold_p1_4, gold_a_5, gold_a1_6, gold_a2_7], And(Length(gold_p1_4) <= 15, Length(gold_a_5) <= 1, And(IsInt(gold_a1_6*10000), gold_a1_6 > -1000000000000000, gold_a1_6 < 1000000000000000), And(IsInt(gold_a2_7*10000), gold_a2_7 > -1000000000000000, gold_a2_7 < 1000000000000000), And(Payments(gold_p_1, gold_b_2, gold_c_3, gold_p1_4, gold_a_5, FV_payment_date_0, gold_a1_6, gold_a2_7), Or(300 < gold_a2_7, gold_p1_4 == "Check"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3161.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3161.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3446 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of phones that are not on any market.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Carrier = text -> StringSort()
+        Market_ID = int -> IntSort()
+        Memory_in_G = int -> IntSort()
+        Name = text -> StringSort()
+        Num_of_stock = int -> IntSort()
+        Phone_ID = text -> StringSort()
+        Price = real -> Float32()
+      symbols:
+        phone(Name, Phone_ID, Memory_in_G, Carrier, Price)
+        phone_market(Market_ID, Phone_ID, Num_of_stock)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Memory_in_G ∃p : Phone_ID ∃p1 : Price ∃c : Carrier( (phone(n,p,m,c,p1)) ∧ (¬(∃p2 : Phone_ID( ((phone(n,p,m,c,p1)) ∧ (∃m1 : Market_ID ∃n1 : Num_of_stock( phone_market(m1,p2,n1) ))) ∧ (p = p2) ))) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Memory_in_G EXISTS:∃ IDENT:p COLON:: IDENT:Phone_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Price EXISTS:∃ IDENT:c COLON:: IDENT:Carrier LPAR:( LPAR:( IDENT:phone LPAR:( IDENT:n COMMA:, IDENT:p COMMA:, IDENT:m COMMA:, IDENT:c COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p2 COLON:: IDENT:Phone_ID LPAR:( LPAR:( LPAR:( IDENT:phone LPAR:( IDENT:n COMMA:, IDENT:p COMMA:, IDENT:m COMMA:, IDENT:c COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:Market_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_stock LPAR:( IDENT:phone_market LPAR:( IDENT:m1 COMMA:, IDENT:p2 COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Memory_in_G
+            EXISTS p:Phone_ID
+              EXISTS p1:Price
+                EXISTS c:Carrier
+                  AND
+                    PRED phone(n, p, m, c, p1)
+                    NOT
+                      EXISTS p2:Phone_ID
+                        AND
+                          AND
+                            PRED phone(n, p, m, c, p1)
+                            EXISTS m1:Market_ID
+                              EXISTS n1:Num_of_stock
+                                PRED phone_market(m1, p2, n1)
+                          EQ  p = p2
+      Predicted FOL: ∃p0 : Name ∃p1 : Phone_ID ∃p2 : Memory_in_G ∃p3 : Carrier ∃p4 : Price (phone(p0, p1, p2, p3, p4) ∧ ¬∃m0 : Market_ID ∃m1 : Phone_ID ∃m2 : Num_of_stock phone_market(m0, m1, m2) ∧ m1 = p1)
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:Name EXISTS:∃ IDENT:p1 COLON:: IDENT:Phone_ID EXISTS:∃ IDENT:p2 COLON:: IDENT:Memory_in_G EXISTS:∃ IDENT:p3 COLON:: IDENT:Carrier EXISTS:∃ IDENT:p4 COLON:: IDENT:Price LPAR:( IDENT:phone LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:m0 COLON:: IDENT:Market_ID EXISTS:∃ IDENT:m1 COLON:: IDENT:Phone_ID EXISTS:∃ IDENT:m2 COLON:: IDENT:Num_of_stock IDENT:phone_market LPAR:( IDENT:m0 COMMA:, IDENT:m1 COMMA:, IDENT:m2 RPAR:) AND:∧ IDENT:m1 EQ:= IDENT:p1 RPAR:) EOF
+        AST:
+          EXISTS p0:Name
+            EXISTS p1:Phone_ID
+              EXISTS p2:Memory_in_G
+                EXISTS p3:Carrier
+                  EXISTS p4:Price
+                    AND
+                      PRED phone(p0, p1, p2, p3, p4)
+                      NOT
+                        EXISTS m0:Market_ID
+                          EXISTS m1:Phone_ID
+                            EXISTS m2:Num_of_stock
+                              AND
+                                PRED phone_market(m0, m1, m2)
+                                EQ  m1 = p1
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Carrier, global text -> StringSort()
+        m : local Memory_in_G, global int -> IntSort()
+        m1 : local Market_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_of_stock, global int -> IntSort()
+        p : local Phone_ID, global text -> StringSort()
+        p1 : local Price, global real -> Float32()
+        p2 : local Phone_ID, global text -> StringSort()
+      Predicted FOL:
+        m0 : local Market_ID, global int -> IntSort()
+        m1 : local Phone_ID, global text -> StringSort()
+        m2 : local Num_of_stock, global int -> IntSort()
+        p0 : local Name, global text -> StringSort()
+        p1 : local Phone_ID, global text -> StringSort()
+        p2 : local Memory_in_G, global int -> IntSort()
+        p3 : local Carrier, global text -> StringSort()
+        p4 : local Price, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5509 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3161.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

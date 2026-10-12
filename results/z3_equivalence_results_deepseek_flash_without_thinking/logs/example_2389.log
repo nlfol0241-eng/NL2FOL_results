@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2389.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2389.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4385 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the campus that have between 600 and 1000 faculty lines in year 2004.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 6 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Campus = integer -> IntSort()
+        County = text -> StringSort()
+        Faculty = real -> Float32()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        faculty(Campus, Year, Faculty)
+        constant 1000 : Faculty
+        constant 2004 : Year
+        constant 600 : Faculty
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Id ∃l : Location ∃c1 : County ∃y : Year ∃c2 : Campus ∃y1 : Year ∃f : Faculty ( (((Campuses(i,c,l,c1,y)) ∧ (faculty(c2,y1,f))) ∧ (i = c2)) ∧ (((f >= 600) ∧ (f <= 1000)) ∧ (y = 2004)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c1 COLON:: IDENT:County EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c2 COLON:: IDENT:Campus EXISTS:∃ IDENT:y1 COLON:: IDENT:Year EXISTS:∃ IDENT:f COLON:: IDENT:Faculty LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:c1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:faculty LPAR:( IDENT:c2 COMMA:, IDENT:y1 COMMA:, IDENT:f RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:f GE:>= NUM:600 RPAR:) AND:∧ LPAR:( IDENT:f LE:<= NUM:1000 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2004 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS l:Location
+              EXISTS c1:County
+                EXISTS y:Year
+                  EXISTS c2:Campus
+                    EXISTS y1:Year
+                      EXISTS f:Faculty
+                        AND
+                          AND
+                            AND
+                              PRED Campuses(i, c, l, c1, y)
+                              PRED faculty(c2, y1, f)
+                            EQ  i = c2
+                          AND
+                            AND
+                              CMP  f >= 600
+                              CMP  f <= 1000
+                            EQ  y = 2004
+      Predicted FOL: ∃x : Id ∃y : campus ∃z : Location ∃w : County ∃v : Year (Campuses(x, y, z, w, v) ∧ v = 2004 ∧ ∃u : Faculty (faculty(x, v, u) ∧ u ≥ 600 ∧ u ≤ 1000))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Id EXISTS:∃ IDENT:y COLON:: IDENT:campus EXISTS:∃ IDENT:z COLON:: IDENT:Location EXISTS:∃ IDENT:w COLON:: IDENT:County EXISTS:∃ IDENT:v COLON:: IDENT:Year LPAR:( IDENT:Campuses LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) AND:∧ IDENT:v EQ:= NUM:2004 AND:∧ EXISTS:∃ IDENT:u COLON:: IDENT:Faculty LPAR:( IDENT:faculty LPAR:( IDENT:x COMMA:, IDENT:v COMMA:, IDENT:u RPAR:) AND:∧ IDENT:u GE:≥ NUM:600 AND:∧ IDENT:u LE:≤ NUM:1000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Id
+            EXISTS y:campus
+              EXISTS z:Location
+                EXISTS w:County
+                  EXISTS v:Year
+                    AND
+                      PRED Campuses(x, y, z, w, v)
+                      EQ  v = 2004
+                      EXISTS u:Faculty
+                        AND
+                          PRED faculty(x, v, u)
+                          CMP  u >= 600
+                          CMP  u <= 1000
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : campus) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local campus, global text -> StringSort()
+        c1 : local County, global text -> StringSort()
+        c2 : local Campus, global integer -> IntSort()
+        f : local Faculty, global real -> Float32()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+        y1 : local Year, global integer -> IntSort()
+      Predicted FOL:
+        u : local Faculty, global real -> Float32()
+        v : local Year, global integer -> IntSort()
+        w : local County, global text -> StringSort()
+        x : local Id, global integer -> IntSort()
+        y : local campus, global text -> StringSort()
+        z : local Location, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5490 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2389.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : campus) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

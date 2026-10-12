@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2153.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2153.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4778 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what papers were published in Academic radiology in 1995 ?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(100) -> StringSort()   [domain Length(x) <= 100; length <= 100]
+        integer -> IntSort()
+        varchar(300) -> StringSort()   [domain Length(x) <= 300; length <= 300]
+      local sorts:
+        journalId = integer -> IntSort()
+        journalName = varchar(100) -> StringSort()
+        numCitedBy = integer -> IntSort()
+        numCiting = integer -> IntSort()
+        paperId = integer -> IntSort()
+        title = varchar(300) -> StringSort()
+        venueId = integer -> IntSort()
+        year = integer -> IntSort()
+      symbols:
+        journal(journalId, journalName)
+        paper(paperId, title, venueId, year, numCiting, numCitedBy, journalId)
+        constant 1995 : year
+        constant Academic radiology : journalName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : title ∃v : venueId ∃y : year ∃n : numCiting ∃n1 : numCitedBy ∃j : journalId ∃j1 : journalId ∃j2 : journalName ( (((paper(p,t,v,y,n,n1,j)) ∧ (journal(j1,j2))) ∧ (j = j1)) ∧ ((j2 = 'Academic radiology') ∧ (y = 1995)) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:v COLON:: IDENT:venueId EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:n COLON:: IDENT:numCiting EXISTS:∃ IDENT:n1 COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:j COLON:: IDENT:journalId EXISTS:∃ IDENT:j1 COLON:: IDENT:journalId EXISTS:∃ IDENT:j2 COLON:: IDENT:journalName LPAR:( LPAR:( LPAR:( LPAR:( IDENT:paper LPAR:( IDENT:p COMMA:, IDENT:t COMMA:, IDENT:v COMMA:, IDENT:y COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:journal LPAR:( IDENT:j1 COMMA:, IDENT:j2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:j EQ:= IDENT:j1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:j2 EQ:= LIT:Academic radiology RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:1995 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:title
+            EXISTS v:venueId
+              EXISTS y:year
+                EXISTS n:numCiting
+                  EXISTS n1:numCitedBy
+                    EXISTS j:journalId
+                      EXISTS j1:journalId
+                        EXISTS j2:journalName
+                          AND
+                            AND
+                              AND
+                                PRED paper(p, t, v, y, n, n1, j)
+                                PRED journal(j1, j2)
+                              EQ  j = j1
+                            AND
+                              EQ  j2 = 'Academic radiology'
+                              EQ  y = 1995
+      Predicted FOL: ∃p : paperId ∃v : venueId ∃c : numCiting ∃b : numCitedBy ∃j : journalId (paper(p, t, v, 1995, c, b, j) ∧ journal(j, 'Academic radiology'))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:paperId EXISTS:∃ IDENT:v COLON:: IDENT:venueId EXISTS:∃ IDENT:c COLON:: IDENT:numCiting EXISTS:∃ IDENT:b COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:j COLON:: IDENT:journalId LPAR:( IDENT:paper LPAR:( IDENT:p COMMA:, IDENT:t COMMA:, IDENT:v COMMA:, NUM:1995 COMMA:, IDENT:c COMMA:, IDENT:b COMMA:, IDENT:j RPAR:) AND:∧ IDENT:journal LPAR:( IDENT:j COMMA:, LIT:Academic radiology RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:paperId
+            EXISTS v:venueId
+              EXISTS c:numCiting
+                EXISTS b:numCitedBy
+                  EXISTS j:journalId
+                    AND
+                      PRED paper(p, t, v, 1995, c, b, j)
+                      PRED journal(j, 'Academic radiology')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (p : paperId) -> ['numeric'] vs Predicted (t : title) -> ['StringSort()']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        j : local journalId, global integer -> IntSort()
+        j1 : local journalId, global integer -> IntSort()
+        j2 : local journalName, global varchar(100) -> StringSort()
+        n : local numCiting, global integer -> IntSort()
+        n1 : local numCitedBy, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+        t : local title, global varchar(300) -> StringSort()
+        v : local venueId, global integer -> IntSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        b : local numCitedBy, global integer -> IntSort()
+        c : local numCiting, global integer -> IntSort()
+        j : local journalId, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+        t : local title, global varchar(300) -> StringSort()
+        v : local venueId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5512 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2153.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: the free variables have different value types: Gold (p : paperId) -> ['numeric'] vs Predicted (t : title) -> ['StringSort()']
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

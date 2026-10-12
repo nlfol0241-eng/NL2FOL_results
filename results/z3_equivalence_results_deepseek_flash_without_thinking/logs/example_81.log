@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_81.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_81.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2506 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show names of people whose nationality is not "Russia".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Birth_Date = text -> StringSort()
+        Height = real -> Float32()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        People_ID = int -> IntSort()
+      symbols:
+        people(People_ID, Nationality, Name, Birth_Date, Height)
+        constant Russia : Nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : People_ID ∃n : Nationality ∃b : Birth_Date ∃h : Height ( (people(p,n,n1,b,h)) ∧ (n <> 'Russia') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:People_ID EXISTS:∃ IDENT:n COLON:: IDENT:Nationality EXISTS:∃ IDENT:b COLON:: IDENT:Birth_Date EXISTS:∃ IDENT:h COLON:: IDENT:Height LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:b COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n NEQ:<> LIT:Russia RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:People_ID
+            EXISTS n:Nationality
+              EXISTS b:Birth_Date
+                EXISTS h:Height
+                  AND
+                    PRED people(p, n, n1, b, h)
+                    NEQ  n != 'Russia'
+      Predicted FOL: ∃x : People_ID ∃y : Nationality ∃z : Name ∃w : Birth_Date ∃v : Height (people(x, y, z, w, v) ∧ y ≠ 'Russia')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:People_ID EXISTS:∃ IDENT:y COLON:: IDENT:Nationality EXISTS:∃ IDENT:z COLON:: IDENT:Name EXISTS:∃ IDENT:w COLON:: IDENT:Birth_Date EXISTS:∃ IDENT:v COLON:: IDENT:Height LPAR:( IDENT:people LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) AND:∧ IDENT:y NEQ:≠ LIT:Russia RPAR:) EOF
+        AST:
+          EXISTS x:People_ID
+            EXISTS y:Nationality
+              EXISTS z:Name
+                EXISTS w:Birth_Date
+                  EXISTS v:Height
+                    AND
+                      PRED people(x, y, z, w, v)
+                      NEQ  y != 'Russia'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Birth_Date, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        n : local Nationality, global text -> StringSort()
+        n1 : local Name, global text -> StringSort()
+        p : local People_ID, global int -> IntSort()
+      Predicted FOL:
+        v : local Height, global real -> Float32()
+        w : local Birth_Date, global text -> StringSort()
+        x : local People_ID, global int -> IntSort()
+        y : local Nationality, global text -> StringSort()
+        z : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5320 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_81.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

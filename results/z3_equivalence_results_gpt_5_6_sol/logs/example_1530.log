@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1530.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1530.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3407 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of buildings with at least 200 feet of height and with at least 20 floors.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Floors = int -> IntSort()
+        Height_feet = int -> IntSort()
+        Name = text -> StringSort()
+        Street_address = text -> StringSort()
+        Years_as_tallest = text -> StringSort()
+        building_id = text -> StringSort()
+      symbols:
+        building(building_id, Name, Street_address, Years_as_tallest, Height_feet, Floors)
+        constant 20 : Floors
+        constant 200 : Height_feet
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : building_id ∃s : Street_address ∃y : Years_as_tallest ∃h : Height_feet ∃f : Floors ( (building(b,n,s,y,h,f)) ∧ ((h >= 200) ∧ (f >= 20)) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:building_id EXISTS:∃ IDENT:s COLON:: IDENT:Street_address EXISTS:∃ IDENT:y COLON:: IDENT:Years_as_tallest EXISTS:∃ IDENT:h COLON:: IDENT:Height_feet EXISTS:∃ IDENT:f COLON:: IDENT:Floors LPAR:( LPAR:( IDENT:building LPAR:( IDENT:b COMMA:, IDENT:n COMMA:, IDENT:s COMMA:, IDENT:y COMMA:, IDENT:h COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:h GE:>= NUM:200 RPAR:) AND:∧ LPAR:( IDENT:f GE:>= NUM:20 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:building_id
+            EXISTS s:Street_address
+              EXISTS y:Years_as_tallest
+                EXISTS h:Height_feet
+                  EXISTS f:Floors
+                    AND
+                      PRED building(b, n, s, y, h, f)
+                      AND
+                        CMP  h >= 200
+                        CMP  f >= 20
+      Predicted FOL: ∃b : building_id ∃a : Street_address ∃y : Years_as_tallest ∃h : Height_feet ∃f : Floors (building(b, n, a, y, h, f) ∧ h ≥ 200 ∧ f ≥ 20)
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:building_id EXISTS:∃ IDENT:a COLON:: IDENT:Street_address EXISTS:∃ IDENT:y COLON:: IDENT:Years_as_tallest EXISTS:∃ IDENT:h COLON:: IDENT:Height_feet EXISTS:∃ IDENT:f COLON:: IDENT:Floors LPAR:( IDENT:building LPAR:( IDENT:b COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:y COMMA:, IDENT:h COMMA:, IDENT:f RPAR:) AND:∧ IDENT:h GE:≥ NUM:200 AND:∧ IDENT:f GE:≥ NUM:20 RPAR:) EOF
+        AST:
+          EXISTS b:building_id
+            EXISTS a:Street_address
+              EXISTS y:Years_as_tallest
+                EXISTS h:Height_feet
+                  EXISTS f:Floors
+                    AND
+                      PRED building(b, n, a, y, h, f)
+                      CMP  h >= 200
+                      CMP  f >= 20
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local building_id, global text -> StringSort()
+        f : local Floors, global int -> IntSort()
+        h : local Height_feet, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        s : local Street_address, global text -> StringSort()
+        y : local Years_as_tallest, global text -> StringSort()
+      Predicted FOL:
+        a : local Street_address, global text -> StringSort()
+        b : local building_id, global text -> StringSort()
+        f : local Floors, global int -> IntSort()
+        h : local Height_feet, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        y : local Years_as_tallest, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_s_2, gold_y_3, gold_h_4, gold_f_5], And(P_building(gold_b_1, FV_Name_0, gold_s_2, gold_y_3, gold_h_4, gold_f_5), And((gold_h_4 >= L_v_200_int), (gold_f_5 >= L_v_20_int))))
+      gold_skolem (witnesses WGOLD_b, WGOLD_s, WGOLD_y, WGOLD_h, WGOLD_f):  And(P_building(WGOLD_b, FV_Name_0, WGOLD_s, WGOLD_y, WGOLD_h, WGOLD_f), And((WGOLD_h >= L_v_200_int), (WGOLD_f >= L_v_20_int)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_b_1, predicted_a_2, predicted_y_3, predicted_h_4, predicted_f_5], And(P_building(predicted_b_1, FV_Name_0, predicted_a_2, predicted_y_3, predicted_h_4, predicted_f_5), (predicted_h_4 >= L_v_200_int), (predicted_f_5 >= L_v_20_int)))
+      predicted_skolem (witnesses WPREDICTED_b, WPREDICTED_a, WPREDICTED_y, WPREDICTED_h, WPREDICTED_f):  And(P_building(WPREDICTED_b, FV_Name_0, WPREDICTED_a, WPREDICTED_y, WPREDICTED_h, WPREDICTED_f), (WPREDICTED_h >= L_v_200_int), (WPREDICTED_f >= L_v_20_int))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '200' at int -> L_v_200_int = IntVal(200)
+      literal '20' at int -> L_v_20_int = IntVal(20)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 748 lines, 28623 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1530.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_s, WGOLD_y, WGOLD_h, WGOLD_f
+      claim: And(And(building(WGOLD_b, FV_Name_0, WGOLD_s, WGOLD_y, WGOLD_h, WGOLD_f), And(200 <= WGOLD_h, 20 <= WGOLD_f)), Not(Exists([predicted_b_1, predicted_a_2, predicted_y_3, predicted_h_4, predicted_f_5], And(building(predicted_b_1, FV_Name_0, predicted_a_2, predicted_y_3, predicted_h_4, predicted_f_5), 200 <= predicted_h_4, 20 <= predicted_f_5))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_b, WPREDICTED_a, WPREDICTED_y, WPREDICTED_h, WPREDICTED_f
+      claim: And(And(building(WPREDICTED_b, FV_Name_0, WPREDICTED_a, WPREDICTED_y, WPREDICTED_h, WPREDICTED_f), 200 <= WPREDICTED_h, 20 <= WPREDICTED_f), Not(Exists([gold_b_1, gold_s_2, gold_y_3, gold_h_4, gold_f_5], And(building(gold_b_1, FV_Name_0, gold_s_2, gold_y_3, gold_h_4, gold_f_5), And(200 <= gold_h_4, 20 <= gold_f_5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

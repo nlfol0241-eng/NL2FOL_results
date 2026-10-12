@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_566.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_566.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3557 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the gender and occupation of players?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Gender = text -> StringSort()
+        Occupation = text -> StringSort()
+        Player_ID = int -> IntSort()
+        Player_name = text -> StringSort()
+        Rank = text -> StringSort()
+        Residence = text -> StringSort()
+        Sponsor_name = text -> StringSort()
+        Votes = int -> IntSort()
+      symbols:
+        player(Player_ID, Sponsor_name, Player_name, Gender, Residence, Occupation, Votes, Rank)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Player_ID ∃s : Sponsor_name ∃p1 : Player_name ∃r : Residence ∃v : Votes ∃r1 : Rank ( player(p,s,p1,g,r,o,v,r1) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Player_ID EXISTS:∃ IDENT:s COLON:: IDENT:Sponsor_name EXISTS:∃ IDENT:p1 COLON:: IDENT:Player_name EXISTS:∃ IDENT:r COLON:: IDENT:Residence EXISTS:∃ IDENT:v COLON:: IDENT:Votes EXISTS:∃ IDENT:r1 COLON:: IDENT:Rank LPAR:( IDENT:player LPAR:( IDENT:p COMMA:, IDENT:s COMMA:, IDENT:p1 COMMA:, IDENT:g COMMA:, IDENT:r COMMA:, IDENT:o COMMA:, IDENT:v COMMA:, IDENT:r1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Player_ID
+            EXISTS s:Sponsor_name
+              EXISTS p1:Player_name
+                EXISTS r:Residence
+                  EXISTS v:Votes
+                    EXISTS r1:Rank
+                      PRED player(p, s, p1, g, r, o, v, r1)
+      Predicted FOL: ∃i : Player_ID ∃s : Sponsor_name ∃n : Player_name ∃r : Residence ∃v : Votes ∃k : Rank (player(i, s, n, g, r, o, v, k))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Player_ID EXISTS:∃ IDENT:s COLON:: IDENT:Sponsor_name EXISTS:∃ IDENT:n COLON:: IDENT:Player_name EXISTS:∃ IDENT:r COLON:: IDENT:Residence EXISTS:∃ IDENT:v COLON:: IDENT:Votes EXISTS:∃ IDENT:k COLON:: IDENT:Rank LPAR:( IDENT:player LPAR:( IDENT:i COMMA:, IDENT:s COMMA:, IDENT:n COMMA:, IDENT:g COMMA:, IDENT:r COMMA:, IDENT:o COMMA:, IDENT:v COMMA:, IDENT:k RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Player_ID
+            EXISTS s:Sponsor_name
+              EXISTS n:Player_name
+                EXISTS r:Residence
+                  EXISTS v:Votes
+                    EXISTS k:Rank
+                      PRED player(i, s, n, g, r, o, v, k)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Gender_0 : Gender   Gold g <-> Predicted g
+      FV_Occupation_0 : Occupation   Gold o <-> Predicted o
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local Gender, global text -> StringSort()
+        o : local Occupation, global text -> StringSort()
+        p : local Player_ID, global int -> IntSort()
+        p1 : local Player_name, global text -> StringSort()
+        r : local Residence, global text -> StringSort()
+        r1 : local Rank, global text -> StringSort()
+        s : local Sponsor_name, global text -> StringSort()
+        v : local Votes, global int -> IntSort()
+      Predicted FOL:
+        g : local Gender, global text -> StringSort()
+        i : local Player_ID, global int -> IntSort()
+        k : local Rank, global text -> StringSort()
+        n : local Player_name, global text -> StringSort()
+        o : local Occupation, global text -> StringSort()
+        r : local Residence, global text -> StringSort()
+        s : local Sponsor_name, global text -> StringSort()
+        v : local Votes, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_s_2, gold_p1_3, gold_r_4, gold_v_5, gold_r1_6], P_player(gold_p_1, gold_s_2, gold_p1_3, FV_Gender_0, gold_r_4, FV_Occupation_0, gold_v_5, gold_r1_6))
+      gold_skolem (witnesses WGOLD_p, WGOLD_s, WGOLD_p1, WGOLD_r, WGOLD_v, WGOLD_r1):  P_player(WGOLD_p, WGOLD_s, WGOLD_p1, FV_Gender_0, WGOLD_r, FV_Occupation_0, WGOLD_v, WGOLD_r1)
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_s_2, predicted_n_3, predicted_r_4, predicted_v_5, predicted_k_6], P_player(predicted_i_1, predicted_s_2, predicted_n_3, FV_Gender_0, predicted_r_4, FV_Occupation_0, predicted_v_5, predicted_k_6))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_s, WPREDICTED_n, WPREDICTED_r, WPREDICTED_v, WPREDICTED_k):  P_player(WPREDICTED_i, WPREDICTED_s, WPREDICTED_n, FV_Gender_0, WPREDICTED_r, FV_Occupation_0, WPREDICTED_v, WPREDICTED_k)
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 756 lines, 28869 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_566.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_s, WGOLD_p1, WGOLD_r, WGOLD_v, WGOLD_r1
+      claim: And(player(WGOLD_p, WGOLD_s, WGOLD_p1, FV_Gender_0, WGOLD_r, FV_Occupation_0, WGOLD_v, WGOLD_r1), Not(Exists([predicted_i_1, predicted_s_2, predicted_n_3, predicted_r_4, predicted_v_5, predicted_k_6], player(predicted_i_1, predicted_s_2, predicted_n_3, FV_Gender_0, predicted_r_4, FV_Occupation_0, predicted_v_5, predicted_k_6))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_s, WPREDICTED_n, WPREDICTED_r, WPREDICTED_v, WPREDICTED_k
+      claim: And(player(WPREDICTED_i, WPREDICTED_s, WPREDICTED_n, FV_Gender_0, WPREDICTED_r, FV_Occupation_0, WPREDICTED_v, WPREDICTED_k), Not(Exists([gold_p_1, gold_s_2, gold_p1_3, gold_r_4, gold_v_5, gold_r1_6], player(gold_p_1, gold_s_2, gold_p1_3, FV_Gender_0, gold_r_4, FV_Occupation_0, gold_v_5, gold_r1_6))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

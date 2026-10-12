@@ -1,0 +1,104 @@
+{
+  "NL": "Which shops run with no employees? Find the shop names",
+  "Vocabulary": {
+    "Predicates": [
+      "shop",
+      "hiring"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "shop": [
+        "Shop_ID",
+        "Name",
+        "Location",
+        "District",
+        "Number_products",
+        "Manager_name"
+      ],
+      "hiring": [
+        "Shop_ID",
+        "Employee_ID",
+        "Start_from",
+        "Is_full_time"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( employee(a0, a1, a2, a3) ∧ employee(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b5∀b0'∀b1'∀b2'∀b3'∀b4'∀b5'( shop(b0, b1, b2, b3, b4, b5) ∧ shop(b0', b1', b2', b3', b4', b5') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' ∧ b5 = b5' )",
+    "axiom3": "∀c0∀c1∀c2∀c3∀c0'∀c1'∀c2'∀c3'( hiring(c0, c1, c2, c3) ∧ hiring(c0', c1', c2', c3') ∧ c1 = c1' ) → ( c0 = c0' ∧ c2 = c2' ∧ c3 = c3' )",
+    "axiom4": "∀d0∀d1∀d2∀d0'∀d1'∀d2'( evaluation(d0, d1, d2) ∧ evaluation(d0', d1', d2') ∧ d0 = d0' ∧ d1 = d1' ) → ( d2 = d2' )",
+    "axiom5": "∀c0∀c1∀c2∀c3 ( hiring(c0, c1, c2, c3) → ∃a0∃a1∃a2∃a3 ( employee(a0, a1, a2, a3) ∧ a0 = c1 ) )",
+    "axiom6": "∀c0∀c1∀c2∀c3 ( hiring(c0, c1, c2, c3) → ∃b0∃b1∃b2∃b3∃b4∃b5 ( shop(b0, b1, b2, b3, b4, b5) ∧ b0 = c0 ) )",
+    "axiom7": "∀d0∀d1∀d2 ( evaluation(d0, d1, d2) → ∃a0∃a1∃a2∃a3 ( employee(a0, a1, a2, a3) ∧ a0 = d0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "shop": {
+        "A": "shop",
+        "A0": "Shop_ID",
+        "A1": "Name",
+        "A2": "Location",
+        "A3": "District",
+        "A4": "Number_products",
+        "A5": "Manager_name"
+      },
+      "hiring": {
+        "B": "hiring",
+        "B0": "Shop_ID",
+        "B1": "Employee_ID",
+        "B2": "Start_from",
+        "B3": "Is_full_time"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃l : Location ∃m : Manager_name ∃n1 : Number_products ∃d : District ∃s : Shop_ID( (shop(s,n,l,d,n1,m)) ∧ (¬(∃s1 : Shop_ID( ((shop(s,n,l,d,n1,m)) ∧ (∃i : Is_full_time ∃s2 : Start_from ∃e : Employee_ID( hiring(s1,e,s2,i) ))) ∧ (s = s1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4,A5](A))<D>(<P>[A0,A1,A2,A3,A4,A5](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4,A5](A))<D>(<P>[A0,A1,A2,A3,A4,A5](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "RC": "[E]?A2,?A5,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4,?A5)) & (~([E]?B0( ((A(?A0,?A1,?A2,?A3,?A4,?A5)) & ([E]?B3,?B2,?B1( B(?B0,?B1,?B2,?B3) ))) & (?A0 = ?B0) ))) )",
+    "string": "∃A2 ∃A5 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4,A5)) ∧ (¬(∃B0( ((A(A0,A1,A2,A3,A4,A5)) ∧ (∃B3 ∃B2 ∃B1( B(B0,B1,B2,B3) ))) ∧ (A0 = B0) ))) )",
+    "free variables": "A1",
+    "db_id": "employee_hire_evaluation",
+    "processed_sql": "SELECT name FROM shop WHERE shop_id NOT IN (SELECT shop_id FROM hiring)"
+  },
+  "Global Sorts": [
+    "int",
+    "bool",
+    "text"
+  ],
+  "Sort Axioms": {
+    "shop": {
+      "sortaxiom0": "Shop_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Location = text",
+      "sortaxiom3": "District = text",
+      "sortaxiom4": "Number_products = int",
+      "sortaxiom5": "Manager_name = text"
+    },
+    "hiring": {
+      "sortaxiom0": "Shop_ID = int",
+      "sortaxiom1": "Employee_ID = text",
+      "sortaxiom2": "Start_from = text",
+      "sortaxiom3": "Is_full_time = bool"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT name FROM shop WHERE shop_id NOT IN (SELECT shop_id FROM hiring)"
+  },
+  "id": 2931,
+  "Predicted FOL": {
+    "string": "∃s_id : Shop_ID, loc : Location, dist : District, num : Number_products, mgr : Manager_name ( shop(s_id, n, loc, dist, num, mgr) ∧ ¬∃e_id : Employee_ID, start : Start_from, full : Is_full_time ( hiring(s_id, e_id, start, full) ) )",
+    "free vars": "n : Name"
+  }
+}

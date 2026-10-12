@@ -1,0 +1,88 @@
+{
+  "NL": "Show the locations that have both performances with more than 2000 attendees and performances with less than 1000 attendees.",
+  "Vocabulary": {
+    "Predicates": [
+      "performance"
+    ],
+    "Functions": [],
+    "Constants": [
+      2000,
+      1000
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "performance": [
+        "Performance_ID",
+        "Date",
+        "Host",
+        "Location",
+        "Attendance"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "2000": "Attendance",
+      "1000": "Attendance"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( member(a0, a1, a2, a3) ∧ member(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( performance(b0, b1, b2, b3, b4) ∧ performance(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( member_attendance(c0, c1, c2) ∧ member_attendance(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( member_attendance(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4 ( performance(b0, b1, b2, b3, b4) ∧ b0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( member_attendance(c0, c1, c2) → ∃a0∃a1∃a2∃a3 ( member(a0, a1, a2, a3) ∧ a0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "performance": {
+        "A": "performance",
+        "A0": "Performance_ID",
+        "A1": "Date",
+        "A2": "Host",
+        "A3": "Location",
+        "A4": "Attendance"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": 2000,
+      "const2": 1000
+    }
+  },
+  "Gold FOL": {
+    "string": "(∃h : Host ∃d : Date ∃a : Attendance ∃p : Performance_ID( (performance(p,d,h,l,a)) ∧ (a > 2000) )) ∧ (¬((∃h : Host ∃d : Date ∃a : Attendance ∃p : Performance_ID( (performance(p,d,h,l,a)) ∧ (a > 2000) )) ∧ (¬(∃h : Host ∃d : Date ∃a : Attendance ∃p : Performance_ID( (performance(p,d,h,l,a)) ∧ (a < 1000) )))))",
+    "free vars": "l : Location"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A3](<S>[A4 > 2000](A)))<D>((<P>[A3](<S>[A4 > 2000](A)))<D>(<P>[A3](<S>[A4 < 1000](A))))",
+    "Processed_RA": "(<P>[A3](<S>[A4 = 'A4 > 2000'](A)))<D>((<P>[A3](<S>[A4 = 'A4 > 2000'](A)))<D>(<P>[A3](<S>[A4 = 'A4 < 1000'](A))))",
+    "RC": "([E]?A2,?A1,?A4,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (?A4 = A4 > 2000) )) & (~(([E]?A2,?A1,?A4,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (?A4 = A4 > 2000) )) & (~([E]?A2,?A1,?A4,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (?A4 = A4 < 1000) )))))",
+    "string": "(∃A2 ∃A1 ∃A4 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (A4 > 2000) )) ∧ (¬((∃A2 ∃A1 ∃A4 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (A4 > 2000) )) ∧ (¬(∃A2 ∃A1 ∃A4 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (A4 < 1000) )))))",
+    "free variables": "A3",
+    "db_id": "performance_attendance",
+    "processed_sql": "SELECT LOCATION FROM performance WHERE Attendance  >  2000 INTERSECT SELECT LOCATION FROM performance WHERE Attendance  <  1000"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "performance": {
+      "sortaxiom0": "Performance_ID = real",
+      "sortaxiom1": "Date = text",
+      "sortaxiom2": "Host = text",
+      "sortaxiom3": "Location = text",
+      "sortaxiom4": "Attendance = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT LOCATION FROM performance WHERE Attendance  >  2000 INTERSECT SELECT LOCATION FROM performance WHERE Attendance  <  1000"
+  },
+  "id": 3120,
+  "Predicted FOL": {
+    "string": "∃x : Location (∃p1 : Performance_ID ∃d1 : Date ∃h1 : Host ∃a1 : Attendance (performance(p1, d1, h1, x, a1) ∧ a1 > 2000) ∧ ∃p2 : Performance_ID ∃d2 : Date ∃h2 : Host ∃a2 : Attendance (performance(p2, d2, h2, x, a2) ∧ a2 < 1000))",
+    "free vars": ""
+  }
+}

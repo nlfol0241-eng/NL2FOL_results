@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_872.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_872.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2740 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Tell me the location of the club "Hopkins Student Enterprises".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+        varchar(1024) -> StringSort()   [domain Length(x) <= 1024; length <= 1024]
+      local sorts:
+        ClubDesc = varchar(1024) -> StringSort()
+        ClubID = integer -> IntSort()
+        ClubLocation = varchar(40) -> StringSort()
+        ClubName = varchar(40) -> StringSort()
+      symbols:
+        Club(ClubID, ClubName, ClubDesc, ClubLocation)
+        constant Hopkins Student Enterprises : ClubName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : ClubID ∃c1 : ClubName ∃c2 : ClubDesc ( (Club(c,c1,c2,c3)) ∧ (c1 = 'Hopkins Student Enterprises') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:ClubID EXISTS:∃ IDENT:c1 COLON:: IDENT:ClubName EXISTS:∃ IDENT:c2 COLON:: IDENT:ClubDesc LPAR:( LPAR:( IDENT:Club LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Hopkins Student Enterprises RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:ClubID
+            EXISTS c1:ClubName
+              EXISTS c2:ClubDesc
+                AND
+                  PRED Club(c, c1, c2, c3)
+                  EQ  c1 = 'Hopkins Student Enterprises'
+      Predicted FOL: ∃x0:ClubID ∃x2:ClubDesc Club(x0, 'Hopkins Student Enterprises', x2, x3)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:ClubID EXISTS:∃ IDENT:x2 COLON:: IDENT:ClubDesc IDENT:Club LPAR:( IDENT:x0 COMMA:, LIT:Hopkins Student Enterprises COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) EOF
+        AST:
+          EXISTS x0:ClubID
+            EXISTS x2:ClubDesc
+              PRED Club(x0, 'Hopkins Student Enterprises', x2, x3)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_ClubLocation_0 : ClubLocation   Gold c3 <-> Predicted x3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local ClubID, global integer -> IntSort()
+        c1 : local ClubName, global varchar(40) -> StringSort()
+        c2 : local ClubDesc, global varchar(1024) -> StringSort()
+        c3 : local ClubLocation, global varchar(40) -> StringSort()
+      Predicted FOL:
+        x0 : local ClubID, global integer -> IntSort()
+        x2 : local ClubDesc, global varchar(1024) -> StringSort()
+        x3 : local ClubLocation, global varchar(40) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_c2_3], And(D_varchar_40_(gold_c1_2), D_varchar_1024_(gold_c2_3), And(P_Club(gold_c_1, gold_c1_2, gold_c2_3, FV_ClubLocation_0), (gold_c1_2 == L_Hopkins_Student_Enterprises))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_c2):  And(D_varchar_40_(WGOLD_c1), D_varchar_1024_(WGOLD_c2), And(P_Club(WGOLD_c, WGOLD_c1, WGOLD_c2, FV_ClubLocation_0), (WGOLD_c1 == L_Hopkins_Student_Enterprises)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x0_1, predicted_x2_2], And(D_varchar_1024_(predicted_x2_2), And(P_Club(predicted_x0_1, L_Hopkins_Student_Enterprises, predicted_x2_2, FV_ClubLocation_0), D_varchar_40_(L_Hopkins_Student_Enterprises))))
+      predicted_skolem (witnesses WPREDICTED_x0, WPREDICTED_x2):  And(D_varchar_1024_(WPREDICTED_x2), And(P_Club(WPREDICTED_x0, L_Hopkins_Student_Enterprises, WPREDICTED_x2, FV_ClubLocation_0), D_varchar_40_(L_Hopkins_Student_Enterprises)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Hopkins Student Enterprises' at varchar(40) -> L_Hopkins_Student_Enterprises = StringVal('Hopkins Student Enterprises')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 734 lines, 27738 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_872.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_ClubLocation_0) <= 40
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_c2
+      claim: And(And(Length(WGOLD_c1) <= 40, Length(WGOLD_c2) <= 1024, And(Club(WGOLD_c, WGOLD_c1, WGOLD_c2, FV_ClubLocation_0), WGOLD_c1 == "Hopkins Student Enterprises")), Not(Exists([predicted_x0_1, predicted_x2_2], And(Length(predicted_x2_2) <= 1024, And(Club(predicted_x0_1, "Hopkins Student Enterprises", predicted_x2_2, FV_ClubLocation_0), Length("Hopkins Student Enterprises") <= 40)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.021 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_x0, WPREDICTED_x2
+      claim: And(And(Length(WPREDICTED_x2) <= 1024, And(Club(WPREDICTED_x0, "Hopkins Student Enterprises", WPREDICTED_x2, FV_ClubLocation_0), Length("Hopkins Student Enterprises") <= 40)), Not(Exists([gold_c_1, gold_c1_2, gold_c2_3], And(Length(gold_c1_2) <= 40, Length(gold_c2_3) <= 1024, And(Club(gold_c_1, gold_c1_2, gold_c2_3, FV_ClubLocation_0), gold_c1_2 == "Hopkins Student Enterprises")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.015 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

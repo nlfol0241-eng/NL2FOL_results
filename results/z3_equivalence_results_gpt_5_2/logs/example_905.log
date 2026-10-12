@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_905.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_905.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3085 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the name of pilots aged 25 or older?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int(11) -> IntSort()
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+      local sorts:
+        Age = int(11) -> IntSort()
+        Name = varchar(50) -> StringSort()
+        Pilot_Id = int(11) -> IntSort()
+      symbols:
+        pilot(Pilot_Id, Name, Age)
+        constant 25 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Pilot_Id ∃a : Age ( (pilot(p,n,a)) ∧ (a >= 25) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Pilot_Id EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( LPAR:( IDENT:pilot LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GE:>= NUM:25 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Pilot_Id
+            EXISTS a:Age
+              AND
+                PRED pilot(p, n, a)
+                CMP  a >= 25
+      Predicted FOL: ∃pid:Pilot_Id ∃age:Age (pilot(pid, n, age) ∧ age ≥ 25)
+        tokens: EXISTS:∃ IDENT:pid COLON:: IDENT:Pilot_Id EXISTS:∃ IDENT:age COLON:: IDENT:Age LPAR:( IDENT:pilot LPAR:( IDENT:pid COMMA:, IDENT:n COMMA:, IDENT:age RPAR:) AND:∧ IDENT:age GE:≥ NUM:25 RPAR:) EOF
+        AST:
+          EXISTS pid:Pilot_Id
+            EXISTS age:Age
+              AND
+                PRED pilot(pid, n, age)
+                CMP  age >= 25
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int(11) -> IntSort()
+        n : local Name, global varchar(50) -> StringSort()
+        p : local Pilot_Id, global int(11) -> IntSort()
+      Predicted FOL:
+        age : local Age, global int(11) -> IntSort()
+        n : local Name, global varchar(50) -> StringSort()
+        pid : local Pilot_Id, global int(11) -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_a_2], And(P_pilot(gold_p_1, FV_Name_0, gold_a_2), (gold_a_2 >= L_v_25_int_11_)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_a):  And(P_pilot(WGOLD_p, FV_Name_0, WGOLD_a), (WGOLD_a >= L_v_25_int_11_))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_pid_1, predicted_age_2], And(P_pilot(predicted_pid_1, FV_Name_0, predicted_age_2), (predicted_age_2 >= L_v_25_int_11_)))
+      predicted_skolem (witnesses WPREDICTED_pid, WPREDICTED_age):  And(P_pilot(WPREDICTED_pid, FV_Name_0, WPREDICTED_age), (WPREDICTED_age >= L_v_25_int_11_))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '25' at int(11) -> L_v_25_int_11_ = IntVal(25)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 724 lines, 26575 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_905.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_a
+      claim: And(And(pilot(WGOLD_p, FV_Name_0, WGOLD_a), 25 <= WGOLD_a), Not(Exists([predicted_pid_1, predicted_age_2], And(pilot(predicted_pid_1, FV_Name_0, predicted_age_2), 25 <= predicted_age_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_pid, WPREDICTED_age
+      claim: And(And(pilot(WPREDICTED_pid, FV_Name_0, WPREDICTED_age), 25 <= WPREDICTED_age), Not(Exists([gold_p_1, gold_a_2], And(pilot(gold_p_1, FV_Name_0, gold_a_2), 25 <= gold_a_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

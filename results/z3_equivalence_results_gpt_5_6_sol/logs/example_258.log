@@ -1,0 +1,56 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_258.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_258.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3581 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is the lowest point in iowa in meters
+   [G1] took 0.003 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        highest_elevation = text -> StringSort()
+        highest_point = text -> StringSort()
+        lowest_elevation = text -> StringSort()
+        lowest_point = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        highlow(state_name, highest_elevation, lowest_point, highest_point, lowest_elevation)
+        constant iowa : state_name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ∃h : highest_elevation ∃h1 : highest_point ∃l1 : lowest_elevation ( (highlow(s,h,l,h1,l1)) ∧ (s = 'iowa') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:h COLON:: IDENT:highest_elevation EXISTS:∃ IDENT:h1 COLON:: IDENT:highest_point EXISTS:∃ IDENT:l1 COLON:: IDENT:lowest_elevation LPAR:( LPAR:( IDENT:highlow LPAR:( IDENT:s COMMA:, IDENT:h COMMA:, IDENT:l COMMA:, IDENT:h1 COMMA:, IDENT:l1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:iowa RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS h:highest_elevation
+              EXISTS h1:highest_point
+                EXISTS l1:lowest_elevation
+                  AND
+                    PRED highlow(s, h, l, h1, l1)
+                    EQ  s = 'iowa'
+      Predicted FOL: ∃h : highest_elevation ∃l : lowest_point ∃p : highest_point highlow(iowa, h, l, p, x)
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:highest_elevation EXISTS:∃ IDENT:l COLON:: IDENT:lowest_point EXISTS:∃ IDENT:p COLON:: IDENT:highest_point IDENT:highlow LPAR:( IDENT:iowa COMMA:, IDENT:h COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:x RPAR:) EOF
+        AST:
+          EXISTS h:highest_elevation
+            EXISTS l:lowest_point
+              EXISTS p:highest_point
+                PRED highlow(iowa<const>, h, l, p, x)
+   [G3] took 0.006 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['lowest_point'] vs Predicted ['lowest_elevation']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['lowest_point'] vs Predicted ['lowest_elevation']

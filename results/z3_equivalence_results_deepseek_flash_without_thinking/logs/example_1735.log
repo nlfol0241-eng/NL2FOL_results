@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1735.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1735.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7226 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the ids of the nurses who are on call in block floor 1 and block code 1.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+      local sorts:
+        BlockCode = integer -> IntSort()
+        BlockFloor = integer -> IntSort()
+        Nurse = integer -> IntSort()
+        OnCallEnd = datetime -> IntSort()
+        OnCallStart = datetime -> IntSort()
+      symbols:
+        On_Call(Nurse, BlockFloor, BlockCode, OnCallStart, OnCallEnd)
+        constant 1 : BlockFloor
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : BlockFloor ∃b1 : BlockCode ∃o : OnCallStart ∃o1 : OnCallEnd ( (On_Call(n,b,b1,o,o1)) ∧ ((b = 1) ∧ (b1 = 1)) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:BlockFloor EXISTS:∃ IDENT:b1 COLON:: IDENT:BlockCode EXISTS:∃ IDENT:o COLON:: IDENT:OnCallStart EXISTS:∃ IDENT:o1 COLON:: IDENT:OnCallEnd LPAR:( LPAR:( IDENT:On_Call LPAR:( IDENT:n COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:o COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:b EQ:= NUM:1 RPAR:) AND:∧ LPAR:( IDENT:b1 EQ:= NUM:1 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:BlockFloor
+            EXISTS b1:BlockCode
+              EXISTS o:OnCallStart
+                EXISTS o1:OnCallEnd
+                  AND
+                    PRED On_Call(n, b, b1, o, o1)
+                    AND
+                      EQ  b = 1
+                      EQ  b1 = 1
+      Predicted FOL: ∃n : Nurse ( On_Call(n, 1, 1, s, e) ∧ ∃s : OnCallStart ∃e : OnCallEnd On_Call(n, 1, 1, s, e) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Nurse LPAR:( IDENT:On_Call LPAR:( IDENT:n COMMA:, NUM:1 COMMA:, NUM:1 COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) AND:∧ EXISTS:∃ IDENT:s COLON:: IDENT:OnCallStart EXISTS:∃ IDENT:e COLON:: IDENT:OnCallEnd IDENT:On_Call LPAR:( IDENT:n COMMA:, NUM:1 COMMA:, NUM:1 COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Nurse
+            AND
+              PRED On_Call(n, 1, 1, s, e)
+              EXISTS s:OnCallStart
+                EXISTS e:OnCallEnd
+                  PRED On_Call(n, 1, 1, s, e)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) s, e occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n : Nurse) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local BlockFloor, global integer -> IntSort()
+        b1 : local BlockCode, global integer -> IntSort()
+        n : local Nurse, global integer -> IntSort()
+        o : local OnCallStart, global datetime -> IntSort()
+        o1 : local OnCallEnd, global datetime -> IntSort()
+      Predicted FOL:
+        e : local OnCallEnd, global datetime -> IntSort()
+        n : local Nurse, global integer -> IntSort()
+        s : local OnCallStart, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5437 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1735.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Nurse) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) s, e occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

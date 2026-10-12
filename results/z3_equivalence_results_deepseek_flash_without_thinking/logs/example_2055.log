@@ -1,0 +1,122 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2055.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2055.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3250 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which directors had a movie in either 1999 or 2000?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Budget_million = real -> Float32()
+        Director = text -> StringSort()
+        Gross_worldwide = int -> IntSort()
+        Title = text -> StringSort()
+        Year = int -> IntSort()
+        movie_id = text -> StringSort()
+      symbols:
+        movie(movie_id, Title, Year, Director, Budget_million, Gross_worldwide)
+        constant 1999 : Year
+        constant 2000 : Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : movie_id ∃t : Title ∃y : Year ∃b : Budget_million ∃g : Gross_worldwide ( (movie(m,t,y,d,b,g)) ∧ ((y = 1999) ∨ (y = 2000)) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:movie_id EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:b COLON:: IDENT:Budget_million EXISTS:∃ IDENT:g COLON:: IDENT:Gross_worldwide LPAR:( LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d COMMA:, IDENT:b COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:y EQ:= NUM:1999 RPAR:) OR:∨ LPAR:( IDENT:y EQ:= NUM:2000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:movie_id
+            EXISTS t:Title
+              EXISTS y:Year
+                EXISTS b:Budget_million
+                  EXISTS g:Gross_worldwide
+                    AND
+                      PRED movie(m, t, y, d, b, g)
+                      OR
+                        EQ  y = 1999
+                        EQ  y = 2000
+      Predicted FOL: ∃y : Year ( (y = 1999 ∨ y = 2000) ∧ ∃m0 : movie_id ∃m1 : Title ∃m2 : Year ∃m3 : Director ∃m4 : Budget_million ∃m5 : Gross_worldwide ( movie(m0, m1, m2, m3, m4, m5) ∧ m2 = y ∧ m3 = d ) )
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:Year LPAR:( LPAR:( IDENT:y EQ:= NUM:1999 OR:∨ IDENT:y EQ:= NUM:2000 RPAR:) AND:∧ EXISTS:∃ IDENT:m0 COLON:: IDENT:movie_id EXISTS:∃ IDENT:m1 COLON:: IDENT:Title EXISTS:∃ IDENT:m2 COLON:: IDENT:Year EXISTS:∃ IDENT:m3 COLON:: IDENT:Director EXISTS:∃ IDENT:m4 COLON:: IDENT:Budget_million EXISTS:∃ IDENT:m5 COLON:: IDENT:Gross_worldwide LPAR:( IDENT:movie LPAR:( IDENT:m0 COMMA:, IDENT:m1 COMMA:, IDENT:m2 COMMA:, IDENT:m3 COMMA:, IDENT:m4 COMMA:, IDENT:m5 RPAR:) AND:∧ IDENT:m2 EQ:= IDENT:y AND:∧ IDENT:m3 EQ:= IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:Year
+            AND
+              OR
+                EQ  y = 1999
+                EQ  y = 2000
+              EXISTS m0:movie_id
+                EXISTS m1:Title
+                  EXISTS m2:Year
+                    EXISTS m3:Director
+                      EXISTS m4:Budget_million
+                        EXISTS m5:Gross_worldwide
+                          AND
+                            PRED movie(m0, m1, m2, m3, m4, m5)
+                            EQ  m2 = y
+                            EQ  m3 = d
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Director_0 : Director   Gold d <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Budget_million, global real -> Float32()
+        d : local Director, global text -> StringSort()
+        g : local Gross_worldwide, global int -> IntSort()
+        m : local movie_id, global text -> StringSort()
+        t : local Title, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        d : local Director, global text -> StringSort()
+        m0 : local movie_id, global text -> StringSort()
+        m1 : local Title, global text -> StringSort()
+        m2 : local Year, global int -> IntSort()
+        m3 : local Director, global text -> StringSort()
+        m4 : local Budget_million, global real -> Float32()
+        m5 : local Gross_worldwide, global int -> IntSort()
+        y : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_t_2, gold_y_3, gold_b_4, gold_g_5], And(D_real(gold_b_4), And(P_movie(gold_m_1, gold_t_2, gold_y_3, FV_Director_0, gold_b_4, gold_g_5), Or((gold_y_3 == L_v_1999_int), (gold_y_3 == L_v_2000_int)))))
+      gold_skolem (witnesses WGOLD_m, WGOLD_t, WGOLD_y, WGOLD_b, WGOLD_g):  And(D_real(WGOLD_b), And(P_movie(WGOLD_m, WGOLD_t, WGOLD_y, FV_Director_0, WGOLD_b, WGOLD_g), Or((WGOLD_y == L_v_1999_int), (WGOLD_y == L_v_2000_int))))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_y_1], And(Or((predicted_y_1 == L_v_1999_int), (predicted_y_1 == L_v_2000_int)), Exists([predicted_m0_2, predicted_m1_3, predicted_m2_4, predicted_m3_5, predicted_m4_6, predicted_m5_7], And(D_real(predicted_m4_6), And(P_movie(predicted_m0_2, predicted_m1_3, predicted_m2_4, predicted_m3_5, predicted_m4_6, predicted_m5_7), (predicted_m2_4 == predicted_y_1), (predicted_m3_5 == FV_Director_0))))))
+      predicted_skolem (witnesses WPREDICTED_y):  And(Or((WPREDICTED_y == L_v_1999_int), (WPREDICTED_y == L_v_2000_int)), Exists([predictedsk_m0_1, predictedsk_m1_2, predictedsk_m2_3, predictedsk_m3_4, predictedsk_m4_5, predictedsk_m5_6], And(D_real(predictedsk_m4_5), And(P_movie(predictedsk_m0_1, predictedsk_m1_2, predictedsk_m2_3, predictedsk_m3_4, predictedsk_m4_5, predictedsk_m5_6), (predictedsk_m2_3 == WPREDICTED_y), (predictedsk_m3_4 == FV_Director_0)))))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1999' at int -> L_v_1999_int = IntVal(1999)
+      literal '2000' at int -> L_v_2000_int = IntVal(2000)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 751 lines, 29245 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2055.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_t, WGOLD_y, WGOLD_b, WGOLD_g
+      claim: And(And(And(Not(fpIsNaN(WGOLD_b)), Not(And(fpIsZero(WGOLD_b), fpIsNegative(WGOLD_b)))), And(movie(WGOLD_m, WGOLD_t, WGOLD_y, FV_Director_0, WGOLD_b, WGOLD_g), Or(1999 == WGOLD_y, 2000 == WGOLD_y))), Not(Exists(predicted_y_1, And(Or(1999 == predicted_y_1, 2000 == predicted_y_1), Exists([predicted_m0_2, predicted_m1_3, predicted_m2_4, predicted_m3_5, predicted_m4_6, predicted_m5_7], And(And(Not(fpIsNaN(predicted_m4_6)), Not(And(fpIsZero(predicted_m4_6), fpIsNegative(predicted_m4_6)))), And(movie(predicted_m0_2, predicted_m1_3, predicted_m2_4, predicted_m3_5, predicted_m4_6, predicted_m5_7), predicted_m2_4 == predicted_y_1, predicted_m3_5 == FV_Director_0)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.025 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_y
+      claim: And(And(Or(1999 == WPREDICTED_y, 2000 == WPREDICTED_y), Exists([predictedsk_m0_1, predictedsk_m1_2, predictedsk_m2_3, predictedsk_m3_4, predictedsk_m4_5, predictedsk_m5_6], And(And(Not(fpIsNaN(predictedsk_m4_5)), Not(And(fpIsZero(predictedsk_m4_5), fpIsNegative(predictedsk_m4_5)))), And(movie(predictedsk_m0_1, predictedsk_m1_2, predictedsk_m2_3, predictedsk_m3_4, predictedsk_m4_5, predictedsk_m5_6), predictedsk_m2_3 == WPREDICTED_y, predictedsk_m3_4 == FV_Director_0)))), Not(Exists([gold_m_1, gold_t_2, gold_y_3, gold_b_4, gold_g_5], And(And(Not(fpIsNaN(gold_b_4)), Not(And(fpIsZero(gold_b_4), fpIsNegative(gold_b_4)))), And(movie(gold_m_1, gold_t_2, gold_y_3, FV_Director_0, gold_b_4, gold_g_5), Or(1999 == gold_y_3, 2000 == gold_y_3))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.031 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.039 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

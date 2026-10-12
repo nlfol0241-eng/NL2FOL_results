@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_997.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_997.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3816 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the product category description and unit of measurement of category "Herbs"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        product_category_code = varchar(15) -> StringSort()
+        product_category_description = varchar(80) -> StringSort()
+        unit_of_measure = varchar(20) -> StringSort()
+      symbols:
+        Ref_Product_Categories(product_category_code, product_category_description, unit_of_measure)
+        constant Herbs : product_category_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_category_code ( (Ref_Product_Categories(p,p1,u)) ∧ (p = 'Herbs') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_category_code LPAR:( LPAR:( IDENT:Ref_Product_Categories LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:u RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= LIT:Herbs RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_category_code
+            AND
+              PRED Ref_Product_Categories(p, p1, u)
+              EQ  p = 'Herbs'
+      Predicted FOL: Ref_Product_Categories('Herbs', product_category_description, unit_of_measure)
+        tokens: IDENT:Ref_Product_Categories LPAR:( LIT:Herbs COMMA:, IDENT:product_category_description COMMA:, IDENT:unit_of_measure RPAR:) EOF
+        AST:
+          PRED Ref_Product_Categories('Herbs', product_category_description, unit_of_measure)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_product_category_description_0 : product_category_description   Gold p1 <-> Predicted product_category_description
+      FV_unit_of_measure_0 : unit_of_measure   Gold u <-> Predicted unit_of_measure
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local product_category_code, global varchar(15) -> StringSort()
+        p1 : local product_category_description, global varchar(80) -> StringSort()
+        u : local unit_of_measure, global varchar(20) -> StringSort()
+      Predicted FOL:
+        product_category_description : local product_category_description, global varchar(80) -> StringSort()
+        unit_of_measure : local unit_of_measure, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1], And(D_varchar_15_(gold_p_1), And(P_Ref_Product_Categories(gold_p_1, FV_product_category_description_0, FV_unit_of_measure_0), (gold_p_1 == L_Herbs))))
+      gold_skolem (witnesses WGOLD_p):  And(D_varchar_15_(WGOLD_p), And(P_Ref_Product_Categories(WGOLD_p, FV_product_category_description_0, FV_unit_of_measure_0), (WGOLD_p == L_Herbs)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_Ref_Product_Categories(L_Herbs, FV_product_category_description_0, FV_unit_of_measure_0), D_varchar_15_(L_Herbs))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Herbs' at varchar(15) -> L_Herbs = StringVal('Herbs')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 725 lines, 27123 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_997.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_product_category_description_0) <= 80
+      [1] Length(FV_unit_of_measure_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_p
+      claim: And(And(Length(WGOLD_p) <= 15, And(Ref_Product_Categories(WGOLD_p, FV_product_category_description_0, FV_unit_of_measure_0), WGOLD_p == "Herbs")), Not(And(Ref_Product_Categories("Herbs", FV_product_category_description_0, FV_unit_of_measure_0), Length("Herbs") <= 15)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses -
+      claim: And(And(Ref_Product_Categories("Herbs", FV_product_category_description_0, FV_unit_of_measure_0), Length("Herbs") <= 15), Not(Exists(gold_p_1, And(Length(gold_p_1) <= 15, And(Ref_Product_Categories(gold_p_1, FV_product_category_description_0, FV_unit_of_measure_0), gold_p_1 == "Herbs")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.002 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

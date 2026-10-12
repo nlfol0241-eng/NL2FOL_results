@@ -1,0 +1,119 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1807.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1807.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7755 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give me the product type, name and price for all the products supplied by supplier id 3.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 9 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        date_supplied_from = datetime -> IntSort()
+        date_supplied_to = datetime -> IntSort()
+        product_id = integer -> IntSort()
+        product_name = varchar(80) -> StringSort()
+        product_price = decimal(19,4) -> RealSort()
+        product_type_code = varchar(10) -> StringSort()
+        supplier_id = integer -> IntSort()
+        total_amount_purchased = varchar(80) -> StringSort()
+        total_value_purchased = decimal(19,4) -> RealSort()
+      symbols:
+        Product_Suppliers(product_id, supplier_id, date_supplied_from, date_supplied_to, total_amount_purchased, total_value_purchased)
+        Products(product_id, product_type_code, product_name, product_price)
+        constant 3 : supplier_id
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃s : supplier_id ∃d : date_supplied_from ∃d1 : date_supplied_to ∃t : total_amount_purchased ∃t1 : total_value_purchased ∃p1 : product_id ( (((Product_Suppliers(p,s,d,d1,t,t1)) ∧ (Products(p1,p2,p3,p4))) ∧ (p = p1)) ∧ (s = 3) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:s COLON:: IDENT:supplier_id EXISTS:∃ IDENT:d COLON:: IDENT:date_supplied_from EXISTS:∃ IDENT:d1 COLON:: IDENT:date_supplied_to EXISTS:∃ IDENT:t COLON:: IDENT:total_amount_purchased EXISTS:∃ IDENT:t1 COLON:: IDENT:total_value_purchased EXISTS:∃ IDENT:p1 COLON:: IDENT:product_id LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Product_Suppliers LPAR:( IDENT:p COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:t COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Products LPAR:( IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= NUM:3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS s:supplier_id
+              EXISTS d:date_supplied_from
+                EXISTS d1:date_supplied_to
+                  EXISTS t:total_amount_purchased
+                    EXISTS t1:total_value_purchased
+                      EXISTS p1:product_id
+                        AND
+                          AND
+                            AND
+                              PRED Product_Suppliers(p, s, d, d1, t, t1)
+                              PRED Products(p1, p2, p3, p4)
+                            EQ  p = p1
+                          EQ  s = 3
+      Predicted FOL: ∀p_id : product_id ∀p_type : product_type_code ∀p_name : product_name ∀p_price : product_price ( ( Products(p_id, p_type, p_name, p_price) ∧ ∃s_id : supplier_id ∃d_from : date_supplied_from ∃d_to : date_supplied_to ∃amt : total_amount_purchased ∃val : total_value_purchased ( Product_Suppliers(p_id, s_id, d_from, d_to, amt, val) ∧ s_id = 3 ) ) → ( p_type = p_type ∧ p_name = p_name ∧ p_price = p_price ) )
+        tokens: FORALL:∀ IDENT:p_id COLON:: IDENT:product_id FORALL:∀ IDENT:p_type COLON:: IDENT:product_type_code FORALL:∀ IDENT:p_name COLON:: IDENT:product_name FORALL:∀ IDENT:p_price COLON:: IDENT:product_price LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p_id COMMA:, IDENT:p_type COMMA:, IDENT:p_name COMMA:, IDENT:p_price RPAR:) AND:∧ EXISTS:∃ IDENT:s_id COLON:: IDENT:supplier_id EXISTS:∃ IDENT:d_from COLON:: IDENT:date_supplied_from EXISTS:∃ IDENT:d_to COLON:: IDENT:date_supplied_to EXISTS:∃ IDENT:amt COLON:: IDENT:total_amount_purchased EXISTS:∃ IDENT:val COLON:: IDENT:total_value_purchased LPAR:( IDENT:Product_Suppliers LPAR:( IDENT:p_id COMMA:, IDENT:s_id COMMA:, IDENT:d_from COMMA:, IDENT:d_to COMMA:, IDENT:amt COMMA:, IDENT:val RPAR:) AND:∧ IDENT:s_id EQ:= NUM:3 RPAR:) RPAR:) IMPL:→ LPAR:( IDENT:p_type EQ:= IDENT:p_type AND:∧ IDENT:p_name EQ:= IDENT:p_name AND:∧ IDENT:p_price EQ:= IDENT:p_price RPAR:) RPAR:) EOF
+        AST:
+          FORALL p_id:product_id
+            FORALL p_type:product_type_code
+              FORALL p_name:product_name
+                FORALL p_price:product_price
+                  IMPLIES
+                    AND
+                      PRED Products(p_id, p_type, p_name, p_price)
+                      EXISTS s_id:supplier_id
+                        EXISTS d_from:date_supplied_from
+                          EXISTS d_to:date_supplied_to
+                            EXISTS amt:total_amount_purchased
+                              EXISTS val:total_value_purchased
+                                AND
+                                  PRED Product_Suppliers(p_id, s_id, d_from, d_to, amt, val)
+                                  EQ  s_id = 3
+                    AND
+                      EQ  p_type = p_type
+                      EQ  p_name = p_name
+                      EQ  p_price = p_price
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (p2 : product_type_code, p3 : product_name, p4 : product_price) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_supplied_from, global datetime -> IntSort()
+        d1 : local date_supplied_to, global datetime -> IntSort()
+        p : local product_id, global integer -> IntSort()
+        p1 : local product_id, global integer -> IntSort()
+        p2 : local product_type_code, global varchar(10) -> StringSort()
+        p3 : local product_name, global varchar(80) -> StringSort()
+        p4 : local product_price, global decimal(19,4) -> RealSort()
+        s : local supplier_id, global integer -> IntSort()
+        t : local total_amount_purchased, global varchar(80) -> StringSort()
+        t1 : local total_value_purchased, global decimal(19,4) -> RealSort()
+      Predicted FOL:
+        amt : local total_amount_purchased, global varchar(80) -> StringSort()
+        d_from : local date_supplied_from, global datetime -> IntSort()
+        d_to : local date_supplied_to, global datetime -> IntSort()
+        p_id : local product_id, global integer -> IntSort()
+        p_name : local product_name, global varchar(80) -> StringSort()
+        p_price : local product_price, global decimal(19,4) -> RealSort()
+        p_type : local product_type_code, global varchar(10) -> StringSort()
+        s_id : local supplier_id, global integer -> IntSort()
+        val : local total_value_purchased, global decimal(19,4) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5919 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1807.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (p2 : product_type_code, p3 : product_name, p4 : product_price) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

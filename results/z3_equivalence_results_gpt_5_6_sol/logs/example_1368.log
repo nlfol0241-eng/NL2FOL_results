@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1368.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1368.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5078 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names and publication dates of all catalogs that have catalog level number greater than 5.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        integer -> IntSort()
+      local sorts:
+        catalog_id = integer -> IntSort()
+        catalog_level_name = varchar(50) -> StringSort()
+        catalog_level_number = integer -> IntSort()
+        catalog_name = varchar(50) -> StringSort()
+        catalog_publisher = varchar(80) -> StringSort()
+        date_of_latest_revision = datetime -> IntSort()
+        date_of_publication = datetime -> IntSort()
+      symbols:
+        Catalog_Structure(catalog_level_number, catalog_id, catalog_level_name)
+        Catalogs(catalog_id, catalog_name, catalog_publisher, date_of_publication, date_of_latest_revision)
+        constant 5 : catalog_level_number
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : catalog_id ∃c2 : catalog_publisher ∃d1 : date_of_latest_revision ∃c3 : catalog_level_number ∃c4 : catalog_id ∃c5 : catalog_level_name ( (((Catalogs(c,c1,c2,d,d1)) ∧ (Catalog_Structure(c3,c4,c5))) ∧ (c = c4)) ∧ (c3 > 5) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:catalog_id EXISTS:∃ IDENT:c2 COLON:: IDENT:catalog_publisher EXISTS:∃ IDENT:d1 COLON:: IDENT:date_of_latest_revision EXISTS:∃ IDENT:c3 COLON:: IDENT:catalog_level_number EXISTS:∃ IDENT:c4 COLON:: IDENT:catalog_id EXISTS:∃ IDENT:c5 COLON:: IDENT:catalog_level_name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Catalogs LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:d COMMA:, IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Catalog_Structure LPAR:( IDENT:c3 COMMA:, IDENT:c4 COMMA:, IDENT:c5 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c4 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c3 GT:> NUM:5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:catalog_id
+            EXISTS c2:catalog_publisher
+              EXISTS d1:date_of_latest_revision
+                EXISTS c3:catalog_level_number
+                  EXISTS c4:catalog_id
+                    EXISTS c5:catalog_level_name
+                      AND
+                        AND
+                          AND
+                            PRED Catalogs(c, c1, c2, d, d1)
+                            PRED Catalog_Structure(c3, c4, c5)
+                          EQ  c = c4
+                        CMP  c3 > 5
+      Predicted FOL: ∃cid : catalog_id ∃publisher : catalog_publisher ∃latest_revision : date_of_latest_revision ∃level : catalog_level_number ∃level_name : catalog_level_name (Catalogs(cid, catalog_name, publisher, date_of_publication, latest_revision) ∧ Catalog_Structure(level, cid, level_name) ∧ level > 5)
+        tokens: EXISTS:∃ IDENT:cid COLON:: IDENT:catalog_id EXISTS:∃ IDENT:publisher COLON:: IDENT:catalog_publisher EXISTS:∃ IDENT:latest_revision COLON:: IDENT:date_of_latest_revision EXISTS:∃ IDENT:level COLON:: IDENT:catalog_level_number EXISTS:∃ IDENT:level_name COLON:: IDENT:catalog_level_name LPAR:( IDENT:Catalogs LPAR:( IDENT:cid COMMA:, IDENT:catalog_name COMMA:, IDENT:publisher COMMA:, IDENT:date_of_publication COMMA:, IDENT:latest_revision RPAR:) AND:∧ IDENT:Catalog_Structure LPAR:( IDENT:level COMMA:, IDENT:cid COMMA:, IDENT:level_name RPAR:) AND:∧ IDENT:level GT:> NUM:5 RPAR:) EOF
+        AST:
+          EXISTS cid:catalog_id
+            EXISTS publisher:catalog_publisher
+              EXISTS latest_revision:date_of_latest_revision
+                EXISTS level:catalog_level_number
+                  EXISTS level_name:catalog_level_name
+                    AND
+                      PRED Catalogs(cid, catalog_name, publisher, date_of_publication, latest_revision)
+                      PRED Catalog_Structure(level, cid, level_name)
+                      CMP  level > 5
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_catalog_name_0 : catalog_name   Gold c1 <-> Predicted catalog_name
+      FV_date_of_publication_0 : date_of_publication   Gold d <-> Predicted date_of_publication
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local catalog_id, global integer -> IntSort()
+        c1 : local catalog_name, global varchar(50) -> StringSort()
+        c2 : local catalog_publisher, global varchar(80) -> StringSort()
+        c3 : local catalog_level_number, global integer -> IntSort()
+        c4 : local catalog_id, global integer -> IntSort()
+        c5 : local catalog_level_name, global varchar(50) -> StringSort()
+        d : local date_of_publication, global datetime -> IntSort()
+        d1 : local date_of_latest_revision, global datetime -> IntSort()
+      Predicted FOL:
+        catalog_name : local catalog_name, global varchar(50) -> StringSort()
+        cid : local catalog_id, global integer -> IntSort()
+        date_of_publication : local date_of_publication, global datetime -> IntSort()
+        latest_revision : local date_of_latest_revision, global datetime -> IntSort()
+        level : local catalog_level_number, global integer -> IntSort()
+        level_name : local catalog_level_name, global varchar(50) -> StringSort()
+        publisher : local catalog_publisher, global varchar(80) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c2_2, gold_d1_3, gold_c3_4, gold_c4_5, gold_c5_6], And(D_varchar_80_(gold_c2_2), D_varchar_50_(gold_c5_6), And(And(And(P_Catalogs(gold_c_1, FV_catalog_name_0, gold_c2_2, FV_date_of_publication_0, gold_d1_3), P_Catalog_Structure(gold_c3_4, gold_c4_5, gold_c5_6)), (gold_c_1 == gold_c4_5)), (gold_c3_4 > L_v_5_integer))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c2, WGOLD_d1, WGOLD_c3, WGOLD_c4, WGOLD_c5):  And(D_varchar_80_(WGOLD_c2), D_varchar_50_(WGOLD_c5), And(And(And(P_Catalogs(WGOLD_c, FV_catalog_name_0, WGOLD_c2, FV_date_of_publication_0, WGOLD_d1), P_Catalog_Structure(WGOLD_c3, WGOLD_c4, WGOLD_c5)), (WGOLD_c == WGOLD_c4)), (WGOLD_c3 > L_v_5_integer)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_cid_1, predicted_publisher_2, predicted_latest_revision_3, predicted_level_4, predicted_level_name_5], And(D_varchar_80_(predicted_publisher_2), D_varchar_50_(predicted_level_name_5), And(P_Catalogs(predicted_cid_1, FV_catalog_name_0, predicted_publisher_2, FV_date_of_publication_0, predicted_latest_revision_3), P_Catalog_Structure(predicted_level_4, predicted_cid_1, predicted_level_name_5), (predicted_level_4 > L_v_5_integer))))
+      predicted_skolem (witnesses WPREDICTED_cid, WPREDICTED_publisher, WPREDICTED_latest_revision, WPREDICTED_level, WPREDICTED_level_name):  And(D_varchar_80_(WPREDICTED_publisher), D_varchar_50_(WPREDICTED_level_name), And(P_Catalogs(WPREDICTED_cid, FV_catalog_name_0, WPREDICTED_publisher, FV_date_of_publication_0, WPREDICTED_latest_revision), P_Catalog_Structure(WPREDICTED_level, WPREDICTED_cid, WPREDICTED_level_name), (WPREDICTED_level > L_v_5_integer)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '5' at integer -> L_v_5_integer = IntVal(5)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 768 lines, 31487 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1368.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_catalog_name_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c2, WGOLD_d1, WGOLD_c3, WGOLD_c4, WGOLD_c5
+      claim: And(And(Length(WGOLD_c2) <= 80, Length(WGOLD_c5) <= 50, And(And(And(Catalogs(WGOLD_c, FV_catalog_name_0, WGOLD_c2, FV_date_of_publication_0, WGOLD_d1), Catalog_Structure(WGOLD_c3, WGOLD_c4, WGOLD_c5)), WGOLD_c == WGOLD_c4), 5 < WGOLD_c3)), Not(Exists([predicted_cid_1, predicted_publisher_2, predicted_latest_revision_3, predicted_level_4, predicted_level_name_5], And(Length(predicted_publisher_2) <= 80, Length(predicted_level_name_5) <= 50, And(Catalogs(predicted_cid_1, FV_catalog_name_0, predicted_publisher_2, FV_date_of_publication_0, predicted_latest_revision_3), Catalog_Structure(predicted_level_4, predicted_cid_1, predicted_level_name_5), 5 < predicted_level_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_cid, WPREDICTED_publisher, WPREDICTED_latest_revision, WPREDICTED_level, WPREDICTED_level_name
+      claim: And(And(Length(WPREDICTED_publisher) <= 80, Length(WPREDICTED_level_name) <= 50, And(Catalogs(WPREDICTED_cid, FV_catalog_name_0, WPREDICTED_publisher, FV_date_of_publication_0, WPREDICTED_latest_revision), Catalog_Structure(WPREDICTED_level, WPREDICTED_cid, WPREDICTED_level_name), 5 < WPREDICTED_level)), Not(Exists([gold_c_1, gold_c2_2, gold_d1_3, gold_c3_4, gold_c4_5, gold_c5_6], And(Length(gold_c2_2) <= 80, Length(gold_c5_6) <= 50, And(And(And(Catalogs(gold_c_1, FV_catalog_name_0, gold_c2_2, FV_date_of_publication_0, gold_d1_3), Catalog_Structure(gold_c3_4, gold_c4_5, gold_c5_6)), gold_c_1 == gold_c4_5), 5 < gold_c3_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

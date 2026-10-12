@@ -1,0 +1,160 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3470.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3470.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3678 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which countries do not have a stadium that was opened after 2006?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Capacity = int -> IntSort()
+        City = text -> StringSort()
+        Country = text -> StringSort()
+        ID = int -> IntSort()
+        Opening_year = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        stadium(ID, name, Capacity, City, Country, Opening_year)
+        constant 2006 : Opening_year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c : Capacity ∃o : Opening_year ∃n : name ∃c1 : City ∃i : ID( stadium(i,n,c,c1,c2,o) )) ∧ (¬(∃c : Capacity ∃o : Opening_year ∃n : name ∃c1 : City ∃i : ID( (stadium(i,n,c,c1,c2,o)) ∧ (o > 2006) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Capacity EXISTS:∃ IDENT:o COLON:: IDENT:Opening_year EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c1 COLON:: IDENT:City EXISTS:∃ IDENT:i COLON:: IDENT:ID LPAR:( IDENT:stadium LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Capacity EXISTS:∃ IDENT:o COLON:: IDENT:Opening_year EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c1 COLON:: IDENT:City EXISTS:∃ IDENT:i COLON:: IDENT:ID LPAR:( LPAR:( IDENT:stadium LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o GT:> NUM:2006 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c:Capacity
+              EXISTS o:Opening_year
+                EXISTS n:name
+                  EXISTS c1:City
+                    EXISTS i:ID
+                      PRED stadium(i, n, c, c1, c2, o)
+            NOT
+              EXISTS c:Capacity
+                EXISTS o:Opening_year
+                  EXISTS n:name
+                    EXISTS c1:City
+                      EXISTS i:ID
+                        AND
+                          PRED stadium(i, n, c, c1, c2, o)
+                          CMP  o > 2006
+      Predicted FOL: ∃c:Country ( (∃i:ID ∃n:name ∃cap:Capacity ∃city:City ∃oy:Opening_year ( stadium(i,n,cap,city,c,oy) )) ∧ ¬∃i2:ID ∃n2:name ∃cap2:Capacity ∃city2:City ∃oy2:Opening_year ( stadium(i2,n2,cap2,city2,c,oy2) ∧ 2006 < oy2 ) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:cap COLON:: IDENT:Capacity EXISTS:∃ IDENT:city COLON:: IDENT:City EXISTS:∃ IDENT:oy COLON:: IDENT:Opening_year LPAR:( IDENT:stadium LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:cap COMMA:, IDENT:city COMMA:, IDENT:c COMMA:, IDENT:oy RPAR:) RPAR:) RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:i2 COLON:: IDENT:ID EXISTS:∃ IDENT:n2 COLON:: IDENT:name EXISTS:∃ IDENT:cap2 COLON:: IDENT:Capacity EXISTS:∃ IDENT:city2 COLON:: IDENT:City EXISTS:∃ IDENT:oy2 COLON:: IDENT:Opening_year LPAR:( IDENT:stadium LPAR:( IDENT:i2 COMMA:, IDENT:n2 COMMA:, IDENT:cap2 COMMA:, IDENT:city2 COMMA:, IDENT:c COMMA:, IDENT:oy2 RPAR:) AND:∧ NUM:2006 LT:< IDENT:oy2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Country
+            AND
+              EXISTS i:ID
+                EXISTS n:name
+                  EXISTS cap:Capacity
+                    EXISTS city:City
+                      EXISTS oy:Opening_year
+                        PRED stadium(i, n, cap, city, c, oy)
+              NOT
+                EXISTS i2:ID
+                  EXISTS n2:name
+                    EXISTS cap2:Capacity
+                      EXISTS city2:City
+                        EXISTS oy2:Opening_year
+                          AND
+                            PRED stadium(i2, n2, cap2, city2, c, oy2)
+                            CMP  2006 < oy2
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) c do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Country_0 : Country   Gold c2 <-> Predicted c
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Capacity, global int -> IntSort()
+        c1 : local City, global text -> StringSort()
+        c2 : local Country, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        o : local Opening_year, global int -> IntSort()
+      Predicted FOL:
+        c : local Country, global text -> StringSort()
+        cap : local Capacity, global int -> IntSort()
+        cap2 : local Capacity, global int -> IntSort()
+        city : local City, global text -> StringSort()
+        city2 : local City, global text -> StringSort()
+        i : local ID, global int -> IntSort()
+        i2 : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        n2 : local name, global text -> StringSort()
+        oy : local Opening_year, global int -> IntSort()
+        oy2 : local Opening_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_c_1, gold_o_2, gold_n_3, gold_c1_4, gold_i_5], P_stadium(gold_i_5, gold_n_3, gold_c_1, gold_c1_4, FV_Country_0, gold_o_2)), Not(Exists([gold_c_6, gold_o_7, gold_n_8, gold_c1_9, gold_i_10], And(P_stadium(gold_i_10, gold_n_8, gold_c_6, gold_c1_9, FV_Country_0, gold_o_7), (gold_o_7 > L_v_2006_int)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1], And(Exists([predicted_i_2, predicted_n_3, predicted_cap_4, predicted_city_5, predicted_oy_6], P_stadium(predicted_i_2, predicted_n_3, predicted_cap_4, predicted_city_5, predicted_c_1, predicted_oy_6)), Not(Exists([predicted_i2_7, predicted_n2_8, predicted_cap2_9, predicted_city2_10, predicted_oy2_11], And(P_stadium(predicted_i2_7, predicted_n2_8, predicted_cap2_9, predicted_city2_10, predicted_c_1, predicted_oy2_11), (L_v_2006_int < predicted_oy2_11))))))
+      predicted_skolem (witnesses WPREDICTED_c):  And(Exists([predictedsk_i_1, predictedsk_n_2, predictedsk_cap_3, predictedsk_city_4, predictedsk_oy_5], P_stadium(predictedsk_i_1, predictedsk_n_2, predictedsk_cap_3, predictedsk_city_4, WPREDICTED_c, predictedsk_oy_5)), Not(Exists([predictedsk_i2_6, predictedsk_n2_7, predictedsk_cap2_8, predictedsk_city2_9, predictedsk_oy2_10], And(P_stadium(predictedsk_i2_6, predictedsk_n2_7, predictedsk_cap2_8, predictedsk_city2_9, WPREDICTED_c, predictedsk_oy2_10), (L_v_2006_int < predictedsk_oy2_10)))))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2006' at int -> L_v_2006_int = IntVal(2006)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 748 lines, 29423 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3470.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_c_1, gold_o_2, gold_n_3, gold_c1_4, gold_i_5], stadium(gold_i_5, gold_n_3, gold_c_1, gold_c1_4, FV_Country_0, gold_o_2)), Not(Exists([gold_c_6, gold_o_7, gold_n_8, gold_c1_9, gold_i_10], And(stadium(gold_i_10, gold_n_8, gold_c_6, gold_c1_9, FV_Country_0, gold_o_7), 2006 < gold_o_7)))), Not(Exists(predicted_c_1, And(Exists([predicted_i_2, predicted_n_3, predicted_cap_4, predicted_city_5, predicted_oy_6], stadium(predicted_i_2, predicted_n_3, predicted_cap_4, predicted_city_5, predicted_c_1, predicted_oy_6)), Not(Exists([predicted_i2_7, predicted_n2_8, predicted_cap2_9, predicted_city2_10, predicted_oy2_11], And(stadium(predicted_i2_7, predicted_n2_8, predicted_cap2_9, predicted_city2_10, predicted_c_1, predicted_oy2_11), 2006 < predicted_oy2_11)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c
+      claim: And(And(Exists([predictedsk_i_1, predictedsk_n_2, predictedsk_cap_3, predictedsk_city_4, predictedsk_oy_5], stadium(predictedsk_i_1, predictedsk_n_2, predictedsk_cap_3, predictedsk_city_4, WPREDICTED_c, predictedsk_oy_5)), Not(Exists([predictedsk_i2_6, predictedsk_n2_7, predictedsk_cap2_8, predictedsk_city2_9, predictedsk_oy2_10], And(stadium(predictedsk_i2_6, predictedsk_n2_7, predictedsk_cap2_8, predictedsk_city2_9, WPREDICTED_c, predictedsk_oy2_10), 2006 < predictedsk_oy2_10)))), Not(And(Exists([gold_c_1, gold_o_2, gold_n_3, gold_c1_4, gold_i_5], stadium(gold_i_5, gold_n_3, gold_c_1, gold_c1_4, FV_Country_0, gold_o_2)), Not(Exists([gold_c_6, gold_o_7, gold_n_8, gold_c1_9, gold_i_10], And(stadium(gold_i_10, gold_n_8, gold_c_6, gold_c1_9, FV_Country_0, gold_o_7), 2006 < gold_o_7))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.012 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 6 relation tuple(s) listed, 19 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          c : Country = '!2!'
+        free (answer) variables:
+          FV_Country_0 : Country = '!5!'
+        literals / constants:
+          2006 : Opening_year = 2006
+        relations (each value tagged with the local sort of its position):
+          stadium(ID, name, Capacity, City, Country, Opening_year):
+            stadium(ID=2, name='!0!', Capacity=3, City='', Country='!2!', Opening_year=2)
+            stadium(ID=2, name='!0!', Capacity=3, City='', Country='!2!', Opening_year=3)
+            stadium(ID=2, name='!0!', Capacity=3, City='', Country='!2!', Opening_year=2006)
+            stadium(ID=2, name='!0!', Capacity=3, City='!0!', Country='!2!', Opening_year=2006)
+            stadium(ID=2, name='!0!', Capacity=3, City='!2!', Country='!2!', Opening_year=2006)
+            stadium(ID=2, name='!0!', Capacity=3, City='!5!', Country='!2!', Opening_year=2006)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Capacity     : {3}
+          City         : {'', '!0!', '!2!', '!5!'}
+          Country      : {'!2!', '!5!'}
+          ID           : {2}
+          Opening_year : {2, 3, 2006}
+          name         : {'!0!'}
+        values shared across local sorts (joins):
+          2 : ID, Opening_year
+          3 : Capacity, Opening_year
+          '!0!' : City, name
+          '!2!' : City, Country
+          '!5!' : City, Country
+   [R3] took 0.064 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

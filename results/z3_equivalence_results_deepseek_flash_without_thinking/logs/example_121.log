@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_121.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_121.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2517 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the singers who are not French citizens?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Birth_Year = real -> Float32()
+        Citizenship = text -> StringSort()
+        Name = text -> StringSort()
+        Net_Worth_Millions = real -> Float32()
+        Singer_ID = int -> IntSort()
+      symbols:
+        singer(Singer_ID, Name, Birth_Year, Net_Worth_Millions, Citizenship)
+        constant France : Citizenship
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Singer_ID ∃b : Birth_Year ∃n1 : Net_Worth_Millions ∃c : Citizenship ( (singer(s,n,b,n1,c)) ∧ (c <> 'France') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:b COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:n1 COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:c COLON:: IDENT:Citizenship LPAR:( LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:n1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c NEQ:<> LIT:France RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Singer_ID
+            EXISTS b:Birth_Year
+              EXISTS n1:Net_Worth_Millions
+                EXISTS c:Citizenship
+                  AND
+                    PRED singer(s, n, b, n1, c)
+                    NEQ  c != 'France'
+      Predicted FOL: ∃x0 : Singer_ID ∃x1 : Name ∃x2 : Birth_Year ∃x3 : Net_Worth_Millions ∃x4 : Citizenship (singer(x0, x1, x2, x3, x4) ∧ x4 ≠ France)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:x1 COLON:: IDENT:Name EXISTS:∃ IDENT:x2 COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:x3 COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:x4 COLON:: IDENT:Citizenship LPAR:( IDENT:singer LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 RPAR:) AND:∧ IDENT:x4 NEQ:≠ IDENT:France RPAR:) EOF
+        AST:
+          EXISTS x0:Singer_ID
+            EXISTS x1:Name
+              EXISTS x2:Birth_Year
+                EXISTS x3:Net_Worth_Millions
+                  EXISTS x4:Citizenship
+                    AND
+                      PRED singer(x0, x1, x2, x3, x4)
+                      NEQ  x4 != France<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Birth_Year, global real -> Float32()
+        c : local Citizenship, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Net_Worth_Millions, global real -> Float32()
+        s : local Singer_ID, global int -> IntSort()
+      Predicted FOL:
+        x0 : local Singer_ID, global int -> IntSort()
+        x1 : local Name, global text -> StringSort()
+        x2 : local Birth_Year, global real -> Float32()
+        x3 : local Net_Worth_Millions, global real -> Float32()
+        x4 : local Citizenship, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5359 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_121.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

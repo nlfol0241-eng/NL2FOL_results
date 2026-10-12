@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1779.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1779.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3174 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who has a friend that is from new york city?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        age = integer -> IntSort()
+        city = text -> StringSort()
+        friend = varchar(20) -> StringSort()
+        gender = text -> StringSort()
+        job = text -> StringSort()
+        name = varchar(20) -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        Person(name, age, city, gender, job)
+        PersonFriend(name, friend, year)
+        constant new york city : city
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃a : age ∃c : city ∃g : gender ∃j : job ∃f : friend ∃y : year ( (((Person(n,a,c,g,j)) ∧ (PersonFriend(n1,f,y))) ∧ (n = f)) ∧ (c = 'new york city') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:a COLON:: IDENT:age EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job EXISTS:∃ IDENT:f COLON:: IDENT:friend EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:PersonFriend LPAR:( IDENT:n1 COMMA:, IDENT:f COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:new york city RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS a:age
+              EXISTS c:city
+                EXISTS g:gender
+                  EXISTS j:job
+                    EXISTS f:friend
+                      EXISTS y:year
+                        AND
+                          AND
+                            AND
+                              PRED Person(n, a, c, g, j)
+                              PRED PersonFriend(n1, f, y)
+                            EQ  n = f
+                          EQ  c = 'new york city'
+      Predicted FOL: ∃x : name ∃y : age ∃z : city ∃w : gender ∃v : job ( Person(x, y, z, w, v) ∧ ∃x' : name ∃y' : age ∃z' : city ∃w' : gender ∃v' : job ∃t : year ( PersonFriend(x, x', t) ∧ Person(x', y', z', w', v') ∧ z' = 'new york city' ) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:name EXISTS:∃ IDENT:y COLON:: IDENT:age EXISTS:∃ IDENT:z COLON:: IDENT:city EXISTS:∃ IDENT:w COLON:: IDENT:gender EXISTS:∃ IDENT:v COLON:: IDENT:job LPAR:( IDENT:Person LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) AND:∧ EXISTS:∃ IDENT:x' COLON:: IDENT:name EXISTS:∃ IDENT:y' COLON:: IDENT:age EXISTS:∃ IDENT:z' COLON:: IDENT:city EXISTS:∃ IDENT:w' COLON:: IDENT:gender EXISTS:∃ IDENT:v' COLON:: IDENT:job EXISTS:∃ IDENT:t COLON:: IDENT:year LPAR:( IDENT:PersonFriend LPAR:( IDENT:x COMMA:, IDENT:x' COMMA:, IDENT:t RPAR:) AND:∧ IDENT:Person LPAR:( IDENT:x' COMMA:, IDENT:y' COMMA:, IDENT:z' COMMA:, IDENT:w' COMMA:, IDENT:v' RPAR:) AND:∧ IDENT:z' EQ:= LIT:new york city RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:name
+            EXISTS y:age
+              EXISTS z:city
+                EXISTS w:gender
+                  EXISTS v:job
+                    AND
+                      PRED Person(x, y, z, w, v)
+                      EXISTS x':name
+                        EXISTS y':age
+                          EXISTS z':city
+                            EXISTS w':gender
+                              EXISTS v':job
+                                EXISTS t:year
+                                  AND
+                                    PRED PersonFriend(x, x', t)
+                                    PRED Person(x', y', z', w', v')
+                                    EQ  z' = 'new york city'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        f : local friend, global varchar(20) -> StringSort()
+        g : local gender, global text -> StringSort()
+        j : local job, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        n1 : local name, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        t : local year, global integer -> IntSort()
+        v : local job, global text -> StringSort()
+        v' : local job, global text -> StringSort()
+        w : local gender, global text -> StringSort()
+        w' : local gender, global text -> StringSort()
+        x : local name, global varchar(20) -> StringSort()
+        x' : local name, global varchar(20) -> StringSort()
+        y : local age, global integer -> IntSort()
+        y' : local age, global integer -> IntSort()
+        z : local city, global text -> StringSort()
+        z' : local city, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5502 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1779.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

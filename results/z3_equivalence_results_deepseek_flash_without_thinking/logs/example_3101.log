@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3101.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3101.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3105 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of editors that are not on any journal committee.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = real -> Float32()
+        Editor_ID = int -> IntSort()
+        Journal_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Work_Type = text -> StringSort()
+      symbols:
+        editor(Editor_ID, Name, Age)
+        journal_committee(Editor_ID, Journal_ID, Work_Type)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Age ∃e : Editor_ID( (editor(e,n,a)) ∧ (¬(∃e1 : Editor_ID( ((editor(e,n,a)) ∧ (∃w : Work_Type ∃j : Journal_ID( journal_committee(e1,j,w) ))) ∧ (e = e1) ))) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:e COLON:: IDENT:Editor_ID LPAR:( LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e1 COLON:: IDENT:Editor_ID LPAR:( LPAR:( LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:w COLON:: IDENT:Work_Type EXISTS:∃ IDENT:j COLON:: IDENT:Journal_ID LPAR:( IDENT:journal_committee LPAR:( IDENT:e1 COMMA:, IDENT:j COMMA:, IDENT:w RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Age
+            EXISTS e:Editor_ID
+              AND
+                PRED editor(e, n, a)
+                NOT
+                  EXISTS e1:Editor_ID
+                    AND
+                      AND
+                        PRED editor(e, n, a)
+                        EXISTS w:Work_Type
+                          EXISTS j:Journal_ID
+                            PRED journal_committee(e1, j, w)
+                      EQ  e = e1
+      Predicted FOL: ∃e_id : Editor_ID ∃name : Name ∃age : Age (editor(e_id, name, age) ∧ ¬∃j_id : Journal_ID ∃w_type : Work_Type journal_committee(e_id, j_id, w_type))
+        tokens: EXISTS:∃ IDENT:e_id COLON:: IDENT:Editor_ID EXISTS:∃ IDENT:name COLON:: IDENT:Name EXISTS:∃ IDENT:age COLON:: IDENT:Age LPAR:( IDENT:editor LPAR:( IDENT:e_id COMMA:, IDENT:name COMMA:, IDENT:age RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:j_id COLON:: IDENT:Journal_ID EXISTS:∃ IDENT:w_type COLON:: IDENT:Work_Type IDENT:journal_committee LPAR:( IDENT:e_id COMMA:, IDENT:j_id COMMA:, IDENT:w_type RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e_id:Editor_ID
+            EXISTS name:Name
+              EXISTS age:Age
+                AND
+                  PRED editor(e_id, name, age)
+                  NOT
+                    EXISTS j_id:Journal_ID
+                      EXISTS w_type:Work_Type
+                        PRED journal_committee(e_id, j_id, w_type)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global real -> Float32()
+        e : local Editor_ID, global int -> IntSort()
+        e1 : local Editor_ID, global int -> IntSort()
+        j : local Journal_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        w : local Work_Type, global text -> StringSort()
+      Predicted FOL:
+        age : local Age, global real -> Float32()
+        e_id : local Editor_ID, global int -> IntSort()
+        j_id : local Journal_ID, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+        w_type : local Work_Type, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5431 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3101.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

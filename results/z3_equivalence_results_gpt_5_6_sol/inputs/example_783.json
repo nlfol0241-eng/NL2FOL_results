@@ -1,0 +1,89 @@
+{
+  "NL": "Give me the payment Id, the date and the amount for all the payments processed with Visa.",
+  "Vocabulary": {
+    "Predicates": [
+      "Payments"
+    ],
+    "Functions": [],
+    "Constants": [
+      "Visa"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "Payments": [
+        "Payment_ID",
+        "Settlement_ID",
+        "Payment_Method_Code",
+        "Date_Payment_Made",
+        "Amount_Payment"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "Visa": "Payment_Method_Code"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a0'∀a1'( Customers(a0, a1) ∧ Customers(a0', a1') ∧ a0 = a0' ) → ( a1 = a1' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( Customer_Policies(b0, b1, b2, b3, b4) ∧ Customer_Policies(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c3∀c4∀c5∀c0'∀c1'∀c2'∀c3'∀c4'∀c5'( Claims(c0, c1, c2, c3, c4, c5) ∧ Claims(c0', c1', c2', c3', c4', c5') ∧ c0 = c0' ) → ( c1 = c1' ∧ c2 = c2' ∧ c3 = c3' ∧ c4 = c4' ∧ c5 = c5' )",
+    "axiom4": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6∀d0'∀d1'∀d2'∀d3'∀d4'∀d5'∀d6'( Settlements(d0, d1, d2, d3, d4, d5, d6) ∧ Settlements(d0', d1', d2', d3', d4', d5', d6') ∧ d0 = d0' ) → ( d1 = d1' ∧ d2 = d2' ∧ d3 = d3' ∧ d4 = d4' ∧ d5 = d5' ∧ d6 = d6' )",
+    "axiom5": "∀e0∀e1∀e2∀e3∀e4∀e0'∀e1'∀e2'∀e3'∀e4'( Payments(e0, e1, e2, e3, e4) ∧ Payments(e0', e1', e2', e3', e4') ∧ e0 = e0' ) → ( e1 = e1' ∧ e2 = e2' ∧ e3 = e3' ∧ e4 = e4' )",
+    "axiom6": "∀b0∀b1∀b2∀b3∀b4 ( Customer_Policies(b0, b1, b2, b3, b4) → ∃a0∃a1 ( Customers(a0, a1) ∧ a0 = b1 ) )",
+    "axiom7": "∀c0∀c1∀c2∀c3∀c4∀c5 ( Claims(c0, c1, c2, c3, c4, c5) → ∃b0∃b1∃b2∃b3∃b4 ( Customer_Policies(b0, b1, b2, b3, b4) ∧ b0 = c1 ) )",
+    "axiom8": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6 ( Settlements(d0, d1, d2, d3, d4, d5, d6) → ∃c0∃c1∃c2∃c3∃c4∃c5 ( Claims(c0, c1, c2, c3, c4, c5) ∧ c0 = d1 ) )",
+    "axiom9": "∀e0∀e1∀e2∀e3∀e4 ( Payments(e0, e1, e2, e3, e4) → ∃d0∃d1∃d2∃d3∃d4∃d5∃d6 ( Settlements(d0, d1, d2, d3, d4, d5, d6) ∧ d0 = e1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Payments": {
+        "A": "Payments",
+        "A0": "Payment_ID",
+        "A1": "Settlement_ID",
+        "A2": "Payment_Method_Code",
+        "A3": "Date_Payment_Made",
+        "A4": "Amount_Payment"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "Visa"
+    }
+  },
+  "Gold FOL": {
+    "string": "∃s : Settlement_ID ∃p1 : Payment_Method_Code ( (Payments(p,s,p1,d,a)) ∧ (p1 = 'Visa') )",
+    "free vars": "p : Payment_ID, d : Date_Payment_Made, a : Amount_Payment"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A0,A3,A4](<S>[A2 = 'Visa':VARCHAR(255)](A))",
+    "Processed_RA": "<P>[A0,A3,A4](<S>[A2 = 'Visa'](A))",
+    "RC": "[E]?A2,?A1( (A(?A0,?A1,?A2,?A3,?A4)) & (?A2 = Visa) )",
+    "string": "∃A2 ∃A1( (A(A0,A1,A2,A3,A4)) ∧ (A2 = 'Visa') )",
+    "free variables": "A0, A3, A4",
+    "db_id": "insurance_policies",
+    "processed_sql": "SELECT Payment_ID ,  Date_Payment_Made ,  Amount_Payment FROM Payments WHERE Payment_Method_Code  =  'Visa'"
+  },
+  "Global Sorts": [
+    "date",
+    "varchar(255)",
+    "integer"
+  ],
+  "Sort Axioms": {
+    "Payments": {
+      "sortaxiom0": "Payment_ID = integer",
+      "sortaxiom1": "Settlement_ID = integer",
+      "sortaxiom2": "Payment_Method_Code = varchar(255)",
+      "sortaxiom3": "Date_Payment_Made = date",
+      "sortaxiom4": "Amount_Payment = integer"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Payment_ID ,  Date_Payment_Made ,  Amount_Payment FROM Payments WHERE Payment_Method_Code  =  'Visa'"
+  },
+  "id": 783,
+  "Predicted FOL": {
+    "string": "∃s : Settlement_ID Payments(paymentId, s, 'Visa', paymentDate, amount)",
+    "free vars": "paymentId : Payment_ID, paymentDate : Date_Payment_Made, amount : Amount_Payment"
+  }
+}

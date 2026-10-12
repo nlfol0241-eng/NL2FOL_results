@@ -1,0 +1,69 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_564.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_564.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2239 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the id of the item whose title is "orange".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        i_id = integer -> IntSort()
+        title = varchar(20) -> StringSort()
+      symbols:
+        item(i_id, title)
+        constant orange : title
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : title ( (item(i,t)) ∧ (t = 'orange') )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:title LPAR:( LPAR:( IDENT:item LPAR:( IDENT:i COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:orange RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:title
+            AND
+              PRED item(i, t)
+              EQ  t = 'orange'
+      Predicted FOL: ∃x:i_id ∃t:title ( item(x, t) ∧ t = 'orange' )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:i_id EXISTS:∃ IDENT:t COLON:: IDENT:title LPAR:( IDENT:item LPAR:( IDENT:x COMMA:, IDENT:t RPAR:) AND:∧ IDENT:t EQ:= LIT:orange RPAR:) EOF
+        AST:
+          EXISTS x:i_id
+            EXISTS t:title
+              AND
+                PRED item(x, t)
+                EQ  t = 'orange'
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (i : i_id) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        i : local i_id, global integer -> IntSort()
+        t : local title, global varchar(20) -> StringSort()
+      Predicted FOL:
+        t : local title, global varchar(20) -> StringSort()
+        x : local i_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5176 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_564.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (i : i_id) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

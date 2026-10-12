@@ -1,0 +1,99 @@
+{
+  "NL": "Show the name of storms which don't have affected region in record.",
+  "Vocabulary": {
+    "Predicates": [
+      "storm",
+      "affected_region"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "storm": [
+        "Storm_ID",
+        "Name",
+        "Dates_active",
+        "Max_speed",
+        "Damage_millions_USD",
+        "Number_Deaths"
+      ],
+      "affected_region": [
+        "Region_id",
+        "Storm_ID",
+        "Number_city_affected"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'( storm(a0, a1, a2, a3, a4, a5) ∧ storm(a0', a1', a2', a3', a4', a5') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' )",
+    "axiom2": "∀b0∀b1∀b2∀b0'∀b1'∀b2'( region(b0, b1, b2) ∧ region(b0', b1', b2') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( affected_region(c0, c1, c2) ∧ affected_region(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( affected_region(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4∃a5 ( storm(a0, a1, a2, a3, a4, a5) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( affected_region(c0, c1, c2) → ∃b0∃b1∃b2 ( region(b0, b1, b2) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "storm": {
+        "A": "storm",
+        "A0": "Storm_ID",
+        "A1": "Name",
+        "A2": "Dates_active",
+        "A3": "Max_speed",
+        "A4": "Damage_millions_USD",
+        "A5": "Number_Deaths"
+      },
+      "affected_region": {
+        "B": "affected_region",
+        "B0": "Region_id",
+        "B1": "Storm_ID",
+        "B2": "Number_city_affected"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃d : Dates_active ∃n1 : Number_Deaths ∃d1 : Damage_millions_USD ∃m : Max_speed ∃s : Storm_ID( (storm(s,n,d,m,d1,n1)) ∧ (¬(∃s1 : Storm_ID( ((storm(s,n,d,m,d1,n1)) ∧ (∃r : Region_id ∃n2 : Number_city_affected( affected_region(r,s1,n2) ))) ∧ (s = s1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4,A5](A))<D>(<P>[A0,A1,A2,A3,A4,A5](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3,A4,A5](A))<D>(<P>[A0,A1,A2,A3,A4,A5](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A2,?A5,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4,?A5)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3,?A4,?A5)) & ([E]?B0,?B2( B(?B0,?B1,?B2) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A2 ∃A5 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4,A5)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3,A4,A5)) ∧ (∃B0 ∃B2( B(B0,B1,B2) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A1",
+    "db_id": "storm_record",
+    "processed_sql": "SELECT name FROM storm WHERE storm_id NOT IN (SELECT storm_id FROM affected_region)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "storm": {
+      "sortaxiom0": "Storm_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Dates_active = text",
+      "sortaxiom3": "Max_speed = int",
+      "sortaxiom4": "Damage_millions_USD = real",
+      "sortaxiom5": "Number_Deaths = int"
+    },
+    "affected_region": {
+      "sortaxiom0": "Region_id = int",
+      "sortaxiom1": "Storm_ID = int",
+      "sortaxiom2": "Number_city_affected = real"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT name FROM storm WHERE storm_id NOT IN (SELECT storm_id FROM affected_region)"
+  },
+  "id": 3196,
+  "Predicted FOL": {
+    "string": "∃s : Storm_ID ∃d : Dates_active ∃m : Max_speed ∃u : Damage_millions_USD ∃k : Number_Deaths (storm(s, n, d, m, u, k) ∧ ¬∃r : Region_id ∃c : Number_city_affected affected_region(r, s, c))",
+    "free vars": "n : Name"
+  }
+}

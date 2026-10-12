@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3585.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3585.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3142 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of the movies that are not reviewed by Brittany Harris.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        mID = int -> IntSort()
+        name = text -> StringSort()
+        rID = int -> IntSort()
+        ratingDate = date -> IntSort()
+        stars = int -> IntSort()
+      symbols:
+        Rating(rID, mID, stars, ratingDate)
+        Reviewer(rID, name)
+        constant Brittany Harris : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s : stars ∃r1 : ratingDate ∃r : rID( Rating(r,m,s,r1) )) ∧ (¬(∃r2 : rID ∃s : stars ∃r1 : ratingDate ∃n : name ∃r : rID( (((Rating(r,m,s,r1)) ∧ (Reviewer(r2,n))) ∧ (r = r2)) ∧ (n = 'Brittany Harris') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:r2 COLON:: IDENT:rID EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Reviewer LPAR:( IDENT:r2 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Brittany Harris RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s:stars
+              EXISTS r1:ratingDate
+                EXISTS r:rID
+                  PRED Rating(r, m, s, r1)
+            NOT
+              EXISTS r2:rID
+                EXISTS s:stars
+                  EXISTS r1:ratingDate
+                    EXISTS n:name
+                      EXISTS r:rID
+                        AND
+                          AND
+                            AND
+                              PRED Rating(r, m, s, r1)
+                              PRED Reviewer(r2, n)
+                            EQ  r = r2
+                          EQ  n = 'Brittany Harris'
+      Predicted FOL: ∃r : rID (Reviewer(r, 'Brittany Harris') ∧ ∀m : mID (Movie(m, t, y, d) → ¬∃s : stars ∃rd : ratingDate (Rating(r, m, s, rd))))
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( IDENT:Reviewer LPAR:( IDENT:r COMMA:, LIT:Brittany Harris RPAR:) AND:∧ FORALL:∀ IDENT:m COLON:: IDENT:mID LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) IMPL:→ NOT:¬ EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:rd COLON:: IDENT:ratingDate LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:rd RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:rID
+            AND
+              PRED Reviewer(r, 'Brittany Harris')
+              FORALL m:mID
+                IMPLIES
+                  PRED Movie(m, t, y, d)
+                  NOT
+                    EXISTS s:stars
+                      EXISTS rd:ratingDate
+                        PRED Rating(r, m, s, rd)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) t, y, d occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (m : mID) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'Movie' has no declared arity
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 139, in infer
+    infer(node[1], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 144, in infer
+    raise ValueError(f"predicate {node[1]!r} has no declared arity")
+ValueError: predicate 'Movie' has no declared arity

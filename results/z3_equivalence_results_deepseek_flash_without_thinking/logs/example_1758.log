@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1758.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1758.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5964 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the day Number and stored date for all the documents.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        char(255) -> StringSort()   [domain Length(x) <= 255; length <= 255 (blank padding not modelled)]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Calendar_Date = datetime -> IntSort()
+        Date_Stored = datetime -> IntSort()
+        Day_Number = integer -> IntSort()
+        Document_Description = char(255) -> StringSort()
+        Document_ID = integer -> IntSort()
+        Document_Name = char(255) -> StringSort()
+        Document_Type_Code = char(15) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+      symbols:
+        All_Documents(Document_ID, Date_Stored, Document_Type_Code, Document_Name, Document_Description, Other_Details)
+        Ref_Calendar(Calendar_Date, Day_Number)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Document_ID ∃d2 : Document_Type_Code ∃d3 : Document_Name ∃d4 : Document_Description ∃o : Other_Details ∃c : Calendar_Date ( ((All_Documents(d,d1,d2,d3,d4,o)) ∧ (Ref_Calendar(c,d5))) ∧ (d1 = c) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:d2 COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:d3 COLON:: IDENT:Document_Name EXISTS:∃ IDENT:d4 COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details EXISTS:∃ IDENT:c COLON:: IDENT:Calendar_Date LPAR:( LPAR:( LPAR:( IDENT:All_Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Ref_Calendar LPAR:( IDENT:c COMMA:, IDENT:d5 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            EXISTS d2:Document_Type_Code
+              EXISTS d3:Document_Name
+                EXISTS d4:Document_Description
+                  EXISTS o:Other_Details
+                    EXISTS c:Calendar_Date
+                      AND
+                        AND
+                          PRED All_Documents(d, d1, d2, d3, d4, o)
+                          PRED Ref_Calendar(c, d5)
+                        EQ  d1 = c
+      Predicted FOL: ∀e0 : Document_ID ∀e1 : Date_Stored ∀e2 : Document_Type_Code ∀e3 : Document_Name ∀e4 : Document_Description ∀e5 : Other_Details ( All_Documents(e0, e1, e2, e3, e4, e5) → ∃b0 : Calendar_Date ∃b1 : Day_Number ( Ref_Calendar(b0, b1) ∧ b0 = e1 ) )
+        tokens: FORALL:∀ IDENT:e0 COLON:: IDENT:Document_ID FORALL:∀ IDENT:e1 COLON:: IDENT:Date_Stored FORALL:∀ IDENT:e2 COLON:: IDENT:Document_Type_Code FORALL:∀ IDENT:e3 COLON:: IDENT:Document_Name FORALL:∀ IDENT:e4 COLON:: IDENT:Document_Description FORALL:∀ IDENT:e5 COLON:: IDENT:Other_Details LPAR:( IDENT:All_Documents LPAR:( IDENT:e0 COMMA:, IDENT:e1 COMMA:, IDENT:e2 COMMA:, IDENT:e3 COMMA:, IDENT:e4 COMMA:, IDENT:e5 RPAR:) IMPL:→ EXISTS:∃ IDENT:b0 COLON:: IDENT:Calendar_Date EXISTS:∃ IDENT:b1 COLON:: IDENT:Day_Number LPAR:( IDENT:Ref_Calendar LPAR:( IDENT:b0 COMMA:, IDENT:b1 RPAR:) AND:∧ IDENT:b0 EQ:= IDENT:e1 RPAR:) RPAR:) EOF
+        AST:
+          FORALL e0:Document_ID
+            FORALL e1:Date_Stored
+              FORALL e2:Document_Type_Code
+                FORALL e3:Document_Name
+                  FORALL e4:Document_Description
+                    FORALL e5:Other_Details
+                      IMPLIES
+                        PRED All_Documents(e0, e1, e2, e3, e4, e5)
+                        EXISTS b0:Calendar_Date
+                          EXISTS b1:Day_Number
+                            AND
+                              PRED Ref_Calendar(b0, b1)
+                              EQ  b0 = e1
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (d1 : Date_Stored, d5 : Day_Number) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Calendar_Date, global datetime -> IntSort()
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Date_Stored, global datetime -> IntSort()
+        d2 : local Document_Type_Code, global char(15) -> StringSort()
+        d3 : local Document_Name, global char(255) -> StringSort()
+        d4 : local Document_Description, global char(255) -> StringSort()
+        d5 : local Day_Number, global integer -> IntSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        b0 : local Calendar_Date, global datetime -> IntSort()
+        b1 : local Day_Number, global integer -> IntSort()
+        e0 : local Document_ID, global integer -> IntSort()
+        e1 : local Date_Stored, global datetime -> IntSort()
+        e2 : local Document_Type_Code, global char(15) -> StringSort()
+        e3 : local Document_Name, global char(255) -> StringSort()
+        e4 : local Document_Description, global char(255) -> StringSort()
+        e5 : local Other_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5617 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1758.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (d1 : Date_Stored, d5 : Day_Number) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_523.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_523.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4234 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the start date and end date of each apartment booking?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        apt_booking_id = integer -> IntSort()
+        apt_id = integer -> IntSort()
+        booking_end_date = datetime -> IntSort()
+        booking_start_date = datetime -> IntSort()
+        booking_status_code = char(15) -> StringSort()
+        guest_id = integer -> IntSort()
+      symbols:
+        Apartment_Bookings(apt_booking_id, apt_id, guest_id, booking_status_code, booking_start_date, booking_end_date)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apt_booking_id ∃a1 : apt_id ∃g : guest_id ∃b : booking_status_code ( Apartment_Bookings(a,a1,g,b,b1,b2) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apt_booking_id EXISTS:∃ IDENT:a1 COLON:: IDENT:apt_id EXISTS:∃ IDENT:g COLON:: IDENT:guest_id EXISTS:∃ IDENT:b COLON:: IDENT:booking_status_code LPAR:( IDENT:Apartment_Bookings LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:g COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:b2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apt_booking_id
+            EXISTS a1:apt_id
+              EXISTS g:guest_id
+                EXISTS b:booking_status_code
+                  PRED Apartment_Bookings(a, a1, g, b, b1, b2)
+      Predicted FOL: ∃e0:apt_booking_id ∃e1:apt_id ∃e2:guest_id ∃e3:booking_status_code (Apartment_Bookings(e0, e1, e2, e3, booking_start_date, booking_end_date))
+        tokens: EXISTS:∃ IDENT:e0 COLON:: IDENT:apt_booking_id EXISTS:∃ IDENT:e1 COLON:: IDENT:apt_id EXISTS:∃ IDENT:e2 COLON:: IDENT:guest_id EXISTS:∃ IDENT:e3 COLON:: IDENT:booking_status_code LPAR:( IDENT:Apartment_Bookings LPAR:( IDENT:e0 COMMA:, IDENT:e1 COMMA:, IDENT:e2 COMMA:, IDENT:e3 COMMA:, IDENT:booking_start_date COMMA:, IDENT:booking_end_date RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e0:apt_booking_id
+            EXISTS e1:apt_id
+              EXISTS e2:guest_id
+                EXISTS e3:booking_status_code
+                  PRED Apartment_Bookings(e0, e1, e2, e3, booking_start_date, booking_end_date)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_booking_end_date_0 : booking_end_date   Gold b2 <-> Predicted booking_end_date
+      FV_booking_start_date_0 : booking_start_date   Gold b1 <-> Predicted booking_start_date
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apt_booking_id, global integer -> IntSort()
+        a1 : local apt_id, global integer -> IntSort()
+        b : local booking_status_code, global char(15) -> StringSort()
+        b1 : local booking_start_date, global datetime -> IntSort()
+        b2 : local booking_end_date, global datetime -> IntSort()
+        g : local guest_id, global integer -> IntSort()
+      Predicted FOL:
+        booking_end_date : local booking_end_date, global datetime -> IntSort()
+        booking_start_date : local booking_start_date, global datetime -> IntSort()
+        e0 : local apt_booking_id, global integer -> IntSort()
+        e1 : local apt_id, global integer -> IntSort()
+        e2 : local guest_id, global integer -> IntSort()
+        e3 : local booking_status_code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_a1_2, gold_g_3, gold_b_4], And(D_char_15_(gold_b_4), P_Apartment_Bookings(gold_a_1, gold_a1_2, gold_g_3, gold_b_4, FV_booking_start_date_0, FV_booking_end_date_0)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_a1, WGOLD_g, WGOLD_b):  And(D_char_15_(WGOLD_b), P_Apartment_Bookings(WGOLD_a, WGOLD_a1, WGOLD_g, WGOLD_b, FV_booking_start_date_0, FV_booking_end_date_0))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e0_1, predicted_e1_2, predicted_e2_3, predicted_e3_4], And(D_char_15_(predicted_e3_4), P_Apartment_Bookings(predicted_e0_1, predicted_e1_2, predicted_e2_3, predicted_e3_4, FV_booking_start_date_0, FV_booking_end_date_0)))
+      predicted_skolem (witnesses WPREDICTED_e0, WPREDICTED_e1, WPREDICTED_e2, WPREDICTED_e3):  And(D_char_15_(WPREDICTED_e3), P_Apartment_Bookings(WPREDICTED_e0, WPREDICTED_e1, WPREDICTED_e2, WPREDICTED_e3, FV_booking_start_date_0, FV_booking_end_date_0))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 746 lines, 28846 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_523.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_a1, WGOLD_g, WGOLD_b
+      claim: And(And(Length(WGOLD_b) <= 15, Apartment_Bookings(WGOLD_a, WGOLD_a1, WGOLD_g, WGOLD_b, FV_booking_start_date_0, FV_booking_end_date_0)), Not(Exists([predicted_e0_1, predicted_e1_2, predicted_e2_3, predicted_e3_4], And(Length(predicted_e3_4) <= 15, Apartment_Bookings(predicted_e0_1, predicted_e1_2, predicted_e2_3, predicted_e3_4, FV_booking_start_date_0, FV_booking_end_date_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e0, WPREDICTED_e1, WPREDICTED_e2, WPREDICTED_e3
+      claim: And(And(Length(WPREDICTED_e3) <= 15, Apartment_Bookings(WPREDICTED_e0, WPREDICTED_e1, WPREDICTED_e2, WPREDICTED_e3, FV_booking_start_date_0, FV_booking_end_date_0)), Not(Exists([gold_a_1, gold_a1_2, gold_g_3, gold_b_4], And(Length(gold_b_4) <= 15, Apartment_Bookings(gold_a_1, gold_a1_2, gold_g_3, gold_b_4, FV_booking_start_date_0, FV_booking_end_date_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

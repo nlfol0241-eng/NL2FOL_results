@@ -1,0 +1,64 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_512.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_512.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2321 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all team names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Name = text -> StringSort()
+        Team_id = int -> IntSort()
+      symbols:
+        team(Team_id, Name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : Team_id ( team(t,n) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Team_id LPAR:( IDENT:team LPAR:( IDENT:t COMMA:, IDENT:n RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Team_id
+            PRED team(t, n)
+      Predicted FOL: ∃x : Team_id ∃y : Name team(x, y)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Team_id EXISTS:∃ IDENT:y COLON:: IDENT:Name IDENT:team LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) EOF
+        AST:
+          EXISTS x:Team_id
+            EXISTS y:Name
+              PRED team(x, y)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Name, global text -> StringSort()
+        t : local Team_id, global int -> IntSort()
+      Predicted FOL:
+        x : local Team_id, global int -> IntSort()
+        y : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5114 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_512.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

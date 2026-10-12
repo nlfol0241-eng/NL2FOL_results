@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_682.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_682.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2874 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the address of the restaurant Subway?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        varchar(100) -> StringSort()   [domain Length(x) <= 100; length <= 100]
+      local sorts:
+        Address = varchar(100) -> StringSort()
+        Rating = integer -> IntSort()
+        ResID = integer -> IntSort()
+        ResName = varchar(100) -> StringSort()
+      symbols:
+        Restaurant(ResID, ResName, Address, Rating)
+        constant Subway : ResName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : ResID ∃r1 : ResName ∃r2 : Rating ( (Restaurant(r,r1,a,r2)) ∧ (r1 = 'Subway') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:ResID EXISTS:∃ IDENT:r1 COLON:: IDENT:ResName EXISTS:∃ IDENT:r2 COLON:: IDENT:Rating LPAR:( LPAR:( IDENT:Restaurant LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:a COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r1 EQ:= LIT:Subway RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:ResID
+            EXISTS r1:ResName
+              EXISTS r2:Rating
+                AND
+                  PRED Restaurant(r, r1, a, r2)
+                  EQ  r1 = 'Subway'
+      Predicted FOL: ∃r : ResID ∃g : Rating Restaurant(r, 'Subway', address, g)
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:ResID EXISTS:∃ IDENT:g COLON:: IDENT:Rating IDENT:Restaurant LPAR:( IDENT:r COMMA:, LIT:Subway COMMA:, IDENT:address COMMA:, IDENT:g RPAR:) EOF
+        AST:
+          EXISTS r:ResID
+            EXISTS g:Rating
+              PRED Restaurant(r, 'Subway', address, g)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Address_0 : Address   Gold a <-> Predicted address
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address, global varchar(100) -> StringSort()
+        r : local ResID, global integer -> IntSort()
+        r1 : local ResName, global varchar(100) -> StringSort()
+        r2 : local Rating, global integer -> IntSort()
+      Predicted FOL:
+        address : local Address, global varchar(100) -> StringSort()
+        g : local Rating, global integer -> IntSort()
+        r : local ResID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_r1_2, gold_r2_3], And(D_varchar_100_(gold_r1_2), And(P_Restaurant(gold_r_1, gold_r1_2, FV_Address_0, gold_r2_3), (gold_r1_2 == L_Subway))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_r1, WGOLD_r2):  And(D_varchar_100_(WGOLD_r1), And(P_Restaurant(WGOLD_r, WGOLD_r1, FV_Address_0, WGOLD_r2), (WGOLD_r1 == L_Subway)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_g_2], And(P_Restaurant(predicted_r_1, L_Subway, FV_Address_0, predicted_g_2), D_varchar_100_(L_Subway)))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_g):  And(P_Restaurant(WPREDICTED_r, L_Subway, FV_Address_0, WPREDICTED_g), D_varchar_100_(L_Subway))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Subway' at varchar(100) -> L_Subway = StringVal('Subway')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 729 lines, 27080 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_682.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Address_0) <= 100
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_r1, WGOLD_r2
+      claim: And(And(Length(WGOLD_r1) <= 100, And(Restaurant(WGOLD_r, WGOLD_r1, FV_Address_0, WGOLD_r2), WGOLD_r1 == "Subway")), Not(Exists([predicted_r_1, predicted_g_2], And(Restaurant(predicted_r_1, "Subway", FV_Address_0, predicted_g_2), Length("Subway") <= 100))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_g
+      claim: And(And(Restaurant(WPREDICTED_r, "Subway", FV_Address_0, WPREDICTED_g), Length("Subway") <= 100), Not(Exists([gold_r_1, gold_r1_2, gold_r2_3], And(Length(gold_r1_2) <= 100, And(Restaurant(gold_r_1, gold_r1_2, FV_Address_0, gold_r2_3), gold_r1_2 == "Subway")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

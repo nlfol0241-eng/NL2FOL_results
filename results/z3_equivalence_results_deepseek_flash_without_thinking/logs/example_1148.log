@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1148.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1148.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3516 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the first name, last name, and phone number of all the female faculty members?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        integer -> IntSort()
+        varchar(13) -> StringSort()   [domain Length(x) <= 13; length <= 13]
+        text -> StringSort()
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        Building = varchar(13) -> StringSort()
+        FacID = integer -> IntSort()
+        Fname = text -> StringSort()
+        Lname = text -> StringSort()
+        Phone = integer -> IntSort()
+        Rank = varchar(15) -> StringSort()
+        Room = varchar(5) -> StringSort()
+        Sex = varchar(1) -> StringSort()
+      symbols:
+        Faculty(FacID, Lname, Fname, Rank, Sex, Phone, Room, Building)
+        constant F : Sex
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : FacID ∃r : Rank ∃s : Sex ∃r1 : Room ∃b : Building ( (Faculty(f,l,f1,r,s,p,r1,b)) ∧ (s = 'F') )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:FacID EXISTS:∃ IDENT:r COLON:: IDENT:Rank EXISTS:∃ IDENT:s COLON:: IDENT:Sex EXISTS:∃ IDENT:r1 COLON:: IDENT:Room EXISTS:∃ IDENT:b COLON:: IDENT:Building LPAR:( LPAR:( IDENT:Faculty LPAR:( IDENT:f COMMA:, IDENT:l COMMA:, IDENT:f1 COMMA:, IDENT:r COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:r1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:F RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:FacID
+            EXISTS r:Rank
+              EXISTS s:Sex
+                EXISTS r1:Room
+                  EXISTS b:Building
+                    AND
+                      PRED Faculty(f, l, f1, r, s, p, r1, b)
+                      EQ  s = 'F'
+      Predicted FOL: ∃x_FacID : FacID ∃x_Lname : Lname ∃x_Fname : Fname ∃x_Rank : Rank ∃x_Sex : Sex ∃x_Phone : Phone ∃x_Room : Room ∃x_Building : Building (Faculty(x_FacID, x_Lname, x_Fname, x_Rank, x_Sex, x_Phone, x_Room, x_Building) ∧ x_Sex = F)
+        tokens: EXISTS:∃ IDENT:x_FacID COLON:: IDENT:FacID EXISTS:∃ IDENT:x_Lname COLON:: IDENT:Lname EXISTS:∃ IDENT:x_Fname COLON:: IDENT:Fname EXISTS:∃ IDENT:x_Rank COLON:: IDENT:Rank EXISTS:∃ IDENT:x_Sex COLON:: IDENT:Sex EXISTS:∃ IDENT:x_Phone COLON:: IDENT:Phone EXISTS:∃ IDENT:x_Room COLON:: IDENT:Room EXISTS:∃ IDENT:x_Building COLON:: IDENT:Building LPAR:( IDENT:Faculty LPAR:( IDENT:x_FacID COMMA:, IDENT:x_Lname COMMA:, IDENT:x_Fname COMMA:, IDENT:x_Rank COMMA:, IDENT:x_Sex COMMA:, IDENT:x_Phone COMMA:, IDENT:x_Room COMMA:, IDENT:x_Building RPAR:) AND:∧ IDENT:x_Sex EQ:= IDENT:F RPAR:) EOF
+        AST:
+          EXISTS x_FacID:FacID
+            EXISTS x_Lname:Lname
+              EXISTS x_Fname:Fname
+                EXISTS x_Rank:Rank
+                  EXISTS x_Sex:Sex
+                    EXISTS x_Phone:Phone
+                      EXISTS x_Room:Room
+                        EXISTS x_Building:Building
+                          AND
+                            PRED Faculty(x_FacID, x_Lname, x_Fname, x_Rank, x_Sex, x_Phone, x_Room, x_Building)
+                            EQ  x_Sex = F<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (l : Lname, f1 : Fname, p : Phone) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Building, global varchar(13) -> StringSort()
+        f : local FacID, global integer -> IntSort()
+        f1 : local Fname, global text -> StringSort()
+        l : local Lname, global text -> StringSort()
+        p : local Phone, global integer -> IntSort()
+        r : local Rank, global varchar(15) -> StringSort()
+        r1 : local Room, global varchar(5) -> StringSort()
+        s : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        x_Building : local Building, global varchar(13) -> StringSort()
+        x_FacID : local FacID, global integer -> IntSort()
+        x_Fname : local Fname, global text -> StringSort()
+        x_Lname : local Lname, global text -> StringSort()
+        x_Phone : local Phone, global integer -> IntSort()
+        x_Rank : local Rank, global varchar(15) -> StringSort()
+        x_Room : local Room, global varchar(5) -> StringSort()
+        x_Sex : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5519 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1148.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (l : Lname, f1 : Fname, p : Phone) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

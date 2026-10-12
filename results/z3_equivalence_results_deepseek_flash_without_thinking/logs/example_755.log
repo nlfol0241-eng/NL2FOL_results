@@ -1,0 +1,165 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_755.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_755.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3207 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the name, height and prominence of mountains which do not belong to the range 'Aberdare Range'?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Country = text -> StringSort()
+        Height = real -> Float32()
+        Prominence = real -> Float32()
+        Range = text -> StringSort()
+        id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        mountain(id, name, Height, Prominence, Range, Country)
+        constant Aberdare Range : Range
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃r : Range ∃c : Country ( (mountain(i,n,h,p,r,c)) ∧ (r <> 'Aberdare Range') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:r COLON:: IDENT:Range EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( IDENT:mountain LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r NEQ:<> LIT:Aberdare Range RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS r:Range
+              EXISTS c:Country
+                AND
+                  PRED mountain(i, n, h, p, r, c)
+                  NEQ  r != 'Aberdare Range'
+      Predicted FOL: ∃x_id : id ∃x_name : name ∃x_Height : Height ∃x_Prominence : Prominence ∃x_Range : Range ∃x_Country : Country (mountain(x_id, x_name, x_Height, x_Prominence, x_Range, x_Country) ∧ x_Range ≠ 'Aberdare Range')
+        tokens: EXISTS:∃ IDENT:x_id COLON:: IDENT:id EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:x_Height COLON:: IDENT:Height EXISTS:∃ IDENT:x_Prominence COLON:: IDENT:Prominence EXISTS:∃ IDENT:x_Range COLON:: IDENT:Range EXISTS:∃ IDENT:x_Country COLON:: IDENT:Country LPAR:( IDENT:mountain LPAR:( IDENT:x_id COMMA:, IDENT:x_name COMMA:, IDENT:x_Height COMMA:, IDENT:x_Prominence COMMA:, IDENT:x_Range COMMA:, IDENT:x_Country RPAR:) AND:∧ IDENT:x_Range NEQ:≠ LIT:Aberdare Range RPAR:) EOF
+        AST:
+          EXISTS x_id:id
+            EXISTS x_name:name
+              EXISTS x_Height:Height
+                EXISTS x_Prominence:Prominence
+                  EXISTS x_Range:Range
+                    EXISTS x_Country:Country
+                      AND
+                        PRED mountain(x_id, x_name, x_Height, x_Prominence, x_Range, x_Country)
+                        NEQ  x_Range != 'Aberdare Range'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x_name, x_Height, x_Prominence do not occur free in the formula
+   3 shared answer variable(s)
+      FV_Height_0 : Height   Gold h <-> Predicted x_Height
+      FV_Prominence_0 : Prominence   Gold p <-> Predicted x_Prominence
+      FV_name_0 : name   Gold n <-> Predicted x_name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        i : local id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        p : local Prominence, global real -> Float32()
+        r : local Range, global text -> StringSort()
+      Predicted FOL:
+        x_Country : local Country, global text -> StringSort()
+        x_Height : local Height, global real -> Float32()
+        x_Prominence : local Prominence, global real -> Float32()
+        x_Range : local Range, global text -> StringSort()
+        x_id : local id, global int -> IntSort()
+        x_name : local name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_r_2, gold_c_3], And(P_mountain(gold_i_1, FV_name_0, FV_Height_0, FV_Prominence_0, gold_r_2, gold_c_3), (gold_r_2 != L_Aberdare_Range)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_r, WGOLD_c):  And(P_mountain(WGOLD_i, FV_name_0, FV_Height_0, FV_Prominence_0, WGOLD_r, WGOLD_c), (WGOLD_r != L_Aberdare_Range))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_id_1, predicted_x_name_2, predicted_x_Height_3, predicted_x_Prominence_4, predicted_x_Range_5, predicted_x_Country_6], And(D_real(predicted_x_Height_3), D_real(predicted_x_Prominence_4), And(P_mountain(predicted_x_id_1, predicted_x_name_2, predicted_x_Height_3, predicted_x_Prominence_4, predicted_x_Range_5, predicted_x_Country_6), (predicted_x_Range_5 != L_Aberdare_Range))))
+      predicted_skolem (witnesses WPREDICTED_x_id, WPREDICTED_x_name, WPREDICTED_x_Height, WPREDICTED_x_Prominence, WPREDICTED_x_Range, WPREDICTED_x_Country):  And(D_real(WPREDICTED_x_Height), D_real(WPREDICTED_x_Prominence), And(P_mountain(WPREDICTED_x_id, WPREDICTED_x_name, WPREDICTED_x_Height, WPREDICTED_x_Prominence, WPREDICTED_x_Range, WPREDICTED_x_Country), (WPREDICTED_x_Range != L_Aberdare_Range)))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Aberdare Range' at text -> L_Aberdare_Range = StringVal('Aberdare Range')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 752 lines, 29165 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_755.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Height_0)), Not(And(fpIsZero(FV_Height_0), fpIsNegative(FV_Height_0))))
+      [1] And(Not(fpIsNaN(FV_Prominence_0)), Not(And(fpIsZero(FV_Prominence_0), fpIsNegative(FV_Prominence_0))))
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_r, WGOLD_c
+      claim: And(And(mountain(WGOLD_i, FV_name_0, FV_Height_0, FV_Prominence_0, WGOLD_r, WGOLD_c), WGOLD_r != "Aberdare Range"), Not(Exists([predicted_x_id_1, predicted_x_name_2, predicted_x_Height_3, predicted_x_Prominence_4, predicted_x_Range_5, predicted_x_Country_6], And(And(Not(fpIsNaN(predicted_x_Height_3)), Not(And(fpIsZero(predicted_x_Height_3), fpIsNegative(predicted_x_Height_3)))), And(Not(fpIsNaN(predicted_x_Prominence_4)), Not(And(fpIsZero(predicted_x_Prominence_4), fpIsNegative(predicted_x_Prominence_4)))), And(mountain(predicted_x_id_1, predicted_x_name_2, predicted_x_Height_3, predicted_x_Prominence_4, predicted_x_Range_5, predicted_x_Country_6), predicted_x_Range_5 != "Aberdare Range")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_x_id, WPREDICTED_x_name, WPREDICTED_x_Height, WPREDICTED_x_Prominence, WPREDICTED_x_Range, WPREDICTED_x_Country
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_x_Height)), Not(And(fpIsZero(WPREDICTED_x_Height), fpIsNegative(WPREDICTED_x_Height)))), And(Not(fpIsNaN(WPREDICTED_x_Prominence)), Not(And(fpIsZero(WPREDICTED_x_Prominence), fpIsNegative(WPREDICTED_x_Prominence)))), And(mountain(WPREDICTED_x_id, WPREDICTED_x_name, WPREDICTED_x_Height, WPREDICTED_x_Prominence, WPREDICTED_x_Range, WPREDICTED_x_Country), WPREDICTED_x_Range != "Aberdare Range")), Not(Exists([gold_i_1, gold_r_2, gold_c_3], And(mountain(gold_i_1, FV_name_0, FV_Height_0, FV_Prominence_0, gold_r_2, gold_c_3), gold_r_2 != "Aberdare Range"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.014 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 17 relation tuple(s) listed, 15 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x_id : id = 2
+          x_name : name = 'b'
+          x_Height : Height = 0.0
+          x_Prominence : Prominence = 0.0
+          x_Range : Range = ''
+          x_Country : Country = ''
+        free (answer) variables:
+          FV_Height_0 : Height = 0.0
+          FV_Prominence_0 : Prominence = 0.0
+          FV_name_0 : name = 'A'
+        literals / constants:
+          Aberdare Range : Range = 'Aberdare Range'
+        relations (each value tagged with the local sort of its position):
+          mountain(id, name, Height, Prominence, Range, Country):
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='!0!')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='b')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='A', Country='')
+            mountain(id=0, name='', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='b', Country='')
+            mountain(id=0, name='!0!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='A')
+            mountain(id=0, name='!0!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='Aberdare Range')
+            mountain(id=0, name='!0!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='B')
+            mountain(id=0, name='!0!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='!0!', Country='')
+            mountain(id=0, name='!0!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='C', Country='')
+            mountain(id=0, name='A', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=0, name='Aberdare Range', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=0, name='B', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=0, name='C', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='', Country='')
+            mountain(id=2, name='b', Height=0.0, Prominence=0.0, Range='', Country='')
+            mountain(id=2, name='b', Height=0.0, Prominence=0.0, Range='Aberdare Range', Country='')
+            mountain(id=3, name='!0!', Height=1.175494490952134e-38, Prominence=1.175494490952134e-38, Range='B', Country='C')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Country    : {'', '!0!', 'A', 'Aberdare Range', 'B', 'C', 'b'}
+          Height     : {0.0, 1.175494490952134e-38}
+          Prominence : {0.0, 1.175494490952134e-38}
+          Range      : {'', '!0!', 'A', 'Aberdare Range', 'B', 'C', 'b'}
+          id         : {0, 2, 3}
+          name       : {'', '!0!', 'A', 'Aberdare Range', 'B', 'C', 'b'}
+        values shared across local sorts (joins):
+          0.0 : Height, Prominence
+          1.175494490952134e-38 : Height, Prominence
+          '!0!' : Country, Range, name
+          '' : Country, Range, name
+          'A' : Country, Range, name
+          'Aberdare Range' : Country, Range, name
+          'B' : Country, Range, name
+          'C' : Country, Range, name
+          'b' : Country, Range, name
+   [R3] took 0.179 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

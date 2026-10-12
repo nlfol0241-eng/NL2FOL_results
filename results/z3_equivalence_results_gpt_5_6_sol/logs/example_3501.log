@@ -1,0 +1,134 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3501.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4184 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the name of the countries where there is not a single car maker?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Continent = integer -> IntSort()
+        Country = integer -> IntSort()
+        CountryId = integer -> IntSort()
+        CountryName = text -> StringSort()
+        FullName = text -> StringSort()
+        Id = integer -> IntSort()
+        Maker = text -> StringSort()
+      symbols:
+        car_makers(Id, Maker, FullName, Country)
+        countries(CountryId, CountryName, Continent)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c2 : Continent ∃c : CountryId( countries(c,c1,c2) )) ∧ (¬(∃i : Id ∃c3 : Country ∃c2 : Continent ∃f : FullName ∃m : Maker ∃c : CountryId( ((countries(c,c1,c2)) ∧ (car_makers(i,m,f,c3))) ∧ (c = c3) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c2 COLON:: IDENT:Continent EXISTS:∃ IDENT:c COLON:: IDENT:CountryId LPAR:( IDENT:countries LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:c3 COLON:: IDENT:Country EXISTS:∃ IDENT:c2 COLON:: IDENT:Continent EXISTS:∃ IDENT:f COLON:: IDENT:FullName EXISTS:∃ IDENT:m COLON:: IDENT:Maker EXISTS:∃ IDENT:c COLON:: IDENT:CountryId LPAR:( LPAR:( LPAR:( IDENT:countries LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:car_makers LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:f COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c3 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c2:Continent
+              EXISTS c:CountryId
+                PRED countries(c, c1, c2)
+            NOT
+              EXISTS i:Id
+                EXISTS c3:Country
+                  EXISTS c2:Continent
+                    EXISTS f:FullName
+                      EXISTS m:Maker
+                        EXISTS c:CountryId
+                          AND
+                            AND
+                              PRED countries(c, c1, c2)
+                              PRED car_makers(i, m, f, c3)
+                            EQ  c = c3
+      Predicted FOL: ∃cid : CountryId ∃continent : Continent (countries(cid, name, continent) ∧ ¬∃makerId : Id ∃maker : Maker ∃fullName : FullName ∃country : Country (car_makers(makerId, maker, fullName, country) ∧ country = cid))
+        tokens: EXISTS:∃ IDENT:cid COLON:: IDENT:CountryId EXISTS:∃ IDENT:continent COLON:: IDENT:Continent LPAR:( IDENT:countries LPAR:( IDENT:cid COMMA:, IDENT:name COMMA:, IDENT:continent RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:makerId COLON:: IDENT:Id EXISTS:∃ IDENT:maker COLON:: IDENT:Maker EXISTS:∃ IDENT:fullName COLON:: IDENT:FullName EXISTS:∃ IDENT:country COLON:: IDENT:Country LPAR:( IDENT:car_makers LPAR:( IDENT:makerId COMMA:, IDENT:maker COMMA:, IDENT:fullName COMMA:, IDENT:country RPAR:) AND:∧ IDENT:country EQ:= IDENT:cid RPAR:) RPAR:) EOF
+        AST:
+          EXISTS cid:CountryId
+            EXISTS continent:Continent
+              AND
+                PRED countries(cid, name, continent)
+                NOT
+                  EXISTS makerId:Id
+                    EXISTS maker:Maker
+                      EXISTS fullName:FullName
+                        EXISTS country:Country
+                          AND
+                            PRED car_makers(makerId, maker, fullName, country)
+                            EQ  country = cid
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_CountryName_0 : CountryName   Gold c1 <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CountryId, global integer -> IntSort()
+        c1 : local CountryName, global text -> StringSort()
+        c2 : local Continent, global integer -> IntSort()
+        c3 : local Country, global integer -> IntSort()
+        f : local FullName, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        m : local Maker, global text -> StringSort()
+      Predicted FOL:
+        cid : local CountryId, global integer -> IntSort()
+        continent : local Continent, global integer -> IntSort()
+        country : local Country, global integer -> IntSort()
+        fullName : local FullName, global text -> StringSort()
+        maker : local Maker, global text -> StringSort()
+        makerId : local Id, global integer -> IntSort()
+        name : local CountryName, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_c2_1, gold_c_2], P_countries(gold_c_2, FV_CountryName_0, gold_c2_1)), Not(Exists([gold_i_3, gold_c3_4, gold_c2_5, gold_f_6, gold_m_7, gold_c_8], And(And(P_countries(gold_c_8, FV_CountryName_0, gold_c2_5), P_car_makers(gold_i_3, gold_m_7, gold_f_6, gold_c3_4)), (gold_c_8 == gold_c3_4)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_cid_1, predicted_continent_2], And(P_countries(predicted_cid_1, FV_CountryName_0, predicted_continent_2), Not(Exists([predicted_makerId_3, predicted_maker_4, predicted_fullName_5, predicted_country_6], And(P_car_makers(predicted_makerId_3, predicted_maker_4, predicted_fullName_5, predicted_country_6), (predicted_country_6 == predicted_cid_1))))))
+      predicted_skolem (witnesses WPREDICTED_cid, WPREDICTED_continent):  And(P_countries(WPREDICTED_cid, FV_CountryName_0, WPREDICTED_continent), Not(Exists([predictedsk_makerId_1, predictedsk_maker_2, predictedsk_fullName_3, predictedsk_country_4], And(P_car_makers(predictedsk_makerId_1, predictedsk_maker_2, predictedsk_fullName_3, predictedsk_country_4), (predictedsk_country_4 == WPREDICTED_cid)))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 740 lines, 28734 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_c2_1, gold_c_2], countries(gold_c_2, FV_CountryName_0, gold_c2_1)), Not(Exists([gold_i_3, gold_c3_4, gold_c2_5, gold_f_6, gold_m_7, gold_c_8], And(And(countries(gold_c_8, FV_CountryName_0, gold_c2_5), car_makers(gold_i_3, gold_m_7, gold_f_6, gold_c3_4)), gold_c_8 == gold_c3_4)))), Not(Exists([predicted_cid_1, predicted_continent_2], And(countries(predicted_cid_1, FV_CountryName_0, predicted_continent_2), Not(Exists([predicted_makerId_3, predicted_maker_4, predicted_fullName_5, predicted_country_6], And(car_makers(predicted_makerId_3, predicted_maker_4, predicted_fullName_5, predicted_country_6), predicted_country_6 == predicted_cid_1)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_cid, WPREDICTED_continent
+      claim: And(And(countries(WPREDICTED_cid, FV_CountryName_0, WPREDICTED_continent), Not(Exists([predictedsk_makerId_1, predictedsk_maker_2, predictedsk_fullName_3, predictedsk_country_4], And(car_makers(predictedsk_makerId_1, predictedsk_maker_2, predictedsk_fullName_3, predictedsk_country_4), predictedsk_country_4 == WPREDICTED_cid)))), Not(And(Exists([gold_c2_1, gold_c_2], countries(gold_c_2, FV_CountryName_0, gold_c2_1)), Not(Exists([gold_i_3, gold_c3_4, gold_c2_5, gold_f_6, gold_m_7, gold_c_8], And(And(countries(gold_c_8, FV_CountryName_0, gold_c2_5), car_makers(gold_i_3, gold_m_7, gold_f_6, gold_c3_4)), gold_c_8 == gold_c3_4))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.003 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py", line 688, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py", line 719, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py", line 670, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py", line 568, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py", line 492, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py", line 372, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3501.py", line 372, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_81.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_81.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2509 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show names of people whose nationality is not "Russia".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Birth_Date = text -> StringSort()
+        Height = real -> Float32()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        People_ID = int -> IntSort()
+      symbols:
+        people(People_ID, Nationality, Name, Birth_Date, Height)
+        constant Russia : Nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : People_ID ∃n : Nationality ∃b : Birth_Date ∃h : Height ( (people(p,n,n1,b,h)) ∧ (n <> 'Russia') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:People_ID EXISTS:∃ IDENT:n COLON:: IDENT:Nationality EXISTS:∃ IDENT:b COLON:: IDENT:Birth_Date EXISTS:∃ IDENT:h COLON:: IDENT:Height LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:b COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n NEQ:<> LIT:Russia RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:People_ID
+            EXISTS n:Nationality
+              EXISTS b:Birth_Date
+                EXISTS h:Height
+                  AND
+                    PRED people(p, n, n1, b, h)
+                    NEQ  n != 'Russia'
+      Predicted FOL: ∃pid:People_ID ∃bd:Birth_Date ∃h:Height ∃nat:Nationality ( people(pid, nat, n, bd, h) ∧ ¬(nat = Russia) )
+        tokens: EXISTS:∃ IDENT:pid COLON:: IDENT:People_ID EXISTS:∃ IDENT:bd COLON:: IDENT:Birth_Date EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:nat COLON:: IDENT:Nationality LPAR:( IDENT:people LPAR:( IDENT:pid COMMA:, IDENT:nat COMMA:, IDENT:n COMMA:, IDENT:bd COMMA:, IDENT:h RPAR:) AND:∧ NOT:¬ LPAR:( IDENT:nat EQ:= IDENT:Russia RPAR:) RPAR:) EOF
+        AST:
+          EXISTS pid:People_ID
+            EXISTS bd:Birth_Date
+              EXISTS h:Height
+                EXISTS nat:Nationality
+                  AND
+                    PRED people(pid, nat, n, bd, h)
+                    NOT
+                      EQ  nat = Russia<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Birth_Date, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        n : local Nationality, global text -> StringSort()
+        n1 : local Name, global text -> StringSort()
+        p : local People_ID, global int -> IntSort()
+      Predicted FOL:
+        bd : local Birth_Date, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        nat : local Nationality, global text -> StringSort()
+        pid : local People_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_n_2, gold_b_3, gold_h_4], And(D_real(gold_h_4), And(P_people(gold_p_1, gold_n_2, FV_Name_0, gold_b_3, gold_h_4), (gold_n_2 != L_Russia))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_n, WGOLD_b, WGOLD_h):  And(D_real(WGOLD_h), And(P_people(WGOLD_p, WGOLD_n, FV_Name_0, WGOLD_b, WGOLD_h), (WGOLD_n != L_Russia)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_pid_1, predicted_bd_2, predicted_h_3, predicted_nat_4], And(D_real(predicted_h_3), And(P_people(predicted_pid_1, predicted_nat_4, FV_Name_0, predicted_bd_2, predicted_h_3), Not((predicted_nat_4 == L_Russia)))))
+      predicted_skolem (witnesses WPREDICTED_pid, WPREDICTED_bd, WPREDICTED_h, WPREDICTED_nat):  And(D_real(WPREDICTED_h), And(P_people(WPREDICTED_pid, WPREDICTED_nat, FV_Name_0, WPREDICTED_bd, WPREDICTED_h), Not((WPREDICTED_nat == L_Russia))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Russia' at text -> L_Russia = StringVal('Russia')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 741 lines, 27951 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_81.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_n, WGOLD_b, WGOLD_h
+      claim: And(And(And(Not(fpIsNaN(WGOLD_h)), Not(And(fpIsZero(WGOLD_h), fpIsNegative(WGOLD_h)))), And(people(WGOLD_p, WGOLD_n, FV_Name_0, WGOLD_b, WGOLD_h), WGOLD_n != "Russia")), Not(Exists([predicted_pid_1, predicted_bd_2, predicted_h_3, predicted_nat_4], And(And(Not(fpIsNaN(predicted_h_3)), Not(And(fpIsZero(predicted_h_3), fpIsNegative(predicted_h_3)))), And(people(predicted_pid_1, predicted_nat_4, FV_Name_0, predicted_bd_2, predicted_h_3), Not(predicted_nat_4 == "Russia"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_pid, WPREDICTED_bd, WPREDICTED_h, WPREDICTED_nat
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_h)), Not(And(fpIsZero(WPREDICTED_h), fpIsNegative(WPREDICTED_h)))), And(people(WPREDICTED_pid, WPREDICTED_nat, FV_Name_0, WPREDICTED_bd, WPREDICTED_h), Not(WPREDICTED_nat == "Russia"))), Not(Exists([gold_p_1, gold_n_2, gold_b_3, gold_h_4], And(And(Not(fpIsNaN(gold_h_4)), Not(And(fpIsZero(gold_h_4), fpIsNegative(gold_h_4)))), And(people(gold_p_1, gold_n_2, FV_Name_0, gold_b_3, gold_h_4), gold_n_2 != "Russia")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

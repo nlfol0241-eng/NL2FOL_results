@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1492.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1492.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5477 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give id of the instructor who advises students in the History department.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        numeric(3,0) -> RealSort()   [domain And(IsInt(x), x > -1000, x < 1000); 3 digits, 0 after the point]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+      local sorts:
+        ID = varchar(5) -> StringSort()
+        dept_name = varchar(20) -> StringSort()
+        i_ID = varchar(5) -> StringSort()
+        name = varchar(20) -> StringSort()
+        s_ID = varchar(5) -> StringSort()
+        tot_cred = numeric(3,0) -> RealSort()
+      symbols:
+        advisor(s_ID, i_ID)
+        student(ID, name, dept_name, tot_cred)
+        constant History : dept_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : s_ID ∃i1 : ID ∃n : name ∃d : dept_name ∃t : tot_cred ( (((advisor(s,i)) ∧ (student(i1,n,d,t))) ∧ (s = i1)) ∧ (d = 'History') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:s_ID EXISTS:∃ IDENT:i1 COLON:: IDENT:ID EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:t COLON:: IDENT:tot_cred LPAR:( LPAR:( LPAR:( LPAR:( IDENT:advisor LPAR:( IDENT:s COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:student LPAR:( IDENT:i1 COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:History RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:s_ID
+            EXISTS i1:ID
+              EXISTS n:name
+                EXISTS d:dept_name
+                  EXISTS t:tot_cred
+                    AND
+                      AND
+                        AND
+                          PRED advisor(s, i)
+                          PRED student(i1, n, d, t)
+                        EQ  s = i1
+                      EQ  d = 'History'
+      Predicted FOL: ∃s : s_ID ∃i : i_ID ( advisor(s, i) ∧ ∃n : name ∃d : dept_name ∃t : tot_cred ( student(s, n, d, t) ∧ d = 'History' ) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:s_ID EXISTS:∃ IDENT:i COLON:: IDENT:i_ID LPAR:( IDENT:advisor LPAR:( IDENT:s COMMA:, IDENT:i RPAR:) AND:∧ EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:t COLON:: IDENT:tot_cred LPAR:( IDENT:student LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:t RPAR:) AND:∧ IDENT:d EQ:= LIT:History RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:s_ID
+            EXISTS i:i_ID
+              AND
+                PRED advisor(s, i)
+                EXISTS n:name
+                  EXISTS d:dept_name
+                    EXISTS t:tot_cred
+                      AND
+                        PRED student(s, n, d, t)
+                        EQ  d = 'History'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (i : i_ID) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local dept_name, global varchar(20) -> StringSort()
+        i : local i_ID, global varchar(5) -> StringSort()
+        i1 : local ID, global varchar(5) -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        s : local s_ID, global varchar(5) -> StringSort()
+        t : local tot_cred, global numeric(3,0) -> RealSort()
+      Predicted FOL:
+        d : local dept_name, global varchar(20) -> StringSort()
+        i : local i_ID, global varchar(5) -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        s : local s_ID, global varchar(5) -> StringSort()
+        t : local tot_cred, global numeric(3,0) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5381 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1492.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (i : i_ID) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

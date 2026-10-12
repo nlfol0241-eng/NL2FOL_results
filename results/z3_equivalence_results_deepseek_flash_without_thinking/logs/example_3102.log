@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3102.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3102.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3333 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all track names that have had no races.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Class = text -> StringSort()
+        Date = text -> StringSort()
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        Race_ID = int -> IntSort()
+        Seating = real -> Float32()
+        Track_ID = text -> StringSort()
+        Year_Opened = real -> Float32()
+      symbols:
+        race(Race_ID, Name, Class, Date, Track_ID)
+        track(Track_ID, Name, Location, Seating, Year_Opened)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : Location ∃y : Year_Opened ∃s : Seating ∃t : Track_ID( (track(t,n,l,s,y)) ∧ (¬(∃t1 : Track_ID( ((track(t,n,l,s,y)) ∧ (∃r : Race_ID ∃d : Date ∃c : Class ∃n1 : Name( race(r,n1,c,d,t1) ))) ∧ (t = t1) ))) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:y COLON:: IDENT:Year_Opened EXISTS:∃ IDENT:s COLON:: IDENT:Seating EXISTS:∃ IDENT:t COLON:: IDENT:Track_ID LPAR:( LPAR:( IDENT:track LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:t1 COLON:: IDENT:Track_ID LPAR:( LPAR:( LPAR:( IDENT:track LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:Race_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:c COLON:: IDENT:Class EXISTS:∃ IDENT:n1 COLON:: IDENT:Name LPAR:( IDENT:race LPAR:( IDENT:r COMMA:, IDENT:n1 COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:t1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:Location
+            EXISTS y:Year_Opened
+              EXISTS s:Seating
+                EXISTS t:Track_ID
+                  AND
+                    PRED track(t, n, l, s, y)
+                    NOT
+                      EXISTS t1:Track_ID
+                        AND
+                          AND
+                            PRED track(t, n, l, s, y)
+                            EXISTS r:Race_ID
+                              EXISTS d:Date
+                                EXISTS c:Class
+                                  EXISTS n1:Name
+                                    PRED race(r, n1, c, d, t1)
+                          EQ  t = t1
+      Predicted FOL: ∀t0 : Track_ID ∀t1 : Name ∀t2 : Location ∀t3 : Seating ∀t4 : Year_Opened ( track(t0, t1, t2, t3, t4) ∧ ¬∃r0 : Race_ID ∃r1 : Name ∃r2 : Class ∃r3 : Date ∃r4 : Track_ID ( race(r0, r1, r2, r3, r4) ∧ r4 = t0 ) → answer(t1) )
+        tokens: FORALL:∀ IDENT:t0 COLON:: IDENT:Track_ID FORALL:∀ IDENT:t1 COLON:: IDENT:Name FORALL:∀ IDENT:t2 COLON:: IDENT:Location FORALL:∀ IDENT:t3 COLON:: IDENT:Seating FORALL:∀ IDENT:t4 COLON:: IDENT:Year_Opened LPAR:( IDENT:track LPAR:( IDENT:t0 COMMA:, IDENT:t1 COMMA:, IDENT:t2 COMMA:, IDENT:t3 COMMA:, IDENT:t4 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:r0 COLON:: IDENT:Race_ID EXISTS:∃ IDENT:r1 COLON:: IDENT:Name EXISTS:∃ IDENT:r2 COLON:: IDENT:Class EXISTS:∃ IDENT:r3 COLON:: IDENT:Date EXISTS:∃ IDENT:r4 COLON:: IDENT:Track_ID LPAR:( IDENT:race LPAR:( IDENT:r0 COMMA:, IDENT:r1 COMMA:, IDENT:r2 COMMA:, IDENT:r3 COMMA:, IDENT:r4 RPAR:) AND:∧ IDENT:r4 EQ:= IDENT:t0 RPAR:) IMPL:→ IDENT:answer LPAR:( IDENT:t1 RPAR:) RPAR:) EOF
+        AST:
+          FORALL t0:Track_ID
+            FORALL t1:Name
+              FORALL t2:Location
+                FORALL t3:Seating
+                  FORALL t4:Year_Opened
+                    AND
+                      PRED track(t0, t1, t2, t3, t4)
+                      NOT
+                        EXISTS r0:Race_ID
+                          EXISTS r1:Name
+                            EXISTS r2:Class
+                              EXISTS r3:Date
+                                EXISTS r4:Track_ID
+                                  IMPLIES
+                                    AND
+                                      PRED race(r0, r1, r2, r3, r4)
+                                      EQ  r4 = t0
+                                    PRED answer(t1)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'answer' has no declared arity
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 2 more times]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 134, in infer
+    infer(node[1], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 2 more times]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 140, in infer
+    infer(node[2], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 144, in infer
+    raise ValueError(f"predicate {node[1]!r} has no declared arity")
+ValueError: predicate 'answer' has no declared arity

@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1415.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1415.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3844 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the id and address of the shops which have a happy hour in May?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Address = text -> StringSort()
+        HH_ID = int -> IntSort()
+        Month = text -> StringSort()
+        Num_of_shaff_in_charge = int -> IntSort()
+        Num_of_staff = text -> StringSort()
+        Open_Year = text -> StringSort()
+        Score = real -> Float32()
+        Shop_ID = int -> IntSort()
+      symbols:
+        happy_hour(HH_ID, Shop_ID, Month, Num_of_shaff_in_charge)
+        shop(Shop_ID, Address, Num_of_staff, Score, Open_Year)
+        constant May : Month
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : Num_of_staff ∃s1 : Score ∃o : Open_Year ∃h : HH_ID ∃s2 : Shop_ID ∃m : Month ∃n1 : Num_of_shaff_in_charge ( (((shop(s,a,n,s1,o)) ∧ (happy_hour(h,s2,m,n1))) ∧ (s = s2)) ∧ (m = 'May') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_staff EXISTS:∃ IDENT:s1 COLON:: IDENT:Score EXISTS:∃ IDENT:o COLON:: IDENT:Open_Year EXISTS:∃ IDENT:h COLON:: IDENT:HH_ID EXISTS:∃ IDENT:s2 COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:m COLON:: IDENT:Month EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_shaff_in_charge LPAR:( LPAR:( LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:s1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:happy_hour LPAR:( IDENT:h COMMA:, IDENT:s2 COMMA:, IDENT:m COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= LIT:May RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Num_of_staff
+            EXISTS s1:Score
+              EXISTS o:Open_Year
+                EXISTS h:HH_ID
+                  EXISTS s2:Shop_ID
+                    EXISTS m:Month
+                      EXISTS n1:Num_of_shaff_in_charge
+                        AND
+                          AND
+                            AND
+                              PRED shop(s, a, n, s1, o)
+                              PRED happy_hour(h, s2, m, n1)
+                            EQ  s = s2
+                          EQ  m = 'May'
+      Predicted FOL: ∃n : Num_of_staff ∃s : Score ∃y : Open_Year ∃h : HH_ID ∃c : Num_of_shaff_in_charge (shop(id, address, n, s, y) ∧ happy_hour(h, id, 'May', c))
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_staff EXISTS:∃ IDENT:s COLON:: IDENT:Score EXISTS:∃ IDENT:y COLON:: IDENT:Open_Year EXISTS:∃ IDENT:h COLON:: IDENT:HH_ID EXISTS:∃ IDENT:c COLON:: IDENT:Num_of_shaff_in_charge LPAR:( IDENT:shop LPAR:( IDENT:id COMMA:, IDENT:address COMMA:, IDENT:n COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) AND:∧ IDENT:happy_hour LPAR:( IDENT:h COMMA:, IDENT:id COMMA:, LIT:May COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Num_of_staff
+            EXISTS s:Score
+              EXISTS y:Open_Year
+                EXISTS h:HH_ID
+                  EXISTS c:Num_of_shaff_in_charge
+                    AND
+                      PRED shop(id, address, n, s, y)
+                      PRED happy_hour(h, id, 'May', c)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Address_0 : Address   Gold a <-> Predicted address
+      FV_Shop_ID_0 : Shop_ID   Gold s <-> Predicted id
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address, global text -> StringSort()
+        h : local HH_ID, global int -> IntSort()
+        m : local Month, global text -> StringSort()
+        n : local Num_of_staff, global text -> StringSort()
+        n1 : local Num_of_shaff_in_charge, global int -> IntSort()
+        o : local Open_Year, global text -> StringSort()
+        s : local Shop_ID, global int -> IntSort()
+        s1 : local Score, global real -> Float32()
+        s2 : local Shop_ID, global int -> IntSort()
+      Predicted FOL:
+        address : local Address, global text -> StringSort()
+        c : local Num_of_shaff_in_charge, global int -> IntSort()
+        h : local HH_ID, global int -> IntSort()
+        id : local Shop_ID, global int -> IntSort()
+        n : local Num_of_staff, global text -> StringSort()
+        s : local Score, global real -> Float32()
+        y : local Open_Year, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_s1_2, gold_o_3, gold_h_4, gold_s2_5, gold_m_6, gold_n1_7], And(D_real(gold_s1_2), And(And(And(P_shop(FV_Shop_ID_0, FV_Address_0, gold_n_1, gold_s1_2, gold_o_3), P_happy_hour(gold_h_4, gold_s2_5, gold_m_6, gold_n1_7)), (FV_Shop_ID_0 == gold_s2_5)), (gold_m_6 == L_May))))
+      gold_skolem (witnesses WGOLD_n, WGOLD_s1, WGOLD_o, WGOLD_h, WGOLD_s2, WGOLD_m, WGOLD_n1):  And(D_real(WGOLD_s1), And(And(And(P_shop(FV_Shop_ID_0, FV_Address_0, WGOLD_n, WGOLD_s1, WGOLD_o), P_happy_hour(WGOLD_h, WGOLD_s2, WGOLD_m, WGOLD_n1)), (FV_Shop_ID_0 == WGOLD_s2)), (WGOLD_m == L_May)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_n_1, predicted_s_2, predicted_y_3, predicted_h_4, predicted_c_5], And(D_real(predicted_s_2), And(P_shop(FV_Shop_ID_0, FV_Address_0, predicted_n_1, predicted_s_2, predicted_y_3), P_happy_hour(predicted_h_4, FV_Shop_ID_0, L_May, predicted_c_5))))
+      predicted_skolem (witnesses WPREDICTED_n, WPREDICTED_s, WPREDICTED_y, WPREDICTED_h, WPREDICTED_c):  And(D_real(WPREDICTED_s), And(P_shop(FV_Shop_ID_0, FV_Address_0, WPREDICTED_n, WPREDICTED_s, WPREDICTED_y), P_happy_hour(WPREDICTED_h, FV_Shop_ID_0, L_May, WPREDICTED_c)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'May' at text -> L_May = StringVal('May')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 764 lines, 29683 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1415.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_s1, WGOLD_o, WGOLD_h, WGOLD_s2, WGOLD_m, WGOLD_n1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s1)), Not(And(fpIsZero(WGOLD_s1), fpIsNegative(WGOLD_s1)))), And(And(And(shop(FV_Shop_ID_0, FV_Address_0, WGOLD_n, WGOLD_s1, WGOLD_o), happy_hour(WGOLD_h, WGOLD_s2, WGOLD_m, WGOLD_n1)), FV_Shop_ID_0 == WGOLD_s2), WGOLD_m == "May")), Not(Exists([predicted_n_1, predicted_s_2, predicted_y_3, predicted_h_4, predicted_c_5], And(And(Not(fpIsNaN(predicted_s_2)), Not(And(fpIsZero(predicted_s_2), fpIsNegative(predicted_s_2)))), And(shop(FV_Shop_ID_0, FV_Address_0, predicted_n_1, predicted_s_2, predicted_y_3), happy_hour(predicted_h_4, FV_Shop_ID_0, "May", predicted_c_5))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_n, WPREDICTED_s, WPREDICTED_y, WPREDICTED_h, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_s)), Not(And(fpIsZero(WPREDICTED_s), fpIsNegative(WPREDICTED_s)))), And(shop(FV_Shop_ID_0, FV_Address_0, WPREDICTED_n, WPREDICTED_s, WPREDICTED_y), happy_hour(WPREDICTED_h, FV_Shop_ID_0, "May", WPREDICTED_c))), Not(Exists([gold_n_1, gold_s1_2, gold_o_3, gold_h_4, gold_s2_5, gold_m_6, gold_n1_7], And(And(Not(fpIsNaN(gold_s1_2)), Not(And(fpIsZero(gold_s1_2), fpIsNegative(gold_s1_2)))), And(And(And(shop(FV_Shop_ID_0, FV_Address_0, gold_n_1, gold_s1_2, gold_o_3), happy_hour(gold_h_4, gold_s2_5, gold_m_6, gold_n1_7)), FV_Shop_ID_0 == gold_s2_5), gold_m_6 == "May")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

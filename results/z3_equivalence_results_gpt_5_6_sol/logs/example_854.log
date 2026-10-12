@@ -1,0 +1,69 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_854.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_854.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5064 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are each document's location code, and starting date and ending data in that location?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Date_in_Location_From = datetime -> IntSort()
+        Date_in_Locaton_To = datetime -> IntSort()
+        Document_ID = integer -> IntSort()
+        Location_Code = char(15) -> StringSort()
+      symbols:
+        Document_Locations(Document_ID, Location_Code, Date_in_Location_From, Date_in_Locaton_To)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Document_ID ( Document_Locations(d,l,d1,d2) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID LPAR:( IDENT:Document_Locations LPAR:( IDENT:d COMMA:, IDENT:l COMMA:, IDENT:d1 COMMA:, IDENT:d2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            PRED Document_Locations(d, l, d1, d2)
+      Predicted FOL: Document_Locations(document_id, location_code, starting_date, ending_date)
+        tokens: IDENT:Document_Locations LPAR:( IDENT:document_id COMMA:, IDENT:location_code COMMA:, IDENT:starting_date COMMA:, IDENT:ending_date RPAR:) EOF
+        AST:
+          PRED Document_Locations(document_id, location_code, starting_date, ending_date)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (l : Location_Code, d1 : Date_in_Location_From, d2 : Date_in_Locaton_To) but Predicted has 4 (document_id : Document_ID, location_code : Location_Code, starting_date : Date_in_Location_From, ending_date : Date_in_Locaton_To): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Date_in_Location_From, global datetime -> IntSort()
+        d2 : local Date_in_Locaton_To, global datetime -> IntSort()
+        l : local Location_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        document_id : local Document_ID, global integer -> IntSort()
+        ending_date : local Date_in_Locaton_To, global datetime -> IntSort()
+        location_code : local Location_Code, global char(15) -> StringSort()
+        starting_date : local Date_in_Location_From, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5620 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_854.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (l : Location_Code, d1 : Date_in_Location_From, d2 : Date_in_Locaton_To) but Predicted has 4 (document_id : Document_ID, location_code : Location_Code, starting_date : Date_in_Location_From, ending_date : Date_in_Locaton_To): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

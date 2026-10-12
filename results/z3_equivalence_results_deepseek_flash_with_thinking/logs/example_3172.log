@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3172.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3172.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3830 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of technicians who have not been assigned to repair machines.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Machine_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Starting_Year = real -> Float32()
+        Team = text -> StringSort()
+        repair_ID = int -> IntSort()
+        technician_id = real -> Float32()
+      symbols:
+        repair_assignment(technician_id, repair_ID, Machine_ID)
+        technician(technician_id, Name, Team, Starting_Year, Age)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t1 : Team ∃a : Age ∃s : Starting_Year ∃t : technician_id( (technician(t,n,t1,s,a)) ∧ (¬(∃t2 : technician_id( ((technician(t,n,t1,s,a)) ∧ (∃m : Machine_ID ∃r : repair_ID( repair_assignment(t2,r,m) ))) ∧ (t = t2) ))) )
+        tokens: EXISTS:∃ IDENT:t1 COLON:: IDENT:Team EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:s COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:t COLON:: IDENT:technician_id LPAR:( LPAR:( IDENT:technician LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:t2 COLON:: IDENT:technician_id LPAR:( LPAR:( LPAR:( IDENT:technician LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:m COLON:: IDENT:Machine_ID EXISTS:∃ IDENT:r COLON:: IDENT:repair_ID LPAR:( IDENT:repair_assignment LPAR:( IDENT:t2 COMMA:, IDENT:r COMMA:, IDENT:m RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t1:Team
+            EXISTS a:Age
+              EXISTS s:Starting_Year
+                EXISTS t:technician_id
+                  AND
+                    PRED technician(t, n, t1, s, a)
+                    NOT
+                      EXISTS t2:technician_id
+                        AND
+                          AND
+                            PRED technician(t, n, t1, s, a)
+                            EXISTS m:Machine_ID
+                              EXISTS r:repair_ID
+                                PRED repair_assignment(t2, r, m)
+                          EQ  t = t2
+      Predicted FOL: ∃t_id : technician_id ∃team : Team ∃start : Starting_Year ∃age : Age (technician(t_id, name, team, start, age) ∧ ¬∃r_id : repair_ID ∃m_id : Machine_ID repair_assignment(t_id, r_id, m_id))
+        tokens: EXISTS:∃ IDENT:t_id COLON:: IDENT:technician_id EXISTS:∃ IDENT:team COLON:: IDENT:Team EXISTS:∃ IDENT:start COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:age COLON:: IDENT:Age LPAR:( IDENT:technician LPAR:( IDENT:t_id COMMA:, IDENT:name COMMA:, IDENT:team COMMA:, IDENT:start COMMA:, IDENT:age RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:r_id COLON:: IDENT:repair_ID EXISTS:∃ IDENT:m_id COLON:: IDENT:Machine_ID IDENT:repair_assignment LPAR:( IDENT:t_id COMMA:, IDENT:r_id COMMA:, IDENT:m_id RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t_id:technician_id
+            EXISTS team:Team
+              EXISTS start:Starting_Year
+                EXISTS age:Age
+                  AND
+                    PRED technician(t_id, name, team, start, age)
+                    NOT
+                      EXISTS r_id:repair_ID
+                        EXISTS m_id:Machine_ID
+                          PRED repair_assignment(t_id, r_id, m_id)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        m : local Machine_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        r : local repair_ID, global int -> IntSort()
+        s : local Starting_Year, global real -> Float32()
+        t : local technician_id, global real -> Float32()
+        t1 : local Team, global text -> StringSort()
+        t2 : local technician_id, global real -> Float32()
+      Predicted FOL:
+        age : local Age, global int -> IntSort()
+        m_id : local Machine_ID, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+        r_id : local repair_ID, global int -> IntSort()
+        start : local Starting_Year, global real -> Float32()
+        t_id : local technician_id, global real -> Float32()
+        team : local Team, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t1_1, gold_a_2, gold_s_3, gold_t_4], And(D_real(gold_s_3), D_real(gold_t_4), And(P_technician(gold_t_4, FV_Name_0, gold_t1_1, gold_s_3, gold_a_2), Not(Exists([gold_t2_5], And(D_real(gold_t2_5), And(And(P_technician(gold_t_4, FV_Name_0, gold_t1_1, gold_s_3, gold_a_2), Exists([gold_m_6, gold_r_7], P_repair_assignment(gold_t2_5, gold_r_7, gold_m_6))), (gold_t_4 == gold_t2_5))))))))
+      gold_skolem (witnesses WGOLD_t1, WGOLD_a, WGOLD_s, WGOLD_t):  And(D_real(WGOLD_s), D_real(WGOLD_t), And(P_technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Not(Exists([goldsk_t2_1], And(D_real(goldsk_t2_1), And(And(P_technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Exists([goldsk_m_2, goldsk_r_3], P_repair_assignment(goldsk_t2_1, goldsk_r_3, goldsk_m_2))), (WGOLD_t == goldsk_t2_1)))))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_t_id_1, predicted_team_2, predicted_start_3, predicted_age_4], And(D_real(predicted_t_id_1), D_real(predicted_start_3), And(P_technician(predicted_t_id_1, FV_Name_0, predicted_team_2, predicted_start_3, predicted_age_4), Not(Exists([predicted_r_id_5, predicted_m_id_6], P_repair_assignment(predicted_t_id_1, predicted_r_id_5, predicted_m_id_6))))))
+      predicted_skolem (witnesses WPREDICTED_t_id, WPREDICTED_team, WPREDICTED_start, WPREDICTED_age):  And(D_real(WPREDICTED_t_id), D_real(WPREDICTED_start), And(P_technician(WPREDICTED_t_id, FV_Name_0, WPREDICTED_team, WPREDICTED_start, WPREDICTED_age), Not(Exists([predictedsk_r_id_1, predictedsk_m_id_2], P_repair_assignment(WPREDICTED_t_id, predictedsk_r_id_1, predictedsk_m_id_2)))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 756 lines, 29972 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3172.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_t1, WGOLD_a, WGOLD_s, WGOLD_t
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(Not(fpIsNaN(WGOLD_t)), Not(And(fpIsZero(WGOLD_t), fpIsNegative(WGOLD_t)))), And(technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Not(Exists(goldsk_t2_1, And(And(Not(fpIsNaN(goldsk_t2_1)), Not(And(fpIsZero(goldsk_t2_1), fpIsNegative(goldsk_t2_1)))), And(And(technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Exists([goldsk_m_2, goldsk_r_3], repair_assignment(goldsk_t2_1, goldsk_r_3, goldsk_m_2))), WGOLD_t == goldsk_t2_1)))))), Not(Exists([predicted_t_id_1, predicted_team_2, predicted_start_3, predicted_age_4], And(And(Not(fpIsNaN(predicted_t_id_1)), Not(And(fpIsZero(predicted_t_id_1), fpIsNegative(predicted_t_id_1)))), And(Not(fpIsNaN(predicted_start_3)), Not(And(fpIsZero(predicted_start_3), fpIsNegative(predicted_start_3)))), And(technician(predicted_t_id_1, FV_Name_0, predicted_team_2, predicted_start_3, predicted_age_4), Not(Exists([predicted_r_id_5, predicted_m_id_6], repair_assignment(predicted_t_id_1, predicted_r_id_5, predicted_m_id_6))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.018 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_t_id, WPREDICTED_team, WPREDICTED_start, WPREDICTED_age
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_t_id)), Not(And(fpIsZero(WPREDICTED_t_id), fpIsNegative(WPREDICTED_t_id)))), And(Not(fpIsNaN(WPREDICTED_start)), Not(And(fpIsZero(WPREDICTED_start), fpIsNegative(WPREDICTED_start)))), And(technician(WPREDICTED_t_id, FV_Name_0, WPREDICTED_team, WPREDICTED_start, WPREDICTED_age), Not(Exists([predictedsk_r_id_1, predictedsk_m_id_2], repair_assignment(WPREDICTED_t_id, predictedsk_r_id_1, predictedsk_m_id_2))))), Not(Exists([gold_t1_1, gold_a_2, gold_s_3, gold_t_4], And(And(Not(fpIsNaN(gold_s_3)), Not(And(fpIsZero(gold_s_3), fpIsNegative(gold_s_3)))), And(Not(fpIsNaN(gold_t_4)), Not(And(fpIsZero(gold_t_4), fpIsNegative(gold_t_4)))), And(technician(gold_t_4, FV_Name_0, gold_t1_1, gold_s_3, gold_a_2), Not(Exists(gold_t2_5, And(And(Not(fpIsNaN(gold_t2_5)), Not(And(fpIsZero(gold_t2_5), fpIsNegative(gold_t2_5)))), And(And(technician(gold_t_4, FV_Name_0, gold_t1_1, gold_s_3, gold_a_2), Exists([gold_m_6, gold_r_7], repair_assignment(gold_t2_5, gold_r_7, gold_m_6))), gold_t_4 == gold_t2_5)))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

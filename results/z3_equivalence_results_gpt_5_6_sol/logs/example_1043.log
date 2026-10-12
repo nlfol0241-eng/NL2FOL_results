@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1043.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1043.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2257 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the different types of video games?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+      local sorts:
+        GName = varchar(40) -> StringSort()
+        GType = varchar(40) -> StringSort()
+        GameID = integer -> IntSort()
+      symbols:
+        Video_Games(GameID, GName, GType)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : GameID ∃g1 : GName ( Video_Games(g,g1,g2) )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:GameID EXISTS:∃ IDENT:g1 COLON:: IDENT:GName LPAR:( IDENT:Video_Games LPAR:( IDENT:g COMMA:, IDENT:g1 COMMA:, IDENT:g2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:GameID
+            EXISTS g1:GName
+              PRED Video_Games(g, g1, g2)
+      Predicted FOL: ∃gameID : GameID ∃gameName : GName Video_Games(gameID, gameName, gameType)
+        tokens: EXISTS:∃ IDENT:gameID COLON:: IDENT:GameID EXISTS:∃ IDENT:gameName COLON:: IDENT:GName IDENT:Video_Games LPAR:( IDENT:gameID COMMA:, IDENT:gameName COMMA:, IDENT:gameType RPAR:) EOF
+        AST:
+          EXISTS gameID:GameID
+            EXISTS gameName:GName
+              PRED Video_Games(gameID, gameName, gameType)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_GType_0 : GType   Gold g2 <-> Predicted gameType
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local GameID, global integer -> IntSort()
+        g1 : local GName, global varchar(40) -> StringSort()
+        g2 : local GType, global varchar(40) -> StringSort()
+      Predicted FOL:
+        gameID : local GameID, global integer -> IntSort()
+        gameName : local GName, global varchar(40) -> StringSort()
+        gameType : local GType, global varchar(40) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_g_1, gold_g1_2], And(D_varchar_40_(gold_g1_2), P_Video_Games(gold_g_1, gold_g1_2, FV_GType_0)))
+      gold_skolem (witnesses WGOLD_g, WGOLD_g1):  And(D_varchar_40_(WGOLD_g1), P_Video_Games(WGOLD_g, WGOLD_g1, FV_GType_0))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_gameID_1, predicted_gameName_2], And(D_varchar_40_(predicted_gameName_2), P_Video_Games(predicted_gameID_1, predicted_gameName_2, FV_GType_0)))
+      predicted_skolem (witnesses WPREDICTED_gameID, WPREDICTED_gameName):  And(D_varchar_40_(WPREDICTED_gameName), P_Video_Games(WPREDICTED_gameID, WPREDICTED_gameName, FV_GType_0))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 722 lines, 26711 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1043.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_GType_0) <= 40
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_g, WGOLD_g1
+      claim: And(And(Length(WGOLD_g1) <= 40, Video_Games(WGOLD_g, WGOLD_g1, FV_GType_0)), Not(Exists([predicted_gameID_1, predicted_gameName_2], And(Length(predicted_gameName_2) <= 40, Video_Games(predicted_gameID_1, predicted_gameName_2, FV_GType_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_gameID, WPREDICTED_gameName
+      claim: And(And(Length(WPREDICTED_gameName) <= 40, Video_Games(WPREDICTED_gameID, WPREDICTED_gameName, FV_GType_0)), Not(Exists([gold_g_1, gold_g1_2], And(Length(gold_g1_2) <= 40, Video_Games(gold_g_1, gold_g1_2, FV_GType_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

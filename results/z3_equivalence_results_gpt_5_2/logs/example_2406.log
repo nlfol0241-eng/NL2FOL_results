@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2406.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2406.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4113 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: For each party, return its theme and the name of its host.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 11 local sorts, 3 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        bool -> BoolSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        First_year = text -> StringSort()
+        Host_ID = int -> IntSort()
+        Is_Main_in_Charge = bool -> BoolSort()
+        Last_year = text -> StringSort()
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Number_of_hosts = int -> IntSort()
+        Party_ID = int -> IntSort()
+        Party_Theme = text -> StringSort()
+      symbols:
+        host(Host_ID, Name, Nationality, Age)
+        party(Party_ID, Party_Theme, Location, First_year, Last_year, Number_of_hosts)
+        party_host(Party_ID, Host_ID, Is_Main_in_Charge)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Party_ID ∃h : Host_ID ∃i : Is_Main_in_Charge ∃h1 : Host_ID ∃n1 : Nationality ∃a : Age ∃p1 : Party_ID ∃l : Location ∃f : First_year ∃l1 : Last_year ∃n2 : Number_of_hosts ( ((((party_host(p,h,i)) ∧ (host(h1,n,n1,a))) ∧ (h = h1)) ∧ (party(p1,p2,l,f,l1,n2))) ∧ (p = p1) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:h COLON:: IDENT:Host_ID EXISTS:∃ IDENT:i COLON:: IDENT:Is_Main_in_Charge EXISTS:∃ IDENT:h1 COLON:: IDENT:Host_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:p1 COLON:: IDENT:Party_ID EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:First_year EXISTS:∃ IDENT:l1 COLON:: IDENT:Last_year EXISTS:∃ IDENT:n2 COLON:: IDENT:Number_of_hosts LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:party_host LPAR:( IDENT:p COMMA:, IDENT:h COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:host LPAR:( IDENT:h1 COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h EQ:= IDENT:h1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:party LPAR:( IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:l1 COMMA:, IDENT:n2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Party_ID
+            EXISTS h:Host_ID
+              EXISTS i:Is_Main_in_Charge
+                EXISTS h1:Host_ID
+                  EXISTS n1:Nationality
+                    EXISTS a:Age
+                      EXISTS p1:Party_ID
+                        EXISTS l:Location
+                          EXISTS f:First_year
+                            EXISTS l1:Last_year
+                              EXISTS n2:Number_of_hosts
+                                AND
+                                  AND
+                                    AND
+                                      AND
+                                        PRED party_host(p, h, i)
+                                        PRED host(h1, n, n1, a)
+                                      EQ  h = h1
+                                    PRED party(p1, p2, l, f, l1, n2)
+                                  EQ  p = p1
+      Predicted FOL: ∀p:Party_ID ∀t:Party_Theme( party(p,t,_,_,_,_) → ∃h:Host_ID ∃n:Name ( party_host(p,h,_) ∧ host(h,n,_,_) ) )
+        tokens: FORALL:∀ IDENT:p COLON:: IDENT:Party_ID FORALL:∀ IDENT:t COLON:: IDENT:Party_Theme LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:t COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ COMMA:, IDENT:_ RPAR:) IMPL:→ EXISTS:∃ IDENT:h COLON:: IDENT:Host_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( IDENT:party_host LPAR:( IDENT:p COMMA:, IDENT:h COMMA:, IDENT:_ RPAR:) AND:∧ IDENT:host LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:_ COMMA:, IDENT:_ RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          FORALL p:Party_ID
+            FORALL t:Party_Theme
+              IMPLIES
+                PRED party(p, t, _, _, _, _)
+                EXISTS h:Host_ID
+                  EXISTS n:Name
+                    AND
+                      PRED party_host(p, h, _)
+                      PRED host(h, n, _, _)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) _ occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 2 free variable(s) (n : Name, p2 : Party_Theme) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable '_' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 139, in infer
+    infer(node[1], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable '_' used at incompatible global sorts text and int

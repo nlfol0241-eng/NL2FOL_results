@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1945.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1945.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7544 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the details and ways to get to tourist attractions related to royal family?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        Attraction_Type_Code = char(15) -> StringSort()
+        Description = varchar(255) -> StringSort()
+        How_to_Get_There = varchar(255) -> StringSort()
+        Location_ID = integer -> IntSort()
+        Name = text -> StringSort()
+        Opening_Hours = varchar(255) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Royal_Family_Details = varchar(255) -> StringSort()
+        Royal_Family_ID = integer -> IntSort()
+        Tourist_Attraction_ID = integer -> IntSort()
+      symbols:
+        Royal_Family(Royal_Family_ID, Royal_Family_Details)
+        Tourist_Attractions(Tourist_Attraction_ID, Attraction_Type_Code, Location_ID, How_to_Get_There, Name, Description, Opening_Hours, Other_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Royal_Family_ID ∃t : Tourist_Attraction_ID ∃a : Attraction_Type_Code ∃l : Location_ID ∃n : Name ∃d : Description ∃o : Opening_Hours ∃o1 : Other_Details ( ((Royal_Family(r,r1)) ∧ (Tourist_Attractions(t,a,l,h,n,d,o,o1))) ∧ (r = t) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Royal_Family_ID EXISTS:∃ IDENT:t COLON:: IDENT:Tourist_Attraction_ID EXISTS:∃ IDENT:a COLON:: IDENT:Attraction_Type_Code EXISTS:∃ IDENT:l COLON:: IDENT:Location_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:d COLON:: IDENT:Description EXISTS:∃ IDENT:o COLON:: IDENT:Opening_Hours EXISTS:∃ IDENT:o1 COLON:: IDENT:Other_Details LPAR:( LPAR:( LPAR:( IDENT:Royal_Family LPAR:( IDENT:r COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Tourist_Attractions LPAR:( IDENT:t COMMA:, IDENT:a COMMA:, IDENT:l COMMA:, IDENT:h COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:o COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Royal_Family_ID
+            EXISTS t:Tourist_Attraction_ID
+              EXISTS a:Attraction_Type_Code
+                EXISTS l:Location_ID
+                  EXISTS n:Name
+                    EXISTS d:Description
+                      EXISTS o:Opening_Hours
+                        EXISTS o1:Other_Details
+                          AND
+                            AND
+                              PRED Royal_Family(r, r1)
+                              PRED Tourist_Attractions(t, a, l, h, n, d, o, o1)
+                            EQ  r = t
+      Predicted FOL: ∃ k0 : Royal_Family_ID ∃ k1 : Royal_Family_Details ( Royal_Family(k0, k1) ∧ Tourist_Attractions(g0, g1, g2, g3, g4, g5, g6, g7) ∧ g0 = k0 )
+        tokens: EXISTS:∃ IDENT:k0 COLON:: IDENT:Royal_Family_ID EXISTS:∃ IDENT:k1 COLON:: IDENT:Royal_Family_Details LPAR:( IDENT:Royal_Family LPAR:( IDENT:k0 COMMA:, IDENT:k1 RPAR:) AND:∧ IDENT:Tourist_Attractions LPAR:( IDENT:g0 COMMA:, IDENT:g1 COMMA:, IDENT:g2 COMMA:, IDENT:g3 COMMA:, IDENT:g4 COMMA:, IDENT:g5 COMMA:, IDENT:g6 COMMA:, IDENT:g7 RPAR:) AND:∧ IDENT:g0 EQ:= IDENT:k0 RPAR:) EOF
+        AST:
+          EXISTS k0:Royal_Family_ID
+            EXISTS k1:Royal_Family_Details
+              AND
+                PRED Royal_Family(k0, k1)
+                PRED Tourist_Attractions(g0, g1, g2, g3, g4, g5, g6, g7)
+                EQ  g0 = k0
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (r1 : Royal_Family_Details, h : How_to_Get_There) but Predicted has 8 (g0 : Tourist_Attraction_ID, g1 : Attraction_Type_Code, g2 : Location_ID, g3 : How_to_Get_There, g4 : Name, g5 : Description, g6 : Opening_Hours, g7 : Other_Details): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Attraction_Type_Code, global char(15) -> StringSort()
+        d : local Description, global varchar(255) -> StringSort()
+        h : local How_to_Get_There, global varchar(255) -> StringSort()
+        l : local Location_ID, global integer -> IntSort()
+        n : local Name, global text -> StringSort()
+        o : local Opening_Hours, global varchar(255) -> StringSort()
+        o1 : local Other_Details, global varchar(255) -> StringSort()
+        r : local Royal_Family_ID, global integer -> IntSort()
+        r1 : local Royal_Family_Details, global varchar(255) -> StringSort()
+        t : local Tourist_Attraction_ID, global integer -> IntSort()
+      Predicted FOL:
+        g0 : local Tourist_Attraction_ID, global integer -> IntSort()
+        g1 : local Attraction_Type_Code, global char(15) -> StringSort()
+        g2 : local Location_ID, global integer -> IntSort()
+        g3 : local How_to_Get_There, global varchar(255) -> StringSort()
+        g4 : local Name, global text -> StringSort()
+        g5 : local Description, global varchar(255) -> StringSort()
+        g6 : local Opening_Hours, global varchar(255) -> StringSort()
+        g7 : local Other_Details, global varchar(255) -> StringSort()
+        k0 : local Royal_Family_ID, global integer -> IntSort()
+        k1 : local Royal_Family_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5911 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1945.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (r1 : Royal_Family_Details, h : How_to_Get_There) but Predicted has 8 (g0 : Tourist_Attraction_ID, g1 : Attraction_Type_Code, g2 : Location_ID, g3 : How_to_Get_There, g4 : Name, g5 : Description, g6 : Opening_Hours, g7 : Other_Details): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

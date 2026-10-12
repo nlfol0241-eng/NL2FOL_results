@@ -1,0 +1,100 @@
+{
+  "NL": "Find the name of the person who has no student friends.",
+  "Vocabulary": {
+    "Predicates": [
+      "Person",
+      "PersonFriend"
+    ],
+    "Functions": [],
+    "Constants": [
+      "student"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "Person": [
+        "name",
+        "age",
+        "city",
+        "gender",
+        "job"
+      ],
+      "PersonFriend": [
+        "name",
+        "friend",
+        "year"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "student": "job"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a0'∀a1'∀a2'∀a3'∀a4'( Person(a0, a1, a2, a3, a4) ∧ Person(a0', a1', a2', a3', a4') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' )",
+    "axiom2": "∀b0∀b1∀b2 ( PersonFriend(b0, b1, b2) → ∃a0∃a1∃a2∃a3∃a4 ( Person(a0, a1, a2, a3, a4) ∧ a0 = b1 ) )",
+    "axiom3": "∀b0∀b1∀b2 ( PersonFriend(b0, b1, b2) → ∃a0∃a1∃a2∃a3∃a4 ( Person(a0, a1, a2, a3, a4) ∧ a0 = b0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Person": {
+        "A": "Person",
+        "A0": "name",
+        "A1": "age",
+        "A2": "city",
+        "A3": "gender",
+        "A4": "job"
+      },
+      "PersonFriend": {
+        "B": "PersonFriend",
+        "B0": "name",
+        "B1": "friend",
+        "B2": "year"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "student"
+    }
+  },
+  "Gold FOL": {
+    "string": "(∃c : city ∃a : age ∃j : job ∃g : gender( Person(n,a,c,g,j) )) ∧ (¬(∃c : city ∃a : age ∃y : year ∃j : job ∃g : gender ∃f : friend ∃n' : name ( (((Person(n',a,c,g,j)) ∧ (PersonFriend(n,f,y))) ∧ (n' = f)) ∧ (j = 'student') )))",
+    "free vars": "n : name"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A0](A))<D>(<R>[B0->A0](<P>[B0](<S>[A4 = 'student':VARCHAR(65536)](<S>[A0 = B1]((A)<X>(B))))))",
+    "Processed_RA": "(<P>[A0](A))<D>(<R>[B0->A0](<P>[B0](<S>[A4 = 'student'](<S>[A0 = B1]((A)<X>(B))))))",
+    "RC": "([E]?A2,?A1,?A4,?A3( A(?A0,?A1,?A2,?A3,?A4) )) & (~([E]?A2,?A1,?B2,?A4,?A3,?B1,?A0'( (((A(?A0',?A1,?A2,?A3,?A4)) & (B(?A0,?B1,?B2))) & (?A0' = ?B1)) & (?A4 = student) )))",
+    "string": "(∃A2 ∃A1 ∃A4 ∃A3( A(A0,A1,A2,A3,A4) )) ∧ (¬(∃A2 ∃A1 ∃B2 ∃A4 ∃A3 ∃B1 ∃A0'( (((A(A0',A1,A2,A3,A4)) ∧ (B(A0,B1,B2))) ∧ (A0' = B1)) ∧ (A4 = 'student') )))",
+    "free variables": "A0",
+    "db_id": "network_2",
+    "processed_sql": "SELECT name FROM person EXCEPT SELECT T2.name FROM Person AS T1 JOIN PersonFriend AS T2 ON T1.name  =  T2.friend WHERE T1.job  =  'student'"
+  },
+  "Global Sorts": [
+    "varchar(20)",
+    "integer",
+    "text"
+  ],
+  "Sort Axioms": {
+    "Person": {
+      "sortaxiom0": "name = varchar(20)",
+      "sortaxiom1": "age = integer",
+      "sortaxiom2": "city = text",
+      "sortaxiom3": "gender = text",
+      "sortaxiom4": "job = text"
+    },
+    "PersonFriend": {
+      "sortaxiom0": "name = varchar(20)",
+      "sortaxiom1": "friend = varchar(20)",
+      "sortaxiom2": "year = integer"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT name FROM person EXCEPT SELECT T2.name FROM Person AS T1 JOIN PersonFriend AS T2 ON T1.name  =  T2.friend WHERE T1.job  =  'student'"
+  },
+  "id": 3625,
+  "Predicted FOL": {
+    "string": "∃a : age ∃c : city ∃g : gender ∃j : job (Person(n, a, c, g, j) ∧ ¬∃f : friend ∃y : year ∃a₂ : age ∃c₂ : city ∃g₂ : gender (PersonFriend(n, f, y) ∧ Person(f, a₂, c₂, g₂, 'student')))",
+    "free vars": "n : name"
+  }
+}

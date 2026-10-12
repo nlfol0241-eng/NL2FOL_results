@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_532.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_532.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4420 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the apartment numbers of the apartments with type code "Flat".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        char(10) -> StringSort()   [domain Length(x) <= 10; length <= 10 (blank padding not modelled)]
+        char(5) -> StringSort()   [domain Length(x) <= 5; length <= 5 (blank padding not modelled)]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        apt_id = integer -> IntSort()
+        apt_number = char(10) -> StringSort()
+        apt_type_code = char(15) -> StringSort()
+        bathroom_count = integer -> IntSort()
+        bedroom_count = integer -> IntSort()
+        building_id = integer -> IntSort()
+        room_count = char(5) -> StringSort()
+      symbols:
+        Apartments(apt_id, building_id, apt_type_code, apt_number, bathroom_count, bedroom_count, room_count)
+        constant Flat : apt_type_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apt_id ∃b : building_id ∃a1 : apt_type_code ∃b1 : bathroom_count ∃b2 : bedroom_count ∃r : room_count ( (Apartments(a,b,a1,a2,b1,b2,r)) ∧ (a1 = 'Flat') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apt_id EXISTS:∃ IDENT:b COLON:: IDENT:building_id EXISTS:∃ IDENT:a1 COLON:: IDENT:apt_type_code EXISTS:∃ IDENT:b1 COLON:: IDENT:bathroom_count EXISTS:∃ IDENT:b2 COLON:: IDENT:bedroom_count EXISTS:∃ IDENT:r COLON:: IDENT:room_count LPAR:( LPAR:( IDENT:Apartments LPAR:( IDENT:a COMMA:, IDENT:b COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:Flat RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apt_id
+            EXISTS b:building_id
+              EXISTS a1:apt_type_code
+                EXISTS b1:bathroom_count
+                  EXISTS b2:bedroom_count
+                    EXISTS r:room_count
+                      AND
+                        PRED Apartments(a, b, a1, a2, b1, b2, r)
+                        EQ  a1 = 'Flat'
+      Predicted FOL: ∃x0 : apt_id ∃x1 : building_id ∃x2 : apt_type_code ∃x3 : apt_number ∃x4 : bathroom_count ∃x5 : bedroom_count ∃x6 : room_count (Apartments(x0, x1, x2, x3, x4, x5, x6) ∧ x2 = 'Flat')
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:apt_id EXISTS:∃ IDENT:x1 COLON:: IDENT:building_id EXISTS:∃ IDENT:x2 COLON:: IDENT:apt_type_code EXISTS:∃ IDENT:x3 COLON:: IDENT:apt_number EXISTS:∃ IDENT:x4 COLON:: IDENT:bathroom_count EXISTS:∃ IDENT:x5 COLON:: IDENT:bedroom_count EXISTS:∃ IDENT:x6 COLON:: IDENT:room_count LPAR:( IDENT:Apartments LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 COMMA:, IDENT:x6 RPAR:) AND:∧ IDENT:x2 EQ:= LIT:Flat RPAR:) EOF
+        AST:
+          EXISTS x0:apt_id
+            EXISTS x1:building_id
+              EXISTS x2:apt_type_code
+                EXISTS x3:apt_number
+                  EXISTS x4:bathroom_count
+                    EXISTS x5:bedroom_count
+                      EXISTS x6:room_count
+                        AND
+                          PRED Apartments(x0, x1, x2, x3, x4, x5, x6)
+                          EQ  x2 = 'Flat'
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (a2 : apt_number) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apt_id, global integer -> IntSort()
+        a1 : local apt_type_code, global char(15) -> StringSort()
+        a2 : local apt_number, global char(10) -> StringSort()
+        b : local building_id, global integer -> IntSort()
+        b1 : local bathroom_count, global integer -> IntSort()
+        b2 : local bedroom_count, global integer -> IntSort()
+        r : local room_count, global char(5) -> StringSort()
+      Predicted FOL:
+        x0 : local apt_id, global integer -> IntSort()
+        x1 : local building_id, global integer -> IntSort()
+        x2 : local apt_type_code, global char(15) -> StringSort()
+        x3 : local apt_number, global char(10) -> StringSort()
+        x4 : local bathroom_count, global integer -> IntSort()
+        x5 : local bedroom_count, global integer -> IntSort()
+        x6 : local room_count, global char(5) -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5479 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_532.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (a2 : apt_number) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

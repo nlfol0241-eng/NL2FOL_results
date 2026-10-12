@@ -1,0 +1,127 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2032.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2032.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3734 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the phone, room, and building for the faculty named Jerry Prince.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        integer -> IntSort()
+        varchar(13) -> StringSort()   [domain Length(x) <= 13; length <= 13]
+        text -> StringSort()
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        Building = varchar(13) -> StringSort()
+        FacID = integer -> IntSort()
+        Fname = text -> StringSort()
+        Lname = text -> StringSort()
+        Phone = integer -> IntSort()
+        Rank = varchar(15) -> StringSort()
+        Room = varchar(5) -> StringSort()
+        Sex = varchar(1) -> StringSort()
+      symbols:
+        Faculty(FacID, Lname, Fname, Rank, Sex, Phone, Room, Building)
+        constant Jerry : Fname
+        constant Prince : Lname
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : FacID ∃l : Lname ∃f1 : Fname ∃r : Rank ∃s : Sex ( (Faculty(f,l,f1,r,s,p,r1,b)) ∧ ((f1 = 'Jerry') ∧ (l = 'Prince')) )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:FacID EXISTS:∃ IDENT:l COLON:: IDENT:Lname EXISTS:∃ IDENT:f1 COLON:: IDENT:Fname EXISTS:∃ IDENT:r COLON:: IDENT:Rank EXISTS:∃ IDENT:s COLON:: IDENT:Sex LPAR:( LPAR:( IDENT:Faculty LPAR:( IDENT:f COMMA:, IDENT:l COMMA:, IDENT:f1 COMMA:, IDENT:r COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:r1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f1 EQ:= LIT:Jerry RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:Prince RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:FacID
+            EXISTS l:Lname
+              EXISTS f1:Fname
+                EXISTS r:Rank
+                  EXISTS s:Sex
+                    AND
+                      PRED Faculty(f, l, f1, r, s, p, r1, b)
+                      AND
+                        EQ  f1 = 'Jerry'
+                        EQ  l = 'Prince'
+      Predicted FOL: ∃ fid : FacID ∃ l : Lname ∃ f : Fname ∃ r : Rank ∃ s : Sex (Faculty(fid, l, f, r, s, phone, room, building) ∧ f = 'Jerry' ∧ l = 'Prince')
+        tokens: EXISTS:∃ IDENT:fid COLON:: IDENT:FacID EXISTS:∃ IDENT:l COLON:: IDENT:Lname EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:r COLON:: IDENT:Rank EXISTS:∃ IDENT:s COLON:: IDENT:Sex LPAR:( IDENT:Faculty LPAR:( IDENT:fid COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:r COMMA:, IDENT:s COMMA:, IDENT:phone COMMA:, IDENT:room COMMA:, IDENT:building RPAR:) AND:∧ IDENT:f EQ:= LIT:Jerry AND:∧ IDENT:l EQ:= LIT:Prince RPAR:) EOF
+        AST:
+          EXISTS fid:FacID
+            EXISTS l:Lname
+              EXISTS f:Fname
+                EXISTS r:Rank
+                  EXISTS s:Sex
+                    AND
+                      PRED Faculty(fid, l, f, r, s, phone, room, building)
+                      EQ  f = 'Jerry'
+                      EQ  l = 'Prince'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Building_0 : Building   Gold b <-> Predicted building
+      FV_Phone_0 : Phone   Gold p <-> Predicted phone
+      FV_Room_0 : Room   Gold r1 <-> Predicted room
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Building, global varchar(13) -> StringSort()
+        f : local FacID, global integer -> IntSort()
+        f1 : local Fname, global text -> StringSort()
+        l : local Lname, global text -> StringSort()
+        p : local Phone, global integer -> IntSort()
+        r : local Rank, global varchar(15) -> StringSort()
+        r1 : local Room, global varchar(5) -> StringSort()
+        s : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        building : local Building, global varchar(13) -> StringSort()
+        f : local Fname, global text -> StringSort()
+        fid : local FacID, global integer -> IntSort()
+        l : local Lname, global text -> StringSort()
+        phone : local Phone, global integer -> IntSort()
+        r : local Rank, global varchar(15) -> StringSort()
+        room : local Room, global varchar(5) -> StringSort()
+        s : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_f_1, gold_l_2, gold_f1_3, gold_r_4, gold_s_5], And(D_varchar_15_(gold_r_4), D_varchar_1_(gold_s_5), And(P_Faculty(gold_f_1, gold_l_2, gold_f1_3, gold_r_4, gold_s_5, FV_Phone_0, FV_Room_0, FV_Building_0), And((gold_f1_3 == L_Jerry), (gold_l_2 == L_Prince)))))
+      gold_skolem (witnesses WGOLD_f, WGOLD_l, WGOLD_f1, WGOLD_r, WGOLD_s):  And(D_varchar_15_(WGOLD_r), D_varchar_1_(WGOLD_s), And(P_Faculty(WGOLD_f, WGOLD_l, WGOLD_f1, WGOLD_r, WGOLD_s, FV_Phone_0, FV_Room_0, FV_Building_0), And((WGOLD_f1 == L_Jerry), (WGOLD_l == L_Prince))))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_fid_1, predicted_l_2, predicted_f_3, predicted_r_4, predicted_s_5], And(D_varchar_15_(predicted_r_4), D_varchar_1_(predicted_s_5), And(P_Faculty(predicted_fid_1, predicted_l_2, predicted_f_3, predicted_r_4, predicted_s_5, FV_Phone_0, FV_Room_0, FV_Building_0), (predicted_f_3 == L_Jerry), (predicted_l_2 == L_Prince))))
+      predicted_skolem (witnesses WPREDICTED_fid, WPREDICTED_l, WPREDICTED_f, WPREDICTED_r, WPREDICTED_s):  And(D_varchar_15_(WPREDICTED_r), D_varchar_1_(WPREDICTED_s), And(P_Faculty(WPREDICTED_fid, WPREDICTED_l, WPREDICTED_f, WPREDICTED_r, WPREDICTED_s, FV_Phone_0, FV_Room_0, FV_Building_0), (WPREDICTED_f == L_Jerry), (WPREDICTED_l == L_Prince)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Jerry' at text -> L_Jerry = StringVal('Jerry')
+      literal 'Prince' at text -> L_Prince = StringVal('Prince')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 776 lines, 29806 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2032.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Building_0) <= 13
+      [1] Length(FV_Room_0) <= 5
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_f, WGOLD_l, WGOLD_f1, WGOLD_r, WGOLD_s
+      claim: And(And(Length(WGOLD_r) <= 15, Length(WGOLD_s) <= 1, And(Faculty(WGOLD_f, WGOLD_l, WGOLD_f1, WGOLD_r, WGOLD_s, FV_Phone_0, FV_Room_0, FV_Building_0), And(WGOLD_f1 == "Jerry", WGOLD_l == "Prince"))), Not(Exists([predicted_fid_1, predicted_l_2, predicted_f_3, predicted_r_4, predicted_s_5], And(Length(predicted_r_4) <= 15, Length(predicted_s_5) <= 1, And(Faculty(predicted_fid_1, predicted_l_2, predicted_f_3, predicted_r_4, predicted_s_5, FV_Phone_0, FV_Room_0, FV_Building_0), predicted_f_3 == "Jerry", predicted_l_2 == "Prince")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_fid, WPREDICTED_l, WPREDICTED_f, WPREDICTED_r, WPREDICTED_s
+      claim: And(And(Length(WPREDICTED_r) <= 15, Length(WPREDICTED_s) <= 1, And(Faculty(WPREDICTED_fid, WPREDICTED_l, WPREDICTED_f, WPREDICTED_r, WPREDICTED_s, FV_Phone_0, FV_Room_0, FV_Building_0), WPREDICTED_f == "Jerry", WPREDICTED_l == "Prince")), Not(Exists([gold_f_1, gold_l_2, gold_f1_3, gold_r_4, gold_s_5], And(Length(gold_r_4) <= 15, Length(gold_s_5) <= 1, And(Faculty(gold_f_1, gold_l_2, gold_f1_3, gold_r_4, gold_s_5, FV_Phone_0, FV_Room_0, FV_Building_0), And(gold_f1_3 == "Jerry", gold_l_2 == "Prince"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

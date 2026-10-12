@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_882.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_882.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2466 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the leader names and locations of colleges.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        College_ID = int -> IntSort()
+        College_Location = text -> StringSort()
+        Leader_Name = text -> StringSort()
+        Name = text -> StringSort()
+      symbols:
+        college(College_ID, Name, Leader_Name, College_Location)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : College_ID ∃n : Name ( college(c,n,l,c1) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:College_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( IDENT:college LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:College_ID
+            EXISTS n:Name
+              PRED college(c, n, l, c1)
+      Predicted FOL: ∃x0 : College_ID ∃x1 : Name ∃x2 : Leader_Name ∃x3 : College_Location (college(x0, x1, x2, x3) ∧ ∃y0 : College_ID ∃y1 : Name ∃y2 : Leader_Name ∃y3 : College_Location (college(y0, y1, y2, y3) ∧ x0 = y0 ∧ x1 = y1 ∧ x2 = y2 ∧ x3 = y3))
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:College_ID EXISTS:∃ IDENT:x1 COLON:: IDENT:Name EXISTS:∃ IDENT:x2 COLON:: IDENT:Leader_Name EXISTS:∃ IDENT:x3 COLON:: IDENT:College_Location LPAR:( IDENT:college LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) AND:∧ EXISTS:∃ IDENT:y0 COLON:: IDENT:College_ID EXISTS:∃ IDENT:y1 COLON:: IDENT:Name EXISTS:∃ IDENT:y2 COLON:: IDENT:Leader_Name EXISTS:∃ IDENT:y3 COLON:: IDENT:College_Location LPAR:( IDENT:college LPAR:( IDENT:y0 COMMA:, IDENT:y1 COMMA:, IDENT:y2 COMMA:, IDENT:y3 RPAR:) AND:∧ IDENT:x0 EQ:= IDENT:y0 AND:∧ IDENT:x1 EQ:= IDENT:y1 AND:∧ IDENT:x2 EQ:= IDENT:y2 AND:∧ IDENT:x3 EQ:= IDENT:y3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:College_ID
+            EXISTS x1:Name
+              EXISTS x2:Leader_Name
+                EXISTS x3:College_Location
+                  AND
+                    PRED college(x0, x1, x2, x3)
+                    EXISTS y0:College_ID
+                      EXISTS y1:Name
+                        EXISTS y2:Leader_Name
+                          EXISTS y3:College_Location
+                            AND
+                              PRED college(y0, y1, y2, y3)
+                              EQ  x0 = y0
+                              EQ  x1 = y1
+                              EQ  x2 = y2
+                              EQ  x3 = y3
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (l : Leader_Name, c1 : College_Location) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local College_ID, global int -> IntSort()
+        c1 : local College_Location, global text -> StringSort()
+        l : local Leader_Name, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+      Predicted FOL:
+        x0 : local College_ID, global int -> IntSort()
+        x1 : local Name, global text -> StringSort()
+        x2 : local Leader_Name, global text -> StringSort()
+        x3 : local College_Location, global text -> StringSort()
+        y0 : local College_ID, global int -> IntSort()
+        y1 : local Name, global text -> StringSort()
+        y2 : local Leader_Name, global text -> StringSort()
+        y3 : local College_Location, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5445 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_882.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (l : Leader_Name, c1 : College_Location) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,128 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1274.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1274.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4686 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is the capital of states that have cities named durham
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        capital = text -> StringSort()
+        city_name = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        city(city_name, population, country_name, state_name)
+        state(state_name, population, area, country_name, capital, density)
+        constant durham : city_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ∃p : population ∃a : area ∃c : country_name ∃d : density ∃c2 : city_name ∃p1 : population ∃c3 : country_name ∃s1 : state_name ( (((state(s,p,a,c,c1,d)) ∧ (city(c2,p1,c3,s1))) ∧ (s = s1)) ∧ (c2 = 'durham') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:c2 COLON:: IDENT:city_name EXISTS:∃ IDENT:p1 COLON:: IDENT:population EXISTS:∃ IDENT:c3 COLON:: IDENT:country_name EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:city LPAR:( IDENT:c2 COMMA:, IDENT:p1 COMMA:, IDENT:c3 COMMA:, IDENT:s1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c2 EQ:= LIT:durham RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS p:population
+              EXISTS a:area
+                EXISTS c:country_name
+                  EXISTS d:density
+                    EXISTS c2:city_name
+                      EXISTS p1:population
+                        EXISTS c3:country_name
+                          EXISTS s1:state_name
+                            AND
+                              AND
+                                AND
+                                  PRED state(s, p, a, c, c1, d)
+                                  PRED city(c2, p1, c3, s1)
+                                EQ  s = s1
+                              EQ  c2 = 'durham'
+      Predicted FOL: ∃ s_name : state_name ∃ s_pop : population ∃ s_area : area ∃ s_country : country_name ∃ s_density : density ∃ c_pop : population ∃ c_country : country_name ( state(s_name, s_pop, s_area, s_country, c, s_density) ∧ city('durham', c_pop, c_country, s_name) )
+        tokens: EXISTS:∃ IDENT:s_name COLON:: IDENT:state_name EXISTS:∃ IDENT:s_pop COLON:: IDENT:population EXISTS:∃ IDENT:s_area COLON:: IDENT:area EXISTS:∃ IDENT:s_country COLON:: IDENT:country_name EXISTS:∃ IDENT:s_density COLON:: IDENT:density EXISTS:∃ IDENT:c_pop COLON:: IDENT:population EXISTS:∃ IDENT:c_country COLON:: IDENT:country_name LPAR:( IDENT:state LPAR:( IDENT:s_name COMMA:, IDENT:s_pop COMMA:, IDENT:s_area COMMA:, IDENT:s_country COMMA:, IDENT:c COMMA:, IDENT:s_density RPAR:) AND:∧ IDENT:city LPAR:( LIT:durham COMMA:, IDENT:c_pop COMMA:, IDENT:c_country COMMA:, IDENT:s_name RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s_name:state_name
+            EXISTS s_pop:population
+              EXISTS s_area:area
+                EXISTS s_country:country_name
+                  EXISTS s_density:density
+                    EXISTS c_pop:population
+                      EXISTS c_country:country_name
+                        AND
+                          PRED state(s_name, s_pop, s_area, s_country, c, s_density)
+                          PRED city('durham', c_pop, c_country, s_name)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_capital_0 : capital   Gold c1 <-> Predicted c
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        c2 : local city_name, global text -> StringSort()
+        c3 : local country_name, global varchar(3) -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        p1 : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+        s1 : local state_name, global text -> StringSort()
+      Predicted FOL:
+        c : local capital, global text -> StringSort()
+        c_country : local country_name, global varchar(3) -> StringSort()
+        c_pop : local population, global integer -> IntSort()
+        s_area : local area, global double -> Float64()
+        s_country : local country_name, global varchar(3) -> StringSort()
+        s_density : local density, global double -> Float64()
+        s_name : local state_name, global text -> StringSort()
+        s_pop : local population, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_p_2, gold_a_3, gold_c_4, gold_d_5, gold_c2_6, gold_p1_7, gold_c3_8, gold_s1_9], And(D_double(gold_a_3), D_varchar_3_(gold_c_4), D_double(gold_d_5), D_varchar_3_(gold_c3_8), And(And(And(P_state(gold_s_1, gold_p_2, gold_a_3, gold_c_4, FV_capital_0, gold_d_5), P_city(gold_c2_6, gold_p1_7, gold_c3_8, gold_s1_9)), (gold_s_1 == gold_s1_9)), (gold_c2_6 == L_durham))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_d, WGOLD_c2, WGOLD_p1, WGOLD_c3, WGOLD_s1):  And(D_double(WGOLD_a), D_varchar_3_(WGOLD_c), D_double(WGOLD_d), D_varchar_3_(WGOLD_c3), And(And(And(P_state(WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_c, FV_capital_0, WGOLD_d), P_city(WGOLD_c2, WGOLD_p1, WGOLD_c3, WGOLD_s1)), (WGOLD_s == WGOLD_s1)), (WGOLD_c2 == L_durham)))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_name_1, predicted_s_pop_2, predicted_s_area_3, predicted_s_country_4, predicted_s_density_5, predicted_c_pop_6, predicted_c_country_7], And(D_double(predicted_s_area_3), D_varchar_3_(predicted_s_country_4), D_double(predicted_s_density_5), D_varchar_3_(predicted_c_country_7), And(P_state(predicted_s_name_1, predicted_s_pop_2, predicted_s_area_3, predicted_s_country_4, FV_capital_0, predicted_s_density_5), P_city(L_durham, predicted_c_pop_6, predicted_c_country_7, predicted_s_name_1))))
+      predicted_skolem (witnesses WPREDICTED_s_name, WPREDICTED_s_pop, WPREDICTED_s_area, WPREDICTED_s_country, WPREDICTED_s_density, WPREDICTED_c_pop, WPREDICTED_c_country):  And(D_double(WPREDICTED_s_area), D_varchar_3_(WPREDICTED_s_country), D_double(WPREDICTED_s_density), D_varchar_3_(WPREDICTED_c_country), And(P_state(WPREDICTED_s_name, WPREDICTED_s_pop, WPREDICTED_s_area, WPREDICTED_s_country, FV_capital_0, WPREDICTED_s_density), P_city(L_durham, WPREDICTED_c_pop, WPREDICTED_c_country, WPREDICTED_s_name)))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'durham' at text -> L_durham = StringVal('durham')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 777 lines, 31535 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1274.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_d, WGOLD_c2, WGOLD_p1, WGOLD_c3, WGOLD_s1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), Length(WGOLD_c) <= 3, And(Not(fpIsNaN(WGOLD_d)), Not(And(fpIsZero(WGOLD_d), fpIsNegative(WGOLD_d)))), Length(WGOLD_c3) <= 3, And(And(And(state(WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_c, FV_capital_0, WGOLD_d), city(WGOLD_c2, WGOLD_p1, WGOLD_c3, WGOLD_s1)), WGOLD_s == WGOLD_s1), WGOLD_c2 == "durham")), Not(Exists([predicted_s_name_1, predicted_s_pop_2, predicted_s_area_3, predicted_s_country_4, predicted_s_density_5, predicted_c_pop_6, predicted_c_country_7], And(And(Not(fpIsNaN(predicted_s_area_3)), Not(And(fpIsZero(predicted_s_area_3), fpIsNegative(predicted_s_area_3)))), Length(predicted_s_country_4) <= 3, And(Not(fpIsNaN(predicted_s_density_5)), Not(And(fpIsZero(predicted_s_density_5), fpIsNegative(predicted_s_density_5)))), Length(predicted_c_country_7) <= 3, And(state(predicted_s_name_1, predicted_s_pop_2, predicted_s_area_3, predicted_s_country_4, FV_capital_0, predicted_s_density_5), city("durham", predicted_c_pop_6, predicted_c_country_7, predicted_s_name_1))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s_name, WPREDICTED_s_pop, WPREDICTED_s_area, WPREDICTED_s_country, WPREDICTED_s_density, WPREDICTED_c_pop, WPREDICTED_c_country
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_s_area)), Not(And(fpIsZero(WPREDICTED_s_area), fpIsNegative(WPREDICTED_s_area)))), Length(WPREDICTED_s_country) <= 3, And(Not(fpIsNaN(WPREDICTED_s_density)), Not(And(fpIsZero(WPREDICTED_s_density), fpIsNegative(WPREDICTED_s_density)))), Length(WPREDICTED_c_country) <= 3, And(state(WPREDICTED_s_name, WPREDICTED_s_pop, WPREDICTED_s_area, WPREDICTED_s_country, FV_capital_0, WPREDICTED_s_density), city("durham", WPREDICTED_c_pop, WPREDICTED_c_country, WPREDICTED_s_name))), Not(Exists([gold_s_1, gold_p_2, gold_a_3, gold_c_4, gold_d_5, gold_c2_6, gold_p1_7, gold_c3_8, gold_s1_9], And(And(Not(fpIsNaN(gold_a_3)), Not(And(fpIsZero(gold_a_3), fpIsNegative(gold_a_3)))), Length(gold_c_4) <= 3, And(Not(fpIsNaN(gold_d_5)), Not(And(fpIsZero(gold_d_5), fpIsNegative(gold_d_5)))), Length(gold_c3_8) <= 3, And(And(And(state(gold_s_1, gold_p_2, gold_a_3, gold_c_4, FV_capital_0, gold_d_5), city(gold_c2_6, gold_p1_7, gold_c3_8, gold_s1_9)), gold_s_1 == gold_s1_9), gold_c2_6 == "durham")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

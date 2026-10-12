@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1822.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1822.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3738 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find products with max page size as "A4" and pages per minute color smaller than 5.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        dimensions = text -> StringSort()
+        dpi = real -> Float32()
+        interface = text -> StringSort()
+        max_page_size = text -> StringSort()
+        pages_per_minute_color = real -> Float32()
+        product = text -> StringSort()
+        product_id = int -> IntSort()
+      symbols:
+        product(product_id, product, dimensions, dpi, pages_per_minute_color, max_page_size, interface)
+        constant 5 : pages_per_minute_color
+        constant A4 : max_page_size
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃d : dimensions ∃d1 : dpi ∃p2 : pages_per_minute_color ∃m : max_page_size ∃i : interface ( (product(p,p1,d,d1,p2,m,i)) ∧ ((m = 'A4') ∧ (p2 < 5)) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:d COLON:: IDENT:dimensions EXISTS:∃ IDENT:d1 COLON:: IDENT:dpi EXISTS:∃ IDENT:p2 COLON:: IDENT:pages_per_minute_color EXISTS:∃ IDENT:m COLON:: IDENT:max_page_size EXISTS:∃ IDENT:i COLON:: IDENT:interface LPAR:( LPAR:( IDENT:product LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:p2 COMMA:, IDENT:m COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:m EQ:= LIT:A4 RPAR:) AND:∧ LPAR:( IDENT:p2 LT:< NUM:5 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS d:dimensions
+              EXISTS d1:dpi
+                EXISTS p2:pages_per_minute_color
+                  EXISTS m:max_page_size
+                    EXISTS i:interface
+                      AND
+                        PRED product(p, p1, d, d1, p2, m, i)
+                        AND
+                          EQ  m = 'A4'
+                          CMP  p2 < 5
+      Predicted FOL: ∃p0:product_id ∃p1:product ∃p2:dimensions ∃p3:dpi ∃p4:pages_per_minute_color ∃p5:max_page_size ∃p6:interface ( product(p0, p1, p2, p3, p4, p5, p6) ∧ p5 = 'A4' ∧ p4 < 5 )
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:product_id EXISTS:∃ IDENT:p1 COLON:: IDENT:product EXISTS:∃ IDENT:p2 COLON:: IDENT:dimensions EXISTS:∃ IDENT:p3 COLON:: IDENT:dpi EXISTS:∃ IDENT:p4 COLON:: IDENT:pages_per_minute_color EXISTS:∃ IDENT:p5 COLON:: IDENT:max_page_size EXISTS:∃ IDENT:p6 COLON:: IDENT:interface LPAR:( IDENT:product LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 COMMA:, IDENT:p6 RPAR:) AND:∧ IDENT:p5 EQ:= LIT:A4 AND:∧ IDENT:p4 LT:< NUM:5 RPAR:) EOF
+        AST:
+          EXISTS p0:product_id
+            EXISTS p1:product
+              EXISTS p2:dimensions
+                EXISTS p3:dpi
+                  EXISTS p4:pages_per_minute_color
+                    EXISTS p5:max_page_size
+                      EXISTS p6:interface
+                        AND
+                          PRED product(p0, p1, p2, p3, p4, p5, p6)
+                          EQ  p5 = 'A4'
+                          CMP  p4 < 5
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p1 : product) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local dimensions, global text -> StringSort()
+        d1 : local dpi, global real -> Float32()
+        i : local interface, global text -> StringSort()
+        m : local max_page_size, global text -> StringSort()
+        p : local product_id, global int -> IntSort()
+        p1 : local product, global text -> StringSort()
+        p2 : local pages_per_minute_color, global real -> Float32()
+      Predicted FOL:
+        p0 : local product_id, global int -> IntSort()
+        p1 : local product, global text -> StringSort()
+        p2 : local dimensions, global text -> StringSort()
+        p3 : local dpi, global real -> Float32()
+        p4 : local pages_per_minute_color, global real -> Float32()
+        p5 : local max_page_size, global text -> StringSort()
+        p6 : local interface, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5485 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1822.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p1 : product) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

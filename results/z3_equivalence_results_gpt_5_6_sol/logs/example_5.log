@@ -1,0 +1,86 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_5.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_5.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2922 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the makers and models?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Maker_ID = integer -> IntSort()
+        Model = text -> StringSort()
+        ModelId = integer -> IntSort()
+      symbols:
+        model_list(ModelId, Maker_ID, Model)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : ModelId ( model_list(m,m1,m2) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:ModelId LPAR:( IDENT:model_list LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:m2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:ModelId
+            PRED model_list(m, m1, m2)
+      Predicted FOL: ∃modelId : ModelId model_list(modelId, maker, model)
+        tokens: EXISTS:∃ IDENT:modelId COLON:: IDENT:ModelId IDENT:model_list LPAR:( IDENT:modelId COMMA:, IDENT:maker COMMA:, IDENT:model RPAR:) EOF
+        AST:
+          EXISTS modelId:ModelId
+            PRED model_list(modelId, maker, model)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Maker_ID_0 : Maker_ID   Gold m1 <-> Predicted maker
+      FV_Model_0 : Model   Gold m2 <-> Predicted model
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local ModelId, global integer -> IntSort()
+        m1 : local Maker_ID, global integer -> IntSort()
+        m2 : local Model, global text -> StringSort()
+      Predicted FOL:
+        maker : local Maker_ID, global integer -> IntSort()
+        model : local Model, global text -> StringSort()
+        modelId : local ModelId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1], P_model_list(gold_m_1, FV_Maker_ID_0, FV_Model_0))
+      gold_skolem (witnesses WGOLD_m):  P_model_list(WGOLD_m, FV_Maker_ID_0, FV_Model_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_modelId_1], P_model_list(predicted_modelId_1, FV_Maker_ID_0, FV_Model_0))
+      predicted_skolem (witnesses WPREDICTED_modelId):  P_model_list(WPREDICTED_modelId, FV_Maker_ID_0, FV_Model_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 716 lines, 26053 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_5.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m
+      claim: And(model_list(WGOLD_m, FV_Maker_ID_0, FV_Model_0), Not(Exists(predicted_modelId_1, model_list(predicted_modelId_1, FV_Maker_ID_0, FV_Model_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_modelId
+      claim: And(model_list(WPREDICTED_modelId, FV_Maker_ID_0, FV_Model_0), Not(Exists(gold_m_1, model_list(gold_m_1, FV_Maker_ID_0, FV_Model_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

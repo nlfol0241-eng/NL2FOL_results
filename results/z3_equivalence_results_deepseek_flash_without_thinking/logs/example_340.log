@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_340.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_340.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5667 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the nationality of " Kevin Spacey " ?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        birth_city = text -> StringSort()
+        birth_year = int -> IntSort()
+        did = int -> IntSort()
+        gender = text -> StringSort()
+        name = text -> StringSort()
+        nationality = text -> StringSort()
+      symbols:
+        director(did, gender, name, nationality, birth_city, birth_year)
+        constant director_name0 : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : did ∃g : gender ∃n : name ∃b : birth_city ∃b1 : birth_year ( (director(d,g,n,n1,b,b1)) ∧ (n = 'director_name0') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:did EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:b COLON:: IDENT:birth_city EXISTS:∃ IDENT:b1 COLON:: IDENT:birth_year LPAR:( LPAR:( IDENT:director LPAR:( IDENT:d COMMA:, IDENT:g COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:b COMMA:, IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:director_name0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:did
+            EXISTS g:gender
+              EXISTS n:name
+                EXISTS b:birth_city
+                  EXISTS b1:birth_year
+                    AND
+                      PRED director(d, g, n, n1, b, b1)
+                      EQ  n = 'director_name0'
+      Predicted FOL: ∃x : nationality (director(did, gender, 'Kevin Spacey', x, birth_city, birth_year))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:nationality LPAR:( IDENT:director LPAR:( IDENT:did COMMA:, IDENT:gender COMMA:, LIT:Kevin Spacey COMMA:, IDENT:x COMMA:, IDENT:birth_city COMMA:, IDENT:birth_year RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:nationality
+            PRED director(did, gender, 'Kevin Spacey', x, birth_city, birth_year)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) did, gender, birth_city, birth_year occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n1 : nationality) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local birth_city, global text -> StringSort()
+        b1 : local birth_year, global int -> IntSort()
+        d : local did, global int -> IntSort()
+        g : local gender, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        n1 : local nationality, global text -> StringSort()
+      Predicted FOL:
+        birth_city : local birth_city, global text -> StringSort()
+        birth_year : local birth_year, global int -> IntSort()
+        did : local did, global int -> IntSort()
+        gender : local gender, global text -> StringSort()
+        x : local nationality, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5437 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_340.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : nationality) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) did, gender, birth_city, birth_year occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

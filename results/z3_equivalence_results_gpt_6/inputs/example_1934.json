@@ -1,0 +1,101 @@
+{
+  "NL": "What are the dates of transactions with at least 100 share count or amount bigger than 100?",
+  "Vocabulary": {
+    "Predicates": [
+      "Transactions"
+    ],
+    "Functions": [],
+    "Constants": [
+      100
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "Transactions": [
+        "transaction_id",
+        "investor_id",
+        "transaction_type_code",
+        "date_of_transaction",
+        "amount_of_transaction",
+        "share_count",
+        "other_details"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "100": "share_count"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a0'∀a1'( Investors(a0, a1) ∧ Investors(a0', a1') ∧ a0 = a0' ) → ( a1 = a1' )",
+    "axiom2": "∀b0∀b1∀b2∀b0'∀b1'∀b2'( Lots(b0, b1, b2) ∧ Lots(b0', b1', b2') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' )",
+    "axiom3": "∀c0∀c1∀c0'∀c1'( Ref_Transaction_Types(c0, c1) ∧ Ref_Transaction_Types(c0', c1') ∧ c0 = c0' ) → ( c1 = c1' )",
+    "axiom4": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6∀d0'∀d1'∀d2'∀d3'∀d4'∀d5'∀d6'( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ Transactions(d0', d1', d2', d3', d4', d5', d6') ∧ d0 = d0' ) → ( d1 = d1' ∧ d2 = d2' ∧ d3 = d3' ∧ d4 = d4' ∧ d5 = d5' ∧ d6 = d6' )",
+    "axiom5": "∀e0∀e1∀e0'∀e1'( Sales(e0, e1) ∧ Sales(e0', e1') ∧ e0 = e0' ) → ( e1 = e1' )",
+    "axiom6": "∀b0∀b1∀b2 ( Lots(b0, b1, b2) → ∃a0∃a1 ( Investors(a0, a1) ∧ a0 = b1 ) )",
+    "axiom7": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) → ∃c0∃c1 ( Ref_Transaction_Types(c0, c1) ∧ c0 = d2 ) )",
+    "axiom8": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) → ∃a0∃a1 ( Investors(a0, a1) ∧ a0 = d1 ) )",
+    "axiom9": "∀e0∀e1 ( Sales(e0, e1) → ∃d0∃d1∃d2∃d3∃d4∃d5∃d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ d0 = e0 ) )",
+    "axiom10": "∀f0∀f1 ( Purchases(f0, f1) → ∃d0∃d1∃d2∃d3∃d4∃d5∃d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ d0 = f0 ) )",
+    "axiom11": "∀g0∀g1 ( Transactions_Lots(g0, g1) → ∃d0∃d1∃d2∃d3∃d4∃d5∃d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ d0 = g0 ) )",
+    "axiom12": "∀g0∀g1 ( Transactions_Lots(g0, g1) → ∃b0∃b1∃b2 ( Lots(b0, b1, b2) ∧ b0 = g1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Transactions": {
+        "A": "Transactions",
+        "A0": "transaction_id",
+        "A1": "investor_id",
+        "A2": "transaction_type_code",
+        "A3": "date_of_transaction",
+        "A4": "amount_of_transaction",
+        "A5": "share_count",
+        "A6": "other_details"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": 100
+    }
+  },
+  "Gold FOL": {
+    "string": "∃t : transaction_id ∃i : investor_id ∃t1 : transaction_type_code ∃a : amount_of_transaction ∃s : share_count ∃o : other_details ( (Transactions(t,i,t1,d,a,s,o)) ∧ ((s >= 100) ∨ (a >= 100)) )",
+    "free vars": "d : date_of_transaction"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A3](<S>[A5 >= 100 | A4 >= 100](A))",
+    "Processed_RA": "<P>[A3](<S>[A5 = 'A5 >= 100' | A4 = 'A4 >= 100'](A))",
+    "RC": "[E]?A2,?A5,?A1,?A4,?A0,?A6( (A(?A0,?A1,?A2,?A3,?A4,?A5,?A6)) & ((?A5 = A5 >= 100) | (?A4 = A4 >= 100)) )",
+    "string": "∃A2 ∃A5 ∃A1 ∃A4 ∃A0 ∃A6( (A(A0,A1,A2,A3,A4,A5,A6)) ∧ ((A5 >= 100) ∨ (A4 >= 100)) )",
+    "free variables": "A3",
+    "db_id": "tracking_share_transactions",
+    "processed_sql": "SELECT date_of_transaction FROM TRANSACTIONS WHERE share_count  >=  100 OR amount_of_transaction  >=  100"
+  },
+  "Global Sorts": [
+    "varchar(10)",
+    "datetime",
+    "varchar(255)",
+    "integer",
+    "decimal(19,4)",
+    "varchar(40)"
+  ],
+  "Sort Axioms": {
+    "Transactions": {
+      "sortaxiom0": "transaction_id = integer",
+      "sortaxiom1": "investor_id = integer",
+      "sortaxiom2": "transaction_type_code = varchar(10)",
+      "sortaxiom3": "date_of_transaction = datetime",
+      "sortaxiom4": "amount_of_transaction = decimal(19,4)",
+      "sortaxiom5": "share_count = varchar(40)",
+      "sortaxiom6": "other_details = varchar(255)"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT date_of_transaction FROM TRANSACTIONS WHERE share_count  >=  100 OR amount_of_transaction  >=  100"
+  },
+  "id": 1934,
+  "Predicted FOL": {
+    "string": "∃t : transaction_id ∃i : investor_id ∃c : transaction_type_code ∃a : amount_of_transaction ∃s : share_count ∃o : other_details (Transactions(t, i, c, d, a, s, o) ∧ (s ≥ '100' ∨ a > 100))",
+    "free vars": "d : date_of_transaction"
+  }
+}

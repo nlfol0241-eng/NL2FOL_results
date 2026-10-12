@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_844.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_844.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4804 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the description of the role named "Proof Reader"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Role_Code = char(15) -> StringSort()
+        Role_Description = varchar(255) -> StringSort()
+        Role_Name = varchar(255) -> StringSort()
+      symbols:
+        Roles(Role_Code, Role_Name, Role_Description)
+        constant Proof Reader : Role_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Role_Code ∃r1 : Role_Name ( (Roles(r,r1,r2)) ∧ (r1 = 'Proof Reader') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Role_Code EXISTS:∃ IDENT:r1 COLON:: IDENT:Role_Name LPAR:( LPAR:( IDENT:Roles LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r1 EQ:= LIT:Proof Reader RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Role_Code
+            EXISTS r1:Role_Name
+              AND
+                PRED Roles(r, r1, r2)
+                EQ  r1 = 'Proof Reader'
+      Predicted FOL: ∃c : Role_Code Roles(c, 'Proof Reader', d)
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Role_Code IDENT:Roles LPAR:( IDENT:c COMMA:, LIT:Proof Reader COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS c:Role_Code
+            PRED Roles(c, 'Proof Reader', d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Role_Description_0 : Role_Description   Gold r2 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        r : local Role_Code, global char(15) -> StringSort()
+        r1 : local Role_Name, global varchar(255) -> StringSort()
+        r2 : local Role_Description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        c : local Role_Code, global char(15) -> StringSort()
+        d : local Role_Description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_r1_2], And(D_char_15_(gold_r_1), D_varchar_255_(gold_r1_2), And(P_Roles(gold_r_1, gold_r1_2, FV_Role_Description_0), (gold_r1_2 == L_Proof_Reader))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_r1):  And(D_char_15_(WGOLD_r), D_varchar_255_(WGOLD_r1), And(P_Roles(WGOLD_r, WGOLD_r1, FV_Role_Description_0), (WGOLD_r1 == L_Proof_Reader)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1], And(D_char_15_(predicted_c_1), And(P_Roles(predicted_c_1, L_Proof_Reader, FV_Role_Description_0), D_varchar_255_(L_Proof_Reader))))
+      predicted_skolem (witnesses WPREDICTED_c):  And(D_char_15_(WPREDICTED_c), And(P_Roles(WPREDICTED_c, L_Proof_Reader, FV_Role_Description_0), D_varchar_255_(L_Proof_Reader)))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Proof Reader' at varchar(255) -> L_Proof_Reader = StringVal('Proof Reader')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 724 lines, 26986 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_844.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Role_Description_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_r1
+      claim: And(And(Length(WGOLD_r) <= 15, Length(WGOLD_r1) <= 255, And(Roles(WGOLD_r, WGOLD_r1, FV_Role_Description_0), WGOLD_r1 == "Proof Reader")), Not(Exists(predicted_c_1, And(Length(predicted_c_1) <= 15, And(Roles(predicted_c_1, "Proof Reader", FV_Role_Description_0), Length("Proof Reader") <= 255)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c
+      claim: And(And(Length(WPREDICTED_c) <= 15, And(Roles(WPREDICTED_c, "Proof Reader", FV_Role_Description_0), Length("Proof Reader") <= 255)), Not(Exists([gold_r_1, gold_r1_2], And(Length(gold_r_1) <= 15, Length(gold_r1_2) <= 255, And(Roles(gold_r_1, gold_r1_2, FV_Role_Description_0), gold_r1_2 == "Proof Reader")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

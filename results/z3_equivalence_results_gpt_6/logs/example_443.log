@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_443.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_443.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2020 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and ages of editors?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = real -> Float32()
+        Editor_ID = int -> IntSort()
+        Name = text -> StringSort()
+      symbols:
+        editor(Editor_ID, Name, Age)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Editor_ID ( editor(e,n,a) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Editor_ID LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Editor_ID
+            PRED editor(e, n, a)
+      Predicted FOL: ∃e : Editor_ID (editor(e, n, a))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Editor_ID LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Editor_ID
+            PRED editor(e, n, a)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Age_0 : Age   Gold a <-> Predicted a
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global real -> Float32()
+        e : local Editor_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+      Predicted FOL:
+        a : local Age, global real -> Float32()
+        e : local Editor_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1], P_editor(gold_e_1, FV_Name_0, FV_Age_0))
+      gold_skolem (witnesses WGOLD_e):  P_editor(WGOLD_e, FV_Name_0, FV_Age_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1], P_editor(predicted_e_1, FV_Name_0, FV_Age_0))
+      predicted_skolem (witnesses WPREDICTED_e):  P_editor(WPREDICTED_e, FV_Name_0, FV_Age_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 720 lines, 26019 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_443.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Age_0)), Not(And(fpIsZero(FV_Age_0), fpIsNegative(FV_Age_0))))
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_e
+      claim: And(editor(WGOLD_e, FV_Name_0, FV_Age_0), Not(Exists(predicted_e_1, editor(predicted_e_1, FV_Name_0, FV_Age_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_e
+      claim: And(editor(WPREDICTED_e, FV_Name_0, FV_Age_0), Not(Exists(gold_e_1, editor(gold_e_1, FV_Name_0, FV_Age_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

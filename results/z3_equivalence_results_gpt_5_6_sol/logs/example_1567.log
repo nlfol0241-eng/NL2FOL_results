@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1567.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1567.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2969 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name of technicians aged either 36 or 37
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Name = text -> StringSort()
+        Starting_Year = real -> Float32()
+        Team = text -> StringSort()
+        technician_id = real -> Float32()
+      symbols:
+        technician(technician_id, Name, Team, Starting_Year, Age)
+        constant 36 : Age
+        constant 37 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : technician_id ∃t1 : Team ∃s : Starting_Year ∃a : Age ( (technician(t,n,t1,s,a)) ∧ ((a = 36) ∨ (a = 37)) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:technician_id EXISTS:∃ IDENT:t1 COLON:: IDENT:Team EXISTS:∃ IDENT:s COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( LPAR:( IDENT:technician LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a EQ:= NUM:36 RPAR:) OR:∨ LPAR:( IDENT:a EQ:= NUM:37 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:technician_id
+            EXISTS t1:Team
+              EXISTS s:Starting_Year
+                EXISTS a:Age
+                  AND
+                    PRED technician(t, n, t1, s, a)
+                    OR
+                      EQ  a = 36
+                      EQ  a = 37
+      Predicted FOL: ∃i : technician_id ∃t : Team ∃y : Starting_Year ∃a : Age (technician(i, n, t, y, a) ∧ (a = 36 ∨ a = 37))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:technician_id EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:y COLON:: IDENT:Starting_Year EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( IDENT:technician LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:a RPAR:) AND:∧ LPAR:( IDENT:a EQ:= NUM:36 OR:∨ IDENT:a EQ:= NUM:37 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:technician_id
+            EXISTS t:Team
+              EXISTS y:Starting_Year
+                EXISTS a:Age
+                  AND
+                    PRED technician(i, n, t, y, a)
+                    OR
+                      EQ  a = 36
+                      EQ  a = 37
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        s : local Starting_Year, global real -> Float32()
+        t : local technician_id, global real -> Float32()
+        t1 : local Team, global text -> StringSort()
+      Predicted FOL:
+        a : local Age, global int -> IntSort()
+        i : local technician_id, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        t : local Team, global text -> StringSort()
+        y : local Starting_Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_t1_2, gold_s_3, gold_a_4], And(D_real(gold_t_1), D_real(gold_s_3), And(P_technician(gold_t_1, FV_Name_0, gold_t1_2, gold_s_3, gold_a_4), Or((gold_a_4 == L_v_36_int), (gold_a_4 == L_v_37_int)))))
+      gold_skolem (witnesses WGOLD_t, WGOLD_t1, WGOLD_s, WGOLD_a):  And(D_real(WGOLD_t), D_real(WGOLD_s), And(P_technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Or((WGOLD_a == L_v_36_int), (WGOLD_a == L_v_37_int))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_t_2, predicted_y_3, predicted_a_4], And(D_real(predicted_i_1), D_real(predicted_y_3), And(P_technician(predicted_i_1, FV_Name_0, predicted_t_2, predicted_y_3, predicted_a_4), Or((predicted_a_4 == L_v_36_int), (predicted_a_4 == L_v_37_int)))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_t, WPREDICTED_y, WPREDICTED_a):  And(D_real(WPREDICTED_i), D_real(WPREDICTED_y), And(P_technician(WPREDICTED_i, FV_Name_0, WPREDICTED_t, WPREDICTED_y, WPREDICTED_a), Or((WPREDICTED_a == L_v_36_int), (WPREDICTED_a == L_v_37_int))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '36' at int -> L_v_36_int = IntVal(36)
+      literal '37' at int -> L_v_37_int = IntVal(37)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 743 lines, 28150 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1567.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_t1, WGOLD_s, WGOLD_a
+      claim: And(And(And(Not(fpIsNaN(WGOLD_t)), Not(And(fpIsZero(WGOLD_t), fpIsNegative(WGOLD_t)))), And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(technician(WGOLD_t, FV_Name_0, WGOLD_t1, WGOLD_s, WGOLD_a), Or(36 == WGOLD_a, 37 == WGOLD_a))), Not(Exists([predicted_i_1, predicted_t_2, predicted_y_3, predicted_a_4], And(And(Not(fpIsNaN(predicted_i_1)), Not(And(fpIsZero(predicted_i_1), fpIsNegative(predicted_i_1)))), And(Not(fpIsNaN(predicted_y_3)), Not(And(fpIsZero(predicted_y_3), fpIsNegative(predicted_y_3)))), And(technician(predicted_i_1, FV_Name_0, predicted_t_2, predicted_y_3, predicted_a_4), Or(36 == predicted_a_4, 37 == predicted_a_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_t, WPREDICTED_y, WPREDICTED_a
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_i)), Not(And(fpIsZero(WPREDICTED_i), fpIsNegative(WPREDICTED_i)))), And(Not(fpIsNaN(WPREDICTED_y)), Not(And(fpIsZero(WPREDICTED_y), fpIsNegative(WPREDICTED_y)))), And(technician(WPREDICTED_i, FV_Name_0, WPREDICTED_t, WPREDICTED_y, WPREDICTED_a), Or(36 == WPREDICTED_a, 37 == WPREDICTED_a))), Not(Exists([gold_t_1, gold_t1_2, gold_s_3, gold_a_4], And(And(Not(fpIsNaN(gold_t_1)), Not(And(fpIsZero(gold_t_1), fpIsNegative(gold_t_1)))), And(Not(fpIsNaN(gold_s_3)), Not(And(fpIsZero(gold_s_3), fpIsNegative(gold_s_3)))), And(technician(gold_t_1, FV_Name_0, gold_t1_2, gold_s_3, gold_a_4), Or(36 == gold_a_4, 37 == gold_a_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

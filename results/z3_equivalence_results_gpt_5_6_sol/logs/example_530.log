@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_530.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_530.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4190 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the apartment number and the number of rooms for each apartment.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        char(10) -> StringSort()   [domain Length(x) <= 10; length <= 10 (blank padding not modelled)]
+        char(5) -> StringSort()   [domain Length(x) <= 5; length <= 5 (blank padding not modelled)]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        apt_id = integer -> IntSort()
+        apt_number = char(10) -> StringSort()
+        apt_type_code = char(15) -> StringSort()
+        bathroom_count = integer -> IntSort()
+        bedroom_count = integer -> IntSort()
+        building_id = integer -> IntSort()
+        room_count = char(5) -> StringSort()
+      symbols:
+        Apartments(apt_id, building_id, apt_type_code, apt_number, bathroom_count, bedroom_count, room_count)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apt_id ∃b : building_id ∃a1 : apt_type_code ∃b1 : bathroom_count ∃b2 : bedroom_count ( Apartments(a,b,a1,a2,b1,b2,r) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apt_id EXISTS:∃ IDENT:b COLON:: IDENT:building_id EXISTS:∃ IDENT:a1 COLON:: IDENT:apt_type_code EXISTS:∃ IDENT:b1 COLON:: IDENT:bathroom_count EXISTS:∃ IDENT:b2 COLON:: IDENT:bedroom_count LPAR:( IDENT:Apartments LPAR:( IDENT:a COMMA:, IDENT:b COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apt_id
+            EXISTS b:building_id
+              EXISTS a1:apt_type_code
+                EXISTS b1:bathroom_count
+                  EXISTS b2:bedroom_count
+                    PRED Apartments(a, b, a1, a2, b1, b2, r)
+      Predicted FOL: ∃ai : apt_id ∃bi : building_id ∃atc : apt_type_code ∃bc : bathroom_count ∃bdc : bedroom_count Apartments(ai, bi, atc, an, bc, bdc, rc)
+        tokens: EXISTS:∃ IDENT:ai COLON:: IDENT:apt_id EXISTS:∃ IDENT:bi COLON:: IDENT:building_id EXISTS:∃ IDENT:atc COLON:: IDENT:apt_type_code EXISTS:∃ IDENT:bc COLON:: IDENT:bathroom_count EXISTS:∃ IDENT:bdc COLON:: IDENT:bedroom_count IDENT:Apartments LPAR:( IDENT:ai COMMA:, IDENT:bi COMMA:, IDENT:atc COMMA:, IDENT:an COMMA:, IDENT:bc COMMA:, IDENT:bdc COMMA:, IDENT:rc RPAR:) EOF
+        AST:
+          EXISTS ai:apt_id
+            EXISTS bi:building_id
+              EXISTS atc:apt_type_code
+                EXISTS bc:bathroom_count
+                  EXISTS bdc:bedroom_count
+                    PRED Apartments(ai, bi, atc, an, bc, bdc, rc)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_apt_number_0 : apt_number   Gold a2 <-> Predicted an
+      FV_room_count_0 : room_count   Gold r <-> Predicted rc
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apt_id, global integer -> IntSort()
+        a1 : local apt_type_code, global char(15) -> StringSort()
+        a2 : local apt_number, global char(10) -> StringSort()
+        b : local building_id, global integer -> IntSort()
+        b1 : local bathroom_count, global integer -> IntSort()
+        b2 : local bedroom_count, global integer -> IntSort()
+        r : local room_count, global char(5) -> StringSort()
+      Predicted FOL:
+        ai : local apt_id, global integer -> IntSort()
+        an : local apt_number, global char(10) -> StringSort()
+        atc : local apt_type_code, global char(15) -> StringSort()
+        bc : local bathroom_count, global integer -> IntSort()
+        bdc : local bedroom_count, global integer -> IntSort()
+        bi : local building_id, global integer -> IntSort()
+        rc : local room_count, global char(5) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_b_2, gold_a1_3, gold_b1_4, gold_b2_5], And(D_char_15_(gold_a1_3), P_Apartments(gold_a_1, gold_b_2, gold_a1_3, FV_apt_number_0, gold_b1_4, gold_b2_5, FV_room_count_0)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_b, WGOLD_a1, WGOLD_b1, WGOLD_b2):  And(D_char_15_(WGOLD_a1), P_Apartments(WGOLD_a, WGOLD_b, WGOLD_a1, FV_apt_number_0, WGOLD_b1, WGOLD_b2, FV_room_count_0))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_ai_1, predicted_bi_2, predicted_atc_3, predicted_bc_4, predicted_bdc_5], And(D_char_15_(predicted_atc_3), P_Apartments(predicted_ai_1, predicted_bi_2, predicted_atc_3, FV_apt_number_0, predicted_bc_4, predicted_bdc_5, FV_room_count_0)))
+      predicted_skolem (witnesses WPREDICTED_ai, WPREDICTED_bi, WPREDICTED_atc, WPREDICTED_bc, WPREDICTED_bdc):  And(D_char_15_(WPREDICTED_atc), P_Apartments(WPREDICTED_ai, WPREDICTED_bi, WPREDICTED_atc, FV_apt_number_0, WPREDICTED_bc, WPREDICTED_bdc, FV_room_count_0))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 761 lines, 29381 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_530.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_apt_number_0) <= 10
+      [1] Length(FV_room_count_0) <= 5
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_b, WGOLD_a1, WGOLD_b1, WGOLD_b2
+      claim: And(And(Length(WGOLD_a1) <= 15, Apartments(WGOLD_a, WGOLD_b, WGOLD_a1, FV_apt_number_0, WGOLD_b1, WGOLD_b2, FV_room_count_0)), Not(Exists([predicted_ai_1, predicted_bi_2, predicted_atc_3, predicted_bc_4, predicted_bdc_5], And(Length(predicted_atc_3) <= 15, Apartments(predicted_ai_1, predicted_bi_2, predicted_atc_3, FV_apt_number_0, predicted_bc_4, predicted_bdc_5, FV_room_count_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_ai, WPREDICTED_bi, WPREDICTED_atc, WPREDICTED_bc, WPREDICTED_bdc
+      claim: And(And(Length(WPREDICTED_atc) <= 15, Apartments(WPREDICTED_ai, WPREDICTED_bi, WPREDICTED_atc, FV_apt_number_0, WPREDICTED_bc, WPREDICTED_bdc, FV_room_count_0)), Not(Exists([gold_a_1, gold_b_2, gold_a1_3, gold_b1_4, gold_b2_5], And(Length(gold_a1_3) <= 15, Apartments(gold_a_1, gold_b_2, gold_a1_3, FV_apt_number_0, gold_b1_4, gold_b2_5, FV_room_count_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

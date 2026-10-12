@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1361.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1361.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2805 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the prices of publications whose publisher is either "Person" or "Wiley"
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Book_ID = int -> IntSort()
+        Price = real -> Float32()
+        Publication_Date = text -> StringSort()
+        Publication_ID = int -> IntSort()
+        Publisher = text -> StringSort()
+      symbols:
+        publication(Publication_ID, Book_ID, Publisher, Publication_Date, Price)
+        constant Person : Publisher
+        constant Wiley : Publisher
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Publication_ID ∃b : Book_ID ∃p1 : Publisher ∃p2 : Publication_Date ( (publication(p,b,p1,p2,p3)) ∧ ((p1 = 'Person') ∨ (p1 = 'Wiley')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Publication_ID EXISTS:∃ IDENT:b COLON:: IDENT:Book_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Publisher EXISTS:∃ IDENT:p2 COLON:: IDENT:Publication_Date LPAR:( LPAR:( IDENT:publication LPAR:( IDENT:p COMMA:, IDENT:b COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:p1 EQ:= LIT:Person RPAR:) OR:∨ LPAR:( IDENT:p1 EQ:= LIT:Wiley RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Publication_ID
+            EXISTS b:Book_ID
+              EXISTS p1:Publisher
+                EXISTS p2:Publication_Date
+                  AND
+                    PRED publication(p, b, p1, p2, p3)
+                    OR
+                      EQ  p1 = 'Person'
+                      EQ  p1 = 'Wiley'
+      Predicted FOL: ∃ id : Publication_ID ∃ bid : Book_ID ∃ pub : Publisher ∃ date : Publication_Date ( publication(id, bid, pub, date, price) ∧ (pub = 'Person' ∨ pub = 'Wiley') )
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Publication_ID EXISTS:∃ IDENT:bid COLON:: IDENT:Book_ID EXISTS:∃ IDENT:pub COLON:: IDENT:Publisher EXISTS:∃ IDENT:date COLON:: IDENT:Publication_Date LPAR:( IDENT:publication LPAR:( IDENT:id COMMA:, IDENT:bid COMMA:, IDENT:pub COMMA:, IDENT:date COMMA:, IDENT:price RPAR:) AND:∧ LPAR:( IDENT:pub EQ:= LIT:Person OR:∨ IDENT:pub EQ:= LIT:Wiley RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:Publication_ID
+            EXISTS bid:Book_ID
+              EXISTS pub:Publisher
+                EXISTS date:Publication_Date
+                  AND
+                    PRED publication(id, bid, pub, date, price)
+                    OR
+                      EQ  pub = 'Person'
+                      EQ  pub = 'Wiley'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Price_0 : Price   Gold p3 <-> Predicted price
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Book_ID, global int -> IntSort()
+        p : local Publication_ID, global int -> IntSort()
+        p1 : local Publisher, global text -> StringSort()
+        p2 : local Publication_Date, global text -> StringSort()
+        p3 : local Price, global real -> Float32()
+      Predicted FOL:
+        bid : local Book_ID, global int -> IntSort()
+        date : local Publication_Date, global text -> StringSort()
+        id : local Publication_ID, global int -> IntSort()
+        price : local Price, global real -> Float32()
+        pub : local Publisher, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_b_2, gold_p1_3, gold_p2_4], And(P_publication(gold_p_1, gold_b_2, gold_p1_3, gold_p2_4, FV_Price_0), Or((gold_p1_3 == L_Person), (gold_p1_3 == L_Wiley))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_b, WGOLD_p1, WGOLD_p2):  And(P_publication(WGOLD_p, WGOLD_b, WGOLD_p1, WGOLD_p2, FV_Price_0), Or((WGOLD_p1 == L_Person), (WGOLD_p1 == L_Wiley)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_bid_2, predicted_pub_3, predicted_date_4], And(P_publication(predicted_id_1, predicted_bid_2, predicted_pub_3, predicted_date_4, FV_Price_0), Or((predicted_pub_3 == L_Person), (predicted_pub_3 == L_Wiley))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_bid, WPREDICTED_pub, WPREDICTED_date):  And(P_publication(WPREDICTED_id, WPREDICTED_bid, WPREDICTED_pub, WPREDICTED_date, FV_Price_0), Or((WPREDICTED_pub == L_Person), (WPREDICTED_pub == L_Wiley)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Person' at text -> L_Person = StringVal('Person')
+      literal 'Wiley' at text -> L_Wiley = StringVal('Wiley')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 744 lines, 28378 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1361.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Price_0)), Not(And(fpIsZero(FV_Price_0), fpIsNegative(FV_Price_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_b, WGOLD_p1, WGOLD_p2
+      claim: And(And(publication(WGOLD_p, WGOLD_b, WGOLD_p1, WGOLD_p2, FV_Price_0), Or(WGOLD_p1 == "Person", WGOLD_p1 == "Wiley")), Not(Exists([predicted_id_1, predicted_bid_2, predicted_pub_3, predicted_date_4], And(publication(predicted_id_1, predicted_bid_2, predicted_pub_3, predicted_date_4, FV_Price_0), Or(predicted_pub_3 == "Person", predicted_pub_3 == "Wiley")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_bid, WPREDICTED_pub, WPREDICTED_date
+      claim: And(And(publication(WPREDICTED_id, WPREDICTED_bid, WPREDICTED_pub, WPREDICTED_date, FV_Price_0), Or(WPREDICTED_pub == "Person", WPREDICTED_pub == "Wiley")), Not(Exists([gold_p_1, gold_b_2, gold_p1_3, gold_p2_4], And(publication(gold_p_1, gold_b_2, gold_p1_3, gold_p2_4, FV_Price_0), Or(gold_p1_3 == "Person", gold_p1_3 == "Wiley")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

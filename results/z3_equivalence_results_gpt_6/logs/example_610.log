@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_610.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_610.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4886 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List all document ids and receipt dates of documents.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        document_id = integer -> IntSort()
+        document_status_code = char(15) -> StringSort()
+        document_type_code = char(15) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+        receipt_date = datetime -> IntSort()
+        receipt_number = varchar(255) -> StringSort()
+        shipping_agent_code = char(15) -> StringSort()
+      symbols:
+        Documents(document_id, document_status_code, document_type_code, shipping_agent_code, receipt_date, receipt_number, other_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d1 : document_status_code ∃d2 : document_type_code ∃s : shipping_agent_code ∃r1 : receipt_number ∃o : other_details ( Documents(d,d1,d2,s,r,r1,o) )
+        tokens: EXISTS:∃ IDENT:d1 COLON:: IDENT:document_status_code EXISTS:∃ IDENT:d2 COLON:: IDENT:document_type_code EXISTS:∃ IDENT:s COLON:: IDENT:shipping_agent_code EXISTS:∃ IDENT:r1 COLON:: IDENT:receipt_number EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:s COMMA:, IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d1:document_status_code
+            EXISTS d2:document_type_code
+              EXISTS s:shipping_agent_code
+                EXISTS r1:receipt_number
+                  EXISTS o:other_details
+                    PRED Documents(d, d1, d2, s, r, r1, o)
+      Predicted FOL: ∃s : document_status_code ∃t : document_type_code ∃a : shipping_agent_code ∃n : receipt_number ∃o : other_details (Documents(d, s, t, a, r, n, o))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:document_status_code EXISTS:∃ IDENT:t COLON:: IDENT:document_type_code EXISTS:∃ IDENT:a COLON:: IDENT:shipping_agent_code EXISTS:∃ IDENT:n COLON:: IDENT:receipt_number EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:s COMMA:, IDENT:t COMMA:, IDENT:a COMMA:, IDENT:r COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:document_status_code
+            EXISTS t:document_type_code
+              EXISTS a:shipping_agent_code
+                EXISTS n:receipt_number
+                  EXISTS o:other_details
+                    PRED Documents(d, s, t, a, r, n, o)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_document_id_0 : document_id   Gold d <-> Predicted d
+      FV_receipt_date_0 : receipt_date   Gold r <-> Predicted r
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local document_id, global integer -> IntSort()
+        d1 : local document_status_code, global char(15) -> StringSort()
+        d2 : local document_type_code, global char(15) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        r : local receipt_date, global datetime -> IntSort()
+        r1 : local receipt_number, global varchar(255) -> StringSort()
+        s : local shipping_agent_code, global char(15) -> StringSort()
+      Predicted FOL:
+        a : local shipping_agent_code, global char(15) -> StringSort()
+        d : local document_id, global integer -> IntSort()
+        n : local receipt_number, global varchar(255) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        r : local receipt_date, global datetime -> IntSort()
+        s : local document_status_code, global char(15) -> StringSort()
+        t : local document_type_code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d1_1, gold_d2_2, gold_s_3, gold_r1_4, gold_o_5], And(D_char_15_(gold_d1_1), D_char_15_(gold_d2_2), D_char_15_(gold_s_3), D_varchar_255_(gold_r1_4), D_varchar_255_(gold_o_5), P_Documents(FV_document_id_0, gold_d1_1, gold_d2_2, gold_s_3, FV_receipt_date_0, gold_r1_4, gold_o_5)))
+      gold_skolem (witnesses WGOLD_d1, WGOLD_d2, WGOLD_s, WGOLD_r1, WGOLD_o):  And(D_char_15_(WGOLD_d1), D_char_15_(WGOLD_d2), D_char_15_(WGOLD_s), D_varchar_255_(WGOLD_r1), D_varchar_255_(WGOLD_o), P_Documents(FV_document_id_0, WGOLD_d1, WGOLD_d2, WGOLD_s, FV_receipt_date_0, WGOLD_r1, WGOLD_o))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_t_2, predicted_a_3, predicted_n_4, predicted_o_5], And(D_char_15_(predicted_s_1), D_char_15_(predicted_t_2), D_char_15_(predicted_a_3), D_varchar_255_(predicted_n_4), D_varchar_255_(predicted_o_5), P_Documents(FV_document_id_0, predicted_s_1, predicted_t_2, predicted_a_3, FV_receipt_date_0, predicted_n_4, predicted_o_5)))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_t, WPREDICTED_a, WPREDICTED_n, WPREDICTED_o):  And(D_char_15_(WPREDICTED_s), D_char_15_(WPREDICTED_t), D_char_15_(WPREDICTED_a), D_varchar_255_(WPREDICTED_n), D_varchar_255_(WPREDICTED_o), P_Documents(FV_document_id_0, WPREDICTED_s, WPREDICTED_t, WPREDICTED_a, FV_receipt_date_0, WPREDICTED_n, WPREDICTED_o))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 758 lines, 30096 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_610.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d1, WGOLD_d2, WGOLD_s, WGOLD_r1, WGOLD_o
+      claim: And(And(Length(WGOLD_d1) <= 15, Length(WGOLD_d2) <= 15, Length(WGOLD_s) <= 15, Length(WGOLD_r1) <= 255, Length(WGOLD_o) <= 255, Documents(FV_document_id_0, WGOLD_d1, WGOLD_d2, WGOLD_s, FV_receipt_date_0, WGOLD_r1, WGOLD_o)), Not(Exists([predicted_s_1, predicted_t_2, predicted_a_3, predicted_n_4, predicted_o_5], And(Length(predicted_s_1) <= 15, Length(predicted_t_2) <= 15, Length(predicted_a_3) <= 15, Length(predicted_n_4) <= 255, Length(predicted_o_5) <= 255, Documents(FV_document_id_0, predicted_s_1, predicted_t_2, predicted_a_3, FV_receipt_date_0, predicted_n_4, predicted_o_5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_t, WPREDICTED_a, WPREDICTED_n, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_s) <= 15, Length(WPREDICTED_t) <= 15, Length(WPREDICTED_a) <= 15, Length(WPREDICTED_n) <= 255, Length(WPREDICTED_o) <= 255, Documents(FV_document_id_0, WPREDICTED_s, WPREDICTED_t, WPREDICTED_a, FV_receipt_date_0, WPREDICTED_n, WPREDICTED_o)), Not(Exists([gold_d1_1, gold_d2_2, gold_s_3, gold_r1_4, gold_o_5], And(Length(gold_d1_1) <= 15, Length(gold_d2_2) <= 15, Length(gold_s_3) <= 15, Length(gold_r1_4) <= 255, Length(gold_o_5) <= 255, Documents(FV_document_id_0, gold_d1_1, gold_d2_2, gold_s_3, FV_receipt_date_0, gold_r1_4, gold_o_5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

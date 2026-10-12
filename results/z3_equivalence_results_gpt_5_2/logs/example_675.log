@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_675.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_675.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3644 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who are the lieutenant governor and comptroller from the democratic party?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Attorney_General = text -> StringSort()
+        Comptroller = text -> StringSort()
+        Governor = text -> StringSort()
+        Lieutenant_Governor = text -> StringSort()
+        Party_ID = int -> IntSort()
+        US_Senate = text -> StringSort()
+        Year = real -> Float32()
+        party = text -> StringSort()
+      symbols:
+        party(Party_ID, Year, party, Governor, Lieutenant_Governor, Comptroller, Attorney_General, US_Senate)
+        constant Democratic : party
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Party_ID ∃y : Year ∃p1 : party ∃g : Governor ∃a : Attorney_General ∃u : US_Senate ( (party(p,y,p1,g,l,c,a,u)) ∧ (p1 = 'Democratic') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:p1 COLON:: IDENT:party EXISTS:∃ IDENT:g COLON:: IDENT:Governor EXISTS:∃ IDENT:a COLON:: IDENT:Attorney_General EXISTS:∃ IDENT:u COLON:: IDENT:US_Senate LPAR:( LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:y COMMA:, IDENT:p1 COMMA:, IDENT:g COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:a COMMA:, IDENT:u RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:Democratic RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Party_ID
+            EXISTS y:Year
+              EXISTS p1:party
+                EXISTS g:Governor
+                  EXISTS a:Attorney_General
+                    EXISTS u:US_Senate
+                      AND
+                        PRED party(p, y, p1, g, l, c, a, u)
+                        EQ  p1 = 'Democratic'
+      Predicted FOL: ∃y:Party_ID ∃t:Year ∃g:Governor ∃lg:Lieutenant_Governor ∃c:Comptroller ∃ag:Attorney_General ∃us:US_Senate (party(y, t, Democratic, g, lg, c, ag, us) ∧ x = lg) ∨ ∃y':Party_ID ∃t':Year ∃g':Governor ∃lg':Lieutenant_Governor ∃c':Comptroller ∃ag':Attorney_General ∃us':US_Senate (party(y', t', Democratic, g', lg', c', ag', us') ∧ x = c')
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:Party_ID EXISTS:∃ IDENT:t COLON:: IDENT:Year EXISTS:∃ IDENT:g COLON:: IDENT:Governor EXISTS:∃ IDENT:lg COLON:: IDENT:Lieutenant_Governor EXISTS:∃ IDENT:c COLON:: IDENT:Comptroller EXISTS:∃ IDENT:ag COLON:: IDENT:Attorney_General EXISTS:∃ IDENT:us COLON:: IDENT:US_Senate LPAR:( IDENT:party LPAR:( IDENT:y COMMA:, IDENT:t COMMA:, IDENT:Democratic COMMA:, IDENT:g COMMA:, IDENT:lg COMMA:, IDENT:c COMMA:, IDENT:ag COMMA:, IDENT:us RPAR:) AND:∧ IDENT:x EQ:= IDENT:lg RPAR:) OR:∨ EXISTS:∃ IDENT:y' COLON:: IDENT:Party_ID EXISTS:∃ IDENT:t' COLON:: IDENT:Year EXISTS:∃ IDENT:g' COLON:: IDENT:Governor EXISTS:∃ IDENT:lg' COLON:: IDENT:Lieutenant_Governor EXISTS:∃ IDENT:c' COLON:: IDENT:Comptroller EXISTS:∃ IDENT:ag' COLON:: IDENT:Attorney_General EXISTS:∃ IDENT:us' COLON:: IDENT:US_Senate LPAR:( IDENT:party LPAR:( IDENT:y' COMMA:, IDENT:t' COMMA:, IDENT:Democratic COMMA:, IDENT:g' COMMA:, IDENT:lg' COMMA:, IDENT:c' COMMA:, IDENT:ag' COMMA:, IDENT:us' RPAR:) AND:∧ IDENT:x EQ:= IDENT:c' RPAR:) EOF
+        AST:
+          EXISTS y:Party_ID
+            EXISTS t:Year
+              EXISTS g:Governor
+                EXISTS lg:Lieutenant_Governor
+                  EXISTS c:Comptroller
+                    EXISTS ag:Attorney_General
+                      EXISTS us:US_Senate
+                        OR
+                          AND
+                            PRED party(y, t, Democratic<const>, g, lg, c, ag, us)
+                            EQ  x = lg
+                          EXISTS y':Party_ID
+                            EXISTS t':Year
+                              EXISTS g':Governor
+                                EXISTS lg':Lieutenant_Governor
+                                  EXISTS c':Comptroller
+                                    EXISTS ag':Attorney_General
+                                      EXISTS us':US_Senate
+                                        AND
+                                          PRED party(y', t', Democratic<const>, g', lg', c', ag', us')
+                                          EQ  x = c'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (l : Lieutenant_Governor, c : Comptroller) but Predicted has 1 (x : Lieutenant_Governor): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 23 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Attorney_General, global text -> StringSort()
+        c : local Comptroller, global text -> StringSort()
+        g : local Governor, global text -> StringSort()
+        l : local Lieutenant_Governor, global text -> StringSort()
+        p : local Party_ID, global int -> IntSort()
+        p1 : local party, global text -> StringSort()
+        u : local US_Senate, global text -> StringSort()
+        y : local Year, global real -> Float32()
+      Predicted FOL:
+        ag : local Attorney_General, global text -> StringSort()
+        ag' : local Attorney_General, global text -> StringSort()
+        c : local Comptroller, global text -> StringSort()
+        c' : local Comptroller, global text -> StringSort()
+        g : local Governor, global text -> StringSort()
+        g' : local Governor, global text -> StringSort()
+        lg : local Lieutenant_Governor, global text -> StringSort()
+        lg' : local Lieutenant_Governor, global text -> StringSort()
+        t : local Year, global real -> Float32()
+        t' : local Year, global real -> Float32()
+        us : local US_Senate, global text -> StringSort()
+        us' : local US_Senate, global text -> StringSort()
+        x : local Lieutenant_Governor, global text -> StringSort()
+        y : local Party_ID, global int -> IntSort()
+        y' : local Party_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5724 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_675.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (l : Lieutenant_Governor, c : Comptroller) but Predicted has 1 (x : Lieutenant_Governor): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

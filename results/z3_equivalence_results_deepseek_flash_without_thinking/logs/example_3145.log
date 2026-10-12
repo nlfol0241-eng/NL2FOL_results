@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3145.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3145.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3143 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of users who did not leave any review.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(128) -> StringSort()   [domain Length(x) <= 128; length <= 128]
+        integer -> IntSort()
+      local sorts:
+        a_id = integer -> IntSort()
+        i_id = integer -> IntSort()
+        name = varchar(128) -> StringSort()
+        rank = integer -> IntSort()
+        rating = integer -> IntSort()
+        u_id = integer -> IntSort()
+      symbols:
+        review(a_id, u_id, i_id, rating, rank)
+        useracct(u_id, name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : u_id( (useracct(u,n)) ∧ (¬(∃u1 : u_id( ((useracct(u,n)) ∧ (∃a : a_id ∃r : rating ∃i : i_id ∃r1 : rank( review(a,u1,i,r,r1) ))) ∧ (u = u1) ))) )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:u_id LPAR:( LPAR:( IDENT:useracct LPAR:( IDENT:u COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:u1 COLON:: IDENT:u_id LPAR:( LPAR:( LPAR:( IDENT:useracct LPAR:( IDENT:u COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:a_id EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:i COLON:: IDENT:i_id EXISTS:∃ IDENT:r1 COLON:: IDENT:rank LPAR:( IDENT:review LPAR:( IDENT:a COMMA:, IDENT:u1 COMMA:, IDENT:i COMMA:, IDENT:r COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:u EQ:= IDENT:u1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:u_id
+            AND
+              PRED useracct(u, n)
+              NOT
+                EXISTS u1:u_id
+                  AND
+                    AND
+                      PRED useracct(u, n)
+                      EXISTS a:a_id
+                        EXISTS r:rating
+                          EXISTS i:i_id
+                            EXISTS r1:rank
+                              PRED review(a, u1, i, r, r1)
+                    EQ  u = u1
+      Predicted FOL: ∃u_id : u_id (useracct(u_id, name) ∧ ¬∃a_id : a_id ∃i_id : i_id ∃rating : rating ∃rank : rank review(a_id, u_id, i_id, rating, rank))
+        tokens: EXISTS:∃ IDENT:u_id COLON:: IDENT:u_id LPAR:( IDENT:useracct LPAR:( IDENT:u_id COMMA:, IDENT:name RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:a_id COLON:: IDENT:a_id EXISTS:∃ IDENT:i_id COLON:: IDENT:i_id EXISTS:∃ IDENT:rating COLON:: IDENT:rating EXISTS:∃ IDENT:rank COLON:: IDENT:rank IDENT:review LPAR:( IDENT:a_id COMMA:, IDENT:u_id COMMA:, IDENT:i_id COMMA:, IDENT:rating COMMA:, IDENT:rank RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u_id:u_id
+            AND
+              PRED useracct(u_id, name)
+              NOT
+                EXISTS a_id:a_id
+                  EXISTS i_id:i_id
+                    EXISTS rating:rating
+                      EXISTS rank:rank
+                        PRED review(a_id, u_id, i_id, rating, rank)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local a_id, global integer -> IntSort()
+        i : local i_id, global integer -> IntSort()
+        n : local name, global varchar(128) -> StringSort()
+        r : local rating, global integer -> IntSort()
+        r1 : local rank, global integer -> IntSort()
+        u : local u_id, global integer -> IntSort()
+        u1 : local u_id, global integer -> IntSort()
+      Predicted FOL:
+        a_id : local a_id, global integer -> IntSort()
+        i_id : local i_id, global integer -> IntSort()
+        name : local name, global varchar(128) -> StringSort()
+        rank : local rank, global integer -> IntSort()
+        rating : local rating, global integer -> IntSort()
+        u_id : local u_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_u_1], And(P_useracct(gold_u_1, FV_name_0), Not(Exists([gold_u1_2], And(And(P_useracct(gold_u_1, FV_name_0), Exists([gold_a_3, gold_r_4, gold_i_5, gold_r1_6], P_review(gold_a_3, gold_u1_2, gold_i_5, gold_r_4, gold_r1_6))), (gold_u_1 == gold_u1_2))))))
+      gold_skolem (witnesses WGOLD_u):  And(P_useracct(WGOLD_u, FV_name_0), Not(Exists([goldsk_u1_1], And(And(P_useracct(WGOLD_u, FV_name_0), Exists([goldsk_a_2, goldsk_r_3, goldsk_i_4, goldsk_r1_5], P_review(goldsk_a_2, goldsk_u1_1, goldsk_i_4, goldsk_r_3, goldsk_r1_5))), (WGOLD_u == goldsk_u1_1)))))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_u_id_1], And(P_useracct(predicted_u_id_1, FV_name_0), Not(Exists([predicted_a_id_2, predicted_i_id_3, predicted_rating_4, predicted_rank_5], P_review(predicted_a_id_2, predicted_u_id_1, predicted_i_id_3, predicted_rating_4, predicted_rank_5)))))
+      predicted_skolem (witnesses WPREDICTED_u_id):  And(P_useracct(WPREDICTED_u_id, FV_name_0), Not(Exists([predictedsk_a_id_1, predictedsk_i_id_2, predictedsk_rating_3, predictedsk_rank_4], P_review(predictedsk_a_id_1, WPREDICTED_u_id, predictedsk_i_id_2, predictedsk_rating_3, predictedsk_rank_4))))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 743 lines, 28605 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3145.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_name_0) <= 128
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_u
+      claim: And(And(useracct(WGOLD_u, FV_name_0), Not(Exists(goldsk_u1_1, And(And(useracct(WGOLD_u, FV_name_0), Exists([goldsk_a_2, goldsk_r_3, goldsk_i_4, goldsk_r1_5], review(goldsk_a_2, goldsk_u1_1, goldsk_i_4, goldsk_r_3, goldsk_r1_5))), WGOLD_u == goldsk_u1_1)))), Not(Exists(predicted_u_id_1, And(useracct(predicted_u_id_1, FV_name_0), Not(Exists([predicted_a_id_2, predicted_i_id_3, predicted_rating_4, predicted_rank_5], review(predicted_a_id_2, predicted_u_id_1, predicted_i_id_3, predicted_rating_4, predicted_rank_5)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_u_id
+      claim: And(And(useracct(WPREDICTED_u_id, FV_name_0), Not(Exists([predictedsk_a_id_1, predictedsk_i_id_2, predictedsk_rating_3, predictedsk_rank_4], review(predictedsk_a_id_1, WPREDICTED_u_id, predictedsk_i_id_2, predictedsk_rating_3, predictedsk_rank_4)))), Not(Exists(gold_u_1, And(useracct(gold_u_1, FV_name_0), Not(Exists(gold_u1_2, And(And(useracct(gold_u_1, FV_name_0), Exists([gold_a_3, gold_r_4, gold_i_5, gold_r1_6], review(gold_a_3, gold_u1_2, gold_i_5, gold_r_4, gold_r1_6))), gold_u_1 == gold_u1_2)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

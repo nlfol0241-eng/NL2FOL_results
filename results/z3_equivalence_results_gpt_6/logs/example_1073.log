@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1073.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1073.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2888 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the famous titles of the artist called "Triumfall".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Artist = text -> StringSort()
+        Artist_ID = int -> IntSort()
+        Famous_Release_date = text -> StringSort()
+        Famous_Title = text -> StringSort()
+      symbols:
+        artist(Artist_ID, Artist, Age, Famous_Title, Famous_Release_date)
+        constant Triumfall : Artist
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Artist_ID ∃a1 : Artist ∃a2 : Age ∃f1 : Famous_Release_date ( (artist(a,a1,a2,f,f1)) ∧ (a1 = 'Triumfall') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:a1 COLON:: IDENT:Artist EXISTS:∃ IDENT:a2 COLON:: IDENT:Age EXISTS:∃ IDENT:f1 COLON:: IDENT:Famous_Release_date LPAR:( LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:f COMMA:, IDENT:f1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:Triumfall RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Artist_ID
+            EXISTS a1:Artist
+              EXISTS a2:Age
+                EXISTS f1:Famous_Release_date
+                  AND
+                    PRED artist(a, a1, a2, f, f1)
+                    EQ  a1 = 'Triumfall'
+      Predicted FOL: ∃i : Artist_ID ∃a : Age ∃d : Famous_Release_date (artist(i, 'Triumfall', a, t, d))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:d COLON:: IDENT:Famous_Release_date LPAR:( IDENT:artist LPAR:( IDENT:i COMMA:, LIT:Triumfall COMMA:, IDENT:a COMMA:, IDENT:t COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Artist_ID
+            EXISTS a:Age
+              EXISTS d:Famous_Release_date
+                PRED artist(i, 'Triumfall', a, t, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Famous_Title_0 : Famous_Title   Gold f <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artist_ID, global int -> IntSort()
+        a1 : local Artist, global text -> StringSort()
+        a2 : local Age, global int -> IntSort()
+        f : local Famous_Title, global text -> StringSort()
+        f1 : local Famous_Release_date, global text -> StringSort()
+      Predicted FOL:
+        a : local Age, global int -> IntSort()
+        d : local Famous_Release_date, global text -> StringSort()
+        i : local Artist_ID, global int -> IntSort()
+        t : local Famous_Title, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_a1_2, gold_a2_3, gold_f1_4], And(P_artist(gold_a_1, gold_a1_2, gold_a2_3, FV_Famous_Title_0, gold_f1_4), (gold_a1_2 == L_Triumfall)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_a1, WGOLD_a2, WGOLD_f1):  And(P_artist(WGOLD_a, WGOLD_a1, WGOLD_a2, FV_Famous_Title_0, WGOLD_f1), (WGOLD_a1 == L_Triumfall))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_a_2, predicted_d_3], P_artist(predicted_i_1, L_Triumfall, predicted_a_2, FV_Famous_Title_0, predicted_d_3))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_a, WPREDICTED_d):  P_artist(WPREDICTED_i, L_Triumfall, WPREDICTED_a, FV_Famous_Title_0, WPREDICTED_d)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Triumfall' at text -> L_Triumfall = StringVal('Triumfall')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 735 lines, 27492 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1073.py
+   [G8] took 0.008 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_a1, WGOLD_a2, WGOLD_f1
+      claim: And(And(artist(WGOLD_a, WGOLD_a1, WGOLD_a2, FV_Famous_Title_0, WGOLD_f1), WGOLD_a1 == "Triumfall"), Not(Exists([predicted_i_1, predicted_a_2, predicted_d_3], artist(predicted_i_1, "Triumfall", predicted_a_2, FV_Famous_Title_0, predicted_d_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_a, WPREDICTED_d
+      claim: And(artist(WPREDICTED_i, "Triumfall", WPREDICTED_a, FV_Famous_Title_0, WPREDICTED_d), Not(Exists([gold_a_1, gold_a1_2, gold_a2_3, gold_f1_4], And(artist(gold_a_1, gold_a1_2, gold_a2_3, FV_Famous_Title_0, gold_f1_4), gold_a1_2 == "Triumfall"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

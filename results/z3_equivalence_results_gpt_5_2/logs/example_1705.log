@@ -1,0 +1,115 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1705.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1705.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3844 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the id and name of the photos for mountains?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Country = text -> StringSort()
+        Height = real -> Float32()
+        Prominence = real -> Float32()
+        Range = text -> StringSort()
+        camera_lens_id = int -> IntSort()
+        color = text -> StringSort()
+        id = int -> IntSort()
+        mountain_id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        mountain(id, name, Height, Prominence, Range, Country)
+        photos(id, camera_lens_id, mountain_id, color, name)
+        constant 4000 : Height
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃h : Height ∃p : Prominence ∃r : Range ∃c : Country ∃i1 : id ∃c1 : camera_lens_id ∃m : mountain_id ∃c2 : color ∃n1 : name ( (((mountain(i,n,h,p,r,c)) ∧ (photos(i1,c1,m,c2,n1))) ∧ (i = m)) ∧ (h > 4000) )
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:Prominence EXISTS:∃ IDENT:r COLON:: IDENT:Range EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:c1 COLON:: IDENT:camera_lens_id EXISTS:∃ IDENT:m COLON:: IDENT:mountain_id EXISTS:∃ IDENT:c2 COLON:: IDENT:color EXISTS:∃ IDENT:n1 COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:mountain LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:photos LPAR:( IDENT:i1 COMMA:, IDENT:c1 COMMA:, IDENT:m COMMA:, IDENT:c2 COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h GT:> NUM:4000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:Height
+            EXISTS p:Prominence
+              EXISTS r:Range
+                EXISTS c:Country
+                  EXISTS i1:id
+                    EXISTS c1:camera_lens_id
+                      EXISTS m:mountain_id
+                        EXISTS c2:color
+                          EXISTS n1:name
+                            AND
+                              AND
+                                AND
+                                  PRED mountain(i, n, h, p, r, c)
+                                  PRED photos(i1, c1, m, c2, n1)
+                                EQ  i = m
+                              CMP  h > 4000
+      Predicted FOL: ∃pid:id ∃clid:camera_lens_id ∃mid:mountain_id ∃col:color ∃pname:name ( photos(pid, clid, mid, col, pname) ∧ ∃mname:name ∃h:Height ∃p:Prominence ∃r:Range ∃c:Country ( mountain(mid, mname, h, p, r, c) ) )
+        tokens: EXISTS:∃ IDENT:pid COLON:: IDENT:id EXISTS:∃ IDENT:clid COLON:: IDENT:camera_lens_id EXISTS:∃ IDENT:mid COLON:: IDENT:mountain_id EXISTS:∃ IDENT:col COLON:: IDENT:color EXISTS:∃ IDENT:pname COLON:: IDENT:name LPAR:( IDENT:photos LPAR:( IDENT:pid COMMA:, IDENT:clid COMMA:, IDENT:mid COMMA:, IDENT:col COMMA:, IDENT:pname RPAR:) AND:∧ EXISTS:∃ IDENT:mname COLON:: IDENT:name EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:p COLON:: IDENT:Prominence EXISTS:∃ IDENT:r COLON:: IDENT:Range EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( IDENT:mountain LPAR:( IDENT:mid COMMA:, IDENT:mname COMMA:, IDENT:h COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS pid:id
+            EXISTS clid:camera_lens_id
+              EXISTS mid:mountain_id
+                EXISTS col:color
+                  EXISTS pname:name
+                    AND
+                      PRED photos(pid, clid, mid, col, pname)
+                      EXISTS mname:name
+                        EXISTS h:Height
+                          EXISTS p:Prominence
+                            EXISTS r:Range
+                              EXISTS c:Country
+                                PRED mountain(mid, mname, h, p, r, c)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (i : id, n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        c1 : local camera_lens_id, global int -> IntSort()
+        c2 : local color, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        i : local id, global int -> IntSort()
+        i1 : local id, global int -> IntSort()
+        m : local mountain_id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+        p : local Prominence, global real -> Float32()
+        r : local Range, global text -> StringSort()
+      Predicted FOL:
+        c : local Country, global text -> StringSort()
+        clid : local camera_lens_id, global int -> IntSort()
+        col : local color, global text -> StringSort()
+        h : local Height, global real -> Float32()
+        mid : local mountain_id, global int -> IntSort()
+        mname : local name, global text -> StringSort()
+        p : local Prominence, global real -> Float32()
+        pid : local id, global int -> IntSort()
+        pname : local name, global text -> StringSort()
+        r : local Range, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5548 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1705.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (i : id, n : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

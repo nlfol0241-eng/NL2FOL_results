@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_348.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_348.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3506 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the census rankings of cities that do not have the status "Village"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Area_km_2 = real -> Float32()
+        Census_Ranking = text -> StringSort()
+        City_ID = int -> IntSort()
+        Official_Name = text -> StringSort()
+        Population = real -> Float32()
+        Status = text -> StringSort()
+      symbols:
+        city(City_ID, Official_Name, Status, Area_km_2, Population, Census_Ranking)
+        constant Village : Status
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : City_ID ∃o : Official_Name ∃s : Status ∃a : Area_km_2 ∃p : Population ( (city(c,o,s,a,p,c1)) ∧ (s <> 'Village') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:City_ID EXISTS:∃ IDENT:o COLON:: IDENT:Official_Name EXISTS:∃ IDENT:s COLON:: IDENT:Status EXISTS:∃ IDENT:a COLON:: IDENT:Area_km_2 EXISTS:∃ IDENT:p COLON:: IDENT:Population LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:o COMMA:, IDENT:s COMMA:, IDENT:a COMMA:, IDENT:p COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s NEQ:<> LIT:Village RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:City_ID
+            EXISTS o:Official_Name
+              EXISTS s:Status
+                EXISTS a:Area_km_2
+                  EXISTS p:Population
+                    AND
+                      PRED city(c, o, s, a, p, c1)
+                      NEQ  s != 'Village'
+      Predicted FOL: ∃id : City_ID ∃name : Official_Name ∃status : Status ∃area : Area_km_2 ∃population : Population ( city(id, name, status, area, population, rank) ∧ status ≠ 'Village' )
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:City_ID EXISTS:∃ IDENT:name COLON:: IDENT:Official_Name EXISTS:∃ IDENT:status COLON:: IDENT:Status EXISTS:∃ IDENT:area COLON:: IDENT:Area_km_2 EXISTS:∃ IDENT:population COLON:: IDENT:Population LPAR:( IDENT:city LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:status COMMA:, IDENT:area COMMA:, IDENT:population COMMA:, IDENT:rank RPAR:) AND:∧ IDENT:status NEQ:≠ LIT:Village RPAR:) EOF
+        AST:
+          EXISTS id:City_ID
+            EXISTS name:Official_Name
+              EXISTS status:Status
+                EXISTS area:Area_km_2
+                  EXISTS population:Population
+                    AND
+                      PRED city(id, name, status, area, population, rank)
+                      NEQ  status != 'Village'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Census_Ranking_0 : Census_Ranking   Gold c1 <-> Predicted rank
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Area_km_2, global real -> Float32()
+        c : local City_ID, global int -> IntSort()
+        c1 : local Census_Ranking, global text -> StringSort()
+        o : local Official_Name, global text -> StringSort()
+        p : local Population, global real -> Float32()
+        s : local Status, global text -> StringSort()
+      Predicted FOL:
+        area : local Area_km_2, global real -> Float32()
+        id : local City_ID, global int -> IntSort()
+        name : local Official_Name, global text -> StringSort()
+        population : local Population, global real -> Float32()
+        rank : local Census_Ranking, global text -> StringSort()
+        status : local Status, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_o_2, gold_s_3, gold_a_4, gold_p_5], And(D_real(gold_a_4), D_real(gold_p_5), And(P_city(gold_c_1, gold_o_2, gold_s_3, gold_a_4, gold_p_5, FV_Census_Ranking_0), (gold_s_3 != L_Village))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_a, WGOLD_p):  And(D_real(WGOLD_a), D_real(WGOLD_p), And(P_city(WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_a, WGOLD_p, FV_Census_Ranking_0), (WGOLD_s != L_Village)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_name_2, predicted_status_3, predicted_area_4, predicted_population_5], And(D_real(predicted_area_4), D_real(predicted_population_5), And(P_city(predicted_id_1, predicted_name_2, predicted_status_3, predicted_area_4, predicted_population_5, FV_Census_Ranking_0), (predicted_status_3 != L_Village))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_name, WPREDICTED_status, WPREDICTED_area, WPREDICTED_population):  And(D_real(WPREDICTED_area), D_real(WPREDICTED_population), And(P_city(WPREDICTED_id, WPREDICTED_name, WPREDICTED_status, WPREDICTED_area, WPREDICTED_population, FV_Census_Ranking_0), (WPREDICTED_status != L_Village)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Village' at text -> L_Village = StringVal('Village')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 749 lines, 28977 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_348.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_a, WGOLD_p
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(Not(fpIsNaN(WGOLD_p)), Not(And(fpIsZero(WGOLD_p), fpIsNegative(WGOLD_p)))), And(city(WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_a, WGOLD_p, FV_Census_Ranking_0), WGOLD_s != "Village")), Not(Exists([predicted_id_1, predicted_name_2, predicted_status_3, predicted_area_4, predicted_population_5], And(And(Not(fpIsNaN(predicted_area_4)), Not(And(fpIsZero(predicted_area_4), fpIsNegative(predicted_area_4)))), And(Not(fpIsNaN(predicted_population_5)), Not(And(fpIsZero(predicted_population_5), fpIsNegative(predicted_population_5)))), And(city(predicted_id_1, predicted_name_2, predicted_status_3, predicted_area_4, predicted_population_5, FV_Census_Ranking_0), predicted_status_3 != "Village")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_name, WPREDICTED_status, WPREDICTED_area, WPREDICTED_population
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_area)), Not(And(fpIsZero(WPREDICTED_area), fpIsNegative(WPREDICTED_area)))), And(Not(fpIsNaN(WPREDICTED_population)), Not(And(fpIsZero(WPREDICTED_population), fpIsNegative(WPREDICTED_population)))), And(city(WPREDICTED_id, WPREDICTED_name, WPREDICTED_status, WPREDICTED_area, WPREDICTED_population, FV_Census_Ranking_0), WPREDICTED_status != "Village")), Not(Exists([gold_c_1, gold_o_2, gold_s_3, gold_a_4, gold_p_5], And(And(Not(fpIsNaN(gold_a_4)), Not(And(fpIsZero(gold_a_4), fpIsNegative(gold_a_4)))), And(Not(fpIsNaN(gold_p_5)), Not(And(fpIsZero(gold_p_5), fpIsNegative(gold_p_5)))), And(city(gold_c_1, gold_o_2, gold_s_3, gold_a_4, gold_p_5, FV_Census_Ranking_0), gold_s_3 != "Village")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

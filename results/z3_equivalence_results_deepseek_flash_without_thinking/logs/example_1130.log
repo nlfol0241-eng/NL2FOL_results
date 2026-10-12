@@ -1,0 +1,72 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1130.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1130.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2174 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name, time, and service for all trains.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Name = text -> StringSort()
+        Service = text -> StringSort()
+        Time = text -> StringSort()
+        Train_ID = int -> IntSort()
+      symbols:
+        train(Train_ID, Name, Time, Service)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : Train_ID ( train(t,n,t1,s) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Train_ID LPAR:( IDENT:train LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Train_ID
+            PRED train(t, n, t1, s)
+      Predicted FOL: ∃x0 : Train_ID ∃x1 : Name ∃x2 : Time ∃x3 : Service train(x0, x1, x2, x3)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:Train_ID EXISTS:∃ IDENT:x1 COLON:: IDENT:Name EXISTS:∃ IDENT:x2 COLON:: IDENT:Time EXISTS:∃ IDENT:x3 COLON:: IDENT:Service IDENT:train LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) EOF
+        AST:
+          EXISTS x0:Train_ID
+            EXISTS x1:Name
+              EXISTS x2:Time
+                EXISTS x3:Service
+                  PRED train(x0, x1, x2, x3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (n : Name, t1 : Time, s : Service) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Name, global text -> StringSort()
+        s : local Service, global text -> StringSort()
+        t : local Train_ID, global int -> IntSort()
+        t1 : local Time, global text -> StringSort()
+      Predicted FOL:
+        x0 : local Train_ID, global int -> IntSort()
+        x1 : local Name, global text -> StringSort()
+        x2 : local Time, global text -> StringSort()
+        x3 : local Service, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5240 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1130.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (n : Name, t1 : Time, s : Service) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

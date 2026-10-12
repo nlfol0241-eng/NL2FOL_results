@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_401.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_401.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3285 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show flight number for all flights with more than 2000 distance.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        number(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+        number(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        number(7,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000, x < 100000); 7 digits, 2 after the point]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        arrival_date = date -> IntSort()
+        departure_date = date -> IntSort()
+        destination = varchar2(20) -> StringSort()
+        distance = number(6,0) -> RealSort()
+        flno = number(4,0) -> RealSort()
+        origin = varchar2(20) -> StringSort()
+        price = number(7,2) -> RealSort()
+      symbols:
+        flight(flno, origin, destination, distance, departure_date, arrival_date, price, aid)
+        constant 2000 : distance
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : origin ∃d : destination ∃d1 : distance ∃d2 : departure_date ∃a : arrival_date ∃p : price ∃a1 : aid ( (flight(f,o,d,d1,d2,a,p,a1)) ∧ (d1 > 2000) )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:origin EXISTS:∃ IDENT:d COLON:: IDENT:destination EXISTS:∃ IDENT:d1 COLON:: IDENT:distance EXISTS:∃ IDENT:d2 COLON:: IDENT:departure_date EXISTS:∃ IDENT:a COLON:: IDENT:arrival_date EXISTS:∃ IDENT:p COLON:: IDENT:price EXISTS:∃ IDENT:a1 COLON:: IDENT:aid LPAR:( LPAR:( IDENT:flight LPAR:( IDENT:f COMMA:, IDENT:o COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:a COMMA:, IDENT:p COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 GT:> NUM:2000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:origin
+            EXISTS d:destination
+              EXISTS d1:distance
+                EXISTS d2:departure_date
+                  EXISTS a:arrival_date
+                    EXISTS p:price
+                      EXISTS a1:aid
+                        AND
+                          PRED flight(f, o, d, d1, d2, a, p, a1)
+                          CMP  d1 > 2000
+      Predicted FOL: ∃o : origin ∃d : destination ∃dist : distance ∃dep : departure_date ∃arr : arrival_date ∃pr : price ∃aid : aid (flight(x, o, d, dist, dep, arr, pr, aid) ∧ dist > 2000)
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:origin EXISTS:∃ IDENT:d COLON:: IDENT:destination EXISTS:∃ IDENT:dist COLON:: IDENT:distance EXISTS:∃ IDENT:dep COLON:: IDENT:departure_date EXISTS:∃ IDENT:arr COLON:: IDENT:arrival_date EXISTS:∃ IDENT:pr COLON:: IDENT:price EXISTS:∃ IDENT:aid COLON:: IDENT:aid LPAR:( IDENT:flight LPAR:( IDENT:x COMMA:, IDENT:o COMMA:, IDENT:d COMMA:, IDENT:dist COMMA:, IDENT:dep COMMA:, IDENT:arr COMMA:, IDENT:pr COMMA:, IDENT:aid RPAR:) AND:∧ IDENT:dist GT:> NUM:2000 RPAR:) EOF
+        AST:
+          EXISTS o:origin
+            EXISTS d:destination
+              EXISTS dist:distance
+                EXISTS dep:departure_date
+                  EXISTS arr:arrival_date
+                    EXISTS pr:price
+                      EXISTS aid:aid
+                        AND
+                          PRED flight(x, o, d, dist, dep, arr, pr, aid)
+                          CMP  dist > 2000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_flno_0 : flno   Gold f <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local arrival_date, global date -> IntSort()
+        a1 : local aid, global number(9,0) -> RealSort()
+        d : local destination, global varchar2(20) -> StringSort()
+        d1 : local distance, global number(6,0) -> RealSort()
+        d2 : local departure_date, global date -> IntSort()
+        f : local flno, global number(4,0) -> RealSort()
+        o : local origin, global varchar2(20) -> StringSort()
+        p : local price, global number(7,2) -> RealSort()
+      Predicted FOL:
+        aid : local aid, global number(9,0) -> RealSort()
+        arr : local arrival_date, global date -> IntSort()
+        d : local destination, global varchar2(20) -> StringSort()
+        dep : local departure_date, global date -> IntSort()
+        dist : local distance, global number(6,0) -> RealSort()
+        o : local origin, global varchar2(20) -> StringSort()
+        pr : local price, global number(7,2) -> RealSort()
+        x : local flno, global number(4,0) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_o_1, gold_d_2, gold_d1_3, gold_d2_4, gold_a_5, gold_p_6, gold_a1_7], And(D_varchar2_20_(gold_o_1), D_varchar2_20_(gold_d_2), D_number_6_0_(gold_d1_3), D_number_7_2_(gold_p_6), D_number_9_0_(gold_a1_7), And(P_flight(FV_flno_0, gold_o_1, gold_d_2, gold_d1_3, gold_d2_4, gold_a_5, gold_p_6, gold_a1_7), (gold_d1_3 > L_v_2000_number_6_0_))))
+      gold_skolem (witnesses WGOLD_o, WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_a, WGOLD_p, WGOLD_a1):  And(D_varchar2_20_(WGOLD_o), D_varchar2_20_(WGOLD_d), D_number_6_0_(WGOLD_d1), D_number_7_2_(WGOLD_p), D_number_9_0_(WGOLD_a1), And(P_flight(FV_flno_0, WGOLD_o, WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_a, WGOLD_p, WGOLD_a1), (WGOLD_d1 > L_v_2000_number_6_0_)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_o_1, predicted_d_2, predicted_dist_3, predicted_dep_4, predicted_arr_5, predicted_pr_6, predicted_aid_7], And(D_varchar2_20_(predicted_o_1), D_varchar2_20_(predicted_d_2), D_number_6_0_(predicted_dist_3), D_number_7_2_(predicted_pr_6), D_number_9_0_(predicted_aid_7), And(P_flight(FV_flno_0, predicted_o_1, predicted_d_2, predicted_dist_3, predicted_dep_4, predicted_arr_5, predicted_pr_6, predicted_aid_7), (predicted_dist_3 > L_v_2000_number_6_0_))))
+      predicted_skolem (witnesses WPREDICTED_o, WPREDICTED_d, WPREDICTED_dist, WPREDICTED_dep, WPREDICTED_arr, WPREDICTED_pr, WPREDICTED_aid):  And(D_varchar2_20_(WPREDICTED_o), D_varchar2_20_(WPREDICTED_d), D_number_6_0_(WPREDICTED_dist), D_number_7_2_(WPREDICTED_pr), D_number_9_0_(WPREDICTED_aid), And(P_flight(FV_flno_0, WPREDICTED_o, WPREDICTED_d, WPREDICTED_dist, WPREDICTED_dep, WPREDICTED_arr, WPREDICTED_pr, WPREDICTED_aid), (WPREDICTED_dist > L_v_2000_number_6_0_)))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2000' at number(6,0) -> L_v_2000_number_6_0_ = RealVal('2000')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 787 lines, 31298 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_401.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_flno_0), FV_flno_0 > -10000, FV_flno_0 < 10000)
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_o, WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_a, WGOLD_p, WGOLD_a1
+      claim: And(And(Length(WGOLD_o) <= 20, Length(WGOLD_d) <= 20, And(IsInt(WGOLD_d1), WGOLD_d1 > -1000000, WGOLD_d1 < 1000000), And(IsInt(WGOLD_p*100), WGOLD_p > -100000, WGOLD_p < 100000), And(IsInt(WGOLD_a1), WGOLD_a1 > -1000000000, WGOLD_a1 < 1000000000), And(flight(FV_flno_0, WGOLD_o, WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_a, WGOLD_p, WGOLD_a1), 2000 < WGOLD_d1)), Not(Exists([predicted_o_1, predicted_d_2, predicted_dist_3, predicted_dep_4, predicted_arr_5, predicted_pr_6, predicted_aid_7], And(Length(predicted_o_1) <= 20, Length(predicted_d_2) <= 20, And(IsInt(predicted_dist_3), predicted_dist_3 > -1000000, predicted_dist_3 < 1000000), And(IsInt(predicted_pr_6*100), predicted_pr_6 > -100000, predicted_pr_6 < 100000), And(IsInt(predicted_aid_7), predicted_aid_7 > -1000000000, predicted_aid_7 < 1000000000), And(flight(FV_flno_0, predicted_o_1, predicted_d_2, predicted_dist_3, predicted_dep_4, predicted_arr_5, predicted_pr_6, predicted_aid_7), 2000 < predicted_dist_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_o, WPREDICTED_d, WPREDICTED_dist, WPREDICTED_dep, WPREDICTED_arr, WPREDICTED_pr, WPREDICTED_aid
+      claim: And(And(Length(WPREDICTED_o) <= 20, Length(WPREDICTED_d) <= 20, And(IsInt(WPREDICTED_dist), WPREDICTED_dist > -1000000, WPREDICTED_dist < 1000000), And(IsInt(WPREDICTED_pr*100), WPREDICTED_pr > -100000, WPREDICTED_pr < 100000), And(IsInt(WPREDICTED_aid), WPREDICTED_aid > -1000000000, WPREDICTED_aid < 1000000000), And(flight(FV_flno_0, WPREDICTED_o, WPREDICTED_d, WPREDICTED_dist, WPREDICTED_dep, WPREDICTED_arr, WPREDICTED_pr, WPREDICTED_aid), 2000 < WPREDICTED_dist)), Not(Exists([gold_o_1, gold_d_2, gold_d1_3, gold_d2_4, gold_a_5, gold_p_6, gold_a1_7], And(Length(gold_o_1) <= 20, Length(gold_d_2) <= 20, And(IsInt(gold_d1_3), gold_d1_3 > -1000000, gold_d1_3 < 1000000), And(IsInt(gold_p_6*100), gold_p_6 > -100000, gold_p_6 < 100000), And(IsInt(gold_a1_7), gold_a1_7 > -1000000000, gold_a1_7 < 1000000000), And(flight(FV_flno_0, gold_o_1, gold_d_2, gold_d1_3, gold_d2_4, gold_a_5, gold_p_6, gold_a1_7), 2000 < gold_d1_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

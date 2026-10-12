@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3717.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3717.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4226 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of songs that does not have a back vocal.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Bandmate = integer -> IntSort()
+        SongId = integer -> IntSort()
+        Title = text -> StringSort()
+        Type = text -> StringSort()
+      symbols:
+        Songs(SongId, Title)
+        Vocals(SongId, Bandmate, Type)
+        constant back : Type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s1 : SongId ∃t : Type ∃b : Bandmate ∃s : SongId( ((Vocals(s,b,t)) ∧ (Songs(s1,t1))) ∧ (s = s1) )) ∧ (¬(∃s1 : SongId ∃t : Type ∃b : Bandmate ∃s : SongId( (((Vocals(s,b,t)) ∧ (Songs(s1,t1))) ∧ (s = s1)) ∧ (t = 'back') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:SongId EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:s COLON:: IDENT:SongId LPAR:( LPAR:( LPAR:( IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Songs LPAR:( IDENT:s1 COMMA:, IDENT:t1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:SongId EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:s COLON:: IDENT:SongId LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Songs LPAR:( IDENT:s1 COMMA:, IDENT:t1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:back RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s1:SongId
+              EXISTS t:Type
+                EXISTS b:Bandmate
+                  EXISTS s:SongId
+                    AND
+                      AND
+                        PRED Vocals(s, b, t)
+                        PRED Songs(s1, t1)
+                      EQ  s = s1
+            NOT
+              EXISTS s1:SongId
+                EXISTS t:Type
+                  EXISTS b:Bandmate
+                    EXISTS s:SongId
+                      AND
+                        AND
+                          AND
+                            PRED Vocals(s, b, t)
+                            PRED Songs(s1, t1)
+                          EQ  s = s1
+                        EQ  t = 'back'
+      Predicted FOL: ∃s : SongId ∃t : Title ( Songs(s, t) ∧ ¬∃b : Bandmate Vocals(s, b, back) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:t COLON:: IDENT:Title LPAR:( IDENT:Songs LPAR:( IDENT:s COMMA:, IDENT:t RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:back RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS t:Title
+              AND
+                PRED Songs(s, t)
+                NOT
+                  EXISTS b:Bandmate
+                    PRED Vocals(s, b, back<const>)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t1 : Title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Bandmate, global integer -> IntSort()
+        s : local SongId, global integer -> IntSort()
+        s1 : local SongId, global integer -> IntSort()
+        t : local Type, global text -> StringSort()
+        t1 : local Title, global text -> StringSort()
+      Predicted FOL:
+        b : local Bandmate, global integer -> IntSort()
+        s : local SongId, global integer -> IntSort()
+        t : local Title, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5421 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3717.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t1 : Title) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

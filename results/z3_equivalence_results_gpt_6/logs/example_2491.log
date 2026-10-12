@@ -1,0 +1,209 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2491.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2491.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3284 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which students in third grade are not taught by teacher COVIN JEROME? Give me the last names of the students.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Classroom = integer -> IntSort()
+        FirstName = text -> StringSort()
+        Grade = integer -> IntSort()
+        LastName = text -> StringSort()
+      symbols:
+        list(LastName, FirstName, Grade, Classroom)
+        teachers(LastName, FirstName, Classroom)
+        constant 3 : Grade
+        constant COVIN : FirstName
+        constant JEROME : LastName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : FirstName ∃g : Grade ∃c : Classroom ∃l1 : LastName ∃f1 : FirstName ∃c1 : Classroom ( (((list(l,f,g,c)) ∧ (teachers(l1,f1,c1))) ∧ (c = c1)) ∧ (((g = 3) ∧ (f1 <> 'COVIN')) ∧ (l1 <> 'JEROME')) )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:FirstName EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:c COLON:: IDENT:Classroom EXISTS:∃ IDENT:l1 COLON:: IDENT:LastName EXISTS:∃ IDENT:f1 COLON:: IDENT:FirstName EXISTS:∃ IDENT:c1 COLON:: IDENT:Classroom LPAR:( LPAR:( LPAR:( LPAR:( IDENT:list LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:teachers LPAR:( IDENT:l1 COMMA:, IDENT:f1 COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:g EQ:= NUM:3 RPAR:) AND:∧ LPAR:( IDENT:f1 NEQ:<> LIT:COVIN RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l1 NEQ:<> LIT:JEROME RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:FirstName
+            EXISTS g:Grade
+              EXISTS c:Classroom
+                EXISTS l1:LastName
+                  EXISTS f1:FirstName
+                    EXISTS c1:Classroom
+                      AND
+                        AND
+                          AND
+                            PRED list(l, f, g, c)
+                            PRED teachers(l1, f1, c1)
+                          EQ  c = c1
+                        AND
+                          AND
+                            EQ  g = 3
+                            NEQ  f1 != 'COVIN'
+                          NEQ  l1 != 'JEROME'
+      Predicted FOL: ∃f : FirstName ∃c : Classroom (list(l, f, 3, c) ∧ ¬teachers('JEROME', 'COVIN', c))
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:FirstName EXISTS:∃ IDENT:c COLON:: IDENT:Classroom LPAR:( IDENT:list LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, NUM:3 COMMA:, IDENT:c RPAR:) AND:∧ NOT:¬ IDENT:teachers LPAR:( LIT:JEROME COMMA:, LIT:COVIN COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:FirstName
+            EXISTS c:Classroom
+              AND
+                PRED list(l, f, 3, c)
+                NOT
+                  PRED teachers('JEROME', 'COVIN', c)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_LastName_0 : LastName   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Classroom, global integer -> IntSort()
+        c1 : local Classroom, global integer -> IntSort()
+        f : local FirstName, global text -> StringSort()
+        f1 : local FirstName, global text -> StringSort()
+        g : local Grade, global integer -> IntSort()
+        l : local LastName, global text -> StringSort()
+        l1 : local LastName, global text -> StringSort()
+      Predicted FOL:
+        c : local Classroom, global integer -> IntSort()
+        f : local FirstName, global text -> StringSort()
+        l : local LastName, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_f_1, gold_g_2, gold_c_3, gold_l1_4, gold_f1_5, gold_c1_6], And(And(And(P_list(FV_LastName_0, gold_f_1, gold_g_2, gold_c_3), P_teachers(gold_l1_4, gold_f1_5, gold_c1_6)), (gold_c_3 == gold_c1_6)), And(And((gold_g_2 == L_v_3_integer), (gold_f1_5 != L_COVIN)), (gold_l1_4 != L_JEROME))))
+      gold_skolem (witnesses WGOLD_f, WGOLD_g, WGOLD_c, WGOLD_l1, WGOLD_f1, WGOLD_c1):  And(And(And(P_list(FV_LastName_0, WGOLD_f, WGOLD_g, WGOLD_c), P_teachers(WGOLD_l1, WGOLD_f1, WGOLD_c1)), (WGOLD_c == WGOLD_c1)), And(And((WGOLD_g == L_v_3_integer), (WGOLD_f1 != L_COVIN)), (WGOLD_l1 != L_JEROME)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_f_1, predicted_c_2], And(P_list(FV_LastName_0, predicted_f_1, L_v_3_integer, predicted_c_2), Not(P_teachers(L_JEROME, L_COVIN, predicted_c_2))))
+      predicted_skolem (witnesses WPREDICTED_f, WPREDICTED_c):  And(P_list(FV_LastName_0, WPREDICTED_f, L_v_3_integer, WPREDICTED_c), Not(P_teachers(L_JEROME, L_COVIN, WPREDICTED_c)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 3 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'COVIN' at text -> L_COVIN = StringVal('COVIN')
+      literal 'JEROME' at text -> L_JEROME = StringVal('JEROME')
+      literal '3' at integer -> L_v_3_integer = IntVal(3)
+   0 sort axiom(s), 3 literal(s), 0 order(s) needing a definition; 743 lines, 28300 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2491.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_f, WGOLD_g, WGOLD_c, WGOLD_l1, WGOLD_f1, WGOLD_c1
+      claim: And(And(And(And(list(FV_LastName_0, WGOLD_f, WGOLD_g, WGOLD_c), teachers(WGOLD_l1, WGOLD_f1, WGOLD_c1)), WGOLD_c == WGOLD_c1), And(And(3 == WGOLD_g, WGOLD_f1 != "COVIN"), WGOLD_l1 != "JEROME")), Not(Exists([predicted_f_1, predicted_c_2], And(list(FV_LastName_0, predicted_f_1, 3, predicted_c_2), Not(teachers("JEROME", "COVIN", predicted_c_2))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.011 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 21 relation tuple(s) listed, 13 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          f : FirstName = ''
+          g : Grade = 3
+          c : Classroom = 2
+          l1 : LastName = ''
+          f1 : FirstName = ''
+          c1 : Classroom = 2
+        free (answer) variables:
+          FV_LastName_0 : LastName = ''
+        literals / constants:
+          COVIN : FirstName = 'COVIN'
+          JEROME : LastName = 'JEROME'
+          3 : Grade = 3
+        relations (each value tagged with the local sort of its position):
+          list(LastName, FirstName, Grade, Classroom):
+            list(LastName='', FirstName='', Grade=0, Classroom=4)
+            list(LastName='', FirstName='', Grade=2, Classroom=0)
+            list(LastName='', FirstName='', Grade=3, Classroom=2)
+            list(LastName='', FirstName='A', Grade=0, Classroom=0)
+            list(LastName='', FirstName='COVIN', Grade=3, Classroom=2)
+            list(LastName='', FirstName='JEROME', Grade=0, Classroom=0)
+            list(LastName='A', FirstName='B', Grade=4, Classroom=3)
+            list(LastName='B', FirstName='', Grade=0, Classroom=0)
+            list(LastName='COVIN', FirstName='', Grade=0, Classroom=0)
+            list(LastName='JEROME', FirstName='', Grade=3, Classroom=2)
+            list(LastName='JEROME', FirstName='COVIN', Grade=3, Classroom=2)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          teachers(LastName, FirstName, Classroom):
+            teachers(LastName='', FirstName='', Classroom=2)
+            teachers(LastName='', FirstName='', Classroom=4)
+            teachers(LastName='', FirstName='A', Classroom=0)
+            teachers(LastName='', FirstName='COVIN', Classroom=2)
+            teachers(LastName='', FirstName='JEROME', Classroom=0)
+            teachers(LastName='A', FirstName='B', Classroom=3)
+            teachers(LastName='B', FirstName='', Classroom=0)
+            teachers(LastName='COVIN', FirstName='', Classroom=0)
+            teachers(LastName='JEROME', FirstName='', Classroom=2)
+            teachers(LastName='JEROME', FirstName='COVIN', Classroom=2)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Classroom : {0, 2, 3, 4}
+          FirstName : {'', 'A', 'B', 'COVIN', 'JEROME'}
+          Grade     : {0, 2, 3, 4}
+          LastName  : {'', 'A', 'B', 'COVIN', 'JEROME'}
+        values shared across local sorts (joins):
+          0 : Classroom, Grade
+          2 : Classroom, Grade
+          3 : Classroom, Grade
+          4 : Classroom, Grade
+          '' : FirstName, LastName
+          'A' : FirstName, LastName
+          'B' : FirstName, LastName
+          'COVIN' : FirstName, LastName
+          'JEROME' : FirstName, LastName
+   [R2] took 0.100 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_f, WPREDICTED_c
+      claim: And(And(list(FV_LastName_0, WPREDICTED_f, 3, WPREDICTED_c), Not(teachers("JEROME", "COVIN", WPREDICTED_c))), Not(Exists([gold_f_1, gold_g_2, gold_c_3, gold_l1_4, gold_f1_5, gold_c1_6], And(And(And(list(FV_LastName_0, gold_f_1, gold_g_2, gold_c_3), teachers(gold_l1_4, gold_f1_5, gold_c1_6)), gold_c_3 == gold_c1_6), And(And(3 == gold_g_2, gold_f1_5 != "COVIN"), gold_l1_4 != "JEROME")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 7 relation tuple(s) listed, 5 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          f : FirstName = 'JEROME'
+          c : Classroom = 2
+        free (answer) variables:
+          FV_LastName_0 : LastName = 'JEROME'
+        literals / constants:
+          COVIN : FirstName = 'COVIN'
+          JEROME : LastName = 'JEROME'
+          3 : Grade = 3
+        relations (each value tagged with the local sort of its position):
+          list(LastName, FirstName, Grade, Classroom):
+            list(LastName='', FirstName='', Grade=0, Classroom=4)
+            list(LastName='', FirstName='', Grade=2, Classroom=0)
+            list(LastName='', FirstName='!0!', Grade=0, Classroom=0)
+            list(LastName='!0!', FirstName='', Grade=4, Classroom=3)
+            list(LastName='COVIN', FirstName='', Grade=0, Classroom=0)
+            list(LastName='JEROME', FirstName='COVIN', Grade=3, Classroom=2)
+            list(LastName='JEROME', FirstName='JEROME', Grade=3, Classroom=2)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          teachers(LastName, FirstName, Classroom):
+            <empty over the values of this model>
+        local-sort domains (values occurring at positions of each local sort):
+          Classroom : {0, 2, 3, 4}
+          FirstName : {'', '!0!', 'COVIN', 'JEROME'}
+          Grade     : {0, 2, 3, 4}
+          LastName  : {'', '!0!', 'COVIN', 'JEROME'}
+        values shared across local sorts (joins):
+          0 : Classroom, Grade
+          2 : Classroom, Grade
+          3 : Classroom, Grade
+          4 : Classroom, Grade
+          '!0!' : FirstName, LastName
+          '' : FirstName, LastName
+          'COVIN' : FirstName, LastName
+          'JEROME' : FirstName, LastName
+   [R3] took 0.057 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

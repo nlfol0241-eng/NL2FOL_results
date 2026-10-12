@@ -1,0 +1,128 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2816.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2816.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5665 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of customers who have used either the service "Close a policy" or the service "Upgrade a policy".
+   [G1] took 0.004 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+      local sorts:
+        Customer_ID = integer -> IntSort()
+        Customer_name = varchar(40) -> StringSort()
+        FNOL_ID = integer -> IntSort()
+        Policy_ID = integer -> IntSort()
+        Service_ID = integer -> IntSort()
+        Service_name = varchar(40) -> StringSort()
+      symbols:
+        Customers(Customer_ID, Customer_name)
+        First_Notification_of_Loss(FNOL_ID, Customer_ID, Policy_ID, Service_ID)
+        Services(Service_ID, Service_name)
+        constant Close a policy : Service_name
+        constant Upgrade a policy : Service_name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Customer_ID ∃f : FNOL_ID ∃c2 : Customer_ID ∃p : Policy_ID ∃s : Service_ID ∃s1 : Service_ID ∃s2 : Service_name ( (((((Customers(c,c1)) ∧ (First_Notification_of_Loss(f,c2,p,s))) ∧ (c = c2)) ∧ (Services(s1,s2))) ∧ (s = s1)) ∧ ((s2 = 'Close a policy') ∨ (s2 = 'Upgrade a policy')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:f COLON:: IDENT:FNOL_ID EXISTS:∃ IDENT:c2 COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Service_ID EXISTS:∃ IDENT:s2 COLON:: IDENT:Service_name LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:First_Notification_of_Loss LPAR:( IDENT:f COMMA:, IDENT:c2 COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Services LPAR:( IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s2 EQ:= LIT:Close a policy RPAR:) OR:∨ LPAR:( IDENT:s2 EQ:= LIT:Upgrade a policy RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Customer_ID
+            EXISTS f:FNOL_ID
+              EXISTS c2:Customer_ID
+                EXISTS p:Policy_ID
+                  EXISTS s:Service_ID
+                    EXISTS s1:Service_ID
+                      EXISTS s2:Service_name
+                        AND
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED Customers(c, c1)
+                                  PRED First_Notification_of_Loss(f, c2, p, s)
+                                EQ  c = c2
+                              PRED Services(s1, s2)
+                            EQ  s = s1
+                          OR
+                            EQ  s2 = 'Close a policy'
+                            EQ  s2 = 'Upgrade a policy'
+      Predicted FOL: ∃c : Customer_ID ∃f : FNOL_ID ∃p : Policy_ID ∃s : Service_ID (Customers(c, name) ∧ First_Notification_of_Loss(f, c, p, s) ∧ (Services(s, 'Close a policy') ∨ Services(s, 'Upgrade a policy')))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:f COLON:: IDENT:FNOL_ID EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:name RPAR:) AND:∧ IDENT:First_Notification_of_Loss LPAR:( IDENT:f COMMA:, IDENT:c COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) AND:∧ LPAR:( IDENT:Services LPAR:( IDENT:s COMMA:, LIT:Close a policy RPAR:) OR:∨ IDENT:Services LPAR:( IDENT:s COMMA:, LIT:Upgrade a policy RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Customer_ID
+            EXISTS f:FNOL_ID
+              EXISTS p:Policy_ID
+                EXISTS s:Service_ID
+                  AND
+                    PRED Customers(c, name)
+                    PRED First_Notification_of_Loss(f, c, p, s)
+                    OR
+                      PRED Services(s, 'Close a policy')
+                      PRED Services(s, 'Upgrade a policy')
+   [G3] took 0.018 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Customer_name_0 : Customer_name   Gold c1 <-> Predicted name
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        c1 : local Customer_name, global varchar(40) -> StringSort()
+        c2 : local Customer_ID, global integer -> IntSort()
+        f : local FNOL_ID, global integer -> IntSort()
+        p : local Policy_ID, global integer -> IntSort()
+        s : local Service_ID, global integer -> IntSort()
+        s1 : local Service_ID, global integer -> IntSort()
+        s2 : local Service_name, global varchar(40) -> StringSort()
+      Predicted FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        f : local FNOL_ID, global integer -> IntSort()
+        name : local Customer_name, global varchar(40) -> StringSort()
+        p : local Policy_ID, global integer -> IntSort()
+        s : local Service_ID, global integer -> IntSort()
+   [G5] took 0.003 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_f_2, gold_c2_3, gold_p_4, gold_s_5, gold_s1_6, gold_s2_7], And(D_varchar_40_(gold_s2_7), And(And(And(And(And(P_Customers(gold_c_1, FV_Customer_name_0), P_First_Notification_of_Loss(gold_f_2, gold_c2_3, gold_p_4, gold_s_5)), (gold_c_1 == gold_c2_3)), P_Services(gold_s1_6, gold_s2_7)), (gold_s_5 == gold_s1_6)), Or((gold_s2_7 == L_Close_a_policy), (gold_s2_7 == L_Upgrade_a_policy)))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_f, WGOLD_c2, WGOLD_p, WGOLD_s, WGOLD_s1, WGOLD_s2):  And(D_varchar_40_(WGOLD_s2), And(And(And(And(And(P_Customers(WGOLD_c, FV_Customer_name_0), P_First_Notification_of_Loss(WGOLD_f, WGOLD_c2, WGOLD_p, WGOLD_s)), (WGOLD_c == WGOLD_c2)), P_Services(WGOLD_s1, WGOLD_s2)), (WGOLD_s == WGOLD_s1)), Or((WGOLD_s2 == L_Close_a_policy), (WGOLD_s2 == L_Upgrade_a_policy))))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_f_2, predicted_p_3, predicted_s_4], And(P_Customers(predicted_c_1, FV_Customer_name_0), P_First_Notification_of_Loss(predicted_f_2, predicted_c_1, predicted_p_3, predicted_s_4), Or(And(P_Services(predicted_s_4, L_Close_a_policy), D_varchar_40_(L_Close_a_policy)), And(P_Services(predicted_s_4, L_Upgrade_a_policy), D_varchar_40_(L_Upgrade_a_policy)))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_f, WPREDICTED_p, WPREDICTED_s):  And(P_Customers(WPREDICTED_c, FV_Customer_name_0), P_First_Notification_of_Loss(WPREDICTED_f, WPREDICTED_c, WPREDICTED_p, WPREDICTED_s), Or(And(P_Services(WPREDICTED_s, L_Close_a_policy), D_varchar_40_(L_Close_a_policy)), And(P_Services(WPREDICTED_s, L_Upgrade_a_policy), D_varchar_40_(L_Upgrade_a_policy))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.003 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Close a policy' at varchar(40) -> L_Close_a_policy = StringVal('Close a policy')
+      literal 'Upgrade a policy' at varchar(40) -> L_Upgrade_a_policy = StringVal('Upgrade a policy')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 759 lines, 30401 bytes
+   [G7] took 0.002 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2816.py
+   [G8] took 0.025 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Customer_name_0) <= 40
+   [R1] took 0.004 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_f, WGOLD_c2, WGOLD_p, WGOLD_s, WGOLD_s1, WGOLD_s2
+      claim: And(And(Length(WGOLD_s2) <= 40, And(And(And(And(And(Customers(WGOLD_c, FV_Customer_name_0), First_Notification_of_Loss(WGOLD_f, WGOLD_c2, WGOLD_p, WGOLD_s)), WGOLD_c == WGOLD_c2), Services(WGOLD_s1, WGOLD_s2)), WGOLD_s == WGOLD_s1), Or(WGOLD_s2 == "Close a policy", WGOLD_s2 == "Upgrade a policy"))), Not(Exists([predicted_c_1, predicted_f_2, predicted_p_3, predicted_s_4], And(Customers(predicted_c_1, FV_Customer_name_0), First_Notification_of_Loss(predicted_f_2, predicted_c_1, predicted_p_3, predicted_s_4), Or(And(Services(predicted_s_4, "Close a policy"), Length("Close a policy") <= 40), And(Services(predicted_s_4, "Upgrade a policy"), Length("Upgrade a policy") <= 40))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.025 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.085 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_f, WPREDICTED_p, WPREDICTED_s
+      claim: And(And(Customers(WPREDICTED_c, FV_Customer_name_0), First_Notification_of_Loss(WPREDICTED_f, WPREDICTED_c, WPREDICTED_p, WPREDICTED_s), Or(And(Services(WPREDICTED_s, "Close a policy"), Length("Close a policy") <= 40), And(Services(WPREDICTED_s, "Upgrade a policy"), Length("Upgrade a policy") <= 40))), Not(Exists([gold_c_1, gold_f_2, gold_c2_3, gold_p_4, gold_s_5, gold_s1_6, gold_s2_7], And(Length(gold_s2_7) <= 40, And(And(And(And(And(Customers(gold_c_1, FV_Customer_name_0), First_Notification_of_Loss(gold_f_2, gold_c2_3, gold_p_4, gold_s_5)), gold_c_1 == gold_c2_3), Services(gold_s1_6, gold_s2_7)), gold_s_5 == gold_s1_6), Or(gold_s2_7 == "Close a policy", gold_s2_7 == "Upgrade a policy"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.020 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.057 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

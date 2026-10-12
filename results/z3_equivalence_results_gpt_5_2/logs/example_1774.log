@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1774.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1774.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2419 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the age of the doctor named Zach?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        age = integer -> IntSort()
+        city = text -> StringSort()
+        gender = text -> StringSort()
+        job = text -> StringSort()
+        name = varchar(20) -> StringSort()
+      symbols:
+        Person(name, age, city, gender, job)
+        constant Zach : name
+        constant doctor : job
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃c : city ∃g : gender ∃j : job ( (Person(n,a,c,g,j)) ∧ ((j = 'doctor') ∧ (n = 'Zach')) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job LPAR:( LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:j EQ:= LIT:doctor RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Zach RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS c:city
+              EXISTS g:gender
+                EXISTS j:job
+                  AND
+                    PRED Person(n, a, c, g, j)
+                    AND
+                      EQ  j = 'doctor'
+                      EQ  n = 'Zach'
+      Predicted FOL: ∃n:name ∃c:city ∃g:gender (Person('Zach', age, c, g, doctor))
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender LPAR:( IDENT:Person LPAR:( LIT:Zach COMMA:, IDENT:age COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:doctor RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS c:city
+              EXISTS g:gender
+                PRED Person('Zach', age, c, g, doctor<const>)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_age_0 : age   Gold a <-> Predicted age
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        g : local gender, global text -> StringSort()
+        j : local job, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+      Predicted FOL:
+        age : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        g : local gender, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_c_2, gold_g_3, gold_j_4], And(D_varchar_20_(gold_n_1), And(P_Person(gold_n_1, FV_age_0, gold_c_2, gold_g_3, gold_j_4), And((gold_j_4 == L_doctor), (gold_n_1 == L_Zach)))))
+      gold_skolem (witnesses WGOLD_n, WGOLD_c, WGOLD_g, WGOLD_j):  And(D_varchar_20_(WGOLD_n), And(P_Person(WGOLD_n, FV_age_0, WGOLD_c, WGOLD_g, WGOLD_j), And((WGOLD_j == L_doctor), (WGOLD_n == L_Zach))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_n_1, predicted_c_2, predicted_g_3], And(D_varchar_20_(predicted_n_1), And(P_Person(L_Zach, FV_age_0, predicted_c_2, predicted_g_3, L_doctor), D_varchar_20_(L_Zach))))
+      predicted_skolem (witnesses WPREDICTED_n, WPREDICTED_c, WPREDICTED_g):  And(D_varchar_20_(WPREDICTED_n), And(P_Person(L_Zach, FV_age_0, WPREDICTED_c, WPREDICTED_g, L_doctor), D_varchar_20_(L_Zach)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Zach' at varchar(20) -> L_Zach = StringVal('Zach')
+      literal 'doctor' at text -> L_doctor = StringVal('doctor')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 740 lines, 27590 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1774.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_c, WGOLD_g, WGOLD_j
+      claim: And(And(Length(WGOLD_n) <= 20, And(Person(WGOLD_n, FV_age_0, WGOLD_c, WGOLD_g, WGOLD_j), And(WGOLD_j == "doctor", WGOLD_n == "Zach"))), Not(Exists([predicted_n_1, predicted_c_2, predicted_g_3], And(Length(predicted_n_1) <= 20, And(Person("Zach", FV_age_0, predicted_c_2, predicted_g_3, "doctor"), Length("Zach") <= 20)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.021 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_n, WPREDICTED_c, WPREDICTED_g
+      claim: And(And(Length(WPREDICTED_n) <= 20, And(Person("Zach", FV_age_0, WPREDICTED_c, WPREDICTED_g, "doctor"), Length("Zach") <= 20)), Not(Exists([gold_n_1, gold_c_2, gold_g_3, gold_j_4], And(Length(gold_n_1) <= 20, And(Person(gold_n_1, FV_age_0, gold_c_2, gold_g_3, gold_j_4), And(gold_j_4 == "doctor", gold_n_1 == "Zach"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.012 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

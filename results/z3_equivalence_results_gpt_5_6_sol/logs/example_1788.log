@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1788.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1788.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4931 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the prices of the products named "Dining" or "Trading Policy".
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        decimal(20,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -10000000000000000, x < 10000000000000000); 20 digits, 4 after the point]
+      local sorts:
+        Product_ID = integer -> IntSort()
+        Product_Name = varchar(255) -> StringSort()
+        Product_Price = decimal(20,4) -> RealSort()
+        Product_Type_Code = char(15) -> StringSort()
+      symbols:
+        Products(Product_ID, Product_Type_Code, Product_Name, Product_Price)
+        constant Dining : Product_Name
+        constant Trading Policy : Product_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Product_ID ∃p1 : Product_Type_Code ∃p2 : Product_Name ( (Products(p,p1,p2,p3)) ∧ ((p2 = 'Dining') ∨ (p2 = 'Trading Policy')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Product_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Product_Type_Code EXISTS:∃ IDENT:p2 COLON:: IDENT:Product_Name LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:p2 EQ:= LIT:Dining RPAR:) OR:∨ LPAR:( IDENT:p2 EQ:= LIT:Trading Policy RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Product_ID
+            EXISTS p1:Product_Type_Code
+              EXISTS p2:Product_Name
+                AND
+                  PRED Products(p, p1, p2, p3)
+                  OR
+                    EQ  p2 = 'Dining'
+                    EQ  p2 = 'Trading Policy'
+      Predicted FOL: ∃id : Product_ID ∃type : Product_Type_Code ∃name : Product_Name (Products(id, type, name, price) ∧ (name = 'Dining' ∨ name = 'Trading Policy'))
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Product_ID EXISTS:∃ IDENT:type COLON:: IDENT:Product_Type_Code EXISTS:∃ IDENT:name COLON:: IDENT:Product_Name LPAR:( IDENT:Products LPAR:( IDENT:id COMMA:, IDENT:type COMMA:, IDENT:name COMMA:, IDENT:price RPAR:) AND:∧ LPAR:( IDENT:name EQ:= LIT:Dining OR:∨ IDENT:name EQ:= LIT:Trading Policy RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:Product_ID
+            EXISTS type:Product_Type_Code
+              EXISTS name:Product_Name
+                AND
+                  PRED Products(id, type, name, price)
+                  OR
+                    EQ  name = 'Dining'
+                    EQ  name = 'Trading Policy'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Product_Price_0 : Product_Price   Gold p3 <-> Predicted price
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local Product_ID, global integer -> IntSort()
+        p1 : local Product_Type_Code, global char(15) -> StringSort()
+        p2 : local Product_Name, global varchar(255) -> StringSort()
+        p3 : local Product_Price, global decimal(20,4) -> RealSort()
+      Predicted FOL:
+        id : local Product_ID, global integer -> IntSort()
+        name : local Product_Name, global varchar(255) -> StringSort()
+        price : local Product_Price, global decimal(20,4) -> RealSort()
+        type : local Product_Type_Code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p1_2, gold_p2_3], And(D_char_15_(gold_p1_2), D_varchar_255_(gold_p2_3), And(P_Products(gold_p_1, gold_p1_2, gold_p2_3, FV_Product_Price_0), Or((gold_p2_3 == L_Dining), (gold_p2_3 == L_Trading_Policy)))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p1, WGOLD_p2):  And(D_char_15_(WGOLD_p1), D_varchar_255_(WGOLD_p2), And(P_Products(WGOLD_p, WGOLD_p1, WGOLD_p2, FV_Product_Price_0), Or((WGOLD_p2 == L_Dining), (WGOLD_p2 == L_Trading_Policy))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_type_2, predicted_name_3], And(D_char_15_(predicted_type_2), D_varchar_255_(predicted_name_3), And(P_Products(predicted_id_1, predicted_type_2, predicted_name_3, FV_Product_Price_0), Or((predicted_name_3 == L_Dining), (predicted_name_3 == L_Trading_Policy)))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_type, WPREDICTED_name):  And(D_char_15_(WPREDICTED_type), D_varchar_255_(WPREDICTED_name), And(P_Products(WPREDICTED_id, WPREDICTED_type, WPREDICTED_name, FV_Product_Price_0), Or((WPREDICTED_name == L_Dining), (WPREDICTED_name == L_Trading_Policy))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Dining' at varchar(255) -> L_Dining = StringVal('Dining')
+      literal 'Trading Policy' at varchar(255) -> L_Trading_Policy = StringVal('Trading Policy')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 744 lines, 28706 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1788.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_Product_Price_0*10000), FV_Product_Price_0 > -10000000000000000, FV_Product_Price_0 < 10000000000000000)
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p1, WGOLD_p2
+      claim: And(And(Length(WGOLD_p1) <= 15, Length(WGOLD_p2) <= 255, And(Products(WGOLD_p, WGOLD_p1, WGOLD_p2, FV_Product_Price_0), Or(WGOLD_p2 == "Dining", WGOLD_p2 == "Trading Policy"))), Not(Exists([predicted_id_1, predicted_type_2, predicted_name_3], And(Length(predicted_type_2) <= 15, Length(predicted_name_3) <= 255, And(Products(predicted_id_1, predicted_type_2, predicted_name_3, FV_Product_Price_0), Or(predicted_name_3 == "Dining", predicted_name_3 == "Trading Policy"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.022 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_type, WPREDICTED_name
+      claim: And(And(Length(WPREDICTED_type) <= 15, Length(WPREDICTED_name) <= 255, And(Products(WPREDICTED_id, WPREDICTED_type, WPREDICTED_name, FV_Product_Price_0), Or(WPREDICTED_name == "Dining", WPREDICTED_name == "Trading Policy"))), Not(Exists([gold_p_1, gold_p1_2, gold_p2_3], And(Length(gold_p1_2) <= 15, Length(gold_p2_3) <= 255, And(Products(gold_p_1, gold_p1_2, gold_p2_3, FV_Product_Price_0), Or(gold_p2_3 == "Dining", gold_p2_3 == "Trading Policy"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.016 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

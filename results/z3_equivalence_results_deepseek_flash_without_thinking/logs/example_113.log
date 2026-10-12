@@ -1,0 +1,71 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_113.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_113.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4605 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List each charge type and its amount.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+      local sorts:
+        charge_amount = decimal(19,4) -> RealSort()
+        charge_id = integer -> IntSort()
+        charge_type = varchar(10) -> StringSort()
+      symbols:
+        Charges(charge_id, charge_type, charge_amount)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : charge_id ( Charges(c,c1,c2) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:charge_id LPAR:( IDENT:Charges LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:charge_id
+            PRED Charges(c, c1, c2)
+      Predicted FOL: ∀x_charge_id : charge_id ∀x_charge_type : charge_type ∀x_charge_amount : charge_amount (Charges(x_charge_id, x_charge_type, x_charge_amount) → True)
+        tokens: FORALL:∀ IDENT:x_charge_id COLON:: IDENT:charge_id FORALL:∀ IDENT:x_charge_type COLON:: IDENT:charge_type FORALL:∀ IDENT:x_charge_amount COLON:: IDENT:charge_amount LPAR:( IDENT:Charges LPAR:( IDENT:x_charge_id COMMA:, IDENT:x_charge_type COMMA:, IDENT:x_charge_amount RPAR:) IMPL:→ TRUE:True RPAR:) EOF
+        AST:
+          FORALL x_charge_id:charge_id
+            FORALL x_charge_type:charge_type
+              FORALL x_charge_amount:charge_amount
+                IMPLIES
+                  PRED Charges(x_charge_id, x_charge_type, x_charge_amount)
+                  TRUE
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (c1 : charge_type, c2 : charge_amount) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local charge_id, global integer -> IntSort()
+        c1 : local charge_type, global varchar(10) -> StringSort()
+        c2 : local charge_amount, global decimal(19,4) -> RealSort()
+      Predicted FOL:
+        x_charge_amount : local charge_amount, global decimal(19,4) -> RealSort()
+        x_charge_id : local charge_id, global integer -> IntSort()
+        x_charge_type : local charge_type, global varchar(10) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5315 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_113.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (c1 : charge_type, c2 : charge_amount) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,127 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2873.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2873.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9164 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of physicians who are affiliated with Surgery or Psychiatry department.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 3 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        boolean -> BoolSort()
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        Department = integer -> IntSort()
+        DepartmentID = integer -> IntSort()
+        EmployeeID = integer -> IntSort()
+        Head = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        PrimaryAffiliation = boolean -> BoolSort()
+        SSN = integer -> IntSort()
+      symbols:
+        Affiliated_With(Physician, Department, PrimaryAffiliation)
+        Department(DepartmentID, Name, Head)
+        Physician(EmployeeID, Name, Position, SSN)
+        constant Psychiatry : Name
+        constant Surgery : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : EmployeeID ∃p : Position ∃s : SSN ∃p1 : Physician ∃d : Department ∃p2 : PrimaryAffiliation ∃d1 : DepartmentID ∃n1 : Name ∃h : Head ( (((((Physician(e,n,p,s)) ∧ (Affiliated_With(p1,d,p2))) ∧ (e = p1)) ∧ (Department(d1,n1,h))) ∧ (d = d1)) ∧ ((n1 = 'Surgery') ∨ (n1 = 'Psychiatry')) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:p1 COLON:: IDENT:Physician EXISTS:∃ IDENT:d COLON:: IDENT:Department EXISTS:∃ IDENT:p2 COLON:: IDENT:PrimaryAffiliation EXISTS:∃ IDENT:d1 COLON:: IDENT:DepartmentID EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Head LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Affiliated_With LPAR:( IDENT:p1 COMMA:, IDENT:d COMMA:, IDENT:p2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Department LPAR:( IDENT:d1 COMMA:, IDENT:n1 COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n1 EQ:= LIT:Surgery RPAR:) OR:∨ LPAR:( IDENT:n1 EQ:= LIT:Psychiatry RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:EmployeeID
+            EXISTS p:Position
+              EXISTS s:SSN
+                EXISTS p1:Physician
+                  EXISTS d:Department
+                    EXISTS p2:PrimaryAffiliation
+                      EXISTS d1:DepartmentID
+                        EXISTS n1:Name
+                          EXISTS h:Head
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      PRED Physician(e, n, p, s)
+                                      PRED Affiliated_With(p1, d, p2)
+                                    EQ  e = p1
+                                  PRED Department(d1, n1, h)
+                                EQ  d = d1
+                              OR
+                                EQ  n1 = 'Surgery'
+                                EQ  n1 = 'Psychiatry'
+      Predicted FOL: ∃pid:EmployeeID ∃pos:Position ∃ssn:SSN ( Physician(pid, n, pos, ssn) ∧ ∃d:DepartmentID ∃head:Head ( Department(d, Surgery, head) ∧ Affiliated_With(pid, d, pa) ) ) ∨ ∃pid:EmployeeID ∃pos:Position ∃ssn:SSN ( Physician(pid, n, pos, ssn) ∧ ∃d:DepartmentID ∃head:Head ( Department(d, Psychiatry, head) ∧ Affiliated_With(pid, d, pa) ) )
+        tokens: EXISTS:∃ IDENT:pid COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:pos COLON:: IDENT:Position EXISTS:∃ IDENT:ssn COLON:: IDENT:SSN LPAR:( IDENT:Physician LPAR:( IDENT:pid COMMA:, IDENT:n COMMA:, IDENT:pos COMMA:, IDENT:ssn RPAR:) AND:∧ EXISTS:∃ IDENT:d COLON:: IDENT:DepartmentID EXISTS:∃ IDENT:head COLON:: IDENT:Head LPAR:( IDENT:Department LPAR:( IDENT:d COMMA:, IDENT:Surgery COMMA:, IDENT:head RPAR:) AND:∧ IDENT:Affiliated_With LPAR:( IDENT:pid COMMA:, IDENT:d COMMA:, IDENT:pa RPAR:) RPAR:) RPAR:) OR:∨ EXISTS:∃ IDENT:pid COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:pos COLON:: IDENT:Position EXISTS:∃ IDENT:ssn COLON:: IDENT:SSN LPAR:( IDENT:Physician LPAR:( IDENT:pid COMMA:, IDENT:n COMMA:, IDENT:pos COMMA:, IDENT:ssn RPAR:) AND:∧ EXISTS:∃ IDENT:d COLON:: IDENT:DepartmentID EXISTS:∃ IDENT:head COLON:: IDENT:Head LPAR:( IDENT:Department LPAR:( IDENT:d COMMA:, IDENT:Psychiatry COMMA:, IDENT:head RPAR:) AND:∧ IDENT:Affiliated_With LPAR:( IDENT:pid COMMA:, IDENT:d COMMA:, IDENT:pa RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS pid:EmployeeID
+            EXISTS pos:Position
+              EXISTS ssn:SSN
+                OR
+                  AND
+                    PRED Physician(pid, n, pos, ssn)
+                    EXISTS d:DepartmentID
+                      EXISTS head:Head
+                        AND
+                          PRED Department(d, Surgery<const>, head)
+                          PRED Affiliated_With(pid, d, pa)
+                  EXISTS pid:EmployeeID
+                    EXISTS pos:Position
+                      EXISTS ssn:SSN
+                        AND
+                          PRED Physician(pid, n, pos, ssn)
+                          EXISTS d:DepartmentID
+                            EXISTS head:Head
+                              AND
+                                PRED Department(d, Psychiatry<const>, head)
+                                PRED Affiliated_With(pid, d, pa)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 2 (n : Name, pa : PrimaryAffiliation): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Department, global integer -> IntSort()
+        d1 : local DepartmentID, global integer -> IntSort()
+        e : local EmployeeID, global integer -> IntSort()
+        h : local Head, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        n1 : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        p1 : local Physician, global integer -> IntSort()
+        p2 : local PrimaryAffiliation, global boolean -> BoolSort()
+        s : local SSN, global integer -> IntSort()
+      Predicted FOL:
+        d : local DepartmentID, global integer -> IntSort()
+        head : local Head, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        pa : local PrimaryAffiliation, global boolean -> BoolSort()
+        pid : local EmployeeID, global integer -> IntSort()
+        pos : local Position, global varchar(30) -> StringSort()
+        ssn : local SSN, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5848 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2873.py
+   [G8] took 0.029 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 2 (n : Name, pa : PrimaryAffiliation): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

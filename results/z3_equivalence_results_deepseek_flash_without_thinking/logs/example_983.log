@@ -1,0 +1,64 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_983.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_983.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2956 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the description of all the colors.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        color_code = varchar(15) -> StringSort()
+        color_description = varchar(80) -> StringSort()
+      symbols:
+        Ref_Colors(color_code, color_description)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : color_code ( Ref_Colors(c,c1) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:color_code LPAR:( IDENT:Ref_Colors LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:color_code
+            PRED Ref_Colors(c, c1)
+      Predicted FOL: ∃x : color_code ∃y : color_description Ref_Colors(x, y)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:color_code EXISTS:∃ IDENT:y COLON:: IDENT:color_description IDENT:Ref_Colors LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) EOF
+        AST:
+          EXISTS x:color_code
+            EXISTS y:color_description
+              PRED Ref_Colors(x, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c1 : color_description) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local color_code, global varchar(15) -> StringSort()
+        c1 : local color_description, global varchar(80) -> StringSort()
+      Predicted FOL:
+        x : local color_code, global varchar(15) -> StringSort()
+        y : local color_description, global varchar(80) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5193 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_983.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c1 : color_description) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

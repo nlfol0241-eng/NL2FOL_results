@@ -1,0 +1,119 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1135.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1135.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4907 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the first name middle name and last name of all staff.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        integer -> IntSort()
+      local sorts:
+        date_joined_staff = datetime -> IntSort()
+        date_left_staff = datetime -> IntSort()
+        date_of_birth = datetime -> IntSort()
+        first_name = varchar(80) -> StringSort()
+        last_name = varchar(80) -> StringSort()
+        middle_name = varchar(80) -> StringSort()
+        nickname = varchar(80) -> StringSort()
+        staff_address_id = integer -> IntSort()
+        staff_id = integer -> IntSort()
+      symbols:
+        Staff(staff_id, staff_address_id, nickname, first_name, middle_name, last_name, date_of_birth, date_joined_staff, date_left_staff)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : staff_id ∃s1 : staff_address_id ∃n : nickname ∃d : date_of_birth ∃d1 : date_joined_staff ∃d2 : date_left_staff ( Staff(s,s1,n,f,m,l,d,d1,d2) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:staff_id EXISTS:∃ IDENT:s1 COLON:: IDENT:staff_address_id EXISTS:∃ IDENT:n COLON:: IDENT:nickname EXISTS:∃ IDENT:d COLON:: IDENT:date_of_birth EXISTS:∃ IDENT:d1 COLON:: IDENT:date_joined_staff EXISTS:∃ IDENT:d2 COLON:: IDENT:date_left_staff LPAR:( IDENT:Staff LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:m COMMA:, IDENT:l COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:staff_id
+            EXISTS s1:staff_address_id
+              EXISTS n:nickname
+                EXISTS d:date_of_birth
+                  EXISTS d1:date_joined_staff
+                    EXISTS d2:date_left_staff
+                      PRED Staff(s, s1, n, f, m, l, d, d1, d2)
+      Predicted FOL: ∃s : staff_id ∃a : staff_address_id ∃n : nickname ∃b : date_of_birth ∃j : date_joined_staff ∃l : date_left_staff (Staff(s, a, n, f, m, t, b, j, l))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:staff_id EXISTS:∃ IDENT:a COLON:: IDENT:staff_address_id EXISTS:∃ IDENT:n COLON:: IDENT:nickname EXISTS:∃ IDENT:b COLON:: IDENT:date_of_birth EXISTS:∃ IDENT:j COLON:: IDENT:date_joined_staff EXISTS:∃ IDENT:l COLON:: IDENT:date_left_staff LPAR:( IDENT:Staff LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:m COMMA:, IDENT:t COMMA:, IDENT:b COMMA:, IDENT:j COMMA:, IDENT:l RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:staff_id
+            EXISTS a:staff_address_id
+              EXISTS n:nickname
+                EXISTS b:date_of_birth
+                  EXISTS j:date_joined_staff
+                    EXISTS l:date_left_staff
+                      PRED Staff(s, a, n, f, m, t, b, j, l)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_first_name_0 : first_name   Gold f <-> Predicted f
+      FV_last_name_0 : last_name   Gold l <-> Predicted t
+      FV_middle_name_0 : middle_name   Gold m <-> Predicted m
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_of_birth, global datetime -> IntSort()
+        d1 : local date_joined_staff, global datetime -> IntSort()
+        d2 : local date_left_staff, global datetime -> IntSort()
+        f : local first_name, global varchar(80) -> StringSort()
+        l : local last_name, global varchar(80) -> StringSort()
+        m : local middle_name, global varchar(80) -> StringSort()
+        n : local nickname, global varchar(80) -> StringSort()
+        s : local staff_id, global integer -> IntSort()
+        s1 : local staff_address_id, global integer -> IntSort()
+      Predicted FOL:
+        a : local staff_address_id, global integer -> IntSort()
+        b : local date_of_birth, global datetime -> IntSort()
+        f : local first_name, global varchar(80) -> StringSort()
+        j : local date_joined_staff, global datetime -> IntSort()
+        l : local date_left_staff, global datetime -> IntSort()
+        m : local middle_name, global varchar(80) -> StringSort()
+        n : local nickname, global varchar(80) -> StringSort()
+        s : local staff_id, global integer -> IntSort()
+        t : local last_name, global varchar(80) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_s1_2, gold_n_3, gold_d_4, gold_d1_5, gold_d2_6], And(D_varchar_80_(gold_n_3), P_Staff(gold_s_1, gold_s1_2, gold_n_3, FV_first_name_0, FV_middle_name_0, FV_last_name_0, gold_d_4, gold_d1_5, gold_d2_6)))
+      gold_skolem (witnesses WGOLD_s, WGOLD_s1, WGOLD_n, WGOLD_d, WGOLD_d1, WGOLD_d2):  And(D_varchar_80_(WGOLD_n), P_Staff(WGOLD_s, WGOLD_s1, WGOLD_n, FV_first_name_0, FV_middle_name_0, FV_last_name_0, WGOLD_d, WGOLD_d1, WGOLD_d2))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_a_2, predicted_n_3, predicted_b_4, predicted_j_5, predicted_l_6], And(D_varchar_80_(predicted_n_3), P_Staff(predicted_s_1, predicted_a_2, predicted_n_3, FV_first_name_0, FV_middle_name_0, FV_last_name_0, predicted_b_4, predicted_j_5, predicted_l_6)))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_a, WPREDICTED_n, WPREDICTED_b, WPREDICTED_j, WPREDICTED_l):  And(D_varchar_80_(WPREDICTED_n), P_Staff(WPREDICTED_s, WPREDICTED_a, WPREDICTED_n, FV_first_name_0, FV_middle_name_0, FV_last_name_0, WPREDICTED_b, WPREDICTED_j, WPREDICTED_l))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 770 lines, 30293 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1135.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   3 assertion(s): 0 sort axiom(s), 3 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_first_name_0) <= 80
+      [1] Length(FV_last_name_0) <= 80
+      [2] Length(FV_middle_name_0) <= 80
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 3 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_s1, WGOLD_n, WGOLD_d, WGOLD_d1, WGOLD_d2
+      claim: And(And(Length(WGOLD_n) <= 80, Staff(WGOLD_s, WGOLD_s1, WGOLD_n, FV_first_name_0, FV_middle_name_0, FV_last_name_0, WGOLD_d, WGOLD_d1, WGOLD_d2)), Not(Exists([predicted_s_1, predicted_a_2, predicted_n_3, predicted_b_4, predicted_j_5, predicted_l_6], And(Length(predicted_n_3) <= 80, Staff(predicted_s_1, predicted_a_2, predicted_n_3, FV_first_name_0, FV_middle_name_0, FV_last_name_0, predicted_b_4, predicted_j_5, predicted_l_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 3 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_a, WPREDICTED_n, WPREDICTED_b, WPREDICTED_j, WPREDICTED_l
+      claim: And(And(Length(WPREDICTED_n) <= 80, Staff(WPREDICTED_s, WPREDICTED_a, WPREDICTED_n, FV_first_name_0, FV_middle_name_0, FV_last_name_0, WPREDICTED_b, WPREDICTED_j, WPREDICTED_l)), Not(Exists([gold_s_1, gold_s1_2, gold_n_3, gold_d_4, gold_d1_5, gold_d2_6], And(Length(gold_n_3) <= 80, Staff(gold_s_1, gold_s1_2, gold_n_3, FV_first_name_0, FV_middle_name_0, FV_last_name_0, gold_d_4, gold_d1_5, gold_d2_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

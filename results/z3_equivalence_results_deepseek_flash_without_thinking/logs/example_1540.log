@@ -1,0 +1,76 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1540.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1540.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3447 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the minister who took office after 1961 or before 1959.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Left_office = text -> StringSort()
+        Minister = text -> StringSort()
+        Party_ID = text -> StringSort()
+        Party_name = text -> StringSort()
+        Region_ID = int -> IntSort()
+        Took_office = text -> StringSort()
+      symbols:
+        party(Party_ID, Minister, Took_office, Left_office, Region_ID, Party_name)
+        constant 1959 : Took_office
+        constant 1961 : Took_office
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Party_ID ∃t : Took_office ∃l : Left_office ∃r : Region_ID ∃p1 : Party_name ( (party(p,m,t,l,r,p1)) ∧ ((t > 1961) ∨ (t < 1959)) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:t COLON:: IDENT:Took_office EXISTS:∃ IDENT:l COLON:: IDENT:Left_office EXISTS:∃ IDENT:r COLON:: IDENT:Region_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Party_name LPAR:( LPAR:( IDENT:party LPAR:( IDENT:p COMMA:, IDENT:m COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:r COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:t GT:> NUM:1961 RPAR:) OR:∨ LPAR:( IDENT:t LT:< NUM:1959 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Party_ID
+            EXISTS t:Took_office
+              EXISTS l:Left_office
+                EXISTS r:Region_ID
+                  EXISTS p1:Party_name
+                    AND
+                      PRED party(p, m, t, l, r, p1)
+                      OR
+                        CMP  t > 1961
+                        CMP  t < 1959
+      Predicted FOL: ∃x : Minister (party(x, x, '1961', x, x, x) ∨ party(x, x, '1959', x, x, x))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Minister LPAR:( IDENT:party LPAR:( IDENT:x COMMA:, IDENT:x COMMA:, LIT:1961 COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x RPAR:) OR:∨ IDENT:party LPAR:( IDENT:x COMMA:, IDENT:x COMMA:, LIT:1959 COMMA:, IDENT:x COMMA:, IDENT:x COMMA:, IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Minister
+            OR
+              PRED party(x, x, '1961', x, x, x)
+              PRED party(x, x, '1959', x, x, x)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (m : Minister) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'x' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'x' used at incompatible global sorts text and int

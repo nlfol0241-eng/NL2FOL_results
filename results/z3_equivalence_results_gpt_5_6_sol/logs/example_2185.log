@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2185.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2185.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5682 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me all the keywords in Databases area .
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        did = int -> IntSort()
+        keyword = text -> StringSort()
+        kid = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        domain(did, name)
+        domain_keyword(did, kid)
+        keyword(keyword, kid)
+        constant Databases : name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : did ∃n : name ∃d1 : did ∃k : kid ∃k2 : kid ( (((((domain(d,n)) ∧ (domain_keyword(d1,k))) ∧ (d = d1)) ∧ (keyword(k1,k2))) ∧ (k2 = k)) ∧ (n = 'Databases') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:did EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:d1 COLON:: IDENT:did EXISTS:∃ IDENT:k COLON:: IDENT:kid EXISTS:∃ IDENT:k2 COLON:: IDENT:kid LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:domain LPAR:( IDENT:d COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:domain_keyword LPAR:( IDENT:d1 COMMA:, IDENT:k RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:keyword LPAR:( IDENT:k1 COMMA:, IDENT:k2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k2 EQ:= IDENT:k RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Databases RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:did
+            EXISTS n:name
+              EXISTS d1:did
+                EXISTS k:kid
+                  EXISTS k2:kid
+                    AND
+                      AND
+                        AND
+                          AND
+                            AND
+                              PRED domain(d, n)
+                              PRED domain_keyword(d1, k)
+                            EQ  d = d1
+                          PRED keyword(k1, k2)
+                        EQ  k2 = k
+                      EQ  n = 'Databases'
+      Predicted FOL: ∃d : did ∃i : kid (domain(d, 'Databases') ∧ domain_keyword(d, i) ∧ keyword(k, i))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:did EXISTS:∃ IDENT:i COLON:: IDENT:kid LPAR:( IDENT:domain LPAR:( IDENT:d COMMA:, LIT:Databases RPAR:) AND:∧ IDENT:domain_keyword LPAR:( IDENT:d COMMA:, IDENT:i RPAR:) AND:∧ IDENT:keyword LPAR:( IDENT:k COMMA:, IDENT:i RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:did
+            EXISTS i:kid
+              AND
+                PRED domain(d, 'Databases')
+                PRED domain_keyword(d, i)
+                PRED keyword(k, i)
+   [G3] took 0.006 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_keyword_0 : keyword   Gold k1 <-> Predicted k
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local did, global int -> IntSort()
+        d1 : local did, global int -> IntSort()
+        k : local kid, global int -> IntSort()
+        k1 : local keyword, global text -> StringSort()
+        k2 : local kid, global int -> IntSort()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        d : local did, global int -> IntSort()
+        i : local kid, global int -> IntSort()
+        k : local keyword, global text -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_n_2, gold_d1_3, gold_k_4, gold_k2_5], And(And(And(And(And(P_domain(gold_d_1, gold_n_2), P_domain_keyword(gold_d1_3, gold_k_4)), (gold_d_1 == gold_d1_3)), P_keyword(FV_keyword_0, gold_k2_5)), (gold_k2_5 == gold_k_4)), (gold_n_2 == L_Databases)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_n, WGOLD_d1, WGOLD_k, WGOLD_k2):  And(And(And(And(And(P_domain(WGOLD_d, WGOLD_n), P_domain_keyword(WGOLD_d1, WGOLD_k)), (WGOLD_d == WGOLD_d1)), P_keyword(FV_keyword_0, WGOLD_k2)), (WGOLD_k2 == WGOLD_k)), (WGOLD_n == L_Databases))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_i_2], And(P_domain(predicted_d_1, L_Databases), P_domain_keyword(predicted_d_1, predicted_i_2), P_keyword(FV_keyword_0, predicted_i_2)))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_i):  And(P_domain(WPREDICTED_d, L_Databases), P_domain_keyword(WPREDICTED_d, WPREDICTED_i), P_keyword(FV_keyword_0, WPREDICTED_i))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Databases' at text -> L_Databases = StringVal('Databases')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 739 lines, 27686 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2185.py
+   [G8] took 0.011 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_n, WGOLD_d1, WGOLD_k, WGOLD_k2
+      claim: And(And(And(And(And(And(domain(WGOLD_d, WGOLD_n), domain_keyword(WGOLD_d1, WGOLD_k)), WGOLD_d == WGOLD_d1), keyword(FV_keyword_0, WGOLD_k2)), WGOLD_k2 == WGOLD_k), WGOLD_n == "Databases"), Not(Exists([predicted_d_1, predicted_i_2], And(domain(predicted_d_1, "Databases"), domain_keyword(predicted_d_1, predicted_i_2), keyword(FV_keyword_0, predicted_i_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.017 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.043 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_i
+      claim: And(And(domain(WPREDICTED_d, "Databases"), domain_keyword(WPREDICTED_d, WPREDICTED_i), keyword(FV_keyword_0, WPREDICTED_i)), Not(Exists([gold_d_1, gold_n_2, gold_d1_3, gold_k_4, gold_k2_5], And(And(And(And(And(domain(gold_d_1, gold_n_2), domain_keyword(gold_d1_3, gold_k_4)), gold_d_1 == gold_d1_3), keyword(FV_keyword_0, gold_k2_5)), gold_k2_5 == gold_k_4), gold_n_2 == "Databases"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.033 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

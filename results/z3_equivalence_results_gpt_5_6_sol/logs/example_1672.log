@@ -1,0 +1,115 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1672.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1672.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4583 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and players of all the clubs?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 10 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Apps = real -> Float32()
+        Club_ID = int -> IntSort()
+        Goals = text -> StringSort()
+        Player_ID = int -> IntSort()
+        Points = real -> Float32()
+        Position = text -> StringSort()
+        Region = text -> StringSort()
+        Start_year = text -> StringSort()
+        Tries = real -> Float32()
+        name = text -> StringSort()
+      symbols:
+        club(Club_ID, name, Region, Start_year)
+        player(Player_ID, name, Position, Club_ID, Apps, Tries, Goals, Points)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Club_ID ∃r : Region ∃s : Start_year ∃n1 : name ∃p1 : Position ∃c1 : Club_ID ∃a : Apps ∃t : Tries ∃g : Goals ∃p2 : Points ( ((club(c,n,r,s)) ∧ (player(p,n1,p1,c1,a,t,g,p2))) ∧ (c = c1) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Club_ID EXISTS:∃ IDENT:r COLON:: IDENT:Region EXISTS:∃ IDENT:s COLON:: IDENT:Start_year EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:p1 COLON:: IDENT:Position EXISTS:∃ IDENT:c1 COLON:: IDENT:Club_ID EXISTS:∃ IDENT:a COLON:: IDENT:Apps EXISTS:∃ IDENT:t COLON:: IDENT:Tries EXISTS:∃ IDENT:g COLON:: IDENT:Goals EXISTS:∃ IDENT:p2 COLON:: IDENT:Points LPAR:( LPAR:( LPAR:( IDENT:club LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:r COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:player LPAR:( IDENT:p COMMA:, IDENT:n1 COMMA:, IDENT:p1 COMMA:, IDENT:c1 COMMA:, IDENT:a COMMA:, IDENT:t COMMA:, IDENT:g COMMA:, IDENT:p2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Club_ID
+            EXISTS r:Region
+              EXISTS s:Start_year
+                EXISTS n1:name
+                  EXISTS p1:Position
+                    EXISTS c1:Club_ID
+                      EXISTS a:Apps
+                        EXISTS t:Tries
+                          EXISTS g:Goals
+                            EXISTS p2:Points
+                              AND
+                                AND
+                                  PRED club(c, n, r, s)
+                                  PRED player(p, n1, p1, c1, a, t, g, p2)
+                                EQ  c = c1
+      Predicted FOL: ∃club_id : Club_ID ∃region : Region ∃start_year : Start_year ∃player_id : Player_ID ∃position : Position ∃apps : Apps ∃tries : Tries ∃goals : Goals ∃points : Points (club(club_id, club_name, region, start_year) ∧ player(player_id, player_name, position, club_id, apps, tries, goals, points))
+        tokens: EXISTS:∃ IDENT:club_id COLON:: IDENT:Club_ID EXISTS:∃ IDENT:region COLON:: IDENT:Region EXISTS:∃ IDENT:start_year COLON:: IDENT:Start_year EXISTS:∃ IDENT:player_id COLON:: IDENT:Player_ID EXISTS:∃ IDENT:position COLON:: IDENT:Position EXISTS:∃ IDENT:apps COLON:: IDENT:Apps EXISTS:∃ IDENT:tries COLON:: IDENT:Tries EXISTS:∃ IDENT:goals COLON:: IDENT:Goals EXISTS:∃ IDENT:points COLON:: IDENT:Points LPAR:( IDENT:club LPAR:( IDENT:club_id COMMA:, IDENT:club_name COMMA:, IDENT:region COMMA:, IDENT:start_year RPAR:) AND:∧ IDENT:player LPAR:( IDENT:player_id COMMA:, IDENT:player_name COMMA:, IDENT:position COMMA:, IDENT:club_id COMMA:, IDENT:apps COMMA:, IDENT:tries COMMA:, IDENT:goals COMMA:, IDENT:points RPAR:) RPAR:) EOF
+        AST:
+          EXISTS club_id:Club_ID
+            EXISTS region:Region
+              EXISTS start_year:Start_year
+                EXISTS player_id:Player_ID
+                  EXISTS position:Position
+                    EXISTS apps:Apps
+                      EXISTS tries:Tries
+                        EXISTS goals:Goals
+                          EXISTS points:Points
+                            AND
+                              PRED club(club_id, club_name, region, start_year)
+                              PRED player(player_id, player_name, position, club_id, apps, tries, goals, points)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (n : name, p : Player_ID) -> ['StringSort()', 'numeric'] vs Predicted (club_name : name, player_name : name) -> ['StringSort()', 'StringSort()']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 23 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Apps, global real -> Float32()
+        c : local Club_ID, global int -> IntSort()
+        c1 : local Club_ID, global int -> IntSort()
+        g : local Goals, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+        p : local Player_ID, global int -> IntSort()
+        p1 : local Position, global text -> StringSort()
+        p2 : local Points, global real -> Float32()
+        r : local Region, global text -> StringSort()
+        s : local Start_year, global text -> StringSort()
+        t : local Tries, global real -> Float32()
+      Predicted FOL:
+        apps : local Apps, global real -> Float32()
+        club_id : local Club_ID, global int -> IntSort()
+        club_name : local name, global text -> StringSort()
+        goals : local Goals, global text -> StringSort()
+        player_id : local Player_ID, global int -> IntSort()
+        player_name : local name, global text -> StringSort()
+        points : local Points, global real -> Float32()
+        position : local Position, global text -> StringSort()
+        region : local Region, global text -> StringSort()
+        start_year : local Start_year, global text -> StringSort()
+        tries : local Tries, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5742 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1672.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: the free variables have different value types: Gold (n : name, p : Player_ID) -> ['StringSort()', 'numeric'] vs Predicted (club_name : name, player_name : name) -> ['StringSort()', 'StringSort()']
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

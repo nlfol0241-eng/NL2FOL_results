@@ -1,0 +1,124 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2577.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2577.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3895 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the amenities that Smith Hall has?
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(25) -> StringSort()   [domain Length(x) <= 25; length <= 25]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        amenid = integer -> IntSort()
+        amenity_name = varchar(25) -> StringSort()
+        dorm_name = varchar(20) -> StringSort()
+        dormid = integer -> IntSort()
+        gender = varchar(1) -> StringSort()
+        student_capacity = integer -> IntSort()
+      symbols:
+        Dorm(dormid, dorm_name, student_capacity, gender)
+        Dorm_amenity(amenid, amenity_name)
+        Has_amenity(dormid, amenid)
+        constant Smith Hall : dorm_name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : dormid ∃d1 : dorm_name ∃s : student_capacity ∃g : gender ∃d2 : dormid ∃a : amenid ∃a1 : amenid ( (((((Dorm(d,d1,s,g)) ∧ (Has_amenity(d2,a))) ∧ (d = d2)) ∧ (Dorm_amenity(a1,a2))) ∧ (a = a1)) ∧ (d1 = 'Smith Hall') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:dormid EXISTS:∃ IDENT:d1 COLON:: IDENT:dorm_name EXISTS:∃ IDENT:s COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:d2 COLON:: IDENT:dormid EXISTS:∃ IDENT:a COLON:: IDENT:amenid EXISTS:∃ IDENT:a1 COLON:: IDENT:amenid LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Has_amenity LPAR:( IDENT:d2 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Dorm_amenity LPAR:( IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:Smith Hall RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:dormid
+            EXISTS d1:dorm_name
+              EXISTS s:student_capacity
+                EXISTS g:gender
+                  EXISTS d2:dormid
+                    EXISTS a:amenid
+                      EXISTS a1:amenid
+                        AND
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED Dorm(d, d1, s, g)
+                                  PRED Has_amenity(d2, a)
+                                EQ  d = d2
+                              PRED Dorm_amenity(a1, a2)
+                            EQ  a = a1
+                          EQ  d1 = 'Smith Hall'
+      Predicted FOL: ∃d:dormid ∃c:student_capacity ∃g:gender ∃a:amenid (Dorm(d, 'Smith Hall', c, g) ∧ Has_amenity(d, a) ∧ Dorm_amenity(a, n))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:dormid EXISTS:∃ IDENT:c COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:a COLON:: IDENT:amenid LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, LIT:Smith Hall COMMA:, IDENT:c COMMA:, IDENT:g RPAR:) AND:∧ IDENT:Has_amenity LPAR:( IDENT:d COMMA:, IDENT:a RPAR:) AND:∧ IDENT:Dorm_amenity LPAR:( IDENT:a COMMA:, IDENT:n RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:dormid
+            EXISTS c:student_capacity
+              EXISTS g:gender
+                EXISTS a:amenid
+                  AND
+                    PRED Dorm(d, 'Smith Hall', c, g)
+                    PRED Has_amenity(d, a)
+                    PRED Dorm_amenity(a, n)
+   [G3] took 0.005 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_amenity_name_0 : amenity_name   Gold a2 <-> Predicted n
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amenid, global integer -> IntSort()
+        a1 : local amenid, global integer -> IntSort()
+        a2 : local amenity_name, global varchar(25) -> StringSort()
+        d : local dormid, global integer -> IntSort()
+        d1 : local dorm_name, global varchar(20) -> StringSort()
+        d2 : local dormid, global integer -> IntSort()
+        g : local gender, global varchar(1) -> StringSort()
+        s : local student_capacity, global integer -> IntSort()
+      Predicted FOL:
+        a : local amenid, global integer -> IntSort()
+        c : local student_capacity, global integer -> IntSort()
+        d : local dormid, global integer -> IntSort()
+        g : local gender, global varchar(1) -> StringSort()
+        n : local amenity_name, global varchar(25) -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_s_3, gold_g_4, gold_d2_5, gold_a_6, gold_a1_7], And(D_varchar_20_(gold_d1_2), D_varchar_1_(gold_g_4), And(And(And(And(And(P_Dorm(gold_d_1, gold_d1_2, gold_s_3, gold_g_4), P_Has_amenity(gold_d2_5, gold_a_6)), (gold_d_1 == gold_d2_5)), P_Dorm_amenity(gold_a1_7, FV_amenity_name_0)), (gold_a_6 == gold_a1_7)), (gold_d1_2 == L_Smith_Hall))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_g, WGOLD_d2, WGOLD_a, WGOLD_a1):  And(D_varchar_20_(WGOLD_d1), D_varchar_1_(WGOLD_g), And(And(And(And(And(P_Dorm(WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_g), P_Has_amenity(WGOLD_d2, WGOLD_a)), (WGOLD_d == WGOLD_d2)), P_Dorm_amenity(WGOLD_a1, FV_amenity_name_0)), (WGOLD_a == WGOLD_a1)), (WGOLD_d1 == L_Smith_Hall)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_c_2, predicted_g_3, predicted_a_4], And(D_varchar_1_(predicted_g_3), And(And(P_Dorm(predicted_d_1, L_Smith_Hall, predicted_c_2, predicted_g_3), D_varchar_20_(L_Smith_Hall)), P_Has_amenity(predicted_d_1, predicted_a_4), P_Dorm_amenity(predicted_a_4, FV_amenity_name_0))))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_c, WPREDICTED_g, WPREDICTED_a):  And(D_varchar_1_(WPREDICTED_g), And(And(P_Dorm(WPREDICTED_d, L_Smith_Hall, WPREDICTED_c, WPREDICTED_g), D_varchar_20_(L_Smith_Hall)), P_Has_amenity(WPREDICTED_d, WPREDICTED_a), P_Dorm_amenity(WPREDICTED_a, FV_amenity_name_0)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.002 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Smith Hall' at varchar(20) -> L_Smith_Hall = StringVal('Smith Hall')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 767 lines, 29954 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2577.py
+   [G8] took 0.010 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_amenity_name_0) <= 25
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_g, WGOLD_d2, WGOLD_a, WGOLD_a1
+      claim: And(And(Length(WGOLD_d1) <= 20, Length(WGOLD_g) <= 1, And(And(And(And(And(Dorm(WGOLD_d, WGOLD_d1, WGOLD_s, WGOLD_g), Has_amenity(WGOLD_d2, WGOLD_a)), WGOLD_d == WGOLD_d2), Dorm_amenity(WGOLD_a1, FV_amenity_name_0)), WGOLD_a == WGOLD_a1), WGOLD_d1 == "Smith Hall")), Not(Exists([predicted_d_1, predicted_c_2, predicted_g_3, predicted_a_4], And(Length(predicted_g_3) <= 1, And(And(Dorm(predicted_d_1, "Smith Hall", predicted_c_2, predicted_g_3), Length("Smith Hall") <= 20), Has_amenity(predicted_d_1, predicted_a_4), Dorm_amenity(predicted_a_4, FV_amenity_name_0))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.017 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.051 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_c, WPREDICTED_g, WPREDICTED_a
+      claim: And(And(Length(WPREDICTED_g) <= 1, And(And(Dorm(WPREDICTED_d, "Smith Hall", WPREDICTED_c, WPREDICTED_g), Length("Smith Hall") <= 20), Has_amenity(WPREDICTED_d, WPREDICTED_a), Dorm_amenity(WPREDICTED_a, FV_amenity_name_0))), Not(Exists([gold_d_1, gold_d1_2, gold_s_3, gold_g_4, gold_d2_5, gold_a_6, gold_a1_7], And(Length(gold_d1_2) <= 20, Length(gold_g_4) <= 1, And(And(And(And(And(Dorm(gold_d_1, gold_d1_2, gold_s_3, gold_g_4), Has_amenity(gold_d2_5, gold_a_6)), gold_d_1 == gold_d2_5), Dorm_amenity(gold_a1_7, FV_amenity_name_0)), gold_a_6 == gold_a1_7), gold_d1_2 == "Smith Hall")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.012 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.038 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

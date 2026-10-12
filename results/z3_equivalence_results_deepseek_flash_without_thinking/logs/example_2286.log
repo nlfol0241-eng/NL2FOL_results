@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2286.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2286.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3928 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all aircrafts that John Williams have certificates to be able to fly?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        number(10,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000000, x < 100000000); 10 digits, 2 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        number(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        distance = number(6,0) -> RealSort()
+        eid = number(9,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+        salary = number(10,2) -> RealSort()
+      symbols:
+        aircraft(aid, name, distance)
+        certificate(eid, aid)
+        employee(eid, name, salary)
+        constant John Williams : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : eid ∃n : name ∃s : salary ∃e1 : eid ∃a : aid ∃a1 : aid ∃d : distance ( (((((employee(e,n,s)) ∧ (certificate(e1,a))) ∧ (e = e1)) ∧ (aircraft(a1,n1,d))) ∧ (a1 = a)) ∧ (n = 'John Williams') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:eid EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:s COLON:: IDENT:salary EXISTS:∃ IDENT:e1 COLON:: IDENT:eid EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:a1 COLON:: IDENT:aid EXISTS:∃ IDENT:d COLON:: IDENT:distance LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:certificate LPAR:( IDENT:e1 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:aircraft LPAR:( IDENT:a1 COMMA:, IDENT:n1 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:John Williams RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:eid
+            EXISTS n:name
+              EXISTS s:salary
+                EXISTS e1:eid
+                  EXISTS a:aid
+                    EXISTS a1:aid
+                      EXISTS d:distance
+                        AND
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED employee(e, n, s)
+                                  PRED certificate(e1, a)
+                                EQ  e = e1
+                              PRED aircraft(a1, n1, d)
+                            EQ  a1 = a
+                          EQ  n = 'John Williams'
+      Predicted FOL: ∃x : name (employee(e, x, s) ∧ x = 'John Williams' ∧ ∃a : aid (certificate(e, a) ∧ aircraft(a, n, d)))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:name LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:x COMMA:, IDENT:s RPAR:) AND:∧ IDENT:x EQ:= LIT:John Williams AND:∧ EXISTS:∃ IDENT:a COLON:: IDENT:aid LPAR:( IDENT:certificate LPAR:( IDENT:e COMMA:, IDENT:a RPAR:) AND:∧ IDENT:aircraft LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:name
+            AND
+              PRED employee(e, x, s)
+              EQ  x = 'John Williams'
+              EXISTS a:aid
+                AND
+                  PRED certificate(e, a)
+                  PRED aircraft(a, n, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) e, s, d occur free in the formula but are not declared in 'free vars'
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        a1 : local aid, global number(9,0) -> RealSort()
+        d : local distance, global number(6,0) -> RealSort()
+        e : local eid, global number(9,0) -> RealSort()
+        e1 : local eid, global number(9,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+        n1 : local name, global varchar2(30) -> StringSort()
+        s : local salary, global number(10,2) -> RealSort()
+      Predicted FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        d : local distance, global number(6,0) -> RealSort()
+        e : local eid, global number(9,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+        s : local salary, global number(10,2) -> RealSort()
+        x : local name, global varchar2(30) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_n_2, gold_s_3, gold_e1_4, gold_a_5, gold_a1_6, gold_d_7], And(D_number_9_0_(gold_e_1), D_varchar2_30_(gold_n_2), D_number_10_2_(gold_s_3), D_number_9_0_(gold_e1_4), D_number_9_0_(gold_a_5), D_number_9_0_(gold_a1_6), D_number_6_0_(gold_d_7), And(And(And(And(And(P_employee(gold_e_1, gold_n_2, gold_s_3), P_certificate(gold_e1_4, gold_a_5)), (gold_e_1 == gold_e1_4)), P_aircraft(gold_a1_6, FV_name_0, gold_d_7)), (gold_a1_6 == gold_a_5)), (gold_n_2 == L_John_Williams))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_n, WGOLD_s, WGOLD_e1, WGOLD_a, WGOLD_a1, WGOLD_d):  And(D_number_9_0_(WGOLD_e), D_varchar2_30_(WGOLD_n), D_number_10_2_(WGOLD_s), D_number_9_0_(WGOLD_e1), D_number_9_0_(WGOLD_a), D_number_9_0_(WGOLD_a1), D_number_6_0_(WGOLD_d), And(And(And(And(And(P_employee(WGOLD_e, WGOLD_n, WGOLD_s), P_certificate(WGOLD_e1, WGOLD_a)), (WGOLD_e == WGOLD_e1)), P_aircraft(WGOLD_a1, FV_name_0, WGOLD_d)), (WGOLD_a1 == WGOLD_a)), (WGOLD_n == L_John_Williams)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'e'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in formula
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in <genexpr>
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'e'

@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1027.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1027.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5753 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct location names?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Address = varchar(255) -> StringSort()
+        Location_ID = integer -> IntSort()
+        Location_Name = varchar(255) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+      symbols:
+        Locations(Location_ID, Location_Name, Address, Other_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : Location_ID ∃a : Address ∃o : Other_Details ( Locations(l,l1,a,o) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:Location_ID EXISTS:∃ IDENT:a COLON:: IDENT:Address EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( IDENT:Locations LPAR:( IDENT:l COMMA:, IDENT:l1 COMMA:, IDENT:a COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:Location_ID
+            EXISTS a:Address
+              EXISTS o:Other_Details
+                PRED Locations(l, l1, a, o)
+      Predicted FOL: ∃b0:Location_ID ∃b2:Address ∃b3:Other_Details Locations(b0, x, b2, b3)
+        tokens: EXISTS:∃ IDENT:b0 COLON:: IDENT:Location_ID EXISTS:∃ IDENT:b2 COLON:: IDENT:Address EXISTS:∃ IDENT:b3 COLON:: IDENT:Other_Details IDENT:Locations LPAR:( IDENT:b0 COMMA:, IDENT:x COMMA:, IDENT:b2 COMMA:, IDENT:b3 RPAR:) EOF
+        AST:
+          EXISTS b0:Location_ID
+            EXISTS b2:Address
+              EXISTS b3:Other_Details
+                PRED Locations(b0, x, b2, b3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Location_Name_0 : Location_Name   Gold l1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address, global varchar(255) -> StringSort()
+        l : local Location_ID, global integer -> IntSort()
+        l1 : local Location_Name, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        b0 : local Location_ID, global integer -> IntSort()
+        b2 : local Address, global varchar(255) -> StringSort()
+        b3 : local Other_Details, global varchar(255) -> StringSort()
+        x : local Location_Name, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_l_1, gold_a_2, gold_o_3], And(D_varchar_255_(gold_a_2), D_varchar_255_(gold_o_3), P_Locations(gold_l_1, FV_Location_Name_0, gold_a_2, gold_o_3)))
+      gold_skolem (witnesses WGOLD_l, WGOLD_a, WGOLD_o):  And(D_varchar_255_(WGOLD_a), D_varchar_255_(WGOLD_o), P_Locations(WGOLD_l, FV_Location_Name_0, WGOLD_a, WGOLD_o))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_b0_1, predicted_b2_2, predicted_b3_3], And(D_varchar_255_(predicted_b2_2), D_varchar_255_(predicted_b3_3), P_Locations(predicted_b0_1, FV_Location_Name_0, predicted_b2_2, predicted_b3_3)))
+      predicted_skolem (witnesses WPREDICTED_b0, WPREDICTED_b2, WPREDICTED_b3):  And(D_varchar_255_(WPREDICTED_b2), D_varchar_255_(WPREDICTED_b3), P_Locations(WPREDICTED_b0, FV_Location_Name_0, WPREDICTED_b2, WPREDICTED_b3))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 730 lines, 27544 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1027.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Location_Name_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_l, WGOLD_a, WGOLD_o
+      claim: And(And(Length(WGOLD_a) <= 255, Length(WGOLD_o) <= 255, Locations(WGOLD_l, FV_Location_Name_0, WGOLD_a, WGOLD_o)), Not(Exists([predicted_b0_1, predicted_b2_2, predicted_b3_3], And(Length(predicted_b2_2) <= 255, Length(predicted_b3_3) <= 255, Locations(predicted_b0_1, FV_Location_Name_0, predicted_b2_2, predicted_b3_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_b0, WPREDICTED_b2, WPREDICTED_b3
+      claim: And(And(Length(WPREDICTED_b2) <= 255, Length(WPREDICTED_b3) <= 255, Locations(WPREDICTED_b0, FV_Location_Name_0, WPREDICTED_b2, WPREDICTED_b3)), Not(Exists([gold_l_1, gold_a_2, gold_o_3], And(Length(gold_a_2) <= 255, Length(gold_o_3) <= 255, Locations(gold_l_1, FV_Location_Name_0, gold_a_2, gold_o_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

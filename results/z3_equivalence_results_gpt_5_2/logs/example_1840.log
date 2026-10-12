@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1840.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1840.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3225 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the state and enrollment of the colleges where have any students who got accepted in the tryout decision.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+      local sorts:
+        cName = varchar(20) -> StringSort()
+        decision = varchar(3) -> StringSort()
+        enr = numeric(5,0) -> RealSort()
+        pID = numeric(5,0) -> RealSort()
+        pPos = varchar(8) -> StringSort()
+        state = varchar(2) -> StringSort()
+      symbols:
+        College(cName, state, enr)
+        Tryout(pID, cName, pPos, decision)
+        constant yes : decision
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : cName ∃p : pID ∃c1 : cName ∃p1 : pPos ∃d : decision ( (((College(c,s,e)) ∧ (Tryout(p,c1,p1,d))) ∧ (c = c1)) ∧ (d = 'yes') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:cName EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:c1 COLON:: IDENT:cName EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision LPAR:( LPAR:( LPAR:( LPAR:( IDENT:College LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:cName
+            EXISTS p:pID
+              EXISTS c1:cName
+                EXISTS p1:pPos
+                  EXISTS d:decision
+                    AND
+                      AND
+                        AND
+                          PRED College(c, s, e)
+                          PRED Tryout(p, c1, p1, d)
+                        EQ  c = c1
+                      EQ  d = 'yes'
+      Predicted FOL: ∃c:cName ∃s:state ∃e:enr ( College(c, s, e) ∧ ∃p:pID ∃pos:pPos ( Tryout(p, c, pos, yes) ) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:cName EXISTS:∃ IDENT:s COLON:: IDENT:state EXISTS:∃ IDENT:e COLON:: IDENT:enr LPAR:( IDENT:College LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) AND:∧ EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:pos COLON:: IDENT:pPos LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:pos COMMA:, IDENT:yes RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:cName
+            EXISTS s:state
+              EXISTS e:enr
+                AND
+                  PRED College(c, s, e)
+                  EXISTS p:pID
+                    EXISTS pos:pPos
+                      PRED Tryout(p, c, pos, yes<const>)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (s : state, e : enr) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        c1 : local cName, global varchar(20) -> StringSort()
+        d : local decision, global varchar(3) -> StringSort()
+        e : local enr, global numeric(5,0) -> RealSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pPos, global varchar(8) -> StringSort()
+        s : local state, global varchar(2) -> StringSort()
+      Predicted FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        e : local enr, global numeric(5,0) -> RealSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        pos : local pPos, global varchar(8) -> StringSort()
+        s : local state, global varchar(2) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5409 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1840.py
+   [G8] took 0.006 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (s : state, e : enr) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,119 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1758.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1758.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5955 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the day Number and stored date for all the documents.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        char(255) -> StringSort()   [domain Length(x) <= 255; length <= 255 (blank padding not modelled)]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Calendar_Date = datetime -> IntSort()
+        Date_Stored = datetime -> IntSort()
+        Day_Number = integer -> IntSort()
+        Document_Description = char(255) -> StringSort()
+        Document_ID = integer -> IntSort()
+        Document_Name = char(255) -> StringSort()
+        Document_Type_Code = char(15) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+      symbols:
+        All_Documents(Document_ID, Date_Stored, Document_Type_Code, Document_Name, Document_Description, Other_Details)
+        Ref_Calendar(Calendar_Date, Day_Number)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Document_ID ∃d2 : Document_Type_Code ∃d3 : Document_Name ∃d4 : Document_Description ∃o : Other_Details ∃c : Calendar_Date ( ((All_Documents(d,d1,d2,d3,d4,o)) ∧ (Ref_Calendar(c,d5))) ∧ (d1 = c) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:d2 COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:d3 COLON:: IDENT:Document_Name EXISTS:∃ IDENT:d4 COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details EXISTS:∃ IDENT:c COLON:: IDENT:Calendar_Date LPAR:( LPAR:( LPAR:( IDENT:All_Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Ref_Calendar LPAR:( IDENT:c COMMA:, IDENT:d5 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            EXISTS d2:Document_Type_Code
+              EXISTS d3:Document_Name
+                EXISTS d4:Document_Description
+                  EXISTS o:Other_Details
+                    EXISTS c:Calendar_Date
+                      AND
+                        AND
+                          PRED All_Documents(d, d1, d2, d3, d4, o)
+                          PRED Ref_Calendar(c, d5)
+                        EQ  d1 = c
+      Predicted FOL: ∃e0:Document_ID ∃e2:Document_Type_Code ∃e3:Document_Name ∃e4:Document_Description ∃e5:Other_Details (All_Documents(e0, Date_Stored, e2, e3, e4, e5) ∧ Ref_Calendar(Date_Stored, Day_Number))
+        tokens: EXISTS:∃ IDENT:e0 COLON:: IDENT:Document_ID EXISTS:∃ IDENT:e2 COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:e3 COLON:: IDENT:Document_Name EXISTS:∃ IDENT:e4 COLON:: IDENT:Document_Description EXISTS:∃ IDENT:e5 COLON:: IDENT:Other_Details LPAR:( IDENT:All_Documents LPAR:( IDENT:e0 COMMA:, IDENT:Date_Stored COMMA:, IDENT:e2 COMMA:, IDENT:e3 COMMA:, IDENT:e4 COMMA:, IDENT:e5 RPAR:) AND:∧ IDENT:Ref_Calendar LPAR:( IDENT:Date_Stored COMMA:, IDENT:Day_Number RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e0:Document_ID
+            EXISTS e2:Document_Type_Code
+              EXISTS e3:Document_Name
+                EXISTS e4:Document_Description
+                  EXISTS e5:Other_Details
+                    AND
+                      PRED All_Documents(e0, Date_Stored, e2, e3, e4, e5)
+                      PRED Ref_Calendar(Date_Stored, Day_Number)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Date_Stored_0 : Date_Stored   Gold d1 <-> Predicted Date_Stored
+      FV_Day_Number_0 : Day_Number   Gold d5 <-> Predicted Day_Number
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Calendar_Date, global datetime -> IntSort()
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Date_Stored, global datetime -> IntSort()
+        d2 : local Document_Type_Code, global char(15) -> StringSort()
+        d3 : local Document_Name, global char(255) -> StringSort()
+        d4 : local Document_Description, global char(255) -> StringSort()
+        d5 : local Day_Number, global integer -> IntSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        Date_Stored : local Date_Stored, global datetime -> IntSort()
+        Day_Number : local Day_Number, global integer -> IntSort()
+        e0 : local Document_ID, global integer -> IntSort()
+        e2 : local Document_Type_Code, global char(15) -> StringSort()
+        e3 : local Document_Name, global char(255) -> StringSort()
+        e4 : local Document_Description, global char(255) -> StringSort()
+        e5 : local Other_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d2_2, gold_d3_3, gold_d4_4, gold_o_5, gold_c_6], And(D_char_15_(gold_d2_2), D_char_255_(gold_d3_3), D_char_255_(gold_d4_4), D_varchar_255_(gold_o_5), And(And(P_All_Documents(gold_d_1, FV_Date_Stored_0, gold_d2_2, gold_d3_3, gold_d4_4, gold_o_5), P_Ref_Calendar(gold_c_6, FV_Day_Number_0)), (FV_Date_Stored_0 == gold_c_6))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d2, WGOLD_d3, WGOLD_d4, WGOLD_o, WGOLD_c):  And(D_char_15_(WGOLD_d2), D_char_255_(WGOLD_d3), D_char_255_(WGOLD_d4), D_varchar_255_(WGOLD_o), And(And(P_All_Documents(WGOLD_d, FV_Date_Stored_0, WGOLD_d2, WGOLD_d3, WGOLD_d4, WGOLD_o), P_Ref_Calendar(WGOLD_c, FV_Day_Number_0)), (FV_Date_Stored_0 == WGOLD_c)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e0_1, predicted_e2_2, predicted_e3_3, predicted_e4_4, predicted_e5_5], And(D_char_15_(predicted_e2_2), D_char_255_(predicted_e3_3), D_char_255_(predicted_e4_4), D_varchar_255_(predicted_e5_5), And(P_All_Documents(predicted_e0_1, FV_Date_Stored_0, predicted_e2_2, predicted_e3_3, predicted_e4_4, predicted_e5_5), P_Ref_Calendar(FV_Date_Stored_0, FV_Day_Number_0))))
+      predicted_skolem (witnesses WPREDICTED_e0, WPREDICTED_e2, WPREDICTED_e3, WPREDICTED_e4, WPREDICTED_e5):  And(D_char_15_(WPREDICTED_e2), D_char_255_(WPREDICTED_e3), D_char_255_(WPREDICTED_e4), D_varchar_255_(WPREDICTED_e5), And(P_All_Documents(WPREDICTED_e0, FV_Date_Stored_0, WPREDICTED_e2, WPREDICTED_e3, WPREDICTED_e4, WPREDICTED_e5), P_Ref_Calendar(FV_Date_Stored_0, FV_Day_Number_0)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 772 lines, 30903 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1758.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d2, WGOLD_d3, WGOLD_d4, WGOLD_o, WGOLD_c
+      claim: And(And(Length(WGOLD_d2) <= 15, Length(WGOLD_d3) <= 255, Length(WGOLD_d4) <= 255, Length(WGOLD_o) <= 255, And(And(All_Documents(WGOLD_d, FV_Date_Stored_0, WGOLD_d2, WGOLD_d3, WGOLD_d4, WGOLD_o), Ref_Calendar(WGOLD_c, FV_Day_Number_0)), FV_Date_Stored_0 == WGOLD_c)), Not(Exists([predicted_e0_1, predicted_e2_2, predicted_e3_3, predicted_e4_4, predicted_e5_5], And(Length(predicted_e2_2) <= 15, Length(predicted_e3_3) <= 255, Length(predicted_e4_4) <= 255, Length(predicted_e5_5) <= 255, And(All_Documents(predicted_e0_1, FV_Date_Stored_0, predicted_e2_2, predicted_e3_3, predicted_e4_4, predicted_e5_5), Ref_Calendar(FV_Date_Stored_0, FV_Day_Number_0))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e0, WPREDICTED_e2, WPREDICTED_e3, WPREDICTED_e4, WPREDICTED_e5
+      claim: And(And(Length(WPREDICTED_e2) <= 15, Length(WPREDICTED_e3) <= 255, Length(WPREDICTED_e4) <= 255, Length(WPREDICTED_e5) <= 255, And(All_Documents(WPREDICTED_e0, FV_Date_Stored_0, WPREDICTED_e2, WPREDICTED_e3, WPREDICTED_e4, WPREDICTED_e5), Ref_Calendar(FV_Date_Stored_0, FV_Day_Number_0))), Not(Exists([gold_d_1, gold_d2_2, gold_d3_3, gold_d4_4, gold_o_5, gold_c_6], And(Length(gold_d2_2) <= 15, Length(gold_d3_3) <= 255, Length(gold_d4_4) <= 255, Length(gold_o_5) <= 255, And(And(All_Documents(gold_d_1, FV_Date_Stored_0, gold_d2_2, gold_d3_3, gold_d4_4, gold_o_5), Ref_Calendar(gold_c_6, FV_Day_Number_0)), FV_Date_Stored_0 == gold_c_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

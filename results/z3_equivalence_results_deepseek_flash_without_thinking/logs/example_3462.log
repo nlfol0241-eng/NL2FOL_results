@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3462.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3462.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2980 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of schools that have some players in the mid position but not in the goalie position.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+      local sorts:
+        cName = varchar(20) -> StringSort()
+        decision = varchar(3) -> StringSort()
+        pID = numeric(5,0) -> RealSort()
+        pPos = varchar(8) -> StringSort()
+      symbols:
+        Tryout(pID, cName, pPos, decision)
+        constant goalie : pPos
+        constant mid : pPos
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃p1 : pPos ∃d : decision ∃p : pID( (Tryout(p,c,p1,d)) ∧ (p1 = 'mid') )) ∧ (¬(∃p1 : pPos ∃d : decision ∃p : pID( (Tryout(p,c,p1,d)) ∧ (p1 = 'goalie') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision EXISTS:∃ IDENT:p COLON:: IDENT:pID LPAR:( LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:mid RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision EXISTS:∃ IDENT:p COLON:: IDENT:pID LPAR:( LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:goalie RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p1:pPos
+              EXISTS d:decision
+                EXISTS p:pID
+                  AND
+                    PRED Tryout(p, c, p1, d)
+                    EQ  p1 = 'mid'
+            NOT
+              EXISTS p1:pPos
+                EXISTS d:decision
+                  EXISTS p:pID
+                    AND
+                      PRED Tryout(p, c, p1, d)
+                      EQ  p1 = 'goalie'
+      Predicted FOL: ∃x_cName : cName (∃x_pID : pID (Tryout(x_pID, x_cName, mid, 'yes') ∧ ¬∃y_pID : pID (Tryout(y_pID, x_cName, goalie, 'yes'))))
+        tokens: EXISTS:∃ IDENT:x_cName COLON:: IDENT:cName LPAR:( EXISTS:∃ IDENT:x_pID COLON:: IDENT:pID LPAR:( IDENT:Tryout LPAR:( IDENT:x_pID COMMA:, IDENT:x_cName COMMA:, IDENT:mid COMMA:, LIT:yes RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:y_pID COLON:: IDENT:pID LPAR:( IDENT:Tryout LPAR:( IDENT:y_pID COMMA:, IDENT:x_cName COMMA:, IDENT:goalie COMMA:, LIT:yes RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x_cName:cName
+            EXISTS x_pID:pID
+              AND
+                PRED Tryout(x_pID, x_cName, mid<const>, 'yes')
+                NOT
+                  EXISTS y_pID:pID
+                    PRED Tryout(y_pID, x_cName, goalie<const>, 'yes')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : cName) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        d : local decision, global varchar(3) -> StringSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pPos, global varchar(8) -> StringSort()
+      Predicted FOL:
+        x_cName : local cName, global varchar(20) -> StringSort()
+        x_pID : local pID, global numeric(5,0) -> RealSort()
+        y_pID : local pID, global numeric(5,0) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5436 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3462.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : cName) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

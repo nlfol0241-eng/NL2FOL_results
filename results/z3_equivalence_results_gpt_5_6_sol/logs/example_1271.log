@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1271.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1271.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3664 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the populations of the major cities of wisconsin
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        city_name = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        city(city_name, population, country_name, state_name)
+        constant 150000 : population
+        constant wisconsin : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : city_name ∃c1 : country_name ∃s : state_name ( (city(c,p,c1,s)) ∧ ((p > 150000) ∧ (s = 'wisconsin')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:city_name EXISTS:∃ IDENT:c1 COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:p GT:> NUM:150000 RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:wisconsin RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:city_name
+            EXISTS c1:country_name
+              EXISTS s:state_name
+                AND
+                  PRED city(c, p, c1, s)
+                  AND
+                    CMP  p > 150000
+                    EQ  s = 'wisconsin'
+      Predicted FOL: ∃x : city_name ∃y : country_name (city(x, p, y, 'wisconsin') ∧ p > 150000)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:city_name EXISTS:∃ IDENT:y COLON:: IDENT:country_name LPAR:( IDENT:city LPAR:( IDENT:x COMMA:, IDENT:p COMMA:, IDENT:y COMMA:, LIT:wisconsin RPAR:) AND:∧ IDENT:p GT:> NUM:150000 RPAR:) EOF
+        AST:
+          EXISTS x:city_name
+            EXISTS y:country_name
+              AND
+                PRED city(x, p, y, 'wisconsin')
+                CMP  p > 150000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_population_0 : population   Gold p <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local city_name, global text -> StringSort()
+        c1 : local country_name, global varchar(3) -> StringSort()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        p : local population, global integer -> IntSort()
+        x : local city_name, global text -> StringSort()
+        y : local country_name, global varchar(3) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_s_3], And(D_varchar_3_(gold_c1_2), And(P_city(gold_c_1, FV_population_0, gold_c1_2, gold_s_3), And((FV_population_0 > L_v_150000_integer), (gold_s_3 == L_wisconsin)))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_s):  And(D_varchar_3_(WGOLD_c1), And(P_city(WGOLD_c, FV_population_0, WGOLD_c1, WGOLD_s), And((FV_population_0 > L_v_150000_integer), (WGOLD_s == L_wisconsin))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2], And(D_varchar_3_(predicted_y_2), And(P_city(predicted_x_1, FV_population_0, predicted_y_2, L_wisconsin), (FV_population_0 > L_v_150000_integer))))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y):  And(D_varchar_3_(WPREDICTED_y), And(P_city(WPREDICTED_x, FV_population_0, WPREDICTED_y, L_wisconsin), (FV_population_0 > L_v_150000_integer)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '150000' at integer -> L_v_150000_integer = IntVal(150000)
+      literal 'wisconsin' at text -> L_wisconsin = StringVal('wisconsin')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 732 lines, 27500 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1271.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_s
+      claim: And(And(Length(WGOLD_c1) <= 3, And(city(WGOLD_c, FV_population_0, WGOLD_c1, WGOLD_s), And(150000 < FV_population_0, WGOLD_s == "wisconsin"))), Not(Exists([predicted_x_1, predicted_y_2], And(Length(predicted_y_2) <= 3, And(city(predicted_x_1, FV_population_0, predicted_y_2, "wisconsin"), 150000 < FV_population_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y
+      claim: And(And(Length(WPREDICTED_y) <= 3, And(city(WPREDICTED_x, FV_population_0, WPREDICTED_y, "wisconsin"), 150000 < FV_population_0)), Not(Exists([gold_c_1, gold_c1_2, gold_s_3], And(Length(gold_c1_2) <= 3, And(city(gold_c_1, FV_population_0, gold_c1_2, gold_s_3), And(150000 < FV_population_0, gold_s_3 == "wisconsin"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

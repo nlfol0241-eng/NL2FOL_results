@@ -1,0 +1,132 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1338.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1338.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4355 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the years and the official names of the host cities of competitions.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 11 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Area_km_2 = real -> Float32()
+        Census_Ranking = text -> StringSort()
+        City_ID = int -> IntSort()
+        Competition_ID = int -> IntSort()
+        Host_city_ID = int -> IntSort()
+        Hosts = text -> StringSort()
+        Official_Name = text -> StringSort()
+        Population = real -> Float32()
+        Status = text -> StringSort()
+        Theme = text -> StringSort()
+        Year = int -> IntSort()
+      symbols:
+        city(City_ID, Official_Name, Status, Area_km_2, Population, Census_Ranking)
+        farm_competition(Competition_ID, Year, Theme, Host_city_ID, Hosts)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : City_ID ∃s : Status ∃a : Area_km_2 ∃p : Population ∃c1 : Census_Ranking ∃c2 : Competition_ID ∃t : Theme ∃h : Host_city_ID ∃h1 : Hosts ( ((city(c,o,s,a,p,c1)) ∧ (farm_competition(c2,y,t,h,h1))) ∧ (c = h) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:City_ID EXISTS:∃ IDENT:s COLON:: IDENT:Status EXISTS:∃ IDENT:a COLON:: IDENT:Area_km_2 EXISTS:∃ IDENT:p COLON:: IDENT:Population EXISTS:∃ IDENT:c1 COLON:: IDENT:Census_Ranking EXISTS:∃ IDENT:c2 COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:t COLON:: IDENT:Theme EXISTS:∃ IDENT:h COLON:: IDENT:Host_city_ID EXISTS:∃ IDENT:h1 COLON:: IDENT:Hosts LPAR:( LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:o COMMA:, IDENT:s COMMA:, IDENT:a COMMA:, IDENT:p COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:farm_competition LPAR:( IDENT:c2 COMMA:, IDENT:y COMMA:, IDENT:t COMMA:, IDENT:h COMMA:, IDENT:h1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:h RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:City_ID
+            EXISTS s:Status
+              EXISTS a:Area_km_2
+                EXISTS p:Population
+                  EXISTS c1:Census_Ranking
+                    EXISTS c2:Competition_ID
+                      EXISTS t:Theme
+                        EXISTS h:Host_city_ID
+                          EXISTS h1:Hosts
+                            AND
+                              AND
+                                PRED city(c, o, s, a, p, c1)
+                                PRED farm_competition(c2, y, t, h, h1)
+                              EQ  c = h
+      Predicted FOL: ∃cid:Host_city_ID ∃comp:Competition_ID ∃theme:Theme ∃hosts:Hosts ∃status:Status ∃area:Area_km_2 ∃pop:Population ∃rank:Census_Ranking ( farm_competition(comp, year, theme, cid, hosts) ∧ city(cid, official_name, status, area, pop, rank) )
+        tokens: EXISTS:∃ IDENT:cid COLON:: IDENT:Host_city_ID EXISTS:∃ IDENT:comp COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:theme COLON:: IDENT:Theme EXISTS:∃ IDENT:hosts COLON:: IDENT:Hosts EXISTS:∃ IDENT:status COLON:: IDENT:Status EXISTS:∃ IDENT:area COLON:: IDENT:Area_km_2 EXISTS:∃ IDENT:pop COLON:: IDENT:Population EXISTS:∃ IDENT:rank COLON:: IDENT:Census_Ranking LPAR:( IDENT:farm_competition LPAR:( IDENT:comp COMMA:, IDENT:year COMMA:, IDENT:theme COMMA:, IDENT:cid COMMA:, IDENT:hosts RPAR:) AND:∧ IDENT:city LPAR:( IDENT:cid COMMA:, IDENT:official_name COMMA:, IDENT:status COMMA:, IDENT:area COMMA:, IDENT:pop COMMA:, IDENT:rank RPAR:) RPAR:) EOF
+        AST:
+          EXISTS cid:Host_city_ID
+            EXISTS comp:Competition_ID
+              EXISTS theme:Theme
+                EXISTS hosts:Hosts
+                  EXISTS status:Status
+                    EXISTS area:Area_km_2
+                      EXISTS pop:Population
+                        EXISTS rank:Census_Ranking
+                          AND
+                            PRED farm_competition(comp, year, theme, cid, hosts)
+                            PRED city(cid, official_name, status, area, pop, rank)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Official_Name_0 : Official_Name   Gold o <-> Predicted official_name
+      FV_Year_0 : Year   Gold y <-> Predicted year
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Area_km_2, global real -> Float32()
+        c : local City_ID, global int -> IntSort()
+        c1 : local Census_Ranking, global text -> StringSort()
+        c2 : local Competition_ID, global int -> IntSort()
+        h : local Host_city_ID, global int -> IntSort()
+        h1 : local Hosts, global text -> StringSort()
+        o : local Official_Name, global text -> StringSort()
+        p : local Population, global real -> Float32()
+        s : local Status, global text -> StringSort()
+        t : local Theme, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        area : local Area_km_2, global real -> Float32()
+        cid : local Host_city_ID, global int -> IntSort()
+        comp : local Competition_ID, global int -> IntSort()
+        hosts : local Hosts, global text -> StringSort()
+        official_name : local Official_Name, global text -> StringSort()
+        pop : local Population, global real -> Float32()
+        rank : local Census_Ranking, global text -> StringSort()
+        status : local Status, global text -> StringSort()
+        theme : local Theme, global text -> StringSort()
+        year : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_s_2, gold_a_3, gold_p_4, gold_c1_5, gold_c2_6, gold_t_7, gold_h_8, gold_h1_9], And(D_real(gold_a_3), D_real(gold_p_4), And(And(P_city(gold_c_1, FV_Official_Name_0, gold_s_2, gold_a_3, gold_p_4, gold_c1_5), P_farm_competition(gold_c2_6, FV_Year_0, gold_t_7, gold_h_8, gold_h1_9)), (gold_c_1 == gold_h_8))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_s, WGOLD_a, WGOLD_p, WGOLD_c1, WGOLD_c2, WGOLD_t, WGOLD_h, WGOLD_h1):  And(D_real(WGOLD_a), D_real(WGOLD_p), And(And(P_city(WGOLD_c, FV_Official_Name_0, WGOLD_s, WGOLD_a, WGOLD_p, WGOLD_c1), P_farm_competition(WGOLD_c2, FV_Year_0, WGOLD_t, WGOLD_h, WGOLD_h1)), (WGOLD_c == WGOLD_h)))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_cid_1, predicted_comp_2, predicted_theme_3, predicted_hosts_4, predicted_status_5, predicted_area_6, predicted_pop_7, predicted_rank_8], And(D_real(predicted_area_6), D_real(predicted_pop_7), And(P_farm_competition(predicted_comp_2, FV_Year_0, predicted_theme_3, predicted_cid_1, predicted_hosts_4), P_city(predicted_cid_1, FV_Official_Name_0, predicted_status_5, predicted_area_6, predicted_pop_7, predicted_rank_8))))
+      predicted_skolem (witnesses WPREDICTED_cid, WPREDICTED_comp, WPREDICTED_theme, WPREDICTED_hosts, WPREDICTED_status, WPREDICTED_area, WPREDICTED_pop, WPREDICTED_rank):  And(D_real(WPREDICTED_area), D_real(WPREDICTED_pop), And(P_farm_competition(WPREDICTED_comp, FV_Year_0, WPREDICTED_theme, WPREDICTED_cid, WPREDICTED_hosts), P_city(WPREDICTED_cid, FV_Official_Name_0, WPREDICTED_status, WPREDICTED_area, WPREDICTED_pop, WPREDICTED_rank)))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 783 lines, 31484 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1338.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_s, WGOLD_a, WGOLD_p, WGOLD_c1, WGOLD_c2, WGOLD_t, WGOLD_h, WGOLD_h1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(Not(fpIsNaN(WGOLD_p)), Not(And(fpIsZero(WGOLD_p), fpIsNegative(WGOLD_p)))), And(And(city(WGOLD_c, FV_Official_Name_0, WGOLD_s, WGOLD_a, WGOLD_p, WGOLD_c1), farm_competition(WGOLD_c2, FV_Year_0, WGOLD_t, WGOLD_h, WGOLD_h1)), WGOLD_c == WGOLD_h)), Not(Exists([predicted_cid_1, predicted_comp_2, predicted_theme_3, predicted_hosts_4, predicted_status_5, predicted_area_6, predicted_pop_7, predicted_rank_8], And(And(Not(fpIsNaN(predicted_area_6)), Not(And(fpIsZero(predicted_area_6), fpIsNegative(predicted_area_6)))), And(Not(fpIsNaN(predicted_pop_7)), Not(And(fpIsZero(predicted_pop_7), fpIsNegative(predicted_pop_7)))), And(farm_competition(predicted_comp_2, FV_Year_0, predicted_theme_3, predicted_cid_1, predicted_hosts_4), city(predicted_cid_1, FV_Official_Name_0, predicted_status_5, predicted_area_6, predicted_pop_7, predicted_rank_8))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_cid, WPREDICTED_comp, WPREDICTED_theme, WPREDICTED_hosts, WPREDICTED_status, WPREDICTED_area, WPREDICTED_pop, WPREDICTED_rank
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_area)), Not(And(fpIsZero(WPREDICTED_area), fpIsNegative(WPREDICTED_area)))), And(Not(fpIsNaN(WPREDICTED_pop)), Not(And(fpIsZero(WPREDICTED_pop), fpIsNegative(WPREDICTED_pop)))), And(farm_competition(WPREDICTED_comp, FV_Year_0, WPREDICTED_theme, WPREDICTED_cid, WPREDICTED_hosts), city(WPREDICTED_cid, FV_Official_Name_0, WPREDICTED_status, WPREDICTED_area, WPREDICTED_pop, WPREDICTED_rank))), Not(Exists([gold_c_1, gold_s_2, gold_a_3, gold_p_4, gold_c1_5, gold_c2_6, gold_t_7, gold_h_8, gold_h1_9], And(And(Not(fpIsNaN(gold_a_3)), Not(And(fpIsZero(gold_a_3), fpIsNegative(gold_a_3)))), And(Not(fpIsNaN(gold_p_4)), Not(And(fpIsZero(gold_p_4), fpIsNegative(gold_p_4)))), And(And(city(gold_c_1, FV_Official_Name_0, gold_s_2, gold_a_3, gold_p_4, gold_c1_5), farm_competition(gold_c2_6, FV_Year_0, gold_t_7, gold_h_8, gold_h1_9)), gold_c_1 == gold_h_8)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

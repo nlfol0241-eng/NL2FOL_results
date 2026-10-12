@@ -1,0 +1,115 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1166.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1166.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3339 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the titles and authors or editors that correspond to books made after 1989?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Author_or_Editor = text -> StringSort()
+        Book_Title = text -> StringSort()
+        Category = text -> StringSort()
+        Publisher = text -> StringSort()
+        Result = text -> StringSort()
+        Year = int -> IntSort()
+        book_club_id = text -> StringSort()
+      symbols:
+        book_club(book_club_id, Year, Author_or_Editor, Book_Title, Publisher, Category, Result)
+        constant 1989 : Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : book_club_id ∃y : Year ∃p : Publisher ∃c : Category ∃r : Result ( (book_club(b,y,a,b1,p,c,r)) ∧ (y > 1989) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:book_club_id EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:p COLON:: IDENT:Publisher EXISTS:∃ IDENT:c COLON:: IDENT:Category EXISTS:∃ IDENT:r COLON:: IDENT:Result LPAR:( LPAR:( IDENT:book_club LPAR:( IDENT:b COMMA:, IDENT:y COMMA:, IDENT:a COMMA:, IDENT:b1 COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y GT:> NUM:1989 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:book_club_id
+            EXISTS y:Year
+              EXISTS p:Publisher
+                EXISTS c:Category
+                  EXISTS r:Result
+                    AND
+                      PRED book_club(b, y, a, b1, p, c, r)
+                      CMP  y > 1989
+      Predicted FOL: ∃id:book_club_id ∃y:Year ∃aoe:Author_or_Editor ∃pub:Publisher ∃cat:Category ∃res:Result (book_club(id,y,aoe,Title,pub,cat,res) ∧ y > 1989 ∧ Author_or_Editor = aoe)
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:book_club_id EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:aoe COLON:: IDENT:Author_or_Editor EXISTS:∃ IDENT:pub COLON:: IDENT:Publisher EXISTS:∃ IDENT:cat COLON:: IDENT:Category EXISTS:∃ IDENT:res COLON:: IDENT:Result LPAR:( IDENT:book_club LPAR:( IDENT:id COMMA:, IDENT:y COMMA:, IDENT:aoe COMMA:, IDENT:Title COMMA:, IDENT:pub COMMA:, IDENT:cat COMMA:, IDENT:res RPAR:) AND:∧ IDENT:y GT:> NUM:1989 AND:∧ IDENT:Author_or_Editor EQ:= IDENT:aoe RPAR:) EOF
+        AST:
+          EXISTS id:book_club_id
+            EXISTS y:Year
+              EXISTS aoe:Author_or_Editor
+                EXISTS pub:Publisher
+                  EXISTS cat:Category
+                    EXISTS res:Result
+                      AND
+                        PRED book_club(id, y, aoe, Title, pub, cat, res)
+                        CMP  y > 1989
+                        EQ  Author_or_Editor = aoe
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Author_or_Editor_0 : Author_or_Editor   Gold a <-> Predicted Author_or_Editor
+      FV_Book_Title_0 : Book_Title   Gold b1 <-> Predicted Title
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Author_or_Editor, global text -> StringSort()
+        b : local book_club_id, global text -> StringSort()
+        b1 : local Book_Title, global text -> StringSort()
+        c : local Category, global text -> StringSort()
+        p : local Publisher, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        Author_or_Editor : local Author_or_Editor, global text -> StringSort()
+        Title : local Book_Title, global text -> StringSort()
+        aoe : local Author_or_Editor, global text -> StringSort()
+        cat : local Category, global text -> StringSort()
+        id : local book_club_id, global text -> StringSort()
+        pub : local Publisher, global text -> StringSort()
+        res : local Result, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_y_2, gold_p_3, gold_c_4, gold_r_5], And(P_book_club(gold_b_1, gold_y_2, FV_Author_or_Editor_0, FV_Book_Title_0, gold_p_3, gold_c_4, gold_r_5), (gold_y_2 > L_v_1989_int)))
+      gold_skolem (witnesses WGOLD_b, WGOLD_y, WGOLD_p, WGOLD_c, WGOLD_r):  And(P_book_club(WGOLD_b, WGOLD_y, FV_Author_or_Editor_0, FV_Book_Title_0, WGOLD_p, WGOLD_c, WGOLD_r), (WGOLD_y > L_v_1989_int))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_y_2, predicted_aoe_3, predicted_pub_4, predicted_cat_5, predicted_res_6], And(P_book_club(predicted_id_1, predicted_y_2, predicted_aoe_3, FV_Book_Title_0, predicted_pub_4, predicted_cat_5, predicted_res_6), (predicted_y_2 > L_v_1989_int), (FV_Author_or_Editor_0 == predicted_aoe_3)))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_y, WPREDICTED_aoe, WPREDICTED_pub, WPREDICTED_cat, WPREDICTED_res):  And(P_book_club(WPREDICTED_id, WPREDICTED_y, WPREDICTED_aoe, FV_Book_Title_0, WPREDICTED_pub, WPREDICTED_cat, WPREDICTED_res), (WPREDICTED_y > L_v_1989_int), (FV_Author_or_Editor_0 == WPREDICTED_aoe))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1989' at int -> L_v_1989_int = IntVal(1989)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 753 lines, 29176 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1166.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_y, WGOLD_p, WGOLD_c, WGOLD_r
+      claim: And(And(book_club(WGOLD_b, WGOLD_y, FV_Author_or_Editor_0, FV_Book_Title_0, WGOLD_p, WGOLD_c, WGOLD_r), 1989 < WGOLD_y), Not(Exists([predicted_id_1, predicted_y_2, predicted_aoe_3, predicted_pub_4, predicted_cat_5, predicted_res_6], And(book_club(predicted_id_1, predicted_y_2, predicted_aoe_3, FV_Book_Title_0, predicted_pub_4, predicted_cat_5, predicted_res_6), 1989 < predicted_y_2, FV_Author_or_Editor_0 == predicted_aoe_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_y, WPREDICTED_aoe, WPREDICTED_pub, WPREDICTED_cat, WPREDICTED_res
+      claim: And(And(book_club(WPREDICTED_id, WPREDICTED_y, WPREDICTED_aoe, FV_Book_Title_0, WPREDICTED_pub, WPREDICTED_cat, WPREDICTED_res), 1989 < WPREDICTED_y, FV_Author_or_Editor_0 == WPREDICTED_aoe), Not(Exists([gold_b_1, gold_y_2, gold_p_3, gold_c_4, gold_r_5], And(book_club(gold_b_1, gold_y_2, FV_Author_or_Editor_0, FV_Book_Title_0, gold_p_3, gold_c_4, gold_r_5), 1989 < gold_y_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

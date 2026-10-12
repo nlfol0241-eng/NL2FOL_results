@@ -1,0 +1,82 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_174.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_174.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3096 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what states are next to kentucky
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        border = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        constant kentucky : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ( (border_info(s,b)) ∧ (s = 'kentucky') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:kentucky RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            AND
+              PRED border_info(s, b)
+              EQ  s = 'kentucky'
+      Predicted FOL: border_info('kentucky', x)
+        tokens: IDENT:border_info LPAR:( LIT:kentucky COMMA:, IDENT:x RPAR:) EOF
+        AST:
+          PRED border_info('kentucky', x)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_border_0 : border   Gold b <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 3 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local border, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        x : local border, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1], And(P_border_info(gold_s_1, FV_border_0), (gold_s_1 == L_kentucky)))
+      gold_skolem (witnesses WGOLD_s):  And(P_border_info(WGOLD_s, FV_border_0), (WGOLD_s == L_kentucky))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  P_border_info(L_kentucky, FV_border_0)
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'kentucky' at text -> L_kentucky = StringVal('kentucky')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 708 lines, 25490 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_174.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s
+      claim: And(And(border_info(WGOLD_s, FV_border_0), WGOLD_s == "kentucky"), Not(border_info("kentucky", FV_border_0)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(border_info("kentucky", FV_border_0), Not(Exists(gold_s_1, And(border_info(gold_s_1, FV_border_0), gold_s_1 == "kentucky"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.002 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_932.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_932.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9408 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the phone number of performer "Ashley".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Address_ID = text -> StringSort()
+        Customer_Email_Address = varchar(255) -> StringSort()
+        Customer_Name = varchar(255) -> StringSort()
+        Customer_Phone = varchar(255) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Performer_ID = integer -> IntSort()
+      symbols:
+        Performers(Performer_ID, Address_ID, Customer_Name, Customer_Phone, Customer_Email_Address, Other_Details)
+        constant Ashley : Customer_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Performer_ID ∃a : Address_ID ∃c : Customer_Name ∃c2 : Customer_Email_Address ∃o : Other_Details ( (Performers(p,a,c,c1,c2,o)) ∧ (c = 'Ashley') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Performer_ID EXISTS:∃ IDENT:a COLON:: IDENT:Address_ID EXISTS:∃ IDENT:c COLON:: IDENT:Customer_Name EXISTS:∃ IDENT:c2 COLON:: IDENT:Customer_Email_Address EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( LPAR:( IDENT:Performers LPAR:( IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Ashley RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Performer_ID
+            EXISTS a:Address_ID
+              EXISTS c:Customer_Name
+                EXISTS c2:Customer_Email_Address
+                  EXISTS o:Other_Details
+                    AND
+                      PRED Performers(p, a, c, c1, c2, o)
+                      EQ  c = 'Ashley'
+      Predicted FOL: ∃h0:Performer_ID ∃h1:Address_ID ∃h5:Other_Details ∃h4:Customer_Email_Address ( Performers(h0, h1, Ashley, phone, h4, h5) )
+        tokens: EXISTS:∃ IDENT:h0 COLON:: IDENT:Performer_ID EXISTS:∃ IDENT:h1 COLON:: IDENT:Address_ID EXISTS:∃ IDENT:h5 COLON:: IDENT:Other_Details EXISTS:∃ IDENT:h4 COLON:: IDENT:Customer_Email_Address LPAR:( IDENT:Performers LPAR:( IDENT:h0 COMMA:, IDENT:h1 COMMA:, IDENT:Ashley COMMA:, IDENT:phone COMMA:, IDENT:h4 COMMA:, IDENT:h5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h0:Performer_ID
+            EXISTS h1:Address_ID
+              EXISTS h5:Other_Details
+                EXISTS h4:Customer_Email_Address
+                  PRED Performers(h0, h1, Ashley<const>, phone, h4, h5)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Customer_Phone_0 : Customer_Phone   Gold c1 <-> Predicted phone
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address_ID, global text -> StringSort()
+        c : local Customer_Name, global varchar(255) -> StringSort()
+        c1 : local Customer_Phone, global varchar(255) -> StringSort()
+        c2 : local Customer_Email_Address, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Performer_ID, global integer -> IntSort()
+      Predicted FOL:
+        h0 : local Performer_ID, global integer -> IntSort()
+        h1 : local Address_ID, global text -> StringSort()
+        h4 : local Customer_Email_Address, global varchar(255) -> StringSort()
+        h5 : local Other_Details, global varchar(255) -> StringSort()
+        phone : local Customer_Phone, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_a_2, gold_c_3, gold_c2_4, gold_o_5], And(D_varchar_255_(gold_c_3), D_varchar_255_(gold_c2_4), D_varchar_255_(gold_o_5), And(P_Performers(gold_p_1, gold_a_2, gold_c_3, FV_Customer_Phone_0, gold_c2_4, gold_o_5), (gold_c_3 == L_Ashley))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_c2, WGOLD_o):  And(D_varchar_255_(WGOLD_c), D_varchar_255_(WGOLD_c2), D_varchar_255_(WGOLD_o), And(P_Performers(WGOLD_p, WGOLD_a, WGOLD_c, FV_Customer_Phone_0, WGOLD_c2, WGOLD_o), (WGOLD_c == L_Ashley)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_h0_1, predicted_h1_2, predicted_h5_3, predicted_h4_4], And(D_varchar_255_(predicted_h5_3), D_varchar_255_(predicted_h4_4), And(P_Performers(predicted_h0_1, predicted_h1_2, L_Ashley, FV_Customer_Phone_0, predicted_h4_4, predicted_h5_3), D_varchar_255_(L_Ashley))))
+      predicted_skolem (witnesses WPREDICTED_h0, WPREDICTED_h1, WPREDICTED_h5, WPREDICTED_h4):  And(D_varchar_255_(WPREDICTED_h5), D_varchar_255_(WPREDICTED_h4), And(P_Performers(WPREDICTED_h0, WPREDICTED_h1, L_Ashley, FV_Customer_Phone_0, WPREDICTED_h4, WPREDICTED_h5), D_varchar_255_(L_Ashley)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Ashley' at varchar(255) -> L_Ashley = StringVal('Ashley')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 747 lines, 29146 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_932.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Customer_Phone_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_c2, WGOLD_o
+      claim: And(And(Length(WGOLD_c) <= 255, Length(WGOLD_c2) <= 255, Length(WGOLD_o) <= 255, And(Performers(WGOLD_p, WGOLD_a, WGOLD_c, FV_Customer_Phone_0, WGOLD_c2, WGOLD_o), WGOLD_c == "Ashley")), Not(Exists([predicted_h0_1, predicted_h1_2, predicted_h5_3, predicted_h4_4], And(Length(predicted_h5_3) <= 255, Length(predicted_h4_4) <= 255, And(Performers(predicted_h0_1, predicted_h1_2, "Ashley", FV_Customer_Phone_0, predicted_h4_4, predicted_h5_3), Length("Ashley") <= 255)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_h0, WPREDICTED_h1, WPREDICTED_h5, WPREDICTED_h4
+      claim: And(And(Length(WPREDICTED_h5) <= 255, Length(WPREDICTED_h4) <= 255, And(Performers(WPREDICTED_h0, WPREDICTED_h1, "Ashley", FV_Customer_Phone_0, WPREDICTED_h4, WPREDICTED_h5), Length("Ashley") <= 255)), Not(Exists([gold_p_1, gold_a_2, gold_c_3, gold_c2_4, gold_o_5], And(Length(gold_c_3) <= 255, Length(gold_c2_4) <= 255, Length(gold_o_5) <= 255, And(Performers(gold_p_1, gold_a_2, gold_c_3, FV_Customer_Phone_0, gold_c2_4, gold_o_5), gold_c_3 == "Ashley")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.012 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

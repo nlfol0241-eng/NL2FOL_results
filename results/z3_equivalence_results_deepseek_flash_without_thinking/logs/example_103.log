@@ -1,0 +1,78 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_103.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_103.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2142 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the grade for the high schooler named Kyle.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        ID = int -> IntSort()
+        grade = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Highschooler(ID, name, grade)
+        constant Kyle : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃n : name ( (Highschooler(i,n,g)) ∧ (n = 'Kyle') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( IDENT:Highschooler LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Kyle RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS n:name
+              AND
+                PRED Highschooler(i, n, g)
+                EQ  n = 'Kyle'
+      Predicted FOL: ∃x : ID ∃y : name ∃z : grade (Highschooler(x, y, z) ∧ y = Kyle ∧ z = grade)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:ID EXISTS:∃ IDENT:y COLON:: IDENT:name EXISTS:∃ IDENT:z COLON:: IDENT:grade LPAR:( IDENT:Highschooler LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ IDENT:y EQ:= IDENT:Kyle AND:∧ IDENT:z EQ:= IDENT:grade RPAR:) EOF
+        AST:
+          EXISTS x:ID
+            EXISTS y:name
+              EXISTS z:grade
+                AND
+                  PRED Highschooler(x, y, z)
+                  EQ  y = Kyle<const>
+                  EQ  z = grade
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) grade occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (g : grade) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local grade, global int -> IntSort()
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        grade : local int, global int -> IntSort()
+        x : local ID, global int -> IntSort()
+        y : local name, global text -> StringSort()
+        z : local grade, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5332 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_103.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (g : grade) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) grade occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

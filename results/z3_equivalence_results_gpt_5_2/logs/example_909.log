@@ -1,0 +1,130 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_909.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_909.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4285 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the enrollments of schools whose denomination is not "Catholic"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 10 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Boys_or_Girls = text -> StringSort()
+        Day_or_Boarding = text -> StringSort()
+        Denomination = text -> StringSort()
+        Enrollment = real -> Float32()
+        Founded = real -> Float32()
+        Location = text -> StringSort()
+        School = text -> StringSort()
+        School_Colors = text -> StringSort()
+        School_ID = int -> IntSort()
+        Year_Entered_Competition = real -> Float32()
+      symbols:
+        school(School_ID, School, Location, Enrollment, Founded, Denomination, Boys_or_Girls, Day_or_Boarding, Year_Entered_Competition, School_Colors)
+        constant Catholic : Denomination
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : School_ID ∃s1 : School ∃l : Location ∃f : Founded ∃d : Denomination ∃b : Boys_or_Girls ∃d1 : Day_or_Boarding ∃y : Year_Entered_Competition ∃s2 : School_Colors ( (school(s,s1,l,e,f,d,b,d1,y,s2)) ∧ (d <> 'Catholic') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:School_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:School EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:d COLON:: IDENT:Denomination EXISTS:∃ IDENT:b COLON:: IDENT:Boys_or_Girls EXISTS:∃ IDENT:d1 COLON:: IDENT:Day_or_Boarding EXISTS:∃ IDENT:y COLON:: IDENT:Year_Entered_Competition EXISTS:∃ IDENT:s2 COLON:: IDENT:School_Colors LPAR:( LPAR:( IDENT:school LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:e COMMA:, IDENT:f COMMA:, IDENT:d COMMA:, IDENT:b COMMA:, IDENT:d1 COMMA:, IDENT:y COMMA:, IDENT:s2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d NEQ:<> LIT:Catholic RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:School_ID
+            EXISTS s1:School
+              EXISTS l:Location
+                EXISTS f:Founded
+                  EXISTS d:Denomination
+                    EXISTS b:Boys_or_Girls
+                      EXISTS d1:Day_or_Boarding
+                        EXISTS y:Year_Entered_Competition
+                          EXISTS s2:School_Colors
+                            AND
+                              PRED school(s, s1, l, e, f, d, b, d1, y, s2)
+                              NEQ  d != 'Catholic'
+      Predicted FOL: ∃a0:School_ID ∃a1:School ∃a2:Location ∃a4:Founded ∃a5:Denomination ∃a6:Boys_or_Girls ∃a7:Day_or_Boarding ∃a8:Year_Entered_Competition ∃a9:School_Colors ( school(a0,a1,a2,e,a4,a5,a6,a7,a8,a9) ∧ a5 ≠ Catholic )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:School_ID EXISTS:∃ IDENT:a1 COLON:: IDENT:School EXISTS:∃ IDENT:a2 COLON:: IDENT:Location EXISTS:∃ IDENT:a4 COLON:: IDENT:Founded EXISTS:∃ IDENT:a5 COLON:: IDENT:Denomination EXISTS:∃ IDENT:a6 COLON:: IDENT:Boys_or_Girls EXISTS:∃ IDENT:a7 COLON:: IDENT:Day_or_Boarding EXISTS:∃ IDENT:a8 COLON:: IDENT:Year_Entered_Competition EXISTS:∃ IDENT:a9 COLON:: IDENT:School_Colors LPAR:( IDENT:school LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:e COMMA:, IDENT:a4 COMMA:, IDENT:a5 COMMA:, IDENT:a6 COMMA:, IDENT:a7 COMMA:, IDENT:a8 COMMA:, IDENT:a9 RPAR:) AND:∧ IDENT:a5 NEQ:≠ IDENT:Catholic RPAR:) EOF
+        AST:
+          EXISTS a0:School_ID
+            EXISTS a1:School
+              EXISTS a2:Location
+                EXISTS a4:Founded
+                  EXISTS a5:Denomination
+                    EXISTS a6:Boys_or_Girls
+                      EXISTS a7:Day_or_Boarding
+                        EXISTS a8:Year_Entered_Competition
+                          EXISTS a9:School_Colors
+                            AND
+                              PRED school(a0, a1, a2, e, a4, a5, a6, a7, a8, a9)
+                              NEQ  a5 != Catholic<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Enrollment_0 : Enrollment   Gold e <-> Predicted e
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Boys_or_Girls, global text -> StringSort()
+        d : local Denomination, global text -> StringSort()
+        d1 : local Day_or_Boarding, global text -> StringSort()
+        e : local Enrollment, global real -> Float32()
+        f : local Founded, global real -> Float32()
+        l : local Location, global text -> StringSort()
+        s : local School_ID, global int -> IntSort()
+        s1 : local School, global text -> StringSort()
+        s2 : local School_Colors, global text -> StringSort()
+        y : local Year_Entered_Competition, global real -> Float32()
+      Predicted FOL:
+        a0 : local School_ID, global int -> IntSort()
+        a1 : local School, global text -> StringSort()
+        a2 : local Location, global text -> StringSort()
+        a4 : local Founded, global real -> Float32()
+        a5 : local Denomination, global text -> StringSort()
+        a6 : local Boys_or_Girls, global text -> StringSort()
+        a7 : local Day_or_Boarding, global text -> StringSort()
+        a8 : local Year_Entered_Competition, global real -> Float32()
+        a9 : local School_Colors, global text -> StringSort()
+        e : local Enrollment, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_s1_2, gold_l_3, gold_f_4, gold_d_5, gold_b_6, gold_d1_7, gold_y_8, gold_s2_9], And(D_real(gold_f_4), D_real(gold_y_8), And(P_school(gold_s_1, gold_s1_2, gold_l_3, FV_Enrollment_0, gold_f_4, gold_d_5, gold_b_6, gold_d1_7, gold_y_8, gold_s2_9), (gold_d_5 != L_Catholic))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_s1, WGOLD_l, WGOLD_f, WGOLD_d, WGOLD_b, WGOLD_d1, WGOLD_y, WGOLD_s2):  And(D_real(WGOLD_f), D_real(WGOLD_y), And(P_school(WGOLD_s, WGOLD_s1, WGOLD_l, FV_Enrollment_0, WGOLD_f, WGOLD_d, WGOLD_b, WGOLD_d1, WGOLD_y, WGOLD_s2), (WGOLD_d != L_Catholic)))
+   Gold: 9 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a1_2, predicted_a2_3, predicted_a4_4, predicted_a5_5, predicted_a6_6, predicted_a7_7, predicted_a8_8, predicted_a9_9], And(D_real(predicted_a4_4), D_real(predicted_a8_8), And(P_school(predicted_a0_1, predicted_a1_2, predicted_a2_3, FV_Enrollment_0, predicted_a4_4, predicted_a5_5, predicted_a6_6, predicted_a7_7, predicted_a8_8, predicted_a9_9), (predicted_a5_5 != L_Catholic))))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7, WPREDICTED_a8, WPREDICTED_a9):  And(D_real(WPREDICTED_a4), D_real(WPREDICTED_a8), And(P_school(WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, FV_Enrollment_0, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7, WPREDICTED_a8, WPREDICTED_a9), (WPREDICTED_a5 != L_Catholic)))
+   Predicted: 9 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Catholic' at text -> L_Catholic = StringVal('Catholic')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 782 lines, 31464 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_909.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Enrollment_0)), Not(And(fpIsZero(FV_Enrollment_0), fpIsNegative(FV_Enrollment_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_s1, WGOLD_l, WGOLD_f, WGOLD_d, WGOLD_b, WGOLD_d1, WGOLD_y, WGOLD_s2
+      claim: And(And(And(Not(fpIsNaN(WGOLD_f)), Not(And(fpIsZero(WGOLD_f), fpIsNegative(WGOLD_f)))), And(Not(fpIsNaN(WGOLD_y)), Not(And(fpIsZero(WGOLD_y), fpIsNegative(WGOLD_y)))), And(school(WGOLD_s, WGOLD_s1, WGOLD_l, FV_Enrollment_0, WGOLD_f, WGOLD_d, WGOLD_b, WGOLD_d1, WGOLD_y, WGOLD_s2), WGOLD_d != "Catholic")), Not(Exists([predicted_a0_1, predicted_a1_2, predicted_a2_3, predicted_a4_4, predicted_a5_5, predicted_a6_6, predicted_a7_7, predicted_a8_8, predicted_a9_9], And(And(Not(fpIsNaN(predicted_a4_4)), Not(And(fpIsZero(predicted_a4_4), fpIsNegative(predicted_a4_4)))), And(Not(fpIsNaN(predicted_a8_8)), Not(And(fpIsZero(predicted_a8_8), fpIsNegative(predicted_a8_8)))), And(school(predicted_a0_1, predicted_a1_2, predicted_a2_3, FV_Enrollment_0, predicted_a4_4, predicted_a5_5, predicted_a6_6, predicted_a7_7, predicted_a8_8, predicted_a9_9), predicted_a5_5 != "Catholic")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7, WPREDICTED_a8, WPREDICTED_a9
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a4)), Not(And(fpIsZero(WPREDICTED_a4), fpIsNegative(WPREDICTED_a4)))), And(Not(fpIsNaN(WPREDICTED_a8)), Not(And(fpIsZero(WPREDICTED_a8), fpIsNegative(WPREDICTED_a8)))), And(school(WPREDICTED_a0, WPREDICTED_a1, WPREDICTED_a2, FV_Enrollment_0, WPREDICTED_a4, WPREDICTED_a5, WPREDICTED_a6, WPREDICTED_a7, WPREDICTED_a8, WPREDICTED_a9), WPREDICTED_a5 != "Catholic")), Not(Exists([gold_s_1, gold_s1_2, gold_l_3, gold_f_4, gold_d_5, gold_b_6, gold_d1_7, gold_y_8, gold_s2_9], And(And(Not(fpIsNaN(gold_f_4)), Not(And(fpIsZero(gold_f_4), fpIsNegative(gold_f_4)))), And(Not(fpIsNaN(gold_y_8)), Not(And(fpIsZero(gold_y_8), fpIsNegative(gold_y_8)))), And(school(gold_s_1, gold_s1_2, gold_l_3, FV_Enrollment_0, gold_f_4, gold_d_5, gold_b_6, gold_d1_7, gold_y_8, gold_s2_9), gold_d_5 != "Catholic")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

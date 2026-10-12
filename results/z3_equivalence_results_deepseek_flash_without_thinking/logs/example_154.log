@@ -1,0 +1,82 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_154.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_154.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3505 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: which states border the ohio river
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        country_name = varchar(3) -> StringSort()
+        length = integer -> IntSort()
+        river_name = text -> StringSort()
+        traverse = text -> StringSort()
+      symbols:
+        river(river_name, length, country_name, traverse)
+        constant ohio : river_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : river_name ∃l : length ∃c : country_name ( (river(r,l,c,t)) ∧ (r = 'ohio') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:river_name EXISTS:∃ IDENT:l COLON:: IDENT:length EXISTS:∃ IDENT:c COLON:: IDENT:country_name LPAR:( LPAR:( IDENT:river LPAR:( IDENT:r COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:ohio RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:river_name
+            EXISTS l:length
+              EXISTS c:country_name
+                AND
+                  PRED river(r, l, c, t)
+                  EQ  r = 'ohio'
+      Predicted FOL: ∃x : river_name ∃y : length ∃z : country_name ( river(x, y, z, 'ohio') ∧ ∃a0 : state_name ∃a1 : state_abbr ∃a2 : capital ∃a3 : largest_city ∃a4 : admission_order ∃a5 : population ( state(a0, a1, a2, a3, a4, a5) ∧ border_info(a0, x) ) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:river_name EXISTS:∃ IDENT:y COLON:: IDENT:length EXISTS:∃ IDENT:z COLON:: IDENT:country_name LPAR:( IDENT:river LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, LIT:ohio RPAR:) AND:∧ EXISTS:∃ IDENT:a0 COLON:: IDENT:state_name EXISTS:∃ IDENT:a1 COLON:: IDENT:state_abbr EXISTS:∃ IDENT:a2 COLON:: IDENT:capital EXISTS:∃ IDENT:a3 COLON:: IDENT:largest_city EXISTS:∃ IDENT:a4 COLON:: IDENT:admission_order EXISTS:∃ IDENT:a5 COLON:: IDENT:population LPAR:( IDENT:state LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 COMMA:, IDENT:a5 RPAR:) AND:∧ IDENT:border_info LPAR:( IDENT:a0 COMMA:, IDENT:x RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:river_name
+            EXISTS y:length
+              EXISTS z:country_name
+                AND
+                  PRED river(x, y, z, 'ohio')
+                  EXISTS a0:state_name
+                    EXISTS a1:state_abbr
+                      EXISTS a2:capital
+                        EXISTS a3:largest_city
+                          EXISTS a4:admission_order
+                            EXISTS a5:population
+                              AND
+                                PRED state(a0, a1, a2, a3, a4, a5)
+                                PRED border_info(a0, x)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : traverse) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: unknown sort 'state_name'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 131, in infer
+    env.assign(node[2], sig.g(node[3]))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\signature.py", line 97, in g
+    raise ValueError(f"unknown sort {local_sort!r}")
+ValueError: unknown sort 'state_name'

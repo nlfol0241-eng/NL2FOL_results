@@ -1,0 +1,96 @@
+{
+  "NL": "List the names of phones that are not on any market.",
+  "Vocabulary": {
+    "Predicates": [
+      "phone",
+      "phone_market"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "phone": [
+        "Name",
+        "Phone_ID",
+        "Memory_in_G",
+        "Carrier",
+        "Price"
+      ],
+      "phone_market": [
+        "Market_ID",
+        "Phone_ID",
+        "Num_of_stock"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a0'∀a1'∀a2'∀a3'∀a4'( phone(a0, a1, a2, a3, a4) ∧ phone(a0', a1', a2', a3', a4') ∧ a1 = a1' ) → ( a0 = a0' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( market(b0, b1, b2, b3, b4) ∧ market(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( phone_market(c0, c1, c2) ∧ phone_market(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( phone_market(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4 ( phone(a0, a1, a2, a3, a4) ∧ a1 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( phone_market(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4 ( market(b0, b1, b2, b3, b4) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "phone": {
+        "A": "phone",
+        "A0": "Name",
+        "A1": "Phone_ID",
+        "A2": "Memory_in_G",
+        "A3": "Carrier",
+        "A4": "Price"
+      },
+      "phone_market": {
+        "B": "phone_market",
+        "B0": "Market_ID",
+        "B1": "Phone_ID",
+        "B2": "Num_of_stock"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃m : Memory_in_G ∃p : Phone_ID ∃p1 : Price ∃c : Carrier( (phone(n,p,m,c,p1)) ∧ (¬(∃p2 : Phone_ID( ((phone(n,p,m,c,p1)) ∧ (∃m1 : Market_ID ∃n1 : Num_of_stock( phone_market(m1,p2,n1) ))) ∧ (p = p2) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A0]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A1 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A0]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A1 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A2,?A1,?A4,?A3( (A(?A0,?A1,?A2,?A3,?A4)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3,?A4)) & ([E]?B0,?B2( B(?B0,?B1,?B2) ))) & (?A1 = ?B1) ))) )",
+    "string": "∃A2 ∃A1 ∃A4 ∃A3( (A(A0,A1,A2,A3,A4)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3,A4)) ∧ (∃B0 ∃B2( B(B0,B1,B2) ))) ∧ (A1 = B1) ))) )",
+    "free variables": "A0",
+    "db_id": "phone_market",
+    "processed_sql": "SELECT Name FROM phone WHERE Phone_id NOT IN (SELECT Phone_ID FROM phone_market)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "phone": {
+      "sortaxiom0": "Name = text",
+      "sortaxiom1": "Phone_ID = text",
+      "sortaxiom2": "Memory_in_G = int",
+      "sortaxiom3": "Carrier = text",
+      "sortaxiom4": "Price = real"
+    },
+    "phone_market": {
+      "sortaxiom0": "Market_ID = int",
+      "sortaxiom1": "Phone_ID = text",
+      "sortaxiom2": "Num_of_stock = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Name FROM phone WHERE Phone_id NOT IN (SELECT Phone_ID FROM phone_market)"
+  },
+  "id": 3161,
+  "Predicted FOL": {
+    "string": "∃p : Phone_ID ∃m : Memory_in_G ∃c : Carrier ∃r : Price (phone(n, p, m, c, r) ∧ ¬∃k : Market_ID ∃s : Num_of_stock phone_market(k, p, s))",
+    "free vars": "n : Name"
+  }
+}

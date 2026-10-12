@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_582.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_582.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2545 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all donor names.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        School_id = text -> StringSort()
+        amount = real -> Float32()
+        donator_name = text -> StringSort()
+        endowment_id = int -> IntSort()
+      symbols:
+        endowment(endowment_id, School_id, donator_name, amount)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : endowment_id ∃s : School_id ∃a : amount ( endowment(e,s,d,a) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:endowment_id EXISTS:∃ IDENT:s COLON:: IDENT:School_id EXISTS:∃ IDENT:a COLON:: IDENT:amount LPAR:( IDENT:endowment LPAR:( IDENT:e COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:endowment_id
+            EXISTS s:School_id
+              EXISTS a:amount
+                PRED endowment(e, s, d, a)
+      Predicted FOL: ∃e : endowment_id ∃s : School_id ∃a : amount endowment(e, s, d, a)
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:endowment_id EXISTS:∃ IDENT:s COLON:: IDENT:School_id EXISTS:∃ IDENT:a COLON:: IDENT:amount IDENT:endowment LPAR:( IDENT:e COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:a RPAR:) EOF
+        AST:
+          EXISTS e:endowment_id
+            EXISTS s:School_id
+              EXISTS a:amount
+                PRED endowment(e, s, d, a)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_donator_name_0 : donator_name   Gold d <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount, global real -> Float32()
+        d : local donator_name, global text -> StringSort()
+        e : local endowment_id, global int -> IntSort()
+        s : local School_id, global text -> StringSort()
+      Predicted FOL:
+        a : local amount, global real -> Float32()
+        d : local donator_name, global text -> StringSort()
+        e : local endowment_id, global int -> IntSort()
+        s : local School_id, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_s_2, gold_a_3], And(D_real(gold_a_3), P_endowment(gold_e_1, gold_s_2, FV_donator_name_0, gold_a_3)))
+      gold_skolem (witnesses WGOLD_e, WGOLD_s, WGOLD_a):  And(D_real(WGOLD_a), P_endowment(WGOLD_e, WGOLD_s, FV_donator_name_0, WGOLD_a))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_s_2, predicted_a_3], And(D_real(predicted_a_3), P_endowment(predicted_e_1, predicted_s_2, FV_donator_name_0, predicted_a_3)))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_s, WPREDICTED_a):  And(D_real(WPREDICTED_a), P_endowment(WPREDICTED_e, WPREDICTED_s, FV_donator_name_0, WPREDICTED_a))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 731 lines, 27155 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_582.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_s, WGOLD_a
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), endowment(WGOLD_e, WGOLD_s, FV_donator_name_0, WGOLD_a)), Not(Exists([predicted_e_1, predicted_s_2, predicted_a_3], And(And(Not(fpIsNaN(predicted_a_3)), Not(And(fpIsZero(predicted_a_3), fpIsNegative(predicted_a_3)))), endowment(predicted_e_1, predicted_s_2, FV_donator_name_0, predicted_a_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_s, WPREDICTED_a
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), endowment(WPREDICTED_e, WPREDICTED_s, FV_donator_name_0, WPREDICTED_a)), Not(Exists([gold_e_1, gold_s_2, gold_a_3], And(And(Not(fpIsNaN(gold_a_3)), Not(And(fpIsZero(gold_a_3), fpIsNegative(gold_a_3)))), endowment(gold_e_1, gold_s_2, FV_donator_name_0, gold_a_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,156 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3224.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3224.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5372 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of the artists who are from UK and have produced English songs.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 11 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar2(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        date -> IntSort()   [days since 1970-01-01]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+        number(10) -> RealSort()   [domain And(IsInt(x), x > -10000000000, x < 10000000000); 10 digits, 0 after the point]
+      local sorts:
+        artist_name = varchar2(50) -> StringSort()
+        country = varchar2(20) -> StringSort()
+        f_id = number(10) -> RealSort()
+        gender = varchar2(20) -> StringSort()
+        genre_is = varchar2(20) -> StringSort()
+        languages = varchar2(20) -> StringSort()
+        preferred_genre = varchar2(20) -> StringSort()
+        rating = text -> StringSort()
+        releasedate = date -> IntSort()
+        resolution = number(10) -> RealSort()
+        song_name = varchar2(50) -> StringSort()
+      symbols:
+        artist(artist_name, country, gender, preferred_genre)
+        song(song_name, artist_name, country, f_id, genre_is, rating, languages, releasedate, resolution)
+        constant UK : country
+        constant english : languages
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃g : gender ∃c : country ∃p : preferred_genre( (artist(a,c,g,p)) ∧ (c = 'UK') )) ∧ (¬((∃g : gender ∃c : country ∃p : preferred_genre( (artist(a,c,g,p)) ∧ (c = 'UK') )) ∧ (¬(∃s : song_name ∃f : f_id ∃l : languages ∃c1 : country ∃r : rating ∃r2 : resolution ∃g1 : genre_is ∃r1 : releasedate( (song(s,a,c1,f,g1,r,l,r1,r2)) ∧ (l = 'english') )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:p COLON:: IDENT:preferred_genre LPAR:( LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:UK RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:p COLON:: IDENT:preferred_genre LPAR:( LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:UK RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:song_name EXISTS:∃ IDENT:f COLON:: IDENT:f_id EXISTS:∃ IDENT:l COLON:: IDENT:languages EXISTS:∃ IDENT:c1 COLON:: IDENT:country EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:r2 COLON:: IDENT:resolution EXISTS:∃ IDENT:g1 COLON:: IDENT:genre_is EXISTS:∃ IDENT:r1 COLON:: IDENT:releasedate LPAR:( LPAR:( IDENT:song LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:c1 COMMA:, IDENT:f COMMA:, IDENT:g1 COMMA:, IDENT:r COMMA:, IDENT:l COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l EQ:= LIT:english RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS g:gender
+              EXISTS c:country
+                EXISTS p:preferred_genre
+                  AND
+                    PRED artist(a, c, g, p)
+                    EQ  c = 'UK'
+            NOT
+              AND
+                EXISTS g:gender
+                  EXISTS c:country
+                    EXISTS p:preferred_genre
+                      AND
+                        PRED artist(a, c, g, p)
+                        EQ  c = 'UK'
+                NOT
+                  EXISTS s:song_name
+                    EXISTS f:f_id
+                      EXISTS l:languages
+                        EXISTS c1:country
+                          EXISTS r:rating
+                            EXISTS r2:resolution
+                              EXISTS g1:genre_is
+                                EXISTS r1:releasedate
+                                  AND
+                                    PRED song(s, a, c1, f, g1, r, l, r1, r2)
+                                    EQ  l = 'english'
+      Predicted FOL: ∃ g : gender ∃ p : preferred_genre ( artist(a, 'UK', g, p) ∧ ∃ s : song_name ∃ sa : artist_name ∃ sc : country ∃ fid : f_id ∃ gi : genre_is ∃ r : rating ∃ rd : releasedate ∃ res : resolution ( song(s, sa, sc, fid, gi, r, 'english', rd, res) ∧ sa = a ) )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:p COLON:: IDENT:preferred_genre LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, LIT:UK COMMA:, IDENT:g COMMA:, IDENT:p RPAR:) AND:∧ EXISTS:∃ IDENT:s COLON:: IDENT:song_name EXISTS:∃ IDENT:sa COLON:: IDENT:artist_name EXISTS:∃ IDENT:sc COLON:: IDENT:country EXISTS:∃ IDENT:fid COLON:: IDENT:f_id EXISTS:∃ IDENT:gi COLON:: IDENT:genre_is EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:rd COLON:: IDENT:releasedate EXISTS:∃ IDENT:res COLON:: IDENT:resolution LPAR:( IDENT:song LPAR:( IDENT:s COMMA:, IDENT:sa COMMA:, IDENT:sc COMMA:, IDENT:fid COMMA:, IDENT:gi COMMA:, IDENT:r COMMA:, LIT:english COMMA:, IDENT:rd COMMA:, IDENT:res RPAR:) AND:∧ IDENT:sa EQ:= IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:gender
+            EXISTS p:preferred_genre
+              AND
+                PRED artist(a, 'UK', g, p)
+                EXISTS s:song_name
+                  EXISTS sa:artist_name
+                    EXISTS sc:country
+                      EXISTS fid:f_id
+                        EXISTS gi:genre_is
+                          EXISTS r:rating
+                            EXISTS rd:releasedate
+                              EXISTS res:resolution
+                                AND
+                                  PRED song(s, sa, sc, fid, gi, r, 'english', rd, res)
+                                  EQ  sa = a
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_artist_name_0 : artist_name   Gold a <-> Predicted a
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 23 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        c : local country, global varchar2(20) -> StringSort()
+        c1 : local country, global varchar2(20) -> StringSort()
+        f : local f_id, global number(10) -> RealSort()
+        g : local gender, global varchar2(20) -> StringSort()
+        g1 : local genre_is, global varchar2(20) -> StringSort()
+        l : local languages, global varchar2(20) -> StringSort()
+        p : local preferred_genre, global varchar2(20) -> StringSort()
+        r : local rating, global text -> StringSort()
+        r1 : local releasedate, global date -> IntSort()
+        r2 : local resolution, global number(10) -> RealSort()
+        s : local song_name, global varchar2(50) -> StringSort()
+      Predicted FOL:
+        a : local artist_name, global varchar2(50) -> StringSort()
+        fid : local f_id, global number(10) -> RealSort()
+        g : local gender, global varchar2(20) -> StringSort()
+        gi : local genre_is, global varchar2(20) -> StringSort()
+        p : local preferred_genre, global varchar2(20) -> StringSort()
+        r : local rating, global text -> StringSort()
+        rd : local releasedate, global date -> IntSort()
+        res : local resolution, global number(10) -> RealSort()
+        s : local song_name, global varchar2(50) -> StringSort()
+        sa : local artist_name, global varchar2(50) -> StringSort()
+        sc : local country, global varchar2(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_g_1, gold_c_2, gold_p_3], And(D_varchar2_20_(gold_g_1), D_varchar2_20_(gold_c_2), D_varchar2_20_(gold_p_3), And(P_artist(FV_artist_name_0, gold_c_2, gold_g_1, gold_p_3), (gold_c_2 == L_UK)))), Not(And(Exists([gold_g_4, gold_c_5, gold_p_6], And(D_varchar2_20_(gold_g_4), D_varchar2_20_(gold_c_5), D_varchar2_20_(gold_p_6), And(P_artist(FV_artist_name_0, gold_c_5, gold_g_4, gold_p_6), (gold_c_5 == L_UK)))), Not(Exists([gold_s_7, gold_f_8, gold_l_9, gold_c1_10, gold_r_11, gold_r2_12, gold_g1_13, gold_r1_14], And(D_varchar2_50_(gold_s_7), D_number_10_(gold_f_8), D_varchar2_20_(gold_l_9), D_varchar2_20_(gold_c1_10), D_number_10_(gold_r2_12), D_varchar2_20_(gold_g1_13), And(P_song(gold_s_7, FV_artist_name_0, gold_c1_10, gold_f_8, gold_g1_13, gold_r_11, gold_l_9, gold_r1_14, gold_r2_12), (gold_l_9 == L_english))))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_g_1, predicted_p_2], And(D_varchar2_20_(predicted_g_1), D_varchar2_20_(predicted_p_2), And(And(P_artist(FV_artist_name_0, L_UK, predicted_g_1, predicted_p_2), D_varchar2_20_(L_UK)), Exists([predicted_s_3, predicted_sa_4, predicted_sc_5, predicted_fid_6, predicted_gi_7, predicted_r_8, predicted_rd_9, predicted_res_10], And(D_varchar2_50_(predicted_s_3), D_varchar2_50_(predicted_sa_4), D_varchar2_20_(predicted_sc_5), D_number_10_(predicted_fid_6), D_varchar2_20_(predicted_gi_7), D_number_10_(predicted_res_10), And(And(P_song(predicted_s_3, predicted_sa_4, predicted_sc_5, predicted_fid_6, predicted_gi_7, predicted_r_8, L_english, predicted_rd_9, predicted_res_10), D_varchar2_20_(L_english)), (predicted_sa_4 == FV_artist_name_0)))))))
+      predicted_skolem (witnesses WPREDICTED_g, WPREDICTED_p):  And(D_varchar2_20_(WPREDICTED_g), D_varchar2_20_(WPREDICTED_p), And(And(P_artist(FV_artist_name_0, L_UK, WPREDICTED_g, WPREDICTED_p), D_varchar2_20_(L_UK)), Exists([predictedsk_s_1, predictedsk_sa_2, predictedsk_sc_3, predictedsk_fid_4, predictedsk_gi_5, predictedsk_r_6, predictedsk_rd_7, predictedsk_res_8], And(D_varchar2_50_(predictedsk_s_1), D_varchar2_50_(predictedsk_sa_2), D_varchar2_20_(predictedsk_sc_3), D_number_10_(predictedsk_fid_4), D_varchar2_20_(predictedsk_gi_5), D_number_10_(predictedsk_res_8), And(And(P_song(predictedsk_s_1, predictedsk_sa_2, predictedsk_sc_3, predictedsk_fid_4, predictedsk_gi_5, predictedsk_r_6, L_english, predictedsk_rd_7, predictedsk_res_8), D_varchar2_20_(L_english)), (predictedsk_sa_2 == FV_artist_name_0))))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'UK' at varchar2(20) -> L_UK = StringVal('UK')
+      literal 'english' at varchar2(20) -> L_english = StringVal('english')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 782 lines, 32831 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3224.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_artist_name_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_g_1, gold_c_2, gold_p_3], And(Length(gold_g_1) <= 20, Length(gold_c_2) <= 20, Length(gold_p_3) <= 20, And(artist(FV_artist_name_0, gold_c_2, gold_g_1, gold_p_3), gold_c_2 == "UK"))), Not(And(Exists([gold_g_4, gold_c_5, gold_p_6], And(Length(gold_g_4) <= 20, Length(gold_c_5) <= 20, Length(gold_p_6) <= 20, And(artist(FV_artist_name_0, gold_c_5, gold_g_4, gold_p_6), gold_c_5 == "UK"))), Not(Exists([gold_s_7, gold_f_8, gold_l_9, gold_c1_10, gold_r_11, gold_r2_12, gold_g1_13, gold_r1_14], And(Length(gold_s_7) <= 50, And(IsInt(gold_f_8), gold_f_8 > -10000000000, gold_f_8 < 10000000000), Length(gold_l_9) <= 20, Length(gold_c1_10) <= 20, And(IsInt(gold_r2_12), gold_r2_12 > -10000000000, gold_r2_12 < 10000000000), Length(gold_g1_13) <= 20, And(song(gold_s_7, FV_artist_name_0, gold_c1_10, gold_f_8, gold_g1_13, gold_r_11, gold_l_9, gold_r1_14, gold_r2_12), gold_l_9 == "english"))))))), Not(Exists([predicted_g_1, predicted_p_2], And(Length(predicted_g_1) <= 20, Length(predicted_p_2) <= 20, And(And(artist(FV_artist_name_0, "UK", predicted_g_1, predicted_p_2), Length("UK") <= 20), Exists([predicted_s_3, predicted_sa_4, predicted_sc_5, predicted_fid_6, predicted_gi_7, predicted_r_8, predicted_rd_9, predicted_res_10], And(Length(predicted_s_3) <= 50, Length(predicted_sa_4) <= 50, Length(predicted_sc_5) <= 20, And(IsInt(predicted_fid_6), predicted_fid_6 > -10000000000, predicted_fid_6 < 10000000000), Length(predicted_gi_7) <= 20, And(IsInt(predicted_res_10), predicted_res_10 > -10000000000, predicted_res_10 < 10000000000), And(And(song(predicted_s_3, predicted_sa_4, predicted_sc_5, predicted_fid_6, predicted_gi_7, predicted_r_8, "english", predicted_rd_9, predicted_res_10), Length("english") <= 20), predicted_sa_4 == FV_artist_name_0))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.022 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_g, WPREDICTED_p
+      claim: And(And(Length(WPREDICTED_g) <= 20, Length(WPREDICTED_p) <= 20, And(And(artist(FV_artist_name_0, "UK", WPREDICTED_g, WPREDICTED_p), Length("UK") <= 20), Exists([predictedsk_s_1, predictedsk_sa_2, predictedsk_sc_3, predictedsk_fid_4, predictedsk_gi_5, predictedsk_r_6, predictedsk_rd_7, predictedsk_res_8], And(Length(predictedsk_s_1) <= 50, Length(predictedsk_sa_2) <= 50, Length(predictedsk_sc_3) <= 20, And(IsInt(predictedsk_fid_4), predictedsk_fid_4 > -10000000000, predictedsk_fid_4 < 10000000000), Length(predictedsk_gi_5) <= 20, And(IsInt(predictedsk_res_8), predictedsk_res_8 > -10000000000, predictedsk_res_8 < 10000000000), And(And(song(predictedsk_s_1, predictedsk_sa_2, predictedsk_sc_3, predictedsk_fid_4, predictedsk_gi_5, predictedsk_r_6, "english", predictedsk_rd_7, predictedsk_res_8), Length("english") <= 20), predictedsk_sa_2 == FV_artist_name_0))))), Not(And(Exists([gold_g_1, gold_c_2, gold_p_3], And(Length(gold_g_1) <= 20, Length(gold_c_2) <= 20, Length(gold_p_3) <= 20, And(artist(FV_artist_name_0, gold_c_2, gold_g_1, gold_p_3), gold_c_2 == "UK"))), Not(And(Exists([gold_g_4, gold_c_5, gold_p_6], And(Length(gold_g_4) <= 20, Length(gold_c_5) <= 20, Length(gold_p_6) <= 20, And(artist(FV_artist_name_0, gold_c_5, gold_g_4, gold_p_6), gold_c_5 == "UK"))), Not(Exists([gold_s_7, gold_f_8, gold_l_9, gold_c1_10, gold_r_11, gold_r2_12, gold_g1_13, gold_r1_14], And(Length(gold_s_7) <= 50, And(IsInt(gold_f_8), gold_f_8 > -10000000000, gold_f_8 < 10000000000), Length(gold_l_9) <= 20, Length(gold_c1_10) <= 20, And(IsInt(gold_r2_12), gold_r2_12 > -10000000000, gold_r2_12 < 10000000000), Length(gold_g1_13) <= 20, And(song(gold_s_7, FV_artist_name_0, gold_c1_10, gold_f_8, gold_g1_13, gold_r_11, gold_l_9, gold_r1_14, gold_r2_12), gold_l_9 == "english")))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.026 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

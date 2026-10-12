@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3333.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3333.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3973 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the ids of all the faculty members who participate in an activity and advise a student.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        FacID = integer -> IntSort()
+        Fname = text -> StringSort()
+        LName = text -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        actid = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Faculty_Participates_in(FacID, actid)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃a : actid( Faculty_Participates_in(f,a) )) ∧ (¬((∃a : actid( Faculty_Participates_in(f,a) )) ∧ (¬(∃s : StuID ∃a1 : Age ∃f1 : Fname ∃m : Major ∃l : LName ∃s1 : Sex ∃c : city_code( Student(s,l,f1,a1,s1,m,f,c) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:actid LPAR:( IDENT:Faculty_Participates_in LPAR:( IDENT:f COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:actid LPAR:( IDENT:Faculty_Participates_in LPAR:( IDENT:f COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:a1 COLON:: IDENT:Age EXISTS:∃ IDENT:f1 COLON:: IDENT:Fname EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:c COLON:: IDENT:city_code LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f1 COMMA:, IDENT:a1 COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:f COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS a:actid
+              PRED Faculty_Participates_in(f, a)
+            NOT
+              AND
+                EXISTS a:actid
+                  PRED Faculty_Participates_in(f, a)
+                NOT
+                  EXISTS s:StuID
+                    EXISTS a1:Age
+                      EXISTS f1:Fname
+                        EXISTS m:Major
+                          EXISTS l:LName
+                            EXISTS s1:Sex
+                              EXISTS c:city_code
+                                PRED Student(s, l, f1, a1, s1, m, f, c)
+      Predicted FOL: ∀f:FacID( ( (∃a:actid Faculty_Participates_in(f,a)) ∧ (∃s:StuID∃ln:LName∃fn:Fname∃ag:Age∃sx:Sex∃mj:Major∃cc:city_code Student(s,ln,fn,ag,sx,mj,f,cc)) ) → (f = f) )
+        tokens: FORALL:∀ IDENT:f COLON:: IDENT:FacID LPAR:( LPAR:( LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:actid IDENT:Faculty_Participates_in LPAR:( IDENT:f COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:ln COLON:: IDENT:LName EXISTS:∃ IDENT:fn COLON:: IDENT:Fname EXISTS:∃ IDENT:ag COLON:: IDENT:Age EXISTS:∃ IDENT:sx COLON:: IDENT:Sex EXISTS:∃ IDENT:mj COLON:: IDENT:Major EXISTS:∃ IDENT:cc COLON:: IDENT:city_code IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:ln COMMA:, IDENT:fn COMMA:, IDENT:ag COMMA:, IDENT:sx COMMA:, IDENT:mj COMMA:, IDENT:f COMMA:, IDENT:cc RPAR:) RPAR:) RPAR:) IMPL:→ LPAR:( IDENT:f EQ:= IDENT:f RPAR:) RPAR:) EOF
+        AST:
+          FORALL f:FacID
+            IMPLIES
+              AND
+                EXISTS a:actid
+                  PRED Faculty_Participates_in(f, a)
+                EXISTS s:StuID
+                  EXISTS ln:LName
+                    EXISTS fn:Fname
+                      EXISTS ag:Age
+                        EXISTS sx:Sex
+                          EXISTS mj:Major
+                            EXISTS cc:city_code
+                              PRED Student(s, ln, fn, ag, sx, mj, f, cc)
+              EQ  f = f
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (f : FacID) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local actid, global integer -> IntSort()
+        a1 : local Age, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local FacID, global integer -> IntSort()
+        f1 : local Fname, global text -> StringSort()
+        l : local LName, global text -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        a : local actid, global integer -> IntSort()
+        ag : local Age, global integer -> IntSort()
+        cc : local city_code, global varchar(3) -> StringSort()
+        f : local FacID, global integer -> IntSort()
+        fn : local Fname, global text -> StringSort()
+        ln : local LName, global text -> StringSort()
+        mj : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        sx : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5546 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3333.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (f : FacID) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

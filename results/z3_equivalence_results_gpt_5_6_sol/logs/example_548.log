@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_548.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_548.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2381 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the distinct venues of debates
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Date = text -> StringSort()
+        Debate_ID = int -> IntSort()
+        Num_of_Audience = int -> IntSort()
+        Venue = text -> StringSort()
+      symbols:
+        debate(Debate_ID, Date, Venue, Num_of_Audience)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Debate_ID ∃d1 : Date ∃n : Num_of_Audience ( debate(d,d1,v,n) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Debate_ID EXISTS:∃ IDENT:d1 COLON:: IDENT:Date EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_Audience LPAR:( IDENT:debate LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:v COMMA:, IDENT:n RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Debate_ID
+            EXISTS d1:Date
+              EXISTS n:Num_of_Audience
+                PRED debate(d, d1, v, n)
+      Predicted FOL: ∃d : Debate_ID ∃dt : Date ∃n : Num_of_Audience debate(d, dt, v, n)
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Debate_ID EXISTS:∃ IDENT:dt COLON:: IDENT:Date EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_Audience IDENT:debate LPAR:( IDENT:d COMMA:, IDENT:dt COMMA:, IDENT:v COMMA:, IDENT:n RPAR:) EOF
+        AST:
+          EXISTS d:Debate_ID
+            EXISTS dt:Date
+              EXISTS n:Num_of_Audience
+                PRED debate(d, dt, v, n)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Venue_0 : Venue   Gold v <-> Predicted v
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Debate_ID, global int -> IntSort()
+        d1 : local Date, global text -> StringSort()
+        n : local Num_of_Audience, global int -> IntSort()
+        v : local Venue, global text -> StringSort()
+      Predicted FOL:
+        d : local Debate_ID, global int -> IntSort()
+        dt : local Date, global text -> StringSort()
+        n : local Num_of_Audience, global int -> IntSort()
+        v : local Venue, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_n_3], P_debate(gold_d_1, gold_d1_2, FV_Venue_0, gold_n_3))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_n):  P_debate(WGOLD_d, WGOLD_d1, FV_Venue_0, WGOLD_n)
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_dt_2, predicted_n_3], P_debate(predicted_d_1, predicted_dt_2, FV_Venue_0, predicted_n_3))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_dt, WPREDICTED_n):  P_debate(WPREDICTED_d, WPREDICTED_dt, FV_Venue_0, WPREDICTED_n)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 26806 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_548.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_n
+      claim: And(debate(WGOLD_d, WGOLD_d1, FV_Venue_0, WGOLD_n), Not(Exists([predicted_d_1, predicted_dt_2, predicted_n_3], debate(predicted_d_1, predicted_dt_2, FV_Venue_0, predicted_n_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_dt, WPREDICTED_n
+      claim: And(debate(WPREDICTED_d, WPREDICTED_dt, FV_Venue_0, WPREDICTED_n), Not(Exists([gold_d_1, gold_d1_2, gold_n_3], debate(gold_d_1, gold_d1_2, FV_Venue_0, gold_n_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

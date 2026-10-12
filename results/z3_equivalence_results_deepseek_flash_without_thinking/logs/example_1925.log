@@ -1,0 +1,129 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1925.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1925.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2800 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which authors with submissions are from college "Florida" or "Temple"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Author = text -> StringSort()
+        College = text -> StringSort()
+        Scores = real -> Float32()
+        Submission_ID = int -> IntSort()
+      symbols:
+        submission(Submission_ID, Scores, Author, College)
+        constant Florida : College
+        constant Temple : College
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Submission_ID ∃s1 : Scores ∃c : College ( (submission(s,s1,a,c)) ∧ ((c = 'Florida') ∨ (c = 'Temple')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:c COLON:: IDENT:College LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:Florida RPAR:) OR:∨ LPAR:( IDENT:c EQ:= LIT:Temple RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Submission_ID
+            EXISTS s1:Scores
+              EXISTS c:College
+                AND
+                  PRED submission(s, s1, a, c)
+                  OR
+                    EQ  c = 'Florida'
+                    EQ  c = 'Temple'
+      Predicted FOL: ∃s : Submission_ID ∃sc : Scores ∃a : Author ∃c : College (submission(s, sc, a, c) ∧ (c = Florida ∨ c = Temple))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:sc COLON:: IDENT:Scores EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:c COLON:: IDENT:College LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:sc COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:Florida OR:∨ IDENT:c EQ:= IDENT:Temple RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Submission_ID
+            EXISTS sc:Scores
+              EXISTS a:Author
+                EXISTS c:College
+                  AND
+                    PRED submission(s, sc, a, c)
+                    OR
+                      EQ  c = Florida<const>
+                      EQ  c = Temple<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) a do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Author_0 : Author   Gold a <-> Predicted a
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        s : local Submission_ID, global int -> IntSort()
+        s1 : local Scores, global real -> Float32()
+      Predicted FOL:
+        a : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        s : local Submission_ID, global int -> IntSort()
+        sc : local Scores, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_s1_2, gold_c_3], And(D_real(gold_s1_2), And(P_submission(gold_s_1, gold_s1_2, FV_Author_0, gold_c_3), Or((gold_c_3 == L_Florida), (gold_c_3 == L_Temple)))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_s1, WGOLD_c):  And(D_real(WGOLD_s1), And(P_submission(WGOLD_s, WGOLD_s1, FV_Author_0, WGOLD_c), Or((WGOLD_c == L_Florida), (WGOLD_c == L_Temple))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_sc_2, predicted_a_3, predicted_c_4], And(D_real(predicted_sc_2), And(P_submission(predicted_s_1, predicted_sc_2, predicted_a_3, predicted_c_4), Or((predicted_c_4 == L_Florida), (predicted_c_4 == L_Temple)))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_sc, WPREDICTED_a, WPREDICTED_c):  And(D_real(WPREDICTED_sc), And(P_submission(WPREDICTED_s, WPREDICTED_sc, WPREDICTED_a, WPREDICTED_c), Or((WPREDICTED_c == L_Florida), (WPREDICTED_c == L_Temple))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Florida' at text -> L_Florida = StringVal('Florida')
+      literal 'Temple' at text -> L_Temple = StringVal('Temple')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 738 lines, 27853 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1925.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_s1, WGOLD_c
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s1)), Not(And(fpIsZero(WGOLD_s1), fpIsNegative(WGOLD_s1)))), And(submission(WGOLD_s, WGOLD_s1, FV_Author_0, WGOLD_c), Or(WGOLD_c == "Florida", WGOLD_c == "Temple"))), Not(Exists([predicted_s_1, predicted_sc_2, predicted_a_3, predicted_c_4], And(And(Not(fpIsNaN(predicted_sc_2)), Not(And(fpIsZero(predicted_sc_2), fpIsNegative(predicted_sc_2)))), And(submission(predicted_s_1, predicted_sc_2, predicted_a_3, predicted_c_4), Or(predicted_c_4 == "Florida", predicted_c_4 == "Temple"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.017 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_sc, WPREDICTED_a, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_sc)), Not(And(fpIsZero(WPREDICTED_sc), fpIsNegative(WPREDICTED_sc)))), And(submission(WPREDICTED_s, WPREDICTED_sc, WPREDICTED_a, WPREDICTED_c), Or(WPREDICTED_c == "Florida", WPREDICTED_c == "Temple"))), Not(Exists([gold_s_1, gold_s1_2, gold_c_3], And(And(Not(fpIsNaN(gold_s1_2)), Not(And(fpIsZero(gold_s1_2), fpIsNegative(gold_s1_2)))), And(submission(gold_s_1, gold_s1_2, FV_Author_0, gold_c_3), Or(gold_c_3 == "Florida", gold_c_3 == "Temple"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.016 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 2 relation tuple(s) listed, 5 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          s : Submission_ID = 2
+          sc : Scores = 3.851977438209554e-34
+          a : Author = 'Temple'
+          c : College = 'Florida'
+        free (answer) variables:
+          FV_Author_0 : Author = 'T'
+        literals / constants:
+          Florida : College = 'Florida'
+          Temple : College = 'Temple'
+        relations (each value tagged with the local sort of its position):
+          submission(Submission_ID, Scores, Author, College):
+            submission(Submission_ID=2, Scores=3.851977438209554e-34, Author='Temple', College='Florida')
+            submission(Submission_ID=3, Scores=1.175494490952134e-38, Author='Temple', College='Florida')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Author        : {'T', 'Temple'}
+          College       : {'Florida'}
+          Scores        : {1.175494490952134e-38, 3.851977438209554e-34}
+          Submission_ID : {2, 3}
+   [R3] took 0.049 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

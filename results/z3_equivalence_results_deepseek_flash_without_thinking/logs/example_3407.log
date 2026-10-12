@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3407.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3407.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2807 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of all employees that don't have certificates?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        number(10,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000000, x < 100000000); 10 digits, 2 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        eid = number(9,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+        salary = number(10,2) -> RealSort()
+      symbols:
+        certificate(eid, aid)
+        employee(eid, name, salary)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s : salary ∃n : name( employee(e,n,s) )) ∧ (¬(∃a : aid( certificate(e,a) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:salary EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:aid LPAR:( IDENT:certificate LPAR:( IDENT:e COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s:salary
+              EXISTS n:name
+                PRED employee(e, n, s)
+            NOT
+              EXISTS a:aid
+                PRED certificate(e, a)
+      Predicted FOL: ∃x : eid (employee(x, y, z) ∧ ¬∃a : aid certificate(x, a))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:eid LPAR:( IDENT:employee LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:a COLON:: IDENT:aid IDENT:certificate LPAR:( IDENT:x COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:eid
+            AND
+              PRED employee(x, y, z)
+              NOT
+                EXISTS a:aid
+                  PRED certificate(x, a)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (e : eid) but Predicted has 2 (y : name, z : salary): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        e : local eid, global number(9,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+        s : local salary, global number(10,2) -> RealSort()
+      Predicted FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        x : local eid, global number(9,0) -> RealSort()
+        y : local name, global varchar2(30) -> StringSort()
+        z : local salary, global number(10,2) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5274 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3407.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (e : eid) but Predicted has 2 (y : name, z : salary): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

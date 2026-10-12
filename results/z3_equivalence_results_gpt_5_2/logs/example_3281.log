@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3281.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3281.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3607 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the carriers of devices that are not in stock anywhere?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Applications = text -> StringSort()
+        Carrier = text -> StringSort()
+        Device = text -> StringSort()
+        Device_ID = int -> IntSort()
+        Package_Version = text -> StringSort()
+        Quantity = int -> IntSort()
+        Shop_ID = int -> IntSort()
+        Software_Platform = text -> StringSort()
+      symbols:
+        device(Device_ID, Device, Carrier, Package_Version, Applications, Software_Platform)
+        stock(Shop_ID, Device_ID, Quantity)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Software_Platform ∃d1 : Device ∃a : Applications ∃p : Package_Version ∃d : Device_ID( (device(d,d1,c,p,a,s)) ∧ (¬(∃d2 : Device_ID( ((device(d,d1,c,p,a,s)) ∧ (∃s1 : Shop_ID ∃q : Quantity( stock(s1,d2,q) ))) ∧ (d = d2) ))) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Software_Platform EXISTS:∃ IDENT:d1 COLON:: IDENT:Device EXISTS:∃ IDENT:a COLON:: IDENT:Applications EXISTS:∃ IDENT:p COLON:: IDENT:Package_Version EXISTS:∃ IDENT:d COLON:: IDENT:Device_ID LPAR:( LPAR:( IDENT:device LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:c COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:d2 COLON:: IDENT:Device_ID LPAR:( LPAR:( LPAR:( IDENT:device LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:c COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:q COLON:: IDENT:Quantity LPAR:( IDENT:stock LPAR:( IDENT:s1 COMMA:, IDENT:d2 COMMA:, IDENT:q RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Software_Platform
+            EXISTS d1:Device
+              EXISTS a:Applications
+                EXISTS p:Package_Version
+                  EXISTS d:Device_ID
+                    AND
+                      PRED device(d, d1, c, p, a, s)
+                      NOT
+                        EXISTS d2:Device_ID
+                          AND
+                            AND
+                              PRED device(d, d1, c, p, a, s)
+                              EXISTS s1:Shop_ID
+                                EXISTS q:Quantity
+                                  PRED stock(s1, d2, q)
+                            EQ  d = d2
+      Predicted FOL: ∃dID:Device_ID ∃dName:Device ∃c:Carrier ∃pv:Package_Version ∃apps:Applications ∃sp:Software_Platform ( device(dID,dName,c,pv,apps,sp) ∧ ¬∃sID:Shop_ID ∃q:Quantity stock(sID,dID,q) )
+        tokens: EXISTS:∃ IDENT:dID COLON:: IDENT:Device_ID EXISTS:∃ IDENT:dName COLON:: IDENT:Device EXISTS:∃ IDENT:c COLON:: IDENT:Carrier EXISTS:∃ IDENT:pv COLON:: IDENT:Package_Version EXISTS:∃ IDENT:apps COLON:: IDENT:Applications EXISTS:∃ IDENT:sp COLON:: IDENT:Software_Platform LPAR:( IDENT:device LPAR:( IDENT:dID COMMA:, IDENT:dName COMMA:, IDENT:c COMMA:, IDENT:pv COMMA:, IDENT:apps COMMA:, IDENT:sp RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:sID COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:q COLON:: IDENT:Quantity IDENT:stock LPAR:( IDENT:sID COMMA:, IDENT:dID COMMA:, IDENT:q RPAR:) RPAR:) EOF
+        AST:
+          EXISTS dID:Device_ID
+            EXISTS dName:Device
+              EXISTS c:Carrier
+                EXISTS pv:Package_Version
+                  EXISTS apps:Applications
+                    EXISTS sp:Software_Platform
+                      AND
+                        PRED device(dID, dName, c, pv, apps, sp)
+                        NOT
+                          EXISTS sID:Shop_ID
+                            EXISTS q:Quantity
+                              PRED stock(sID, dID, q)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : Carrier) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Applications, global text -> StringSort()
+        c : local Carrier, global text -> StringSort()
+        d : local Device_ID, global int -> IntSort()
+        d1 : local Device, global text -> StringSort()
+        d2 : local Device_ID, global int -> IntSort()
+        p : local Package_Version, global text -> StringSort()
+        q : local Quantity, global int -> IntSort()
+        s : local Software_Platform, global text -> StringSort()
+        s1 : local Shop_ID, global int -> IntSort()
+      Predicted FOL:
+        apps : local Applications, global text -> StringSort()
+        c : local Carrier, global text -> StringSort()
+        dID : local Device_ID, global int -> IntSort()
+        dName : local Device, global text -> StringSort()
+        pv : local Package_Version, global text -> StringSort()
+        q : local Quantity, global int -> IntSort()
+        sID : local Shop_ID, global int -> IntSort()
+        sp : local Software_Platform, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5548 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3281.py
+   [G8] took 0.028 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : Carrier) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

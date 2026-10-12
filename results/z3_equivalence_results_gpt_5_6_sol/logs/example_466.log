@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_466.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_466.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2104 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show name, class, and date for all races.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Class = text -> StringSort()
+        Date = text -> StringSort()
+        Name = text -> StringSort()
+        Race_ID = int -> IntSort()
+        Track_ID = text -> StringSort()
+      symbols:
+        race(Race_ID, Name, Class, Date, Track_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Race_ID ∃t : Track_ID ( race(r,n,c,d,t) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Race_ID EXISTS:∃ IDENT:t COLON:: IDENT:Track_ID LPAR:( IDENT:race LPAR:( IDENT:r COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Race_ID
+            EXISTS t:Track_ID
+              PRED race(r, n, c, d, t)
+      Predicted FOL: ∃r : Race_ID ∃t : Track_ID race(r, name, class, date, t)
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Race_ID EXISTS:∃ IDENT:t COLON:: IDENT:Track_ID IDENT:race LPAR:( IDENT:r COMMA:, IDENT:name COMMA:, IDENT:class COMMA:, IDENT:date COMMA:, IDENT:t RPAR:) EOF
+        AST:
+          EXISTS r:Race_ID
+            EXISTS t:Track_ID
+              PRED race(r, name, class, date, t)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Class_0 : Class   Gold c <-> Predicted class
+      FV_Date_0 : Date   Gold d <-> Predicted date
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Class, global text -> StringSort()
+        d : local Date, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        r : local Race_ID, global int -> IntSort()
+        t : local Track_ID, global text -> StringSort()
+      Predicted FOL:
+        class : local Class, global text -> StringSort()
+        date : local Date, global text -> StringSort()
+        name : local Name, global text -> StringSort()
+        r : local Race_ID, global int -> IntSort()
+        t : local Track_ID, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_t_2], P_race(gold_r_1, FV_Name_0, FV_Class_0, FV_Date_0, gold_t_2))
+      gold_skolem (witnesses WGOLD_r, WGOLD_t):  P_race(WGOLD_r, FV_Name_0, FV_Class_0, FV_Date_0, WGOLD_t)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_t_2], P_race(predicted_r_1, FV_Name_0, FV_Class_0, FV_Date_0, predicted_t_2))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_t):  P_race(WPREDICTED_r, FV_Name_0, FV_Class_0, FV_Date_0, WPREDICTED_t)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 26668 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_466.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_t
+      claim: And(race(WGOLD_r, FV_Name_0, FV_Class_0, FV_Date_0, WGOLD_t), Not(Exists([predicted_r_1, predicted_t_2], race(predicted_r_1, FV_Name_0, FV_Class_0, FV_Date_0, predicted_t_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_t
+      claim: And(race(WPREDICTED_r, FV_Name_0, FV_Class_0, FV_Date_0, WPREDICTED_t), Not(Exists([gold_r_1, gold_t_2], race(gold_r_1, FV_Name_0, FV_Class_0, FV_Date_0, gold_t_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

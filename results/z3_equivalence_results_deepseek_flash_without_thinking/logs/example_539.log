@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_539.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_539.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3404 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the average attendance of stadiums with capacity percentage higher than 100%?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Average_Attendance = real -> Float32()
+        Capacity_Percentage = real -> Float32()
+        Home_Games = int -> IntSort()
+        Total_Attendance = real -> Float32()
+        id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        stadium(id, name, Home_Games, Average_Attendance, Total_Attendance, Capacity_Percentage)
+        constant 100 : Capacity_Percentage
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃n : name ∃h : Home_Games ∃t : Total_Attendance ∃c : Capacity_Percentage ( (stadium(i,n,h,a,t,c)) ∧ (c > 100) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:h COLON:: IDENT:Home_Games EXISTS:∃ IDENT:t COLON:: IDENT:Total_Attendance EXISTS:∃ IDENT:c COLON:: IDENT:Capacity_Percentage LPAR:( LPAR:( IDENT:stadium LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:a COMMA:, IDENT:t COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c GT:> NUM:100 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS n:name
+              EXISTS h:Home_Games
+                EXISTS t:Total_Attendance
+                  EXISTS c:Capacity_Percentage
+                    AND
+                      PRED stadium(i, n, h, a, t, c)
+                      CMP  c > 100
+      Predicted FOL: ∃x0 : id ∃x1 : name ∃x2 : Home_Games ∃x3 : Average_Attendance ∃x4 : Total_Attendance ∃x5 : Capacity_Percentage (stadium(x0, x1, x2, x3, x4, x5) ∧ x5 > 100 ∧ ∀y0 : id ∀y1 : name ∀y2 : Home_Games ∀y3 : Average_Attendance ∀y4 : Total_Attendance ∀y5 : Capacity_Percentage ((stadium(y0, y1, y2, y3, y4, y5) ∧ y5 > 100) → y3 = x3))
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:id EXISTS:∃ IDENT:x1 COLON:: IDENT:name EXISTS:∃ IDENT:x2 COLON:: IDENT:Home_Games EXISTS:∃ IDENT:x3 COLON:: IDENT:Average_Attendance EXISTS:∃ IDENT:x4 COLON:: IDENT:Total_Attendance EXISTS:∃ IDENT:x5 COLON:: IDENT:Capacity_Percentage LPAR:( IDENT:stadium LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 RPAR:) AND:∧ IDENT:x5 GT:> NUM:100 AND:∧ FORALL:∀ IDENT:y0 COLON:: IDENT:id FORALL:∀ IDENT:y1 COLON:: IDENT:name FORALL:∀ IDENT:y2 COLON:: IDENT:Home_Games FORALL:∀ IDENT:y3 COLON:: IDENT:Average_Attendance FORALL:∀ IDENT:y4 COLON:: IDENT:Total_Attendance FORALL:∀ IDENT:y5 COLON:: IDENT:Capacity_Percentage LPAR:( LPAR:( IDENT:stadium LPAR:( IDENT:y0 COMMA:, IDENT:y1 COMMA:, IDENT:y2 COMMA:, IDENT:y3 COMMA:, IDENT:y4 COMMA:, IDENT:y5 RPAR:) AND:∧ IDENT:y5 GT:> NUM:100 RPAR:) IMPL:→ IDENT:y3 EQ:= IDENT:x3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:id
+            EXISTS x1:name
+              EXISTS x2:Home_Games
+                EXISTS x3:Average_Attendance
+                  EXISTS x4:Total_Attendance
+                    EXISTS x5:Capacity_Percentage
+                      AND
+                        PRED stadium(x0, x1, x2, x3, x4, x5)
+                        CMP  x5 > 100
+                        FORALL y0:id
+                          FORALL y1:name
+                            FORALL y2:Home_Games
+                              FORALL y3:Average_Attendance
+                                FORALL y4:Total_Attendance
+                                  FORALL y5:Capacity_Percentage
+                                    IMPLIES
+                                      AND
+                                        PRED stadium(y0, y1, y2, y3, y4, y5)
+                                        CMP  y5 > 100
+                                      EQ  y3 = x3
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (a : Average_Attendance) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Average_Attendance, global real -> Float32()
+        c : local Capacity_Percentage, global real -> Float32()
+        h : local Home_Games, global int -> IntSort()
+        i : local id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        t : local Total_Attendance, global real -> Float32()
+      Predicted FOL:
+        x0 : local id, global int -> IntSort()
+        x1 : local name, global text -> StringSort()
+        x2 : local Home_Games, global int -> IntSort()
+        x3 : local Average_Attendance, global real -> Float32()
+        x4 : local Total_Attendance, global real -> Float32()
+        x5 : local Capacity_Percentage, global real -> Float32()
+        y0 : local id, global int -> IntSort()
+        y1 : local name, global text -> StringSort()
+        y2 : local Home_Games, global int -> IntSort()
+        y3 : local Average_Attendance, global real -> Float32()
+        y4 : local Total_Attendance, global real -> Float32()
+        y5 : local Capacity_Percentage, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5630 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_539.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (a : Average_Attendance) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

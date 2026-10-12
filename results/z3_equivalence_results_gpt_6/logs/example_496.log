@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_496.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_496.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3337 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List all public schools and their locations.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Affiliation = text -> StringSort()
+        Enrollment = real -> Float32()
+        Founded = real -> Float32()
+        Location = text -> StringSort()
+        Nickname = text -> StringSort()
+        Primary_conference = text -> StringSort()
+        School = text -> StringSort()
+        School_ID = int -> IntSort()
+      symbols:
+        university(School_ID, School, Location, Founded, Affiliation, Enrollment, Nickname, Primary_conference)
+        constant Public : Affiliation
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : School_ID ∃f : Founded ∃a : Affiliation ∃e : Enrollment ∃n : Nickname ∃p : Primary_conference ( (university(s,s1,l,f,a,e,n,p)) ∧ (a = 'Public') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:School_ID EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:a COLON:: IDENT:Affiliation EXISTS:∃ IDENT:e COLON:: IDENT:Enrollment EXISTS:∃ IDENT:n COLON:: IDENT:Nickname EXISTS:∃ IDENT:p COLON:: IDENT:Primary_conference LPAR:( LPAR:( IDENT:university LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= LIT:Public RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:School_ID
+            EXISTS f:Founded
+              EXISTS a:Affiliation
+                EXISTS e:Enrollment
+                  EXISTS n:Nickname
+                    EXISTS p:Primary_conference
+                      AND
+                        PRED university(s, s1, l, f, a, e, n, p)
+                        EQ  a = 'Public'
+      Predicted FOL: ∃i : School_ID ∃f : Founded ∃e : Enrollment ∃n : Nickname ∃c : Primary_conference (university(i, s, l, f, 'Public', e, n, c))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:School_ID EXISTS:∃ IDENT:f COLON:: IDENT:Founded EXISTS:∃ IDENT:e COLON:: IDENT:Enrollment EXISTS:∃ IDENT:n COLON:: IDENT:Nickname EXISTS:∃ IDENT:c COLON:: IDENT:Primary_conference LPAR:( IDENT:university LPAR:( IDENT:i COMMA:, IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, LIT:Public COMMA:, IDENT:e COMMA:, IDENT:n COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:School_ID
+            EXISTS f:Founded
+              EXISTS e:Enrollment
+                EXISTS n:Nickname
+                  EXISTS c:Primary_conference
+                    PRED university(i, s, l, f, 'Public', e, n, c)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Location_0 : Location   Gold l <-> Predicted l
+      FV_School_0 : School   Gold s1 <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Affiliation, global text -> StringSort()
+        e : local Enrollment, global real -> Float32()
+        f : local Founded, global real -> Float32()
+        l : local Location, global text -> StringSort()
+        n : local Nickname, global text -> StringSort()
+        p : local Primary_conference, global text -> StringSort()
+        s : local School_ID, global int -> IntSort()
+        s1 : local School, global text -> StringSort()
+      Predicted FOL:
+        c : local Primary_conference, global text -> StringSort()
+        e : local Enrollment, global real -> Float32()
+        f : local Founded, global real -> Float32()
+        i : local School_ID, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        n : local Nickname, global text -> StringSort()
+        s : local School, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_f_2, gold_a_3, gold_e_4, gold_n_5, gold_p_6], And(D_real(gold_f_2), D_real(gold_e_4), And(P_university(gold_s_1, FV_School_0, FV_Location_0, gold_f_2, gold_a_3, gold_e_4, gold_n_5, gold_p_6), (gold_a_3 == L_Public))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p):  And(D_real(WGOLD_f), D_real(WGOLD_e), And(P_university(WGOLD_s, FV_School_0, FV_Location_0, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p), (WGOLD_a == L_Public)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_f_2, predicted_e_3, predicted_n_4, predicted_c_5], And(D_real(predicted_f_2), D_real(predicted_e_3), P_university(predicted_i_1, FV_School_0, FV_Location_0, predicted_f_2, L_Public, predicted_e_3, predicted_n_4, predicted_c_5)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_e, WPREDICTED_n, WPREDICTED_c):  And(D_real(WPREDICTED_f), D_real(WPREDICTED_e), P_university(WPREDICTED_i, FV_School_0, FV_Location_0, WPREDICTED_f, L_Public, WPREDICTED_e, WPREDICTED_n, WPREDICTED_c))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Public' at text -> L_Public = StringVal('Public')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 758 lines, 29264 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_496.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p
+      claim: And(And(And(Not(fpIsNaN(WGOLD_f)), Not(And(fpIsZero(WGOLD_f), fpIsNegative(WGOLD_f)))), And(Not(fpIsNaN(WGOLD_e)), Not(And(fpIsZero(WGOLD_e), fpIsNegative(WGOLD_e)))), And(university(WGOLD_s, FV_School_0, FV_Location_0, WGOLD_f, WGOLD_a, WGOLD_e, WGOLD_n, WGOLD_p), WGOLD_a == "Public")), Not(Exists([predicted_i_1, predicted_f_2, predicted_e_3, predicted_n_4, predicted_c_5], And(And(Not(fpIsNaN(predicted_f_2)), Not(And(fpIsZero(predicted_f_2), fpIsNegative(predicted_f_2)))), And(Not(fpIsNaN(predicted_e_3)), Not(And(fpIsZero(predicted_e_3), fpIsNegative(predicted_e_3)))), university(predicted_i_1, FV_School_0, FV_Location_0, predicted_f_2, "Public", predicted_e_3, predicted_n_4, predicted_c_5)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_f, WPREDICTED_e, WPREDICTED_n, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_f)), Not(And(fpIsZero(WPREDICTED_f), fpIsNegative(WPREDICTED_f)))), And(Not(fpIsNaN(WPREDICTED_e)), Not(And(fpIsZero(WPREDICTED_e), fpIsNegative(WPREDICTED_e)))), university(WPREDICTED_i, FV_School_0, FV_Location_0, WPREDICTED_f, "Public", WPREDICTED_e, WPREDICTED_n, WPREDICTED_c)), Not(Exists([gold_s_1, gold_f_2, gold_a_3, gold_e_4, gold_n_5, gold_p_6], And(And(Not(fpIsNaN(gold_f_2)), Not(And(fpIsZero(gold_f_2), fpIsNegative(gold_f_2)))), And(Not(fpIsNaN(gold_e_4)), Not(And(fpIsZero(gold_e_4), fpIsNegative(gold_e_4)))), And(university(gold_s_1, FV_School_0, FV_Location_0, gold_f_2, gold_a_3, gold_e_4, gold_n_5, gold_p_6), gold_a_3 == "Public")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

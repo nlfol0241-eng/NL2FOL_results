@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_80.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_80.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2615 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the final tables made and best finishes for all poker players?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+      local sorts:
+        Best_Finish = real -> Float32()
+        Earnings = real -> Float32()
+        Final_Table_Made = real -> Float32()
+        Money_Rank = real -> Float32()
+        People_ID = int -> IntSort()
+        Poker_Player_ID = int -> IntSort()
+      symbols:
+        poker_player(Poker_Player_ID, People_ID, Final_Table_Made, Best_Finish, Money_Rank, Earnings)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Poker_Player_ID ∃p1 : People_ID ∃m : Money_Rank ∃e : Earnings ( poker_player(p,p1,f,b,m,e) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Poker_Player_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:People_ID EXISTS:∃ IDENT:m COLON:: IDENT:Money_Rank EXISTS:∃ IDENT:e COLON:: IDENT:Earnings LPAR:( IDENT:poker_player LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:f COMMA:, IDENT:b COMMA:, IDENT:m COMMA:, IDENT:e RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Poker_Player_ID
+            EXISTS p1:People_ID
+              EXISTS m:Money_Rank
+                EXISTS e:Earnings
+                  PRED poker_player(p, p1, f, b, m, e)
+      Predicted FOL: ∀p0:Poker_Player_ID ∀p1:People_ID ∀p2:Final_Table_Made ∀p3:Best_Finish ∀p4:Money_Rank ∀p5:Earnings (poker_player(p0,p1,p2,p3,p4,p5) → ∃f:Final_Table_Made ∃b:Best_Finish (f = p2 ∧ b = p3))
+        tokens: FORALL:∀ IDENT:p0 COLON:: IDENT:Poker_Player_ID FORALL:∀ IDENT:p1 COLON:: IDENT:People_ID FORALL:∀ IDENT:p2 COLON:: IDENT:Final_Table_Made FORALL:∀ IDENT:p3 COLON:: IDENT:Best_Finish FORALL:∀ IDENT:p4 COLON:: IDENT:Money_Rank FORALL:∀ IDENT:p5 COLON:: IDENT:Earnings LPAR:( IDENT:poker_player LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 RPAR:) IMPL:→ EXISTS:∃ IDENT:f COLON:: IDENT:Final_Table_Made EXISTS:∃ IDENT:b COLON:: IDENT:Best_Finish LPAR:( IDENT:f EQ:= IDENT:p2 AND:∧ IDENT:b EQ:= IDENT:p3 RPAR:) RPAR:) EOF
+        AST:
+          FORALL p0:Poker_Player_ID
+            FORALL p1:People_ID
+              FORALL p2:Final_Table_Made
+                FORALL p3:Best_Finish
+                  FORALL p4:Money_Rank
+                    FORALL p5:Earnings
+                      IMPLIES
+                        PRED poker_player(p0, p1, p2, p3, p4, p5)
+                        EXISTS f:Final_Table_Made
+                          EXISTS b:Best_Finish
+                            AND
+                              EQ  f = p2
+                              EQ  b = p3
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : Final_Table_Made, b : Best_Finish) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Best_Finish, global real -> Float32()
+        e : local Earnings, global real -> Float32()
+        f : local Final_Table_Made, global real -> Float32()
+        m : local Money_Rank, global real -> Float32()
+        p : local Poker_Player_ID, global int -> IntSort()
+        p1 : local People_ID, global int -> IntSort()
+      Predicted FOL:
+        b : local Best_Finish, global real -> Float32()
+        f : local Final_Table_Made, global real -> Float32()
+        p0 : local Poker_Player_ID, global int -> IntSort()
+        p1 : local People_ID, global int -> IntSort()
+        p2 : local Final_Table_Made, global real -> Float32()
+        p3 : local Best_Finish, global real -> Float32()
+        p4 : local Money_Rank, global real -> Float32()
+        p5 : local Earnings, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5470 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_80.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : Final_Table_Made, b : Best_Finish) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

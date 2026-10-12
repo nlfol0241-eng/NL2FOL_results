@@ -1,0 +1,107 @@
+{
+  "NL": "What are the distinct name, location and products of the enzymes which has any 'inhibitor' interaction?",
+  "Vocabulary": {
+    "Predicates": [
+      "enzyme",
+      "medicine_enzyme_interaction"
+    ],
+    "Functions": [],
+    "Constants": [
+      "inhibitor"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "enzyme": [
+        "id",
+        "name",
+        "Location",
+        "Product",
+        "Chromosome",
+        "OMIM",
+        "Porphyria"
+      ],
+      "medicine_enzyme_interaction": [
+        "enzyme_id",
+        "medicine_id",
+        "interaction_type"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "inhibitor": "interaction_type"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( medicine(a0, a1, a2, a3) ∧ medicine(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b5∀b6∀b0'∀b1'∀b2'∀b3'∀b4'∀b5'∀b6'( enzyme(b0, b1, b2, b3, b4, b5, b6) ∧ enzyme(b0', b1', b2', b3', b4', b5', b6') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' ∧ b5 = b5' ∧ b6 = b6' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( medicine_enzyme_interaction(c0, c1, c2) ∧ medicine_enzyme_interaction(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( medicine_enzyme_interaction(c0, c1, c2) → ∃a0∃a1∃a2∃a3 ( medicine(a0, a1, a2, a3) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( medicine_enzyme_interaction(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4∃b5∃b6 ( enzyme(b0, b1, b2, b3, b4, b5, b6) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "enzyme": {
+        "A": "enzyme",
+        "A0": "id",
+        "A1": "name",
+        "A2": "Location",
+        "A3": "Product",
+        "A4": "Chromosome",
+        "A5": "OMIM",
+        "A6": "Porphyria"
+      },
+      "medicine_enzyme_interaction": {
+        "B": "medicine_enzyme_interaction",
+        "B0": "enzyme_id",
+        "B1": "medicine_id",
+        "B2": "interaction_type"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "inhibitor"
+    }
+  },
+  "Gold FOL": {
+    "string": "∃i : id ∃c : Chromosome ∃o : OMIM ∃p1 : Porphyria ∃e : enzyme_id ∃m : medicine_id ∃i1 : interaction_type ( (((enzyme(i,n,l,p,c,o,p1)) ∧ (medicine_enzyme_interaction(e,m,i1))) ∧ (e = i)) ∧ (i1 = 'inhibitor') )",
+    "free vars": "n : name, l : Location, p : Product"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1,A2,A3](<S>[B2 = 'inhibitor':VARCHAR(65536)](<S>[B0 = A0]((A)<X>(B))))",
+    "Processed_RA": "<P>[A1,A2,A3](<S>[B2 = 'inhibitor'](<S>[B0 = A0]((A)<X>(B))))",
+    "RC": "[E]?B0,?A5,?B2,?A4,?B1,?A0,?A6( (((A(?A0,?A1,?A2,?A3,?A4,?A5,?A6)) & (B(?B0,?B1,?B2))) & (?B0 = ?A0)) & (?B2 = inhibitor) )",
+    "string": "∃B0 ∃A5 ∃B2 ∃A4 ∃B1 ∃A0 ∃A6( (((A(A0,A1,A2,A3,A4,A5,A6)) ∧ (B(B0,B1,B2))) ∧ (B0 = A0)) ∧ (B2 = 'inhibitor') )",
+    "free variables": "A1, A2, A3",
+    "db_id": "medicine_enzyme_interaction",
+    "processed_sql": "SELECT  T1.name ,  T1.location ,  T1.product FROM enzyme AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.enzyme_id  =  T1.id WHERE T2.interaction_type  =  'inhibitor'"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "enzyme": {
+      "sortaxiom0": "id = int",
+      "sortaxiom1": "name = text",
+      "sortaxiom2": "Location = text",
+      "sortaxiom3": "Product = text",
+      "sortaxiom4": "Chromosome = text",
+      "sortaxiom5": "OMIM = int",
+      "sortaxiom6": "Porphyria = text"
+    },
+    "medicine_enzyme_interaction": {
+      "sortaxiom0": "enzyme_id = int",
+      "sortaxiom1": "medicine_id = int",
+      "sortaxiom2": "interaction_type = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT DISTINCT T1.name ,  T1.location ,  T1.product FROM enzyme AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.enzyme_id  =  T1.id WHERE T2.interaction_type  =  'inhibitor'"
+  },
+  "id": 1428,
+  "Predicted FOL": {
+    "string": "∃e : id ∃c : Chromosome ∃o : OMIM ∃p : Porphyria ∃m : medicine_id (enzyme(e, n, l, r, c, o, p) ∧ medicine_enzyme_interaction(e, m, 'inhibitor'))",
+    "free vars": "n : name, l : Location, r : Product"
+  }
+}

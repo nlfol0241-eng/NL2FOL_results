@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3260.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3260.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5399 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of products that are not in any event.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        decimal(20,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -10000000000000000, x < 10000000000000000); 20 digits, 4 after the point]
+      local sorts:
+        Event_ID = integer -> IntSort()
+        Product_ID = integer -> IntSort()
+        Product_Name = varchar(255) -> StringSort()
+        Product_Price = decimal(20,4) -> RealSort()
+        Product_Type_Code = char(15) -> StringSort()
+        Product_in_Event_ID = integer -> IntSort()
+      symbols:
+        Products(Product_ID, Product_Type_Code, Product_Name, Product_Price)
+        Products_in_Events(Product_in_Event_ID, Event_ID, Product_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p1 : Product_Type_Code ∃p3 : Product_Price ∃p : Product_ID( (Products(p,p1,p2,p3)) ∧ (¬(∃p5 : Product_ID( ((Products(p,p1,p2,p3)) ∧ (∃p4 : Product_in_Event_ID ∃e : Event_ID( Products_in_Events(p4,e,p5) ))) ∧ (p = p5) ))) )
+        tokens: EXISTS:∃ IDENT:p1 COLON:: IDENT:Product_Type_Code EXISTS:∃ IDENT:p3 COLON:: IDENT:Product_Price EXISTS:∃ IDENT:p COLON:: IDENT:Product_ID LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p5 COLON:: IDENT:Product_ID LPAR:( LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:p4 COLON:: IDENT:Product_in_Event_ID EXISTS:∃ IDENT:e COLON:: IDENT:Event_ID LPAR:( IDENT:Products_in_Events LPAR:( IDENT:p4 COMMA:, IDENT:e COMMA:, IDENT:p5 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p5 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p1:Product_Type_Code
+            EXISTS p3:Product_Price
+              EXISTS p:Product_ID
+                AND
+                  PRED Products(p, p1, p2, p3)
+                  NOT
+                    EXISTS p5:Product_ID
+                      AND
+                        AND
+                          PRED Products(p, p1, p2, p3)
+                          EXISTS p4:Product_in_Event_ID
+                            EXISTS e:Event_ID
+                              PRED Products_in_Events(p4, e, p5)
+                        EQ  p = p5
+      Predicted FOL: ∃p0:Product_ID ∃p1:Product_Type_Code ∃p3:Product_Price (Products(p0,p1,x,p3) ∧ ¬∃pie0:Product_in_Event_ID ∃pie1:Event_ID (Products_in_Events(pie0,pie1,p0)))
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:Product_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Product_Type_Code EXISTS:∃ IDENT:p3 COLON:: IDENT:Product_Price LPAR:( IDENT:Products LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:x COMMA:, IDENT:p3 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:pie0 COLON:: IDENT:Product_in_Event_ID EXISTS:∃ IDENT:pie1 COLON:: IDENT:Event_ID LPAR:( IDENT:Products_in_Events LPAR:( IDENT:pie0 COMMA:, IDENT:pie1 COMMA:, IDENT:p0 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p0:Product_ID
+            EXISTS p1:Product_Type_Code
+              EXISTS p3:Product_Price
+                AND
+                  PRED Products(p0, p1, x, p3)
+                  NOT
+                    EXISTS pie0:Product_in_Event_ID
+                      EXISTS pie1:Event_ID
+                        PRED Products_in_Events(pie0, pie1, p0)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Product_Name_0 : Product_Name   Gold p2 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local Event_ID, global integer -> IntSort()
+        p : local Product_ID, global integer -> IntSort()
+        p1 : local Product_Type_Code, global char(15) -> StringSort()
+        p2 : local Product_Name, global varchar(255) -> StringSort()
+        p3 : local Product_Price, global decimal(20,4) -> RealSort()
+        p4 : local Product_in_Event_ID, global integer -> IntSort()
+        p5 : local Product_ID, global integer -> IntSort()
+      Predicted FOL:
+        p0 : local Product_ID, global integer -> IntSort()
+        p1 : local Product_Type_Code, global char(15) -> StringSort()
+        p3 : local Product_Price, global decimal(20,4) -> RealSort()
+        pie0 : local Product_in_Event_ID, global integer -> IntSort()
+        pie1 : local Event_ID, global integer -> IntSort()
+        x : local Product_Name, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p1_1, gold_p3_2, gold_p_3], And(D_char_15_(gold_p1_1), D_decimal_20_4_(gold_p3_2), And(P_Products(gold_p_3, gold_p1_1, FV_Product_Name_0, gold_p3_2), Not(Exists([gold_p5_4], And(And(P_Products(gold_p_3, gold_p1_1, FV_Product_Name_0, gold_p3_2), Exists([gold_p4_5, gold_e_6], P_Products_in_Events(gold_p4_5, gold_e_6, gold_p5_4))), (gold_p_3 == gold_p5_4)))))))
+      gold_skolem (witnesses WGOLD_p1, WGOLD_p3, WGOLD_p):  And(D_char_15_(WGOLD_p1), D_decimal_20_4_(WGOLD_p3), And(P_Products(WGOLD_p, WGOLD_p1, FV_Product_Name_0, WGOLD_p3), Not(Exists([goldsk_p5_1], And(And(P_Products(WGOLD_p, WGOLD_p1, FV_Product_Name_0, WGOLD_p3), Exists([goldsk_p4_2, goldsk_e_3], P_Products_in_Events(goldsk_p4_2, goldsk_e_3, goldsk_p5_1))), (WGOLD_p == goldsk_p5_1))))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p0_1, predicted_p1_2, predicted_p3_3], And(D_char_15_(predicted_p1_2), D_decimal_20_4_(predicted_p3_3), And(P_Products(predicted_p0_1, predicted_p1_2, FV_Product_Name_0, predicted_p3_3), Not(Exists([predicted_pie0_4, predicted_pie1_5], P_Products_in_Events(predicted_pie0_4, predicted_pie1_5, predicted_p0_1))))))
+      predicted_skolem (witnesses WPREDICTED_p0, WPREDICTED_p1, WPREDICTED_p3):  And(D_char_15_(WPREDICTED_p1), D_decimal_20_4_(WPREDICTED_p3), And(P_Products(WPREDICTED_p0, WPREDICTED_p1, FV_Product_Name_0, WPREDICTED_p3), Not(Exists([predictedsk_pie0_1, predictedsk_pie1_2], P_Products_in_Events(predictedsk_pie0_1, predictedsk_pie1_2, WPREDICTED_p0)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 757 lines, 30151 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3260.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Product_Name_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p1, WGOLD_p3, WGOLD_p
+      claim: And(And(Length(WGOLD_p1) <= 15, And(IsInt(WGOLD_p3*10000), WGOLD_p3 > -10000000000000000, WGOLD_p3 < 10000000000000000), And(Products(WGOLD_p, WGOLD_p1, FV_Product_Name_0, WGOLD_p3), Not(Exists(goldsk_p5_1, And(And(Products(WGOLD_p, WGOLD_p1, FV_Product_Name_0, WGOLD_p3), Exists([goldsk_p4_2, goldsk_e_3], Products_in_Events(goldsk_p4_2, goldsk_e_3, goldsk_p5_1))), WGOLD_p == goldsk_p5_1))))), Not(Exists([predicted_p0_1, predicted_p1_2, predicted_p3_3], And(Length(predicted_p1_2) <= 15, And(IsInt(predicted_p3_3*10000), predicted_p3_3 > -10000000000000000, predicted_p3_3 < 10000000000000000), And(Products(predicted_p0_1, predicted_p1_2, FV_Product_Name_0, predicted_p3_3), Not(Exists([predicted_pie0_4, predicted_pie1_5], Products_in_Events(predicted_pie0_4, predicted_pie1_5, predicted_p0_1))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_p0, WPREDICTED_p1, WPREDICTED_p3
+      claim: And(And(Length(WPREDICTED_p1) <= 15, And(IsInt(WPREDICTED_p3*10000), WPREDICTED_p3 > -10000000000000000, WPREDICTED_p3 < 10000000000000000), And(Products(WPREDICTED_p0, WPREDICTED_p1, FV_Product_Name_0, WPREDICTED_p3), Not(Exists([predictedsk_pie0_1, predictedsk_pie1_2], Products_in_Events(predictedsk_pie0_1, predictedsk_pie1_2, WPREDICTED_p0))))), Not(Exists([gold_p1_1, gold_p3_2, gold_p_3], And(Length(gold_p1_1) <= 15, And(IsInt(gold_p3_2*10000), gold_p3_2 > -10000000000000000, gold_p3_2 < 10000000000000000), And(Products(gold_p_3, gold_p1_1, FV_Product_Name_0, gold_p3_2), Not(Exists(gold_p5_4, And(And(Products(gold_p_3, gold_p1_1, FV_Product_Name_0, gold_p3_2), Exists([gold_p4_5, gold_e_6], Products_in_Events(gold_p4_5, gold_e_6, gold_p5_4))), gold_p_3 == gold_p5_4))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

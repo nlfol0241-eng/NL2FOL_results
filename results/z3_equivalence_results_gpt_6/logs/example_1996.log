@@ -1,0 +1,130 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1996.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1996.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5287 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the details for statements with the details 'Private Project', and what are the names of the corresponding documents?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Document_Date = datetime -> IntSort()
+        Document_Description = varchar(255) -> StringSort()
+        Document_ID = integer -> IntSort()
+        Document_Name = varchar(255) -> StringSort()
+        Document_Type_Code = char(15) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Project_ID = integer -> IntSort()
+        Statement_Details = varchar(255) -> StringSort()
+        Statement_ID = integer -> IntSort()
+      symbols:
+        Documents(Document_ID, Document_Type_Code, Project_ID, Document_Date, Document_Name, Document_Description, Other_Details)
+        Statements(Statement_ID, Statement_Details)
+        constant Private Project : Statement_Details
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Statement_ID ∃d : Document_ID ∃d1 : Document_Type_Code ∃p : Project_ID ∃d2 : Document_Date ∃d4 : Document_Description ∃o : Other_Details ( (((Statements(s,s1)) ∧ (Documents(d,d1,p,d2,d3,d4,o))) ∧ (s = d)) ∧ (s1 = 'Private Project') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Statement_ID EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:d1 COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:p COLON:: IDENT:Project_ID EXISTS:∃ IDENT:d2 COLON:: IDENT:Document_Date EXISTS:∃ IDENT:d4 COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Statements LPAR:( IDENT:s COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:p COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:Private Project RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Statement_ID
+            EXISTS d:Document_ID
+              EXISTS d1:Document_Type_Code
+                EXISTS p:Project_ID
+                  EXISTS d2:Document_Date
+                    EXISTS d4:Document_Description
+                      EXISTS o:Other_Details
+                        AND
+                          AND
+                            AND
+                              PRED Statements(s, s1)
+                              PRED Documents(d, d1, p, d2, d3, d4, o)
+                            EQ  s = d
+                          EQ  s1 = 'Private Project'
+      Predicted FOL: ∃s : Statement_ID ∃t : Document_Type_Code ∃p : Project_ID ∃d : Document_Date ∃r : Document_Description ∃o : Other_Details (Statements(s, details) ∧ details = 'Private Project' ∧ Documents(s, t, p, d, name, r, o))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Statement_ID EXISTS:∃ IDENT:t COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:p COLON:: IDENT:Project_ID EXISTS:∃ IDENT:d COLON:: IDENT:Document_Date EXISTS:∃ IDENT:r COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( IDENT:Statements LPAR:( IDENT:s COMMA:, IDENT:details RPAR:) AND:∧ IDENT:details EQ:= LIT:Private Project AND:∧ IDENT:Documents LPAR:( IDENT:s COMMA:, IDENT:t COMMA:, IDENT:p COMMA:, IDENT:d COMMA:, IDENT:name COMMA:, IDENT:r COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Statement_ID
+            EXISTS t:Document_Type_Code
+              EXISTS p:Project_ID
+                EXISTS d:Document_Date
+                  EXISTS r:Document_Description
+                    EXISTS o:Other_Details
+                      AND
+                        PRED Statements(s, details)
+                        EQ  details = 'Private Project'
+                        PRED Documents(s, t, p, d, name, r, o)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Document_Name_0 : Document_Name   Gold d3 <-> Predicted name
+      FV_Statement_Details_0 : Statement_Details   Gold s1 <-> Predicted details
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Document_Type_Code, global char(15) -> StringSort()
+        d2 : local Document_Date, global datetime -> IntSort()
+        d3 : local Document_Name, global varchar(255) -> StringSort()
+        d4 : local Document_Description, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Project_ID, global integer -> IntSort()
+        s : local Statement_ID, global integer -> IntSort()
+        s1 : local Statement_Details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        d : local Document_Date, global datetime -> IntSort()
+        details : local Statement_Details, global varchar(255) -> StringSort()
+        name : local Document_Name, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Project_ID, global integer -> IntSort()
+        r : local Document_Description, global varchar(255) -> StringSort()
+        s : local Statement_ID, global integer -> IntSort()
+        t : local Document_Type_Code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_d_2, gold_d1_3, gold_p_4, gold_d2_5, gold_d4_6, gold_o_7], And(D_char_15_(gold_d1_3), D_varchar_255_(gold_d4_6), D_varchar_255_(gold_o_7), And(And(And(P_Statements(gold_s_1, FV_Statement_Details_0), P_Documents(gold_d_2, gold_d1_3, gold_p_4, gold_d2_5, FV_Document_Name_0, gold_d4_6, gold_o_7)), (gold_s_1 == gold_d_2)), (FV_Statement_Details_0 == L_Private_Project))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_d, WGOLD_d1, WGOLD_p, WGOLD_d2, WGOLD_d4, WGOLD_o):  And(D_char_15_(WGOLD_d1), D_varchar_255_(WGOLD_d4), D_varchar_255_(WGOLD_o), And(And(And(P_Statements(WGOLD_s, FV_Statement_Details_0), P_Documents(WGOLD_d, WGOLD_d1, WGOLD_p, WGOLD_d2, FV_Document_Name_0, WGOLD_d4, WGOLD_o)), (WGOLD_s == WGOLD_d)), (FV_Statement_Details_0 == L_Private_Project)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_t_2, predicted_p_3, predicted_d_4, predicted_r_5, predicted_o_6], And(D_char_15_(predicted_t_2), D_varchar_255_(predicted_r_5), D_varchar_255_(predicted_o_6), And(P_Statements(predicted_s_1, FV_Statement_Details_0), (FV_Statement_Details_0 == L_Private_Project), P_Documents(predicted_s_1, predicted_t_2, predicted_p_3, predicted_d_4, FV_Document_Name_0, predicted_r_5, predicted_o_6))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_t, WPREDICTED_p, WPREDICTED_d, WPREDICTED_r, WPREDICTED_o):  And(D_char_15_(WPREDICTED_t), D_varchar_255_(WPREDICTED_r), D_varchar_255_(WPREDICTED_o), And(P_Statements(WPREDICTED_s, FV_Statement_Details_0), (FV_Statement_Details_0 == L_Private_Project), P_Documents(WPREDICTED_s, WPREDICTED_t, WPREDICTED_p, WPREDICTED_d, FV_Document_Name_0, WPREDICTED_r, WPREDICTED_o)))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Private Project' at varchar(255) -> L_Private_Project = StringVal('Private Project')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 778 lines, 31732 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1996.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Document_Name_0) <= 255
+      [1] Length(FV_Statement_Details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_d, WGOLD_d1, WGOLD_p, WGOLD_d2, WGOLD_d4, WGOLD_o
+      claim: And(And(Length(WGOLD_d1) <= 15, Length(WGOLD_d4) <= 255, Length(WGOLD_o) <= 255, And(And(And(Statements(WGOLD_s, FV_Statement_Details_0), Documents(WGOLD_d, WGOLD_d1, WGOLD_p, WGOLD_d2, FV_Document_Name_0, WGOLD_d4, WGOLD_o)), WGOLD_s == WGOLD_d), FV_Statement_Details_0 == "Private Project")), Not(Exists([predicted_s_1, predicted_t_2, predicted_p_3, predicted_d_4, predicted_r_5, predicted_o_6], And(Length(predicted_t_2) <= 15, Length(predicted_r_5) <= 255, Length(predicted_o_6) <= 255, And(Statements(predicted_s_1, FV_Statement_Details_0), FV_Statement_Details_0 == "Private Project", Documents(predicted_s_1, predicted_t_2, predicted_p_3, predicted_d_4, FV_Document_Name_0, predicted_r_5, predicted_o_6))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_t, WPREDICTED_p, WPREDICTED_d, WPREDICTED_r, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_t) <= 15, Length(WPREDICTED_r) <= 255, Length(WPREDICTED_o) <= 255, And(Statements(WPREDICTED_s, FV_Statement_Details_0), FV_Statement_Details_0 == "Private Project", Documents(WPREDICTED_s, WPREDICTED_t, WPREDICTED_p, WPREDICTED_d, FV_Document_Name_0, WPREDICTED_r, WPREDICTED_o))), Not(Exists([gold_s_1, gold_d_2, gold_d1_3, gold_p_4, gold_d2_5, gold_d4_6, gold_o_7], And(Length(gold_d1_3) <= 15, Length(gold_d4_6) <= 255, Length(gold_o_7) <= 255, And(And(And(Statements(gold_s_1, FV_Statement_Details_0), Documents(gold_d_2, gold_d1_3, gold_p_4, gold_d2_5, FV_Document_Name_0, gold_d4_6, gold_o_7)), gold_s_1 == gold_d_2), FV_Statement_Details_0 == "Private Project")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_728.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_728.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3613 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the different years for all competitions that are not of type equal to tournament?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Competition_ID = int -> IntSort()
+        Competition_type = text -> StringSort()
+        Country = text -> StringSort()
+        Year = real -> Float32()
+      symbols:
+        competition(Competition_ID, Year, Competition_type, Country)
+        constant Tournament : Competition_type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Competition_ID ∃c1 : Competition_type ∃c2 : Country ( (competition(c,y,c1,c2)) ∧ (c1 <> 'Tournament') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Competition_type EXISTS:∃ IDENT:c2 COLON:: IDENT:Country LPAR:( LPAR:( IDENT:competition LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 NEQ:<> LIT:Tournament RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Competition_ID
+            EXISTS c1:Competition_type
+              EXISTS c2:Country
+                AND
+                  PRED competition(c, y, c1, c2)
+                  NEQ  c1 != 'Tournament'
+      Predicted FOL: ∃y:Year( ∃c:Competition_ID ∃t:Competition_type ∃co:Country( competition(c,y,t,co) ∧ t ≠ Tournament ) )
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:Year LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:t COLON:: IDENT:Competition_type EXISTS:∃ IDENT:co COLON:: IDENT:Country LPAR:( IDENT:competition LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:t COMMA:, IDENT:co RPAR:) AND:∧ IDENT:t NEQ:≠ IDENT:Tournament RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:Year
+            EXISTS c:Competition_ID
+              EXISTS t:Competition_type
+                EXISTS co:Country
+                  AND
+                    PRED competition(c, y, t, co)
+                    NEQ  t != Tournament<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (y : Year) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Competition_ID, global int -> IntSort()
+        c1 : local Competition_type, global text -> StringSort()
+        c2 : local Country, global text -> StringSort()
+        y : local Year, global real -> Float32()
+      Predicted FOL:
+        c : local Competition_ID, global int -> IntSort()
+        co : local Country, global text -> StringSort()
+        t : local Competition_type, global text -> StringSort()
+        y : local Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5350 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_728.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (y : Year) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

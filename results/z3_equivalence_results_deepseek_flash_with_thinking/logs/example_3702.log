@@ -1,0 +1,164 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3702.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9300 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Among the procedures that cost more than 1000, which were not specialized in by physician John Wen?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 3 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+      local sorts:
+        CertificationDate = datetime -> IntSort()
+        CertificationExpires = datetime -> IntSort()
+        Code = integer -> IntSort()
+        Cost = real -> Float32()
+        EmployeeID = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        SSN = integer -> IntSort()
+        Treatment = integer -> IntSort()
+      symbols:
+        Physician(EmployeeID, Name, Position, SSN)
+        Procedures(Code, Name, Cost)
+        Trained_In(Physician, Treatment, CertificationDate, CertificationExpires)
+        constant 1000 : Cost
+        constant John Wen : Name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c1 : Cost ∃c : Code( (Procedures(c,n,c1)) ∧ (c1 > 1000) )) ∧ (¬(∃e : EmployeeID ∃s : SSN ∃c2 : CertificationDate ∃c1 : Cost ∃p : Position ∃c3 : CertificationExpires ∃p1 : Physician ∃n1 : Name ∃c : Code ∃t : Treatment( (((((Physician(e,n1,p,s)) ∧ (Trained_In(p1,t,c2,c3))) ∧ (e = p1)) ∧ (Procedures(c,n,c1))) ∧ (c = t)) ∧ (n1 = 'John Wen') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Cost EXISTS:∃ IDENT:c COLON:: IDENT:Code LPAR:( LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 GT:> NUM:1000 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:c2 COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:c1 COLON:: IDENT:Cost EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:c3 COLON:: IDENT:CertificationExpires EXISTS:∃ IDENT:p1 COLON:: IDENT:Physician EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:t COLON:: IDENT:Treatment LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n1 COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Trained_In LPAR:( IDENT:p1 COMMA:, IDENT:t COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:John Wen RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c1:Cost
+              EXISTS c:Code
+                AND
+                  PRED Procedures(c, n, c1)
+                  CMP  c1 > 1000
+            NOT
+              EXISTS e:EmployeeID
+                EXISTS s:SSN
+                  EXISTS c2:CertificationDate
+                    EXISTS c1:Cost
+                      EXISTS p:Position
+                        EXISTS c3:CertificationExpires
+                          EXISTS p1:Physician
+                            EXISTS n1:Name
+                              EXISTS c:Code
+                                EXISTS t:Treatment
+                                  AND
+                                    AND
+                                      AND
+                                        AND
+                                          AND
+                                            PRED Physician(e, n1, p, s)
+                                            PRED Trained_In(p1, t, c2, c3)
+                                          EQ  e = p1
+                                        PRED Procedures(c, n, c1)
+                                      EQ  c = t
+                                    EQ  n1 = 'John Wen'
+      Predicted FOL: ∃c : Code ∃cost : Cost (Procedures(c, n, cost) ∧ cost > 1000 ∧ ¬∃e : EmployeeID ∃pos : Position ∃ssn : SSN ∃cd : CertificationDate ∃ce : CertificationExpires (Physician(e, 'John Wen', pos, ssn) ∧ Trained_In(e, c, cd, ce)))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:cost COLON:: IDENT:Cost LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:cost RPAR:) AND:∧ IDENT:cost GT:> NUM:1000 AND:∧ NOT:¬ EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:pos COLON:: IDENT:Position EXISTS:∃ IDENT:ssn COLON:: IDENT:SSN EXISTS:∃ IDENT:cd COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:ce COLON:: IDENT:CertificationExpires LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, LIT:John Wen COMMA:, IDENT:pos COMMA:, IDENT:ssn RPAR:) AND:∧ IDENT:Trained_In LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, IDENT:cd COMMA:, IDENT:ce RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Code
+            EXISTS cost:Cost
+              AND
+                PRED Procedures(c, n, cost)
+                CMP  cost > 1000
+                NOT
+                  EXISTS e:EmployeeID
+                    EXISTS pos:Position
+                      EXISTS ssn:SSN
+                        EXISTS cd:CertificationDate
+                          EXISTS ce:CertificationExpires
+                            AND
+                              PRED Physician(e, 'John Wen', pos, ssn)
+                              PRED Trained_In(e, c, cd, ce)
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        c1 : local Cost, global real -> Float32()
+        c2 : local CertificationDate, global datetime -> IntSort()
+        c3 : local CertificationExpires, global datetime -> IntSort()
+        e : local EmployeeID, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        n1 : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        p1 : local Physician, global integer -> IntSort()
+        s : local SSN, global integer -> IntSort()
+        t : local Treatment, global integer -> IntSort()
+      Predicted FOL:
+        c : local Code, global integer -> IntSort()
+        cd : local CertificationDate, global datetime -> IntSort()
+        ce : local CertificationExpires, global datetime -> IntSort()
+        cost : local Cost, global real -> Float32()
+        e : local EmployeeID, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        pos : local Position, global varchar(30) -> StringSort()
+        ssn : local SSN, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_c1_1, gold_c_2], And(D_real(gold_c1_1), And(P_Procedures(gold_c_2, FV_Name_0, gold_c1_1), (gold_c1_1 > L_v_1000_real)))), Not(Exists([gold_e_3, gold_s_4, gold_c2_5, gold_c1_6, gold_p_7, gold_c3_8, gold_p1_9, gold_n1_10, gold_c_11, gold_t_12], And(D_real(gold_c1_6), D_varchar_30_(gold_p_7), D_varchar_30_(gold_n1_10), And(And(And(And(And(P_Physician(gold_e_3, gold_n1_10, gold_p_7, gold_s_4), P_Trained_In(gold_p1_9, gold_t_12, gold_c2_5, gold_c3_8)), (gold_e_3 == gold_p1_9)), P_Procedures(gold_c_11, FV_Name_0, gold_c1_6)), (gold_c_11 == gold_t_12)), (gold_n1_10 == L_John_Wen))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_cost_2], And(D_real(predicted_cost_2), And(P_Procedures(predicted_c_1, FV_Name_0, predicted_cost_2), (predicted_cost_2 > L_v_1000_real), Not(Exists([predicted_e_3, predicted_pos_4, predicted_ssn_5, predicted_cd_6, predicted_ce_7], And(D_varchar_30_(predicted_pos_4), And(And(P_Physician(predicted_e_3, L_John_Wen, predicted_pos_4, predicted_ssn_5), D_varchar_30_(L_John_Wen)), P_Trained_In(predicted_e_3, predicted_c_1, predicted_cd_6, predicted_ce_7))))))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_cost):  And(D_real(WPREDICTED_cost), And(P_Procedures(WPREDICTED_c, FV_Name_0, WPREDICTED_cost), (WPREDICTED_cost > L_v_1000_real), Not(Exists([predictedsk_e_1, predictedsk_pos_2, predictedsk_ssn_3, predictedsk_cd_4, predictedsk_ce_5], And(D_varchar_30_(predictedsk_pos_2), And(And(P_Physician(predictedsk_e_1, L_John_Wen, predictedsk_pos_2, predictedsk_ssn_3), D_varchar_30_(L_John_Wen)), P_Trained_In(predictedsk_e_1, WPREDICTED_c, predictedsk_cd_4, predictedsk_ce_5)))))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'John Wen' at varchar(30) -> L_John_Wen = StringVal('John Wen')
+      literal '1000' at real -> L_v_1000_real = FPVal(1000.0, Float32())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 771 lines, 31011 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 30
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_c1_1, gold_c_2], And(And(Not(fpIsNaN(gold_c1_1)), Not(And(fpIsZero(gold_c1_1), fpIsNegative(gold_c1_1)))), And(Procedures(gold_c_2, FV_Name_0, gold_c1_1), 1.953125*(2**9) < gold_c1_1))), Not(Exists([gold_e_3, gold_s_4, gold_c2_5, gold_c1_6, gold_p_7, gold_c3_8, gold_p1_9, gold_n1_10, gold_c_11, gold_t_12], And(And(Not(fpIsNaN(gold_c1_6)), Not(And(fpIsZero(gold_c1_6), fpIsNegative(gold_c1_6)))), Length(gold_p_7) <= 30, Length(gold_n1_10) <= 30, And(And(And(And(And(Physician(gold_e_3, gold_n1_10, gold_p_7, gold_s_4), Trained_In(gold_p1_9, gold_t_12, gold_c2_5, gold_c3_8)), gold_e_3 == gold_p1_9), Procedures(gold_c_11, FV_Name_0, gold_c1_6)), gold_c_11 == gold_t_12), gold_n1_10 == "John Wen"))))), Not(Exists([predicted_c_1, predicted_cost_2], And(And(Not(fpIsNaN(predicted_cost_2)), Not(And(fpIsZero(predicted_cost_2), fpIsNegative(predicted_cost_2)))), And(Procedures(predicted_c_1, FV_Name_0, predicted_cost_2), 1.953125*(2**9) < predicted_cost_2, Not(Exists([predicted_e_3, predicted_pos_4, predicted_ssn_5, predicted_cd_6, predicted_ce_7], And(Length(predicted_pos_4) <= 30, And(And(Physician(predicted_e_3, "John Wen", predicted_pos_4, predicted_ssn_5), Length("John Wen") <= 30), Trained_In(predicted_e_3, predicted_c_1, predicted_cd_6, predicted_ce_7))))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.025 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_cost
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_cost)), Not(And(fpIsZero(WPREDICTED_cost), fpIsNegative(WPREDICTED_cost)))), And(Procedures(WPREDICTED_c, FV_Name_0, WPREDICTED_cost), 1.953125*(2**9) < WPREDICTED_cost, Not(Exists([predictedsk_e_1, predictedsk_pos_2, predictedsk_ssn_3, predictedsk_cd_4, predictedsk_ce_5], And(Length(predictedsk_pos_2) <= 30, And(And(Physician(predictedsk_e_1, "John Wen", predictedsk_pos_2, predictedsk_ssn_3), Length("John Wen") <= 30), Trained_In(predictedsk_e_1, WPREDICTED_c, predictedsk_cd_4, predictedsk_ce_5))))))), Not(And(Exists([gold_c1_1, gold_c_2], And(And(Not(fpIsNaN(gold_c1_1)), Not(And(fpIsZero(gold_c1_1), fpIsNegative(gold_c1_1)))), And(Procedures(gold_c_2, FV_Name_0, gold_c1_1), 1.953125*(2**9) < gold_c1_1))), Not(Exists([gold_e_3, gold_s_4, gold_c2_5, gold_c1_6, gold_p_7, gold_c3_8, gold_p1_9, gold_n1_10, gold_c_11, gold_t_12], And(And(Not(fpIsNaN(gold_c1_6)), Not(And(fpIsZero(gold_c1_6), fpIsNegative(gold_c1_6)))), Length(gold_p_7) <= 30, Length(gold_n1_10) <= 30, And(And(And(And(And(Physician(gold_e_3, gold_n1_10, gold_p_7, gold_s_4), Trained_In(gold_p1_9, gold_t_12, gold_c2_5, gold_c3_8)), gold_e_3 == gold_p1_9), Procedures(gold_c_11, FV_Name_0, gold_c1_6)), gold_c_11 == gold_t_12), gold_n1_10 == "John Wen")))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.011 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py", line 719, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py", line 750, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py", line 701, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py", line 599, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py", line 523, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py", line 403, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3702.py", line 403, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

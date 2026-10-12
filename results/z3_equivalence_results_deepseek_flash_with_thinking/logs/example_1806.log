@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1806.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1806.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7363 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the staff ids and genders for any staff with the title Department Manager.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        date_assigned_from = datetime -> IntSort()
+        date_assigned_to = datetime -> IntSort()
+        department_id = integer -> IntSort()
+        job_title_code = varchar(10) -> StringSort()
+        staff_gender = varchar(1) -> StringSort()
+        staff_id = integer -> IntSort()
+        staff_name = varchar(80) -> StringSort()
+      symbols:
+        Staff(staff_id, staff_gender, staff_name)
+        Staff_Department_Assignments(staff_id, department_id, date_assigned_from, job_title_code, date_assigned_to)
+        constant Department Manager : job_title_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s2 : staff_name ∃s3 : staff_id ∃d : department_id ∃d1 : date_assigned_from ∃j : job_title_code ∃d2 : date_assigned_to ( (((Staff(s,s1,s2)) ∧ (Staff_Department_Assignments(s3,d,d1,j,d2))) ∧ (s = s3)) ∧ (j = 'Department Manager') )
+        tokens: EXISTS:∃ IDENT:s2 COLON:: IDENT:staff_name EXISTS:∃ IDENT:s3 COLON:: IDENT:staff_id EXISTS:∃ IDENT:d COLON:: IDENT:department_id EXISTS:∃ IDENT:d1 COLON:: IDENT:date_assigned_from EXISTS:∃ IDENT:j COLON:: IDENT:job_title_code EXISTS:∃ IDENT:d2 COLON:: IDENT:date_assigned_to LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Staff LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Staff_Department_Assignments LPAR:( IDENT:s3 COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:j COMMA:, IDENT:d2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:j EQ:= LIT:Department Manager RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s2:staff_name
+            EXISTS s3:staff_id
+              EXISTS d:department_id
+                EXISTS d1:date_assigned_from
+                  EXISTS j:job_title_code
+                    EXISTS d2:date_assigned_to
+                      AND
+                        AND
+                          AND
+                            PRED Staff(s, s1, s2)
+                            PRED Staff_Department_Assignments(s3, d, d1, j, d2)
+                          EQ  s = s3
+                        EQ  j = 'Department Manager'
+      Predicted FOL: ∃ c : staff_name ∃ d : department_id ∃ e : date_assigned_from ∃ g : date_assigned_to ( Staff(sid, gender, c) ∧ Staff_Department_Assignments(sid, d, e, 'Department Manager', g) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:staff_name EXISTS:∃ IDENT:d COLON:: IDENT:department_id EXISTS:∃ IDENT:e COLON:: IDENT:date_assigned_from EXISTS:∃ IDENT:g COLON:: IDENT:date_assigned_to LPAR:( IDENT:Staff LPAR:( IDENT:sid COMMA:, IDENT:gender COMMA:, IDENT:c RPAR:) AND:∧ IDENT:Staff_Department_Assignments LPAR:( IDENT:sid COMMA:, IDENT:d COMMA:, IDENT:e COMMA:, LIT:Department Manager COMMA:, IDENT:g RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:staff_name
+            EXISTS d:department_id
+              EXISTS e:date_assigned_from
+                EXISTS g:date_assigned_to
+                  AND
+                    PRED Staff(sid, gender, c)
+                    PRED Staff_Department_Assignments(sid, d, e, 'Department Manager', g)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_staff_gender_0 : staff_gender   Gold s1 <-> Predicted gender
+      FV_staff_id_0 : staff_id   Gold s <-> Predicted sid
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local department_id, global integer -> IntSort()
+        d1 : local date_assigned_from, global datetime -> IntSort()
+        d2 : local date_assigned_to, global datetime -> IntSort()
+        j : local job_title_code, global varchar(10) -> StringSort()
+        s : local staff_id, global integer -> IntSort()
+        s1 : local staff_gender, global varchar(1) -> StringSort()
+        s2 : local staff_name, global varchar(80) -> StringSort()
+        s3 : local staff_id, global integer -> IntSort()
+      Predicted FOL:
+        c : local staff_name, global varchar(80) -> StringSort()
+        d : local department_id, global integer -> IntSort()
+        e : local date_assigned_from, global datetime -> IntSort()
+        g : local date_assigned_to, global datetime -> IntSort()
+        gender : local staff_gender, global varchar(1) -> StringSort()
+        sid : local staff_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s2_1, gold_s3_2, gold_d_3, gold_d1_4, gold_j_5, gold_d2_6], And(D_varchar_80_(gold_s2_1), D_varchar_10_(gold_j_5), And(And(And(P_Staff(FV_staff_id_0, FV_staff_gender_0, gold_s2_1), P_Staff_Department_Assignments(gold_s3_2, gold_d_3, gold_d1_4, gold_j_5, gold_d2_6)), (FV_staff_id_0 == gold_s3_2)), (gold_j_5 == L_Department_Manager))))
+      gold_skolem (witnesses WGOLD_s2, WGOLD_s3, WGOLD_d, WGOLD_d1, WGOLD_j, WGOLD_d2):  And(D_varchar_80_(WGOLD_s2), D_varchar_10_(WGOLD_j), And(And(And(P_Staff(FV_staff_id_0, FV_staff_gender_0, WGOLD_s2), P_Staff_Department_Assignments(WGOLD_s3, WGOLD_d, WGOLD_d1, WGOLD_j, WGOLD_d2)), (FV_staff_id_0 == WGOLD_s3)), (WGOLD_j == L_Department_Manager)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_d_2, predicted_e_3, predicted_g_4], And(D_varchar_80_(predicted_c_1), And(P_Staff(FV_staff_id_0, FV_staff_gender_0, predicted_c_1), And(P_Staff_Department_Assignments(FV_staff_id_0, predicted_d_2, predicted_e_3, L_Department_Manager, predicted_g_4), D_varchar_10_(L_Department_Manager)))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_d, WPREDICTED_e, WPREDICTED_g):  And(D_varchar_80_(WPREDICTED_c), And(P_Staff(FV_staff_id_0, FV_staff_gender_0, WPREDICTED_c), And(P_Staff_Department_Assignments(FV_staff_id_0, WPREDICTED_d, WPREDICTED_e, L_Department_Manager, WPREDICTED_g), D_varchar_10_(L_Department_Manager))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Department Manager' at varchar(10) -> L_Department_Manager = StringVal('Department Manager')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 770 lines, 30588 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1806.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_staff_gender_0) <= 1
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s2, WGOLD_s3, WGOLD_d, WGOLD_d1, WGOLD_j, WGOLD_d2
+      claim: And(And(Length(WGOLD_s2) <= 80, Length(WGOLD_j) <= 10, And(And(And(Staff(FV_staff_id_0, FV_staff_gender_0, WGOLD_s2), Staff_Department_Assignments(WGOLD_s3, WGOLD_d, WGOLD_d1, WGOLD_j, WGOLD_d2)), FV_staff_id_0 == WGOLD_s3), WGOLD_j == "Department Manager")), Not(Exists([predicted_c_1, predicted_d_2, predicted_e_3, predicted_g_4], And(Length(predicted_c_1) <= 80, And(Staff(FV_staff_id_0, FV_staff_gender_0, predicted_c_1), And(Staff_Department_Assignments(FV_staff_id_0, predicted_d_2, predicted_e_3, "Department Manager", predicted_g_4), Length("Department Manager") <= 10))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_d, WPREDICTED_e, WPREDICTED_g
+      claim: And(And(Length(WPREDICTED_c) <= 80, And(Staff(FV_staff_id_0, FV_staff_gender_0, WPREDICTED_c), And(Staff_Department_Assignments(FV_staff_id_0, WPREDICTED_d, WPREDICTED_e, "Department Manager", WPREDICTED_g), Length("Department Manager") <= 10))), Not(Exists([gold_s2_1, gold_s3_2, gold_d_3, gold_d1_4, gold_j_5, gold_d2_6], And(Length(gold_s2_1) <= 80, Length(gold_j_5) <= 10, And(And(And(Staff(FV_staff_id_0, FV_staff_gender_0, gold_s2_1), Staff_Department_Assignments(gold_s3_2, gold_d_3, gold_d1_4, gold_j_5, gold_d2_6)), FV_staff_id_0 == gold_s3_2), gold_j_5 == "Department Manager")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

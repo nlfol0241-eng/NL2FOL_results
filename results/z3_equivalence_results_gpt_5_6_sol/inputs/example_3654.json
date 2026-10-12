@@ -1,0 +1,93 @@
+{
+  "NL": "What are the details of the lots which are not used in any transactions?",
+  "Vocabulary": {
+    "Predicates": [
+      "Lots",
+      "Transactions_Lots"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "Lots": [
+        "lot_id",
+        "investor_id",
+        "lot_details"
+      ],
+      "Transactions_Lots": [
+        "transaction_id",
+        "lot_id"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a0'∀a1'( Investors(a0, a1) ∧ Investors(a0', a1') ∧ a0 = a0' ) → ( a1 = a1' )",
+    "axiom2": "∀b0∀b1∀b2∀b0'∀b1'∀b2'( Lots(b0, b1, b2) ∧ Lots(b0', b1', b2') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' )",
+    "axiom3": "∀c0∀c1∀c0'∀c1'( Ref_Transaction_Types(c0, c1) ∧ Ref_Transaction_Types(c0', c1') ∧ c0 = c0' ) → ( c1 = c1' )",
+    "axiom4": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6∀d0'∀d1'∀d2'∀d3'∀d4'∀d5'∀d6'( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ Transactions(d0', d1', d2', d3', d4', d5', d6') ∧ d0 = d0' ) → ( d1 = d1' ∧ d2 = d2' ∧ d3 = d3' ∧ d4 = d4' ∧ d5 = d5' ∧ d6 = d6' )",
+    "axiom5": "∀e0∀e1∀e0'∀e1'( Sales(e0, e1) ∧ Sales(e0', e1') ∧ e0 = e0' ) → ( e1 = e1' )",
+    "axiom6": "∀b0∀b1∀b2 ( Lots(b0, b1, b2) → ∃a0∃a1 ( Investors(a0, a1) ∧ a0 = b1 ) )",
+    "axiom7": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) → ∃c0∃c1 ( Ref_Transaction_Types(c0, c1) ∧ c0 = d2 ) )",
+    "axiom8": "∀d0∀d1∀d2∀d3∀d4∀d5∀d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) → ∃a0∃a1 ( Investors(a0, a1) ∧ a0 = d1 ) )",
+    "axiom9": "∀e0∀e1 ( Sales(e0, e1) → ∃d0∃d1∃d2∃d3∃d4∃d5∃d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ d0 = e0 ) )",
+    "axiom10": "∀f0∀f1 ( Purchases(f0, f1) → ∃d0∃d1∃d2∃d3∃d4∃d5∃d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ d0 = f0 ) )",
+    "axiom11": "∀g0∀g1 ( Transactions_Lots(g0, g1) → ∃d0∃d1∃d2∃d3∃d4∃d5∃d6 ( Transactions(d0, d1, d2, d3, d4, d5, d6) ∧ d0 = g0 ) )",
+    "axiom12": "∀g0∀g1 ( Transactions_Lots(g0, g1) → ∃b0∃b1∃b2 ( Lots(b0, b1, b2) ∧ b0 = g1 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Lots": {
+        "A": "Lots",
+        "A0": "lot_id",
+        "A1": "investor_id",
+        "A2": "lot_details"
+      },
+      "Transactions_Lots": {
+        "B": "Transactions_Lots",
+        "B0": "transaction_id",
+        "B1": "lot_id"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "(∃i : investor_id ∃l : lot_id( Lots(l,i,l1) )) ∧ (¬(∃t : transaction_id ∃i : investor_id ∃l2 : lot_id ∃l : lot_id( ((Lots(l,i,l1)) ∧ (Transactions_Lots(t,l2))) ∧ (l = l2) )))",
+    "free vars": "l1 : lot_details"
+  },
+  "Gold FOL internal": {
+    "RA": "(<P>[A2](A))<D>(<P>[A2](<S>[A0 = B1]((A)<X>(B))))",
+    "Processed_RA": "(<P>[A2](A))<D>(<P>[A2](<S>[A0 = B1]((A)<X>(B))))",
+    "RC": "([E]?A1,?A0( A(?A0,?A1,?A2) )) & (~([E]?B0,?A1,?B1,?A0( ((A(?A0,?A1,?A2)) & (B(?B0,?B1))) & (?A0 = ?B1) )))",
+    "string": "(∃A1 ∃A0( A(A0,A1,A2) )) ∧ (¬(∃B0 ∃A1 ∃B1 ∃A0( ((A(A0,A1,A2)) ∧ (B(B0,B1))) ∧ (A0 = B1) )))",
+    "free variables": "A2",
+    "db_id": "tracking_share_transactions",
+    "processed_sql": "SELECT lot_details FROM Lots EXCEPT SELECT T1.lot_details FROM Lots AS T1 JOIN transactions_lots AS T2 ON T1.lot_id  =  T2.lot_id"
+  },
+  "Global Sorts": [
+    "varchar(255)",
+    "integer"
+  ],
+  "Sort Axioms": {
+    "Lots": {
+      "sortaxiom0": "lot_id = integer",
+      "sortaxiom1": "investor_id = integer",
+      "sortaxiom2": "lot_details = varchar(255)"
+    },
+    "Transactions_Lots": {
+      "sortaxiom0": "transaction_id = integer",
+      "sortaxiom1": "lot_id = integer"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT lot_details FROM Lots EXCEPT SELECT T1.lot_details FROM Lots AS T1 JOIN transactions_lots AS T2 ON T1.lot_id  =  T2.lot_id"
+  },
+  "id": 3654,
+  "Predicted FOL": {
+    "string": "∃l : lot_id ∃i : investor_id (Lots(l, i, d) ∧ ¬∃t : transaction_id Transactions_Lots(t, l))",
+    "free vars": "d : lot_details"
+  }
+}

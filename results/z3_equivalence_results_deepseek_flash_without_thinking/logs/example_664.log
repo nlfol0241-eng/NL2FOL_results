@@ -1,0 +1,76 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_664.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_664.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2584 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the county name and population of all counties.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        County_Id = int -> IntSort()
+        County_name = text -> StringSort()
+        Population = real -> Float32()
+        Zip_code = text -> StringSort()
+      symbols:
+        county(County_Id, County_name, Population, Zip_code)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : County_Id ∃z : Zip_code ( county(c,c1,p,z) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:County_Id EXISTS:∃ IDENT:z COLON:: IDENT:Zip_code LPAR:( IDENT:county LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:p COMMA:, IDENT:z RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:County_Id
+            EXISTS z:Zip_code
+              PRED county(c, c1, p, z)
+      Predicted FOL: ∀x0 : County_Id ∀x1 : County_name ∀x2 : Population ∀x3 : Zip_code (county(x0, x1, x2, x3) → county(x0, x1, x2, x3))
+        tokens: FORALL:∀ IDENT:x0 COLON:: IDENT:County_Id FORALL:∀ IDENT:x1 COLON:: IDENT:County_name FORALL:∀ IDENT:x2 COLON:: IDENT:Population FORALL:∀ IDENT:x3 COLON:: IDENT:Zip_code LPAR:( IDENT:county LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) IMPL:→ IDENT:county LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) RPAR:) EOF
+        AST:
+          FORALL x0:County_Id
+            FORALL x1:County_name
+              FORALL x2:Population
+                FORALL x3:Zip_code
+                  IMPLIES
+                    PRED county(x0, x1, x2, x3)
+                    PRED county(x0, x1, x2, x3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (c1 : County_name, p : Population) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local County_Id, global int -> IntSort()
+        c1 : local County_name, global text -> StringSort()
+        p : local Population, global real -> Float32()
+        z : local Zip_code, global text -> StringSort()
+      Predicted FOL:
+        x0 : local County_Id, global int -> IntSort()
+        x1 : local County_name, global text -> StringSort()
+        x2 : local Population, global real -> Float32()
+        x3 : local Zip_code, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5307 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_664.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (c1 : County_name, p : Population) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,195 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1194.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1194.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4484 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids and texts of paragraphs in the document titled 'Welcome to NY'?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Document_Description = varchar(255) -> StringSort()
+        Document_ID = integer -> IntSort()
+        Document_Name = varchar(255) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Paragraph_ID = integer -> IntSort()
+        Paragraph_Text = varchar(255) -> StringSort()
+        Template_ID = integer -> IntSort()
+      symbols:
+        Documents(Document_ID, Template_ID, Document_Name, Document_Description, Other_Details)
+        Paragraphs(Paragraph_ID, Document_ID, Paragraph_Text, Other_Details)
+        constant Welcome to NY : Document_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Document_ID ∃o : Other_Details ∃d1 : Document_ID ∃t : Template_ID ∃d2 : Document_Name ∃d3 : Document_Description ∃o1 : Other_Details ( (((Paragraphs(p,d,p1,o)) ∧ (Documents(d1,t,d2,d3,o1))) ∧ (d = d1)) ∧ (d2 = 'Welcome to NY') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details EXISTS:∃ IDENT:d1 COLON:: IDENT:Document_ID EXISTS:∃ IDENT:t COLON:: IDENT:Template_ID EXISTS:∃ IDENT:d2 COLON:: IDENT:Document_Name EXISTS:∃ IDENT:d3 COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o1 COLON:: IDENT:Other_Details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Paragraphs LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:p1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Documents LPAR:( IDENT:d1 COMMA:, IDENT:t COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d2 EQ:= LIT:Welcome to NY RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            EXISTS o:Other_Details
+              EXISTS d1:Document_ID
+                EXISTS t:Template_ID
+                  EXISTS d2:Document_Name
+                    EXISTS d3:Document_Description
+                      EXISTS o1:Other_Details
+                        AND
+                          AND
+                            AND
+                              PRED Paragraphs(p, d, p1, o)
+                              PRED Documents(d1, t, d2, d3, o1)
+                            EQ  d = d1
+                          EQ  d2 = 'Welcome to NY'
+      Predicted FOL: ∃d : Document_ID ∃n : Document_Name ∃t : Template_ID ∃dd : Document_Description ∃od : Other_Details (Documents(d, t, n, dd, od) ∧ n = 'Welcome to NY' ∧ ∃p : Paragraph_ID ∃pt : Paragraph_Text ∃pod : Other_Details (Paragraphs(p, d, pt, pod)))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:n COLON:: IDENT:Document_Name EXISTS:∃ IDENT:t COLON:: IDENT:Template_ID EXISTS:∃ IDENT:dd COLON:: IDENT:Document_Description EXISTS:∃ IDENT:od COLON:: IDENT:Other_Details LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:t COMMA:, IDENT:n COMMA:, IDENT:dd COMMA:, IDENT:od RPAR:) AND:∧ IDENT:n EQ:= LIT:Welcome to NY AND:∧ EXISTS:∃ IDENT:p COLON:: IDENT:Paragraph_ID EXISTS:∃ IDENT:pt COLON:: IDENT:Paragraph_Text EXISTS:∃ IDENT:pod COLON:: IDENT:Other_Details LPAR:( IDENT:Paragraphs LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:pt COMMA:, IDENT:pod RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            EXISTS n:Document_Name
+              EXISTS t:Template_ID
+                EXISTS dd:Document_Description
+                  EXISTS od:Other_Details
+                    AND
+                      PRED Documents(d, t, n, dd, od)
+                      EQ  n = 'Welcome to NY'
+                      EXISTS p:Paragraph_ID
+                        EXISTS pt:Paragraph_Text
+                          EXISTS pod:Other_Details
+                            PRED Paragraphs(p, d, pt, pod)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) p, pt do not occur free in the formula
+   2 shared answer variable(s)
+      FV_Paragraph_ID_0 : Paragraph_ID   Gold p <-> Predicted p
+      FV_Paragraph_Text_0 : Paragraph_Text   Gold p1 <-> Predicted pt
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Document_ID, global integer -> IntSort()
+        d2 : local Document_Name, global varchar(255) -> StringSort()
+        d3 : local Document_Description, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        o1 : local Other_Details, global varchar(255) -> StringSort()
+        p : local Paragraph_ID, global integer -> IntSort()
+        p1 : local Paragraph_Text, global varchar(255) -> StringSort()
+        t : local Template_ID, global integer -> IntSort()
+      Predicted FOL:
+        d : local Document_ID, global integer -> IntSort()
+        dd : local Document_Description, global varchar(255) -> StringSort()
+        n : local Document_Name, global varchar(255) -> StringSort()
+        od : local Other_Details, global varchar(255) -> StringSort()
+        p : local Paragraph_ID, global integer -> IntSort()
+        pod : local Other_Details, global varchar(255) -> StringSort()
+        pt : local Paragraph_Text, global varchar(255) -> StringSort()
+        t : local Template_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_o_2, gold_d1_3, gold_t_4, gold_d2_5, gold_d3_6, gold_o1_7], And(D_varchar_255_(gold_o_2), D_varchar_255_(gold_d2_5), D_varchar_255_(gold_d3_6), D_varchar_255_(gold_o1_7), And(And(And(P_Paragraphs(FV_Paragraph_ID_0, gold_d_1, FV_Paragraph_Text_0, gold_o_2), P_Documents(gold_d1_3, gold_t_4, gold_d2_5, gold_d3_6, gold_o1_7)), (gold_d_1 == gold_d1_3)), (gold_d2_5 == L_Welcome_to_NY))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_o, WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, WGOLD_o1):  And(D_varchar_255_(WGOLD_o), D_varchar_255_(WGOLD_d2), D_varchar_255_(WGOLD_d3), D_varchar_255_(WGOLD_o1), And(And(And(P_Paragraphs(FV_Paragraph_ID_0, WGOLD_d, FV_Paragraph_Text_0, WGOLD_o), P_Documents(WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, WGOLD_o1)), (WGOLD_d == WGOLD_d1)), (WGOLD_d2 == L_Welcome_to_NY)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_n_2, predicted_t_3, predicted_dd_4, predicted_od_5], And(D_varchar_255_(predicted_n_2), D_varchar_255_(predicted_dd_4), D_varchar_255_(predicted_od_5), And(P_Documents(predicted_d_1, predicted_t_3, predicted_n_2, predicted_dd_4, predicted_od_5), (predicted_n_2 == L_Welcome_to_NY), Exists([predicted_p_6, predicted_pt_7, predicted_pod_8], And(D_varchar_255_(predicted_pt_7), D_varchar_255_(predicted_pod_8), P_Paragraphs(predicted_p_6, predicted_d_1, predicted_pt_7, predicted_pod_8))))))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_n, WPREDICTED_t, WPREDICTED_dd, WPREDICTED_od):  And(D_varchar_255_(WPREDICTED_n), D_varchar_255_(WPREDICTED_dd), D_varchar_255_(WPREDICTED_od), And(P_Documents(WPREDICTED_d, WPREDICTED_t, WPREDICTED_n, WPREDICTED_dd, WPREDICTED_od), (WPREDICTED_n == L_Welcome_to_NY), Exists([predictedsk_p_1, predictedsk_pt_2, predictedsk_pod_3], And(D_varchar_255_(predictedsk_pt_2), D_varchar_255_(predictedsk_pod_3), P_Paragraphs(predictedsk_p_1, WPREDICTED_d, predictedsk_pt_2, predictedsk_pod_3)))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Welcome to NY' at varchar(255) -> L_Welcome_to_NY = StringVal('Welcome to NY')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 767 lines, 31708 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1194.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Paragraph_Text_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_o, WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, WGOLD_o1
+      claim: And(And(Length(WGOLD_o) <= 255, Length(WGOLD_d2) <= 255, Length(WGOLD_d3) <= 255, Length(WGOLD_o1) <= 255, And(And(And(Paragraphs(FV_Paragraph_ID_0, WGOLD_d, FV_Paragraph_Text_0, WGOLD_o), Documents(WGOLD_d1, WGOLD_t, WGOLD_d2, WGOLD_d3, WGOLD_o1)), WGOLD_d == WGOLD_d1), WGOLD_d2 == "Welcome to NY")), Not(Exists([predicted_d_1, predicted_n_2, predicted_t_3, predicted_dd_4, predicted_od_5], And(Length(predicted_n_2) <= 255, Length(predicted_dd_4) <= 255, Length(predicted_od_5) <= 255, And(Documents(predicted_d_1, predicted_t_3, predicted_n_2, predicted_dd_4, predicted_od_5), predicted_n_2 == "Welcome to NY", Exists([predicted_p_6, predicted_pt_7, predicted_pod_8], And(Length(predicted_pt_7) <= 255, Length(predicted_pod_8) <= 255, Paragraphs(predicted_p_6, predicted_d_1, predicted_pt_7, predicted_pod_8))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.020 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_n, WPREDICTED_t, WPREDICTED_dd, WPREDICTED_od
+      claim: And(And(Length(WPREDICTED_n) <= 255, Length(WPREDICTED_dd) <= 255, Length(WPREDICTED_od) <= 255, And(Documents(WPREDICTED_d, WPREDICTED_t, WPREDICTED_n, WPREDICTED_dd, WPREDICTED_od), WPREDICTED_n == "Welcome to NY", Exists([predictedsk_p_1, predictedsk_pt_2, predictedsk_pod_3], And(Length(predictedsk_pt_2) <= 255, Length(predictedsk_pod_3) <= 255, Paragraphs(predictedsk_p_1, WPREDICTED_d, predictedsk_pt_2, predictedsk_pod_3))))), Not(Exists([gold_d_1, gold_o_2, gold_d1_3, gold_t_4, gold_d2_5, gold_d3_6, gold_o1_7], And(Length(gold_o_2) <= 255, Length(gold_d2_5) <= 255, Length(gold_d3_6) <= 255, Length(gold_o1_7) <= 255, And(And(And(Paragraphs(FV_Paragraph_ID_0, gold_d_1, FV_Paragraph_Text_0, gold_o_2), Documents(gold_d1_3, gold_t_4, gold_d2_5, gold_d3_6, gold_o1_7)), gold_d_1 == gold_d1_3), gold_d2_5 == "Welcome to NY")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.013 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 30 relation tuple(s) listed, 29 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          d : Document_ID = 2
+          n : Document_Name = 'Welcome to NY'
+          t : Template_ID = 3
+          dd : Document_Description = ''
+          od : Other_Details = ''
+        free (answer) variables:
+          FV_Paragraph_ID_0 : Paragraph_ID = 5
+          FV_Paragraph_Text_0 : Paragraph_Text = ''
+        literals / constants:
+          Welcome to NY : Document_Name = 'Welcome to NY'
+        relations (each value tagged with the local sort of its position):
+          Documents(Document_ID, Template_ID, Document_Name, Document_Description, Other_Details):
+            Documents(Document_ID=0, Template_ID=0, Document_Name='', Document_Description='', Other_Details='A')
+            Documents(Document_ID=0, Template_ID=0, Document_Name='', Document_Description='', Other_Details='Welcome to NY')
+            Documents(Document_ID=0, Template_ID=0, Document_Name='', Document_Description='B', Other_Details='')
+            Documents(Document_ID=0, Template_ID=0, Document_Name='', Document_Description='Welcome to NY', Other_Details='')
+            Documents(Document_ID=0, Template_ID=0, Document_Name='A', Document_Description='', Other_Details='')
+            Documents(Document_ID=0, Template_ID=0, Document_Name='B', Document_Description='', Other_Details='')
+            Documents(Document_ID=0, Template_ID=2, Document_Name='', Document_Description='', Other_Details='')
+            Documents(Document_ID=0, Template_ID=5, Document_Name='', Document_Description='', Other_Details='')
+            Documents(Document_ID=0, Template_ID=6, Document_Name='', Document_Description='', Other_Details='')
+            Documents(Document_ID=2, Template_ID=3, Document_Name='Welcome to NY', Document_Description='', Other_Details='')
+            Documents(Document_ID=3, Template_ID=4, Document_Name='', Document_Description='A', Other_Details='B')
+            Documents(Document_ID=4, Template_ID=0, Document_Name='', Document_Description='', Other_Details='')
+            Documents(Document_ID=5, Template_ID=0, Document_Name='', Document_Description='', Other_Details='')
+            Documents(Document_ID=6, Template_ID=0, Document_Name='', Document_Description='', Other_Details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Paragraphs(Paragraph_ID, Document_ID, Paragraph_Text, Other_Details):
+            Paragraphs(Paragraph_ID=0, Document_ID=0, Paragraph_Text='', Other_Details='')
+            Paragraphs(Paragraph_ID=0, Document_ID=0, Paragraph_Text='B', Other_Details='')
+            Paragraphs(Paragraph_ID=0, Document_ID=0, Paragraph_Text='Welcome to NY', Other_Details='')
+            Paragraphs(Paragraph_ID=2, Document_ID=0, Paragraph_Text='', Other_Details='')
+            Paragraphs(Paragraph_ID=3, Document_ID=0, Paragraph_Text='', Other_Details='')
+            Paragraphs(Paragraph_ID=4, Document_ID=0, Paragraph_Text='', Other_Details='')
+            Paragraphs(Paragraph_ID=5, Document_ID=0, Paragraph_Text='A', Other_Details='')
+            Paragraphs(Paragraph_ID=6, Document_ID=0, Paragraph_Text='A', Other_Details='')
+            Paragraphs(Paragraph_ID=6, Document_ID=0, Paragraph_Text='A', Other_Details='A')
+            Paragraphs(Paragraph_ID=6, Document_ID=0, Paragraph_Text='A', Other_Details='B')
+            Paragraphs(Paragraph_ID=6, Document_ID=0, Paragraph_Text='A', Other_Details='Welcome to NY')
+            Paragraphs(Paragraph_ID=6, Document_ID=2, Paragraph_Text='A', Other_Details='')
+            Paragraphs(Paragraph_ID=6, Document_ID=3, Paragraph_Text='A', Other_Details='')
+            Paragraphs(Paragraph_ID=6, Document_ID=4, Paragraph_Text='A', Other_Details='')
+            Paragraphs(Paragraph_ID=6, Document_ID=5, Paragraph_Text='A', Other_Details='')
+            Paragraphs(Paragraph_ID=6, Document_ID=6, Paragraph_Text='A', Other_Details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Document_Description : {'', 'A', 'B', 'Welcome to NY'}
+          Document_ID          : {0, 2, 3, 4, 5, 6}
+          Document_Name        : {'', 'A', 'B', 'Welcome to NY'}
+          Other_Details        : {'', 'A', 'B', 'Welcome to NY'}
+          Paragraph_ID         : {0, 2, 3, 4, 5, 6}
+          Paragraph_Text       : {'', 'A', 'B', 'Welcome to NY'}
+          Template_ID          : {0, 2, 3, 4, 5, 6}
+        values shared across local sorts (joins):
+          0 : Document_ID, Paragraph_ID, Template_ID
+          2 : Document_ID, Paragraph_ID, Template_ID
+          3 : Document_ID, Paragraph_ID, Template_ID
+          4 : Document_ID, Paragraph_ID, Template_ID
+          5 : Document_ID, Paragraph_ID, Template_ID
+          6 : Document_ID, Paragraph_ID, Template_ID
+          '' : Document_Description, Document_Name, Other_Details, Paragraph_Text
+          'A' : Document_Description, Document_Name, Other_Details, Paragraph_Text
+          'B' : Document_Description, Document_Name, Other_Details, Paragraph_Text
+          'Welcome to NY' : Document_Description, Document_Name, Other_Details, Paragraph_Text
+   [R3] took 0.216 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

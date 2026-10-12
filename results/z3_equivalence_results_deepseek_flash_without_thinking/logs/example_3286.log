@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3286.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3286.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4040 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show member names without any registered branch.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Branch_ID = text -> StringSort()
+        Card_Number = text -> StringSort()
+        Hometown = text -> StringSort()
+        Level = int -> IntSort()
+        Member_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Register_Year = text -> StringSort()
+      symbols:
+        member(Member_ID, Card_Number, Name, Hometown, Level)
+        membership_register_branch(Member_ID, Branch_ID, Register_Year)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Card_Number ∃l : Level ∃h : Hometown ∃m : Member_ID( (member(m,c,n,h,l)) ∧ (¬(∃m1 : Member_ID( ((member(m,c,n,h,l)) ∧ (∃r : Register_Year ∃b : Branch_ID( membership_register_branch(m1,b,r) ))) ∧ (m = m1) ))) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Card_Number EXISTS:∃ IDENT:l COLON:: IDENT:Level EXISTS:∃ IDENT:h COLON:: IDENT:Hometown EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:l RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:Member_ID LPAR:( LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:l RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:Register_Year EXISTS:∃ IDENT:b COLON:: IDENT:Branch_ID LPAR:( IDENT:membership_register_branch LPAR:( IDENT:m1 COMMA:, IDENT:b COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Card_Number
+            EXISTS l:Level
+              EXISTS h:Hometown
+                EXISTS m:Member_ID
+                  AND
+                    PRED member(m, c, n, h, l)
+                    NOT
+                      EXISTS m1:Member_ID
+                        AND
+                          AND
+                            PRED member(m, c, n, h, l)
+                            EXISTS r:Register_Year
+                              EXISTS b:Branch_ID
+                                PRED membership_register_branch(m1, b, r)
+                          EQ  m = m1
+      Predicted FOL: ∃m : Member_ID ∃c : Card_Number ∃n : Name ∃h : Hometown ∃l : Level ( member(m, c, n, h, l) ∧ ¬∃b : Branch_ID ∃r : Register_Year membership_register_branch(m, b, r) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c COLON:: IDENT:Card_Number EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Hometown EXISTS:∃ IDENT:l COLON:: IDENT:Level LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:l RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:b COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:r COLON:: IDENT:Register_Year IDENT:membership_register_branch LPAR:( IDENT:m COMMA:, IDENT:b COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS c:Card_Number
+              EXISTS n:Name
+                EXISTS h:Hometown
+                  EXISTS l:Level
+                    AND
+                      PRED member(m, c, n, h, l)
+                      NOT
+                        EXISTS b:Branch_ID
+                          EXISTS r:Register_Year
+                            PRED membership_register_branch(m, b, r)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Branch_ID, global text -> StringSort()
+        c : local Card_Number, global text -> StringSort()
+        h : local Hometown, global text -> StringSort()
+        l : local Level, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        m1 : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        r : local Register_Year, global text -> StringSort()
+      Predicted FOL:
+        b : local Branch_ID, global text -> StringSort()
+        c : local Card_Number, global text -> StringSort()
+        h : local Hometown, global text -> StringSort()
+        l : local Level, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        r : local Register_Year, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5494 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3286.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

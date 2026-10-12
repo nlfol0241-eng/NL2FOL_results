@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2951.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2498 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the ids of high schoolers who have friends and are also liked by someone else.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 3 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+      local sorts:
+        friend_id = int -> IntSort()
+        liked_id = int -> IntSort()
+        student_id = int -> IntSort()
+      symbols:
+        Friend(student_id, friend_id)
+        Likes(student_id, liked_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃f : friend_id( Friend(s,f) )) ∧ (¬((∃f : friend_id( Friend(s,f) )) ∧ (¬(∃s1 : student_id( Likes(s1,s) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:friend_id LPAR:( IDENT:Friend LPAR:( IDENT:s COMMA:, IDENT:f RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:friend_id LPAR:( IDENT:Friend LPAR:( IDENT:s COMMA:, IDENT:f RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:student_id LPAR:( IDENT:Likes LPAR:( IDENT:s1 COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS f:friend_id
+              PRED Friend(s, f)
+            NOT
+              AND
+                EXISTS f:friend_id
+                  PRED Friend(s, f)
+                NOT
+                  EXISTS s1:student_id
+                    PRED Likes(s1, s)
+      Predicted FOL: ∃y : friend_id Friend(x, y) ∧ ∃z : student_id (Likes(z, x) ∧ z ≠ x)
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:friend_id IDENT:Friend LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) AND:∧ EXISTS:∃ IDENT:z COLON:: IDENT:student_id LPAR:( IDENT:Likes LPAR:( IDENT:z COMMA:, IDENT:x RPAR:) AND:∧ IDENT:z NEQ:≠ IDENT:x RPAR:) EOF
+        AST:
+          EXISTS y:friend_id
+            AND
+              PRED Friend(x, y)
+              EXISTS z:student_id
+                AND
+                  PRED Likes(z, x)
+                  NEQ  z != x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_student_id_0 : student_id   Gold s <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        f : local friend_id, global int -> IntSort()
+        s : local student_id, global int -> IntSort()
+        s1 : local student_id, global int -> IntSort()
+      Predicted FOL:
+        x : local student_id, global int -> IntSort()
+        y : local friend_id, global int -> IntSort()
+        z : local student_id, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_f_1], P_Friend(FV_student_id_0, gold_f_1)), Not(And(Exists([gold_f_2], P_Friend(FV_student_id_0, gold_f_2)), Not(Exists([gold_s1_3], P_Likes(gold_s1_3, FV_student_id_0))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_y_1], And(P_Friend(FV_student_id_0, predicted_y_1), Exists([predicted_z_2], And(P_Likes(predicted_z_2, FV_student_id_0), (predicted_z_2 != FV_student_id_0)))))
+      predicted_skolem (witnesses WPREDICTED_y):  And(P_Friend(FV_student_id_0, WPREDICTED_y), Exists([predictedsk_z_1], And(P_Likes(predictedsk_z_1, FV_student_id_0), (predictedsk_z_1 != FV_student_id_0))))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 716 lines, 26449 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists(gold_f_1, Friend(FV_student_id_0, gold_f_1)), Not(And(Exists(gold_f_2, Friend(FV_student_id_0, gold_f_2)), Not(Exists(gold_s1_3, Likes(gold_s1_3, FV_student_id_0)))))), Not(Exists(predicted_y_1, And(Friend(FV_student_id_0, predicted_y_1), Exists(predicted_z_2, And(Likes(predicted_z_2, FV_student_id_0), predicted_z_2 != FV_student_id_0))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R2] check gold |= predicted: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py", line 664, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py", line 692, in _main
+    r1 = _check("R2", "gold |= predicted ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py", line 646, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py", line 544, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py", line 468, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py", line 348, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2951.py", line 348, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

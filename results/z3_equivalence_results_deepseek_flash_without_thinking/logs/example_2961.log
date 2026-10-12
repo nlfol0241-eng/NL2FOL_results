@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2961.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2961.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4313 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: which states border no other states
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        border = text -> StringSort()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        state(state_name, population, area, country_name, capital, density)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : area ∃d : density ∃p : population ∃c1 : capital ∃c : country_name( (state(s,p,a,c,c1,d)) ∧ (¬(∃s1 : state_name( ((state(s,p,a,c,c1,d)) ∧ (∃b : border( border_info(s1,b) ))) ∧ (s = s1) ))) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c1 COLON:: IDENT:capital EXISTS:∃ IDENT:c COLON:: IDENT:country_name LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:border LPAR:( IDENT:border_info LPAR:( IDENT:s1 COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:area
+            EXISTS d:density
+              EXISTS p:population
+                EXISTS c1:capital
+                  EXISTS c:country_name
+                    AND
+                      PRED state(s, p, a, c, c1, d)
+                      NOT
+                        EXISTS s1:state_name
+                          AND
+                            AND
+                              PRED state(s, p, a, c, c1, d)
+                              EXISTS b:border
+                                PRED border_info(s1, b)
+                            EQ  s = s1
+      Predicted FOL: ∃x : state_name ( state(x, y1, y2, y3, y4, y5) ∧ ¬∃z : state_name ( border_info(x, z) ) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:state_name LPAR:( IDENT:state LPAR:( IDENT:x COMMA:, IDENT:y1 COMMA:, IDENT:y2 COMMA:, IDENT:y3 COMMA:, IDENT:y4 COMMA:, IDENT:y5 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:z COLON:: IDENT:state_name LPAR:( IDENT:border_info LPAR:( IDENT:x COMMA:, IDENT:z RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:state_name
+            AND
+              PRED state(x, y1, y2, y3, y4, y5)
+              NOT
+                EXISTS z:state_name
+                  PRED border_info(x, z)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s : state_name) but Predicted has 5 (y1 : population, y2 : area, y3 : country_name, y4 : capital, y5 : density): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        b : local border, global text -> StringSort()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+        s1 : local state_name, global text -> StringSort()
+      Predicted FOL:
+        x : local state_name, global text -> StringSort()
+        y1 : local population, global integer -> IntSort()
+        y2 : local area, global double -> Float64()
+        y3 : local country_name, global varchar(3) -> StringSort()
+        y4 : local capital, global text -> StringSort()
+        y5 : local density, global double -> Float64()
+        z : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5525 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2961.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s : state_name) but Predicted has 5 (y1 : population, y2 : area, y3 : country_name, y4 : capital, y5 : density): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

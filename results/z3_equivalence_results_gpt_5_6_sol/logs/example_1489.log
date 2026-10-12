@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1489.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1489.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 40165 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List all country and league names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        country_id = integer -> IntSort()
+        id = integer -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Country(id, name)
+        League(id, country_id, name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃i1 : id ∃c : country_id ( ((Country(i,n)) ∧ (League(i1,c,n1))) ∧ (i = c) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:c COLON:: IDENT:country_id LPAR:( LPAR:( LPAR:( IDENT:Country LPAR:( IDENT:i COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:League LPAR:( IDENT:i1 COMMA:, IDENT:c COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS i1:id
+              EXISTS c:country_id
+                AND
+                  AND
+                    PRED Country(i, n)
+                    PRED League(i1, c, n1)
+                  EQ  i = c
+      Predicted FOL: ∃countryId : id ∃leagueId : id ∃leagueCountryId : country_id (Country(countryId, countryName) ∧ League(leagueId, leagueCountryId, leagueName) ∧ countryId = leagueCountryId)
+        tokens: EXISTS:∃ IDENT:countryId COLON:: IDENT:id EXISTS:∃ IDENT:leagueId COLON:: IDENT:id EXISTS:∃ IDENT:leagueCountryId COLON:: IDENT:country_id LPAR:( IDENT:Country LPAR:( IDENT:countryId COMMA:, IDENT:countryName RPAR:) AND:∧ IDENT:League LPAR:( IDENT:leagueId COMMA:, IDENT:leagueCountryId COMMA:, IDENT:leagueName RPAR:) AND:∧ IDENT:countryId EQ:= IDENT:leagueCountryId RPAR:) EOF
+        AST:
+          EXISTS countryId:id
+            EXISTS leagueId:id
+              EXISTS leagueCountryId:country_id
+                AND
+                  PRED Country(countryId, countryName)
+                  PRED League(leagueId, leagueCountryId, leagueName)
+                  EQ  countryId = leagueCountryId
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted countryName
+      FV_name_1 : name   Gold n1 <-> Predicted leagueName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local country_id, global integer -> IntSort()
+        i : local id, global integer -> IntSort()
+        i1 : local id, global integer -> IntSort()
+        n : local name, global text -> StringSort()
+        n1 : local name, global text -> StringSort()
+      Predicted FOL:
+        countryId : local id, global integer -> IntSort()
+        countryName : local name, global text -> StringSort()
+        leagueCountryId : local country_id, global integer -> IntSort()
+        leagueId : local id, global integer -> IntSort()
+        leagueName : local name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_i1_2, gold_c_3], And(And(P_Country(gold_i_1, FV_name_0), P_League(gold_i1_2, gold_c_3, FV_name_1)), (gold_i_1 == gold_c_3)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_i1, WGOLD_c):  And(And(P_Country(WGOLD_i, FV_name_0), P_League(WGOLD_i1, WGOLD_c, FV_name_1)), (WGOLD_i == WGOLD_c))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_countryId_1, predicted_leagueId_2, predicted_leagueCountryId_3], And(P_Country(predicted_countryId_1, FV_name_0), P_League(predicted_leagueId_2, predicted_leagueCountryId_3, FV_name_1), (predicted_countryId_1 == predicted_leagueCountryId_3)))
+      predicted_skolem (witnesses WPREDICTED_countryId, WPREDICTED_leagueId, WPREDICTED_leagueCountryId):  And(P_Country(WPREDICTED_countryId, FV_name_0), P_League(WPREDICTED_leagueId, WPREDICTED_leagueCountryId, FV_name_1), (WPREDICTED_countryId == WPREDICTED_leagueCountryId))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 731 lines, 27588 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1489.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_i1, WGOLD_c
+      claim: And(And(And(Country(WGOLD_i, FV_name_0), League(WGOLD_i1, WGOLD_c, FV_name_1)), WGOLD_i == WGOLD_c), Not(Exists([predicted_countryId_1, predicted_leagueId_2, predicted_leagueCountryId_3], And(Country(predicted_countryId_1, FV_name_0), League(predicted_leagueId_2, predicted_leagueCountryId_3, FV_name_1), predicted_countryId_1 == predicted_leagueCountryId_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_countryId, WPREDICTED_leagueId, WPREDICTED_leagueCountryId
+      claim: And(And(Country(WPREDICTED_countryId, FV_name_0), League(WPREDICTED_leagueId, WPREDICTED_leagueCountryId, FV_name_1), WPREDICTED_countryId == WPREDICTED_leagueCountryId), Not(Exists([gold_i_1, gold_i1_2, gold_c_3], And(And(Country(gold_i_1, FV_name_0), League(gold_i1_2, gold_c_3, FV_name_1)), gold_i_1 == gold_c_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

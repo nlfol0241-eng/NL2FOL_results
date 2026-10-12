@@ -1,0 +1,87 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_582.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_582.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2664 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all donor names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        School_id = text -> StringSort()
+        amount = real -> Float32()
+        donator_name = text -> StringSort()
+        endowment_id = int -> IntSort()
+      symbols:
+        endowment(endowment_id, School_id, donator_name, amount)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : endowment_id ∃s : School_id ∃a : amount ( endowment(e,s,d,a) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:endowment_id EXISTS:∃ IDENT:s COLON:: IDENT:School_id EXISTS:∃ IDENT:a COLON:: IDENT:amount LPAR:( IDENT:endowment LPAR:( IDENT:e COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:endowment_id
+            EXISTS s:School_id
+              EXISTS a:amount
+                PRED endowment(e, s, d, a)
+      Predicted FOL: ∃c0 : endowment_id ∃c1 : School_id ∃c2 : donator_name ∃c3 : amount (endowment(c0, c1, c2, c3) ∧ ∀d0 : endowment_id ∀d1 : School_id ∀d2 : donator_name ∀d3 : amount (endowment(d0, d1, d2, d3) → d2 = c2))
+        tokens: EXISTS:∃ IDENT:c0 COLON:: IDENT:endowment_id EXISTS:∃ IDENT:c1 COLON:: IDENT:School_id EXISTS:∃ IDENT:c2 COLON:: IDENT:donator_name EXISTS:∃ IDENT:c3 COLON:: IDENT:amount LPAR:( IDENT:endowment LPAR:( IDENT:c0 COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) AND:∧ FORALL:∀ IDENT:d0 COLON:: IDENT:endowment_id FORALL:∀ IDENT:d1 COLON:: IDENT:School_id FORALL:∀ IDENT:d2 COLON:: IDENT:donator_name FORALL:∀ IDENT:d3 COLON:: IDENT:amount LPAR:( IDENT:endowment LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 RPAR:) IMPL:→ IDENT:d2 EQ:= IDENT:c2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c0:endowment_id
+            EXISTS c1:School_id
+              EXISTS c2:donator_name
+                EXISTS c3:amount
+                  AND
+                    PRED endowment(c0, c1, c2, c3)
+                    FORALL d0:endowment_id
+                      FORALL d1:School_id
+                        FORALL d2:donator_name
+                          FORALL d3:amount
+                            IMPLIES
+                              PRED endowment(d0, d1, d2, d3)
+                              EQ  d2 = c2
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d : donator_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount, global real -> Float32()
+        d : local donator_name, global text -> StringSort()
+        e : local endowment_id, global int -> IntSort()
+        s : local School_id, global text -> StringSort()
+      Predicted FOL:
+        c0 : local endowment_id, global int -> IntSort()
+        c1 : local School_id, global text -> StringSort()
+        c2 : local donator_name, global text -> StringSort()
+        c3 : local amount, global real -> Float32()
+        d0 : local endowment_id, global int -> IntSort()
+        d1 : local School_id, global text -> StringSort()
+        d2 : local donator_name, global text -> StringSort()
+        d3 : local amount, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5360 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_582.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d : donator_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

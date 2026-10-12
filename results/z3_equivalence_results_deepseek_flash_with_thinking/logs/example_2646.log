@@ -1,0 +1,133 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2646.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2646.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4740 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the populations of states through which the mississippi runs
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        length = integer -> IntSort()
+        population = integer -> IntSort()
+        river_name = text -> StringSort()
+        state_name = text -> StringSort()
+        traverse = text -> StringSort()
+      symbols:
+        river(river_name, length, country_name, traverse)
+        state(state_name, population, area, country_name, capital, density)
+        constant mississippi : river_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : area ∃d : density ∃c1 : capital ∃c : country_name ∃s : state_name( ∃t : traverse( ((state(s,p,a,c,c1,d)) ∧ (∃r : river_name ∃c2 : country_name ∃l : length( (river(r,l,c2,t)) ∧ (r = 'mississippi') ))) ∧ (s = t) ) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:c1 COLON:: IDENT:capital EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:t COLON:: IDENT:traverse LPAR:( LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:river_name EXISTS:∃ IDENT:c2 COLON:: IDENT:country_name EXISTS:∃ IDENT:l COLON:: IDENT:length LPAR:( LPAR:( IDENT:river LPAR:( IDENT:r COMMA:, IDENT:l COMMA:, IDENT:c2 COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:mississippi RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:t RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:area
+            EXISTS d:density
+              EXISTS c1:capital
+                EXISTS c:country_name
+                  EXISTS s:state_name
+                    EXISTS t:traverse
+                      AND
+                        AND
+                          PRED state(s, p, a, c, c1, d)
+                          EXISTS r:river_name
+                            EXISTS c2:country_name
+                              EXISTS l:length
+                                AND
+                                  PRED river(r, l, c2, t)
+                                  EQ  r = 'mississippi'
+                        EQ  s = t
+      Predicted FOL: ∃ s : state_name ∃ a : area ∃ c : country_name ∃ cap : capital ∃ d : density ∃ l : length ∃ rc : country_name ∃ t : traverse ( state(s, p, a, c, cap, d) ∧ river('mississippi', l, rc, t) ∧ s = t )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:cap COLON:: IDENT:capital EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:l COLON:: IDENT:length EXISTS:∃ IDENT:rc COLON:: IDENT:country_name EXISTS:∃ IDENT:t COLON:: IDENT:traverse LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:cap COMMA:, IDENT:d RPAR:) AND:∧ IDENT:river LPAR:( LIT:mississippi COMMA:, IDENT:l COMMA:, IDENT:rc COMMA:, IDENT:t RPAR:) AND:∧ IDENT:s EQ:= IDENT:t RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS a:area
+              EXISTS c:country_name
+                EXISTS cap:capital
+                  EXISTS d:density
+                    EXISTS l:length
+                      EXISTS rc:country_name
+                        EXISTS t:traverse
+                          AND
+                            PRED state(s, p, a, c, cap, d)
+                            PRED river('mississippi', l, rc, t)
+                            EQ  s = t
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_population_0 : population   Gold p <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        c2 : local country_name, global varchar(3) -> StringSort()
+        d : local density, global double -> Float64()
+        l : local length, global integer -> IntSort()
+        p : local population, global integer -> IntSort()
+        r : local river_name, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+        t : local traverse, global text -> StringSort()
+      Predicted FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        cap : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        l : local length, global integer -> IntSort()
+        p : local population, global integer -> IntSort()
+        rc : local country_name, global varchar(3) -> StringSort()
+        s : local state_name, global text -> StringSort()
+        t : local traverse, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_d_2, gold_c1_3, gold_c_4, gold_s_5, gold_t_6], And(D_double(gold_a_1), D_double(gold_d_2), D_varchar_3_(gold_c_4), And(And(P_state(gold_s_5, FV_population_0, gold_a_1, gold_c_4, gold_c1_3, gold_d_2), Exists([gold_r_7, gold_c2_8, gold_l_9], And(D_varchar_3_(gold_c2_8), And(P_river(gold_r_7, gold_l_9, gold_c2_8, gold_t_6), (gold_r_7 == L_mississippi))))), (gold_s_5 == gold_t_6))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_d, WGOLD_c1, WGOLD_c, WGOLD_s, WGOLD_t):  And(D_double(WGOLD_a), D_double(WGOLD_d), D_varchar_3_(WGOLD_c), And(And(P_state(WGOLD_s, FV_population_0, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d), Exists([goldsk_r_1, goldsk_c2_2, goldsk_l_3], And(D_varchar_3_(goldsk_c2_2), And(P_river(goldsk_r_1, goldsk_l_3, goldsk_c2_2, WGOLD_t), (goldsk_r_1 == L_mississippi))))), (WGOLD_s == WGOLD_t)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_a_2, predicted_c_3, predicted_cap_4, predicted_d_5, predicted_l_6, predicted_rc_7, predicted_t_8], And(D_double(predicted_a_2), D_varchar_3_(predicted_c_3), D_double(predicted_d_5), D_varchar_3_(predicted_rc_7), And(P_state(predicted_s_1, FV_population_0, predicted_a_2, predicted_c_3, predicted_cap_4, predicted_d_5), P_river(L_mississippi, predicted_l_6, predicted_rc_7, predicted_t_8), (predicted_s_1 == predicted_t_8))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_a, WPREDICTED_c, WPREDICTED_cap, WPREDICTED_d, WPREDICTED_l, WPREDICTED_rc, WPREDICTED_t):  And(D_double(WPREDICTED_a), D_varchar_3_(WPREDICTED_c), D_double(WPREDICTED_d), D_varchar_3_(WPREDICTED_rc), And(P_state(WPREDICTED_s, FV_population_0, WPREDICTED_a, WPREDICTED_c, WPREDICTED_cap, WPREDICTED_d), P_river(L_mississippi, WPREDICTED_l, WPREDICTED_rc, WPREDICTED_t), (WPREDICTED_s == WPREDICTED_t)))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'mississippi' at text -> L_mississippi = StringVal('mississippi')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 781 lines, 31391 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2646.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_d, WGOLD_c1, WGOLD_c, WGOLD_s, WGOLD_t
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(Not(fpIsNaN(WGOLD_d)), Not(And(fpIsZero(WGOLD_d), fpIsNegative(WGOLD_d)))), Length(WGOLD_c) <= 3, And(And(state(WGOLD_s, FV_population_0, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d), Exists([goldsk_r_1, goldsk_c2_2, goldsk_l_3], And(Length(goldsk_c2_2) <= 3, And(river(goldsk_r_1, goldsk_l_3, goldsk_c2_2, WGOLD_t), goldsk_r_1 == "mississippi")))), WGOLD_s == WGOLD_t)), Not(Exists([predicted_s_1, predicted_a_2, predicted_c_3, predicted_cap_4, predicted_d_5, predicted_l_6, predicted_rc_7, predicted_t_8], And(And(Not(fpIsNaN(predicted_a_2)), Not(And(fpIsZero(predicted_a_2), fpIsNegative(predicted_a_2)))), Length(predicted_c_3) <= 3, And(Not(fpIsNaN(predicted_d_5)), Not(And(fpIsZero(predicted_d_5), fpIsNegative(predicted_d_5)))), Length(predicted_rc_7) <= 3, And(state(predicted_s_1, FV_population_0, predicted_a_2, predicted_c_3, predicted_cap_4, predicted_d_5), river("mississippi", predicted_l_6, predicted_rc_7, predicted_t_8), predicted_s_1 == predicted_t_8)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_a, WPREDICTED_c, WPREDICTED_cap, WPREDICTED_d, WPREDICTED_l, WPREDICTED_rc, WPREDICTED_t
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), Length(WPREDICTED_c) <= 3, And(Not(fpIsNaN(WPREDICTED_d)), Not(And(fpIsZero(WPREDICTED_d), fpIsNegative(WPREDICTED_d)))), Length(WPREDICTED_rc) <= 3, And(state(WPREDICTED_s, FV_population_0, WPREDICTED_a, WPREDICTED_c, WPREDICTED_cap, WPREDICTED_d), river("mississippi", WPREDICTED_l, WPREDICTED_rc, WPREDICTED_t), WPREDICTED_s == WPREDICTED_t)), Not(Exists([gold_a_1, gold_d_2, gold_c1_3, gold_c_4, gold_s_5, gold_t_6], And(And(Not(fpIsNaN(gold_a_1)), Not(And(fpIsZero(gold_a_1), fpIsNegative(gold_a_1)))), And(Not(fpIsNaN(gold_d_2)), Not(And(fpIsZero(gold_d_2), fpIsNegative(gold_d_2)))), Length(gold_c_4) <= 3, And(And(state(gold_s_5, FV_population_0, gold_a_1, gold_c_4, gold_c1_3, gold_d_2), Exists([gold_r_7, gold_c2_8, gold_l_9], And(Length(gold_c2_8) <= 3, And(river(gold_r_7, gold_l_9, gold_c2_8, gold_t_6), gold_r_7 == "mississippi")))), gold_s_5 == gold_t_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

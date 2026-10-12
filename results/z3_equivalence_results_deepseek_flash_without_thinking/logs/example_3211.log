@@ -1,0 +1,127 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3211.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3211.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8692 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which engineers have never visited to maintain the assets? List the engineer first name and last name.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 12 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+      local sorts:
+        company_id = integer -> IntSort()
+        contact_staff_id = integer -> IntSort()
+        engineer_id = integer -> IntSort()
+        engineer_visit_id = integer -> IntSort()
+        fault_log_entry_id = integer -> IntSort()
+        fault_status = varchar(10) -> StringSort()
+        first_name = varchar(50) -> StringSort()
+        last_name = varchar(50) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+        other_visit_details = varchar(255) -> StringSort()
+        visit_end_datetime = datetime -> IntSort()
+        visit_start_datetime = datetime -> IntSort()
+      symbols:
+        Engineer_Visits(engineer_visit_id, contact_staff_id, engineer_id, fault_log_entry_id, fault_status, visit_start_datetime, visit_end_datetime, other_visit_details)
+        Maintenance_Engineers(engineer_id, company_id, first_name, last_name, other_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : company_id ∃o : other_details ∃e : engineer_id( (Maintenance_Engineers(e,c,f,l,o)) ∧ (¬(∃e2 : engineer_id( ((Maintenance_Engineers(e,c,f,l,o)) ∧ (∃e1 : engineer_visit_id ∃f1 : fault_log_entry_id ∃v1 : visit_end_datetime ∃v : visit_start_datetime ∃c1 : contact_staff_id ∃f2 : fault_status ∃o1 : other_visit_details( Engineer_Visits(e1,c1,e2,f1,f2,v,v1,o1) ))) ∧ (e = e2) ))) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:company_id EXISTS:∃ IDENT:o COLON:: IDENT:other_details EXISTS:∃ IDENT:e COLON:: IDENT:engineer_id LPAR:( LPAR:( IDENT:Maintenance_Engineers LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e2 COLON:: IDENT:engineer_id LPAR:( LPAR:( LPAR:( IDENT:Maintenance_Engineers LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:e1 COLON:: IDENT:engineer_visit_id EXISTS:∃ IDENT:f1 COLON:: IDENT:fault_log_entry_id EXISTS:∃ IDENT:v1 COLON:: IDENT:visit_end_datetime EXISTS:∃ IDENT:v COLON:: IDENT:visit_start_datetime EXISTS:∃ IDENT:c1 COLON:: IDENT:contact_staff_id EXISTS:∃ IDENT:f2 COLON:: IDENT:fault_status EXISTS:∃ IDENT:o1 COLON:: IDENT:other_visit_details LPAR:( IDENT:Engineer_Visits LPAR:( IDENT:e1 COMMA:, IDENT:c1 COMMA:, IDENT:e2 COMMA:, IDENT:f1 COMMA:, IDENT:f2 COMMA:, IDENT:v COMMA:, IDENT:v1 COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:company_id
+            EXISTS o:other_details
+              EXISTS e:engineer_id
+                AND
+                  PRED Maintenance_Engineers(e, c, f, l, o)
+                  NOT
+                    EXISTS e2:engineer_id
+                      AND
+                        AND
+                          PRED Maintenance_Engineers(e, c, f, l, o)
+                          EXISTS e1:engineer_visit_id
+                            EXISTS f1:fault_log_entry_id
+                              EXISTS v1:visit_end_datetime
+                                EXISTS v:visit_start_datetime
+                                  EXISTS c1:contact_staff_id
+                                    EXISTS f2:fault_status
+                                      EXISTS o1:other_visit_details
+                                        PRED Engineer_Visits(e1, c1, e2, f1, f2, v, v1, o1)
+                        EQ  e = e2
+      Predicted FOL: ∃e : engineer_id ∃f : first_name ∃l : last_name ( Maintenance_Engineers(e, c, f, l, o) ∧ ¬∃v : engineer_visit_id ∃s : contact_staff_id ∃fe : fault_log_entry_id ∃fs : fault_status ∃vs : visit_start_datetime ∃ve : visit_end_datetime ∃od : other_visit_details ( Engineer_Visits(v, s, e, fe, fs, vs, ve, od) ) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:engineer_id EXISTS:∃ IDENT:f COLON:: IDENT:first_name EXISTS:∃ IDENT:l COLON:: IDENT:last_name LPAR:( IDENT:Maintenance_Engineers LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:o RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:v COLON:: IDENT:engineer_visit_id EXISTS:∃ IDENT:s COLON:: IDENT:contact_staff_id EXISTS:∃ IDENT:fe COLON:: IDENT:fault_log_entry_id EXISTS:∃ IDENT:fs COLON:: IDENT:fault_status EXISTS:∃ IDENT:vs COLON:: IDENT:visit_start_datetime EXISTS:∃ IDENT:ve COLON:: IDENT:visit_end_datetime EXISTS:∃ IDENT:od COLON:: IDENT:other_visit_details LPAR:( IDENT:Engineer_Visits LPAR:( IDENT:v COMMA:, IDENT:s COMMA:, IDENT:e COMMA:, IDENT:fe COMMA:, IDENT:fs COMMA:, IDENT:vs COMMA:, IDENT:ve COMMA:, IDENT:od RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:engineer_id
+            EXISTS f:first_name
+              EXISTS l:last_name
+                AND
+                  PRED Maintenance_Engineers(e, c, f, l, o)
+                  NOT
+                    EXISTS v:engineer_visit_id
+                      EXISTS s:contact_staff_id
+                        EXISTS fe:fault_log_entry_id
+                          EXISTS fs:fault_status
+                            EXISTS vs:visit_start_datetime
+                              EXISTS ve:visit_end_datetime
+                                EXISTS od:other_visit_details
+                                  PRED Engineer_Visits(v, s, e, fe, fs, vs, ve, od)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (f : first_name, l : last_name) -> ['StringSort()', 'StringSort()'] vs Predicted (c : company_id, o : other_details) -> ['StringSort()', 'numeric']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 25 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local company_id, global integer -> IntSort()
+        c1 : local contact_staff_id, global integer -> IntSort()
+        e : local engineer_id, global integer -> IntSort()
+        e1 : local engineer_visit_id, global integer -> IntSort()
+        e2 : local engineer_id, global integer -> IntSort()
+        f : local first_name, global varchar(50) -> StringSort()
+        f1 : local fault_log_entry_id, global integer -> IntSort()
+        f2 : local fault_status, global varchar(10) -> StringSort()
+        l : local last_name, global varchar(50) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        o1 : local other_visit_details, global varchar(255) -> StringSort()
+        v : local visit_start_datetime, global datetime -> IntSort()
+        v1 : local visit_end_datetime, global datetime -> IntSort()
+      Predicted FOL:
+        c : local company_id, global integer -> IntSort()
+        e : local engineer_id, global integer -> IntSort()
+        f : local first_name, global varchar(50) -> StringSort()
+        fe : local fault_log_entry_id, global integer -> IntSort()
+        fs : local fault_status, global varchar(10) -> StringSort()
+        l : local last_name, global varchar(50) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        od : local other_visit_details, global varchar(255) -> StringSort()
+        s : local contact_staff_id, global integer -> IntSort()
+        v : local engineer_visit_id, global integer -> IntSort()
+        ve : local visit_end_datetime, global datetime -> IntSort()
+        vs : local visit_start_datetime, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 6016 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3211.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: the free variables have different value types: Gold (f : first_name, l : last_name) -> ['StringSort()', 'StringSort()'] vs Predicted (c : company_id, o : other_details) -> ['StringSort()', 'numeric']
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

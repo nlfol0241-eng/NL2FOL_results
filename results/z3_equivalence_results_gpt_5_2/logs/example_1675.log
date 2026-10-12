@@ -1,0 +1,86 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1675.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1675.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3005 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give me the name and year of opening of the manufacturers that have either less than 10 factories or more than 10 shops.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Manufacturer_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Num_of_Factories = int -> IntSort()
+        Num_of_Shops = int -> IntSort()
+        Open_Year = real -> Float32()
+      symbols:
+        manufacturer(Manufacturer_ID, Open_Year, Name, Num_of_Factories, Num_of_Shops)
+        constant 10 : Num_of_Shops
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Manufacturer_ID ∃n1 : Num_of_Factories ∃n2 : Num_of_Shops ( (manufacturer(m,o,n,n1,n2)) ∧ ((n2 > 10) ∨ (n1 < 10)) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Manufacturer_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_Factories EXISTS:∃ IDENT:n2 COLON:: IDENT:Num_of_Shops LPAR:( LPAR:( IDENT:manufacturer LPAR:( IDENT:m COMMA:, IDENT:o COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:n2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n2 GT:> NUM:10 RPAR:) OR:∨ LPAR:( IDENT:n1 LT:< NUM:10 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Manufacturer_ID
+            EXISTS n1:Num_of_Factories
+              EXISTS n2:Num_of_Shops
+                AND
+                  PRED manufacturer(m, o, n, n1, n2)
+                  OR
+                    CMP  n2 > 10
+                    CMP  n1 < 10
+      Predicted FOL: ∃a0:Manufacturer_ID ∃a1:Open_Year ∃a2:Name ( manufacturer(a0,a1,a2,a3,a4) ∧ (a3 < 10 ∨ a4 > 10) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:Manufacturer_ID EXISTS:∃ IDENT:a1 COLON:: IDENT:Open_Year EXISTS:∃ IDENT:a2 COLON:: IDENT:Name LPAR:( IDENT:manufacturer LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) AND:∧ LPAR:( IDENT:a3 LT:< NUM:10 OR:∨ IDENT:a4 GT:> NUM:10 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:Manufacturer_ID
+            EXISTS a1:Open_Year
+              EXISTS a2:Name
+                AND
+                  PRED manufacturer(a0, a1, a2, a3, a4)
+                  OR
+                    CMP  a3 < 10
+                    CMP  a4 > 10
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: the free variables have different value types: Gold (o : Open_Year, n : Name) -> ['Float32()', 'StringSort()'] vs Predicted (a3 : Num_of_Factories, a4 : Num_of_Shops) -> ['numeric', 'numeric']
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local Manufacturer_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_of_Factories, global int -> IntSort()
+        n2 : local Num_of_Shops, global int -> IntSort()
+        o : local Open_Year, global real -> Float32()
+      Predicted FOL:
+        a0 : local Manufacturer_ID, global int -> IntSort()
+        a1 : local Open_Year, global real -> Float32()
+        a2 : local Name, global text -> StringSort()
+        a3 : local Num_of_Factories, global int -> IntSort()
+        a4 : local Num_of_Shops, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5526 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1675.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: the free variables have different value types: Gold (o : Open_Year, n : Name) -> ['Float32()', 'StringSort()'] vs Predicted (a3 : Num_of_Factories, a4 : Num_of_Shops) -> ['numeric', 'numeric']
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3477.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3477.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3563 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show ids of students who don't play video game.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = varchar(12) -> StringSort()
+        GameID = integer -> IntSort()
+        Hours_Played = integer -> IntSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Plays_Games(StuID, GameID, Hours_Played)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃f : Fname ∃m : Major ∃l : LName ∃s1 : Sex ∃c : city_code ∃a : Age ∃a1 : Advisor( Student(s,l,f,a,s1,m,a1,c) )) ∧ (¬(∃h : Hours_Played ∃g : GameID( Plays_Games(s,g,h) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:h COLON:: IDENT:Hours_Played EXISTS:∃ IDENT:g COLON:: IDENT:GameID LPAR:( IDENT:Plays_Games LPAR:( IDENT:s COMMA:, IDENT:g COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS f:Fname
+              EXISTS m:Major
+                EXISTS l:LName
+                  EXISTS s1:Sex
+                    EXISTS c:city_code
+                      EXISTS a:Age
+                        EXISTS a1:Advisor
+                          PRED Student(s, l, f, a, s1, m, a1, c)
+            NOT
+              EXISTS h:Hours_Played
+                EXISTS g:GameID
+                  PRED Plays_Games(s, g, h)
+      Predicted FOL: ∃x : StuID ( Student(x, y1, y2, y3, y4, y5, y6, y7) ∧ ¬∃z : GameID ∃h : Hours_Played Plays_Games(x, z, h) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:StuID LPAR:( IDENT:Student LPAR:( IDENT:x COMMA:, IDENT:y1 COMMA:, IDENT:y2 COMMA:, IDENT:y3 COMMA:, IDENT:y4 COMMA:, IDENT:y5 COMMA:, IDENT:y6 COMMA:, IDENT:y7 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:z COLON:: IDENT:GameID EXISTS:∃ IDENT:h COLON:: IDENT:Hours_Played IDENT:Plays_Games LPAR:( IDENT:x COMMA:, IDENT:z COMMA:, IDENT:h RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:StuID
+            AND
+              PRED Student(x, y1, y2, y3, y4, y5, y6, y7)
+              NOT
+                EXISTS z:GameID
+                  EXISTS h:Hours_Played
+                    PRED Plays_Games(x, z, h)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s : StuID) but Predicted has 7 (y1 : LName, y2 : Fname, y3 : Age, y4 : Sex, y5 : Major, y6 : Advisor, y7 : city_code): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        g : local GameID, global integer -> IntSort()
+        h : local Hours_Played, global integer -> IntSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        h : local Hours_Played, global integer -> IntSort()
+        x : local StuID, global integer -> IntSort()
+        y1 : local LName, global varchar(12) -> StringSort()
+        y2 : local Fname, global varchar(12) -> StringSort()
+        y3 : local Age, global integer -> IntSort()
+        y4 : local Sex, global varchar(1) -> StringSort()
+        y5 : local Major, global integer -> IntSort()
+        y6 : local Advisor, global integer -> IntSort()
+        y7 : local city_code, global varchar(3) -> StringSort()
+        z : local GameID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5546 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3477.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s : StuID) but Predicted has 7 (y1 : LName, y2 : Fname, y3 : Age, y4 : Sex, y5 : Major, y6 : Advisor, y7 : city_code): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

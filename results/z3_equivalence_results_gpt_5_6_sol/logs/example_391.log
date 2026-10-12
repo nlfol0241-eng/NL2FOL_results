@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_391.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_391.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2491 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show ids for all employees with at least 100000 salary.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        number(10,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000000, x < 100000000); 10 digits, 2 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+      local sorts:
+        eid = number(9,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+        salary = number(10,2) -> RealSort()
+      symbols:
+        employee(eid, name, salary)
+        constant 100000 : salary
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃s : salary ( (employee(e,n,s)) ∧ (s > 100000) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:s COLON:: IDENT:salary LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s GT:> NUM:100000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS s:salary
+              AND
+                PRED employee(e, n, s)
+                CMP  s > 100000
+      Predicted FOL: ∃n:name ∃s:salary (employee(eid, n, s) ∧ s ≥ 100000)
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:s COLON:: IDENT:salary LPAR:( IDENT:employee LPAR:( IDENT:eid COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) AND:∧ IDENT:s GE:≥ NUM:100000 RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS s:salary
+              AND
+                PRED employee(eid, n, s)
+                CMP  s >= 100000
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_eid_0 : eid   Gold e <-> Predicted eid
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local eid, global number(9,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+        s : local salary, global number(10,2) -> RealSort()
+      Predicted FOL:
+        eid : local eid, global number(9,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+        s : local salary, global number(10,2) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_s_2], And(D_varchar2_30_(gold_n_1), D_number_10_2_(gold_s_2), And(P_employee(FV_eid_0, gold_n_1, gold_s_2), (gold_s_2 > L_v_100000_number_10_2_))))
+      gold_skolem (witnesses WGOLD_n, WGOLD_s):  And(D_varchar2_30_(WGOLD_n), D_number_10_2_(WGOLD_s), And(P_employee(FV_eid_0, WGOLD_n, WGOLD_s), (WGOLD_s > L_v_100000_number_10_2_)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_n_1, predicted_s_2], And(D_varchar2_30_(predicted_n_1), D_number_10_2_(predicted_s_2), And(P_employee(FV_eid_0, predicted_n_1, predicted_s_2), (predicted_s_2 >= L_v_100000_number_10_2_))))
+      predicted_skolem (witnesses WPREDICTED_n, WPREDICTED_s):  And(D_varchar2_30_(WPREDICTED_n), D_number_10_2_(WPREDICTED_s), And(P_employee(FV_eid_0, WPREDICTED_n, WPREDICTED_s), (WPREDICTED_s >= L_v_100000_number_10_2_)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '100000' at number(10,2) -> L_v_100000_number_10_2_ = RealVal('100000')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 732 lines, 27285 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_391.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_eid_0), FV_eid_0 > -1000000000, FV_eid_0 < 1000000000)
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_s
+      claim: And(And(Length(WGOLD_n) <= 30, And(IsInt(WGOLD_s*100), WGOLD_s > -100000000, WGOLD_s < 100000000), And(employee(FV_eid_0, WGOLD_n, WGOLD_s), 100000 < WGOLD_s)), Not(Exists([predicted_n_1, predicted_s_2], And(Length(predicted_n_1) <= 30, And(IsInt(predicted_s_2*100), predicted_s_2 > -100000000, predicted_s_2 < 100000000), And(employee(FV_eid_0, predicted_n_1, predicted_s_2), 100000 <= predicted_s_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_n, WPREDICTED_s
+      claim: And(And(Length(WPREDICTED_n) <= 30, And(IsInt(WPREDICTED_s*100), WPREDICTED_s > -100000000, WPREDICTED_s < 100000000), And(employee(FV_eid_0, WPREDICTED_n, WPREDICTED_s), 100000 <= WPREDICTED_s)), Not(Exists([gold_n_1, gold_s_2], And(Length(gold_n_1) <= 30, And(IsInt(gold_s_2*100), gold_s_2 > -100000000, gold_s_2 < 100000000), And(employee(FV_eid_0, gold_n_1, gold_s_2), 100000 < gold_s_2)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.023 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 2 relation tuple(s) listed, 1 probe query
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          n : name = ''
+          s : salary = 100000
+        free (answer) variables:
+          FV_eid_0 : eid = 0
+        literals / constants:
+          100000 : salary = 100000
+        relations (each value tagged with the local sort of its position):
+          employee(eid, name, salary):
+            employee(eid=0, name='', salary=100000)
+            employee(eid=0, name='A', salary=100000)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          eid    : {0}
+          name   : {'', 'A'}
+          salary : {100000}
+   [R3] took 0.037 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

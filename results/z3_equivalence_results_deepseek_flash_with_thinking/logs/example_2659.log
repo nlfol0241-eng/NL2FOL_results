@@ -1,0 +1,67 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2659.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2659.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4141 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what states border states that the mississippi runs through
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        border = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        length = integer -> IntSort()
+        river_name = text -> StringSort()
+        state_name = text -> StringSort()
+        traverse = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        river(river_name, length, country_name, traverse)
+        constant mississippi : river_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name( ∃t : traverse( ((border_info(s,b)) ∧ (∃r : river_name ∃c : country_name ∃l : length( (river(r,l,c,t)) ∧ (r = 'mississippi') ))) ∧ (s = t) ) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:t COLON:: IDENT:traverse LPAR:( LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:river_name EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:l COLON:: IDENT:length LPAR:( LPAR:( IDENT:river LPAR:( IDENT:r COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:mississippi RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:t RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS t:traverse
+              AND
+                AND
+                  PRED border_info(s, b)
+                  EXISTS r:river_name
+                    EXISTS c:country_name
+                      EXISTS l:length
+                        AND
+                          PRED river(r, l, c, t)
+                          EQ  r = 'mississippi'
+                EQ  s = t
+      Predicted FOL: ∃y : border ∃l : length ∃c : country_name (border_info(x, y) ∧ river('mississippi', l, c, y))
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:border EXISTS:∃ IDENT:l COLON:: IDENT:length EXISTS:∃ IDENT:c COLON:: IDENT:country_name LPAR:( IDENT:border_info LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) AND:∧ IDENT:river LPAR:( LIT:mississippi COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:border
+            EXISTS l:length
+              EXISTS c:country_name
+                AND
+                  PRED border_info(x, y)
+                  PRED river('mississippi', l, c, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['border'] vs Predicted ['state_name']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['border'] vs Predicted ['state_name']

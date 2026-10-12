@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2383.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2383.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4465 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the degrees conferred in "San Francisco State University" in 2001.
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Campus = integer -> IntSort()
+        County = text -> StringSort()
+        Degrees = integer -> IntSort()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        degrees(Year, Campus, Degrees)
+        constant 2001 : Year
+        constant San Francisco State University : campus
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Id ∃c : campus ∃l : Location ∃c1 : County ∃y : Year ∃y1 : Year ∃c2 : Campus ( (((Campuses(i,c,l,c1,y)) ∧ (degrees(y1,c2,d))) ∧ (i = c2)) ∧ ((c = 'San Francisco State University') ∧ (y1 = 2001)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:c COLON:: IDENT:campus EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c1 COLON:: IDENT:County EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:y1 COLON:: IDENT:Year EXISTS:∃ IDENT:c2 COLON:: IDENT:Campus LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:c1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:degrees LPAR:( IDENT:y1 COMMA:, IDENT:c2 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:San Francisco State University RPAR:) AND:∧ LPAR:( IDENT:y1 EQ:= NUM:2001 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS c:campus
+              EXISTS l:Location
+                EXISTS c1:County
+                  EXISTS y:Year
+                    EXISTS y1:Year
+                      EXISTS c2:Campus
+                        AND
+                          AND
+                            AND
+                              PRED Campuses(i, c, l, c1, y)
+                              PRED degrees(y1, c2, d)
+                            EQ  i = c2
+                          AND
+                            EQ  c = 'San Francisco State University'
+                            EQ  y1 = 2001
+      Predicted FOL: ∃cId:Id ∃cLoc:Location ∃cCnty:County ∃cYr:Year (Campuses(cId, 'San Francisco State University', cLoc, cCnty, cYr) ∧ ∃deg:Degrees degrees(2001, cId, deg))
+        tokens: EXISTS:∃ IDENT:cId COLON:: IDENT:Id EXISTS:∃ IDENT:cLoc COLON:: IDENT:Location EXISTS:∃ IDENT:cCnty COLON:: IDENT:County EXISTS:∃ IDENT:cYr COLON:: IDENT:Year LPAR:( IDENT:Campuses LPAR:( IDENT:cId COMMA:, LIT:San Francisco State University COMMA:, IDENT:cLoc COMMA:, IDENT:cCnty COMMA:, IDENT:cYr RPAR:) AND:∧ EXISTS:∃ IDENT:deg COLON:: IDENT:Degrees IDENT:degrees LPAR:( NUM:2001 COMMA:, IDENT:cId COMMA:, IDENT:deg RPAR:) RPAR:) EOF
+        AST:
+          EXISTS cId:Id
+            EXISTS cLoc:Location
+              EXISTS cCnty:County
+                EXISTS cYr:Year
+                  AND
+                    PRED Campuses(cId, 'San Francisco State University', cLoc, cCnty, cYr)
+                    EXISTS deg:Degrees
+                      PRED degrees(2001, cId, deg)
+   [G3] took 0.004 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d : Degrees) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local campus, global text -> StringSort()
+        c1 : local County, global text -> StringSort()
+        c2 : local Campus, global integer -> IntSort()
+        d : local Degrees, global integer -> IntSort()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+        y1 : local Year, global integer -> IntSort()
+      Predicted FOL:
+        cCnty : local County, global text -> StringSort()
+        cId : local Id, global integer -> IntSort()
+        cLoc : local Location, global text -> StringSort()
+        cYr : local Year, global integer -> IntSort()
+        deg : local Degrees, global integer -> IntSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5497 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2383.py
+   [G8] took 0.008 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d : Degrees) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

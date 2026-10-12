@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_711.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_711.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6157 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: How many fault status codes are recorded in the fault log parts table?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        integer -> IntSort()
+      local sorts:
+        fault_log_entry_id = integer -> IntSort()
+        fault_status = varchar(10) -> StringSort()
+        part_fault_id = integer -> IntSort()
+      symbols:
+        Fault_Log_Parts(fault_log_entry_id, part_fault_id, fault_status)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : fault_log_entry_id ∃p : part_fault_id ( Fault_Log_Parts(f,p,f1) )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:fault_log_entry_id EXISTS:∃ IDENT:p COLON:: IDENT:part_fault_id LPAR:( IDENT:Fault_Log_Parts LPAR:( IDENT:f COMMA:, IDENT:p COMMA:, IDENT:f1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:fault_log_entry_id
+            EXISTS p:part_fault_id
+              PRED Fault_Log_Parts(f, p, f1)
+      Predicted FOL: ∃x : fault_log_entry_id ∃y : part_fault_id Fault_Log_Parts(x, y, z)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:fault_log_entry_id EXISTS:∃ IDENT:y COLON:: IDENT:part_fault_id IDENT:Fault_Log_Parts LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) EOF
+        AST:
+          EXISTS x:fault_log_entry_id
+            EXISTS y:part_fault_id
+              PRED Fault_Log_Parts(x, y, z)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_fault_status_0 : fault_status   Gold f1 <-> Predicted z
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        f : local fault_log_entry_id, global integer -> IntSort()
+        f1 : local fault_status, global varchar(10) -> StringSort()
+        p : local part_fault_id, global integer -> IntSort()
+      Predicted FOL:
+        x : local fault_log_entry_id, global integer -> IntSort()
+        y : local part_fault_id, global integer -> IntSort()
+        z : local fault_status, global varchar(10) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_f_1, gold_p_2], P_Fault_Log_Parts(gold_f_1, gold_p_2, FV_fault_status_0))
+      gold_skolem (witnesses WGOLD_f, WGOLD_p):  P_Fault_Log_Parts(WGOLD_f, WGOLD_p, FV_fault_status_0)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2], P_Fault_Log_Parts(predicted_x_1, predicted_y_2, FV_fault_status_0))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y):  P_Fault_Log_Parts(WPREDICTED_x, WPREDICTED_y, FV_fault_status_0)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 722 lines, 26769 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_711.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_fault_status_0) <= 10
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_f, WGOLD_p
+      claim: And(Fault_Log_Parts(WGOLD_f, WGOLD_p, FV_fault_status_0), Not(Exists([predicted_x_1, predicted_y_2], Fault_Log_Parts(predicted_x_1, predicted_y_2, FV_fault_status_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y
+      claim: And(Fault_Log_Parts(WPREDICTED_x, WPREDICTED_y, FV_fault_status_0), Not(Exists([gold_f_1, gold_p_2], Fault_Log_Parts(gold_f_1, gold_p_2, FV_fault_status_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

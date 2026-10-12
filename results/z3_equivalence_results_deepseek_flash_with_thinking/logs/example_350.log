@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_350.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_350.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4312 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of all students who have attended at least one course?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        course_id = text -> StringSort()
+        date_of_attendance = datetime -> IntSort()
+        student_id = integer -> IntSort()
+      symbols:
+        Student_Course_Attendance(student_id, course_id, date_of_attendance)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : course_id ∃d : date_of_attendance ( Student_Course_Attendance(s,c,d) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:d COLON:: IDENT:date_of_attendance LPAR:( IDENT:Student_Course_Attendance LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:course_id
+            EXISTS d:date_of_attendance
+              PRED Student_Course_Attendance(s, c, d)
+      Predicted FOL: ∃ c : course_id ∃ d : date_of_attendance Student_Course_Attendance(s, c, d)
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:d COLON:: IDENT:date_of_attendance IDENT:Student_Course_Attendance LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS c:course_id
+            EXISTS d:date_of_attendance
+              PRED Student_Course_Attendance(s, c, d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_student_id_0 : student_id   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global text -> StringSort()
+        d : local date_of_attendance, global datetime -> IntSort()
+        s : local student_id, global integer -> IntSort()
+      Predicted FOL:
+        c : local course_id, global text -> StringSort()
+        d : local date_of_attendance, global datetime -> IntSort()
+        s : local student_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_d_2], P_Student_Course_Attendance(FV_student_id_0, gold_c_1, gold_d_2))
+      gold_skolem (witnesses WGOLD_c, WGOLD_d):  P_Student_Course_Attendance(FV_student_id_0, WGOLD_c, WGOLD_d)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_d_2], P_Student_Course_Attendance(FV_student_id_0, predicted_c_1, predicted_d_2))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_d):  P_Student_Course_Attendance(FV_student_id_0, WPREDICTED_c, WPREDICTED_d)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 724 lines, 26815 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_350.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_d
+      claim: And(Student_Course_Attendance(FV_student_id_0, WGOLD_c, WGOLD_d), Not(Exists([predicted_c_1, predicted_d_2], Student_Course_Attendance(FV_student_id_0, predicted_c_1, predicted_d_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_d
+      claim: And(Student_Course_Attendance(FV_student_id_0, WPREDICTED_c, WPREDICTED_d), Not(Exists([gold_c_1, gold_d_2], Student_Course_Attendance(FV_student_id_0, gold_c_1, gold_d_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

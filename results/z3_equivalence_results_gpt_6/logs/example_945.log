@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_945.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_945.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2464 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Where is the headquarter of the company founded by James?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Code = integer -> IntSort()
+        Founder = varchar(255) -> StringSort()
+        Headquarter = varchar(255) -> StringSort()
+        Name = varchar(255) -> StringSort()
+        Revenue = real -> Float32()
+      symbols:
+        Manufacturers(Code, Name, Headquarter, Founder, Revenue)
+        constant James : Founder
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Code ∃n : Name ∃f : Founder ∃r : Revenue ( (Manufacturers(c,n,h,f,r)) ∧ (f = 'James') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:f COLON:: IDENT:Founder EXISTS:∃ IDENT:r COLON:: IDENT:Revenue LPAR:( LPAR:( IDENT:Manufacturers LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:f COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f EQ:= LIT:James RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Code
+            EXISTS n:Name
+              EXISTS f:Founder
+                EXISTS r:Revenue
+                  AND
+                    PRED Manufacturers(c, n, h, f, r)
+                    EQ  f = 'James'
+      Predicted FOL: ∃c : Code ∃n : Name ∃r : Revenue Manufacturers(c, n, h, 'James', r)
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:r COLON:: IDENT:Revenue IDENT:Manufacturers LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, LIT:James COMMA:, IDENT:r RPAR:) EOF
+        AST:
+          EXISTS c:Code
+            EXISTS n:Name
+              EXISTS r:Revenue
+                PRED Manufacturers(c, n, h, 'James', r)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Headquarter_0 : Headquarter   Gold h <-> Predicted h
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        f : local Founder, global varchar(255) -> StringSort()
+        h : local Headquarter, global varchar(255) -> StringSort()
+        n : local Name, global varchar(255) -> StringSort()
+        r : local Revenue, global real -> Float32()
+      Predicted FOL:
+        c : local Code, global integer -> IntSort()
+        h : local Headquarter, global varchar(255) -> StringSort()
+        n : local Name, global varchar(255) -> StringSort()
+        r : local Revenue, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_n_2, gold_f_3, gold_r_4], And(D_varchar_255_(gold_n_2), D_varchar_255_(gold_f_3), D_real(gold_r_4), And(P_Manufacturers(gold_c_1, gold_n_2, FV_Headquarter_0, gold_f_3, gold_r_4), (gold_f_3 == L_James))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_n, WGOLD_f, WGOLD_r):  And(D_varchar_255_(WGOLD_n), D_varchar_255_(WGOLD_f), D_real(WGOLD_r), And(P_Manufacturers(WGOLD_c, WGOLD_n, FV_Headquarter_0, WGOLD_f, WGOLD_r), (WGOLD_f == L_James)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_n_2, predicted_r_3], And(D_varchar_255_(predicted_n_2), D_real(predicted_r_3), And(P_Manufacturers(predicted_c_1, predicted_n_2, FV_Headquarter_0, L_James, predicted_r_3), D_varchar_255_(L_James))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_n, WPREDICTED_r):  And(D_varchar_255_(WPREDICTED_n), D_real(WPREDICTED_r), And(P_Manufacturers(WPREDICTED_c, WPREDICTED_n, FV_Headquarter_0, L_James, WPREDICTED_r), D_varchar_255_(L_James)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'James' at varchar(255) -> L_James = StringVal('James')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 742 lines, 28066 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_945.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Headquarter_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_n, WGOLD_f, WGOLD_r
+      claim: And(And(Length(WGOLD_n) <= 255, Length(WGOLD_f) <= 255, And(Not(fpIsNaN(WGOLD_r)), Not(And(fpIsZero(WGOLD_r), fpIsNegative(WGOLD_r)))), And(Manufacturers(WGOLD_c, WGOLD_n, FV_Headquarter_0, WGOLD_f, WGOLD_r), WGOLD_f == "James")), Not(Exists([predicted_c_1, predicted_n_2, predicted_r_3], And(Length(predicted_n_2) <= 255, And(Not(fpIsNaN(predicted_r_3)), Not(And(fpIsZero(predicted_r_3), fpIsNegative(predicted_r_3)))), And(Manufacturers(predicted_c_1, predicted_n_2, FV_Headquarter_0, "James", predicted_r_3), Length("James") <= 255)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_n, WPREDICTED_r
+      claim: And(And(Length(WPREDICTED_n) <= 255, And(Not(fpIsNaN(WPREDICTED_r)), Not(And(fpIsZero(WPREDICTED_r), fpIsNegative(WPREDICTED_r)))), And(Manufacturers(WPREDICTED_c, WPREDICTED_n, FV_Headquarter_0, "James", WPREDICTED_r), Length("James") <= 255)), Not(Exists([gold_c_1, gold_n_2, gold_f_3, gold_r_4], And(Length(gold_n_2) <= 255, Length(gold_f_3) <= 255, And(Not(fpIsNaN(gold_r_4)), Not(And(fpIsZero(gold_r_4), fpIsNegative(gold_r_4)))), And(Manufacturers(gold_c_1, gold_n_2, FV_Headquarter_0, gold_f_3, gold_r_4), gold_f_3 == "James")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.012 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

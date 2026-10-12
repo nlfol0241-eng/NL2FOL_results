@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2034.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2034.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4079 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of the airports located in Cuba or Argentina.
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 9 local sorts, 1 predicates, 0 functions, 2 constants, 2 warnings
+   WARNING: global sort 'character varchar(4)' is not a Z3 built-in sort; it is declared as an uninterpreted sort
+   WARNING: global sort 'character varchar(3)' is not a Z3 built-in sort; it is declared as an uninterpreted sort
+      global sorts:
+        character varchar(4) -> U_character_varchar_4_   [not a Z3 built-in sort]
+        bigint -> IntSort()   [domain And(x >= -9223372036854775808, x <= 9223372036854775807); range [-9223372036854775808, 9223372036854775807]]
+        integer -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+        character varchar(3) -> U_character_varchar_3_   [not a Z3 built-in sort]
+      local sorts:
+        apid = integer -> IntSort()
+        city = text -> StringSort()
+        country = text -> StringSort()
+        elevation = bigint -> IntSort()
+        iata = character varchar(3) -> U_character_varchar_3_
+        icao = character varchar(4) -> U_character_varchar_4_
+        name = text -> StringSort()
+        x = real -> Float32()
+        y = real -> Float32()
+      symbols:
+        airports(apid, name, city, country, x, y, elevation, iata, icao)
+        constant Argentina : country
+        constant Cuba : country
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apid ∃c : city ∃c1 : country ∃x : x ∃y : y ∃e : elevation ∃i : iata ∃i1 : icao ( (airports(a,n,c,c1,x,y,e,i,i1)) ∧ ((c1 = 'Cuba') ∨ (c1 = 'Argentina')) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apid EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:c1 COLON:: IDENT:country EXISTS:∃ IDENT:x COLON:: IDENT:x EXISTS:∃ IDENT:y COLON:: IDENT:y EXISTS:∃ IDENT:e COLON:: IDENT:elevation EXISTS:∃ IDENT:i COLON:: IDENT:iata EXISTS:∃ IDENT:i1 COLON:: IDENT:icao LPAR:( LPAR:( IDENT:airports LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:x COMMA:, IDENT:y COMMA:, IDENT:e COMMA:, IDENT:i COMMA:, IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c1 EQ:= LIT:Cuba RPAR:) OR:∨ LPAR:( IDENT:c1 EQ:= LIT:Argentina RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apid
+            EXISTS c:city
+              EXISTS c1:country
+                EXISTS x:x
+                  EXISTS y:y
+                    EXISTS e:elevation
+                      EXISTS i:iata
+                        EXISTS i1:icao
+                          AND
+                            PRED airports(a, n, c, c1, x, y, e, i, i1)
+                            OR
+                              EQ  c1 = 'Cuba'
+                              EQ  c1 = 'Argentina'
+      Predicted FOL: ∃apid:apid ∃city:city ∃country:country ∃x:x ∃y:y ∃elevation:elevation ∃iata:iata ∃icao:icao (airports(apid, name, city, country, x, y, elevation, iata, icao) ∧ (country = 'Cuba' ∨ country = 'Argentina'))
+        tokens: EXISTS:∃ IDENT:apid COLON:: IDENT:apid EXISTS:∃ IDENT:city COLON:: IDENT:city EXISTS:∃ IDENT:country COLON:: IDENT:country EXISTS:∃ IDENT:x COLON:: IDENT:x EXISTS:∃ IDENT:y COLON:: IDENT:y EXISTS:∃ IDENT:elevation COLON:: IDENT:elevation EXISTS:∃ IDENT:iata COLON:: IDENT:iata EXISTS:∃ IDENT:icao COLON:: IDENT:icao LPAR:( IDENT:airports LPAR:( IDENT:apid COMMA:, IDENT:name COMMA:, IDENT:city COMMA:, IDENT:country COMMA:, IDENT:x COMMA:, IDENT:y COMMA:, IDENT:elevation COMMA:, IDENT:iata COMMA:, IDENT:icao RPAR:) AND:∧ LPAR:( IDENT:country EQ:= LIT:Cuba OR:∨ IDENT:country EQ:= LIT:Argentina RPAR:) RPAR:) EOF
+        AST:
+          EXISTS apid:apid
+            EXISTS city:city
+              EXISTS country:country
+                EXISTS x:x
+                  EXISTS y:y
+                    EXISTS elevation:elevation
+                      EXISTS iata:iata
+                        EXISTS icao:icao
+                          AND
+                            PRED airports(apid, name, city, country, x, y, elevation, iata, icao)
+                            OR
+                              EQ  country = 'Cuba'
+                              EQ  country = 'Argentina'
+   [G3] took 0.004 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) name occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apid, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        c1 : local country, global text -> StringSort()
+        e : local elevation, global bigint -> IntSort()
+        i : local iata, global character varchar(3) -> U_character_varchar_3_
+        i1 : local icao, global character varchar(4) -> U_character_varchar_4_
+        n : local name, global text -> StringSort()
+        x : local x, global real -> Float32()
+        y : local y, global real -> Float32()
+      Predicted FOL:
+        apid : local apid, global integer -> IntSort()
+        city : local city, global text -> StringSort()
+        country : local country, global text -> StringSort()
+        elevation : local elevation, global bigint -> IntSort()
+        iata : local iata, global character varchar(3) -> U_character_varchar_3_
+        icao : local icao, global character varchar(4) -> U_character_varchar_4_
+        name : local name, global text -> StringSort()
+        x : local x, global real -> Float32()
+        y : local y, global real -> Float32()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5590 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2034.py
+   [G8] took 0.008 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) name occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

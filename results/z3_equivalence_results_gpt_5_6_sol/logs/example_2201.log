@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2201.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2201.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6781 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all movies about nuclear weapons
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        budget = text -> StringSort()
+        id = int -> IntSort()
+        keyword = text -> StringSort()
+        kid = int -> IntSort()
+        mid = int -> IntSort()
+        msid = int -> IntSort()
+        release_year = int -> IntSort()
+        title = text -> StringSort()
+        title_aka = text -> StringSort()
+      symbols:
+        keyword(id, keyword)
+        movie(mid, title, release_year, title_aka, budget)
+        tags(id, msid, kid)
+        constant nuclear weapons : keyword
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃m : msid ∃k : kid ∃i1 : id ∃k1 : keyword ∃m1 : mid ∃r : release_year ∃t1 : title_aka ∃b : budget ( (((((tags(i,m,k)) ∧ (keyword(i1,k1))) ∧ (k = i1)) ∧ (movie(m1,t,r,t1,b))) ∧ (m = m1)) ∧ (k1 = 'nuclear weapons') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:m COLON:: IDENT:msid EXISTS:∃ IDENT:k COLON:: IDENT:kid EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:k1 COLON:: IDENT:keyword EXISTS:∃ IDENT:m1 COLON:: IDENT:mid EXISTS:∃ IDENT:r COLON:: IDENT:release_year EXISTS:∃ IDENT:t1 COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:tags LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:k RPAR:) RPAR:) AND:∧ LPAR:( IDENT:keyword LPAR:( IDENT:i1 COMMA:, IDENT:k1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:movie LPAR:( IDENT:m1 COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:t1 COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:k1 EQ:= LIT:nuclear weapons RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS m:msid
+              EXISTS k:kid
+                EXISTS i1:id
+                  EXISTS k1:keyword
+                    EXISTS m1:mid
+                      EXISTS r:release_year
+                        EXISTS t1:title_aka
+                          EXISTS b:budget
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      PRED tags(i, m, k)
+                                      PRED keyword(i1, k1)
+                                    EQ  k = i1
+                                  PRED movie(m1, t, r, t1, b)
+                                EQ  m = m1
+                              EQ  k1 = 'nuclear weapons'
+      Predicted FOL: movie(mid, title, release_year, title_aka, budget) ∧ ∃ t : id ∃ k : kid (tags(t, mid, k) ∧ keyword(k, 'nuclear weapons'))
+        tokens: IDENT:movie LPAR:( IDENT:mid COMMA:, IDENT:title COMMA:, IDENT:release_year COMMA:, IDENT:title_aka COMMA:, IDENT:budget RPAR:) AND:∧ EXISTS:∃ IDENT:t COLON:: IDENT:id EXISTS:∃ IDENT:k COLON:: IDENT:kid LPAR:( IDENT:tags LPAR:( IDENT:t COMMA:, IDENT:mid COMMA:, IDENT:k RPAR:) AND:∧ IDENT:keyword LPAR:( IDENT:k COMMA:, LIT:nuclear weapons RPAR:) RPAR:) EOF
+        AST:
+          AND
+            PRED movie(mid, title, release_year, title_aka, budget)
+            EXISTS t:id
+              EXISTS k:kid
+                AND
+                  PRED tags(t, mid, k)
+                  PRED keyword(k, 'nuclear weapons')
+   [G3] took 0.008 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 5 (mid : mid, title : title, release_year : release_year, title_aka : title_aka, budget : budget): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local budget, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        i1 : local id, global int -> IntSort()
+        k : local kid, global int -> IntSort()
+        k1 : local keyword, global text -> StringSort()
+        m : local msid, global int -> IntSort()
+        m1 : local mid, global int -> IntSort()
+        r : local release_year, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        t1 : local title_aka, global text -> StringSort()
+      Predicted FOL:
+        budget : local budget, global text -> StringSort()
+        k : local kid, global int -> IntSort()
+        mid : local mid, global int -> IntSort()
+        release_year : local release_year, global int -> IntSort()
+        t : local id, global int -> IntSort()
+        title : local title, global text -> StringSort()
+        title_aka : local title_aka, global text -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5625 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2201.py
+   [G8] took 0.010 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : title) but Predicted has 5 (mid : mid, title : title, release_year : release_year, title_aka : title_aka, budget : budget): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

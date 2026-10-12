@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_877.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_877.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4633 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the complete description of the researcher role.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+      local sorts:
+        role_code = varchar(10) -> StringSort()
+        role_description = varchar(255) -> StringSort()
+      symbols:
+        Staff_Roles(role_code, role_description)
+        constant researcher : role_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : role_code ( (Staff_Roles(r,r1)) ∧ (r = 'researcher') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:role_code LPAR:( LPAR:( IDENT:Staff_Roles LPAR:( IDENT:r COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:researcher RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:role_code
+            AND
+              PRED Staff_Roles(r, r1)
+              EQ  r = 'researcher'
+      Predicted FOL: Staff_Roles('researcher', d)
+        tokens: IDENT:Staff_Roles LPAR:( LIT:researcher COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          PRED Staff_Roles('researcher', d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_role_description_0 : role_description   Gold r1 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 3 variable occurrences in 2 formulas
+      Gold FOL:
+        r : local role_code, global varchar(10) -> StringSort()
+        r1 : local role_description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        d : local role_description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1], And(D_varchar_10_(gold_r_1), And(P_Staff_Roles(gold_r_1, FV_role_description_0), (gold_r_1 == L_researcher))))
+      gold_skolem (witnesses WGOLD_r):  And(D_varchar_10_(WGOLD_r), And(P_Staff_Roles(WGOLD_r, FV_role_description_0), (WGOLD_r == L_researcher)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_Staff_Roles(L_researcher, FV_role_description_0), D_varchar_10_(L_researcher))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'researcher' at varchar(10) -> L_researcher = StringVal('researcher')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 715 lines, 26098 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_877.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_role_description_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_r
+      claim: And(And(Length(WGOLD_r) <= 10, And(Staff_Roles(WGOLD_r, FV_role_description_0), WGOLD_r == "researcher")), Not(And(Staff_Roles("researcher", FV_role_description_0), Length("researcher") <= 10)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Staff_Roles("researcher", FV_role_description_0), Length("researcher") <= 10), Not(Exists(gold_r_1, And(Length(gold_r_1) <= 10, And(Staff_Roles(gold_r_1, FV_role_description_0), gold_r_1 == "researcher")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

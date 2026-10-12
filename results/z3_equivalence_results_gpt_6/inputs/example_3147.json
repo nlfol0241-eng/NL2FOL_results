@@ -1,0 +1,94 @@
+{
+  "NL": "Find the names of users who did not leave any review.",
+  "Vocabulary": {
+    "Predicates": [
+      "useracct",
+      "review"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "useracct": [
+        "u_id",
+        "name"
+      ],
+      "review": [
+        "a_id",
+        "u_id",
+        "i_id",
+        "rating",
+        "rank"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a0'∀a1'( item(a0, a1) ∧ item(a0', a1') ∧ a0 = a0' ) → ( a1 = a1' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( review(b0, b1, b2, b3, b4) ∧ review(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c0'∀c1'( useracct(c0, c1) ∧ useracct(c0', c1') ∧ c0 = c0' ) → ( c1 = c1' )",
+    "axiom4": "∀b0∀b1∀b2∀b3∀b4 ( review(b0, b1, b2, b3, b4) → ∃a0∃a1 ( item(a0, a1) ∧ a0 = b2 ) )",
+    "axiom5": "∀b0∀b1∀b2∀b3∀b4 ( review(b0, b1, b2, b3, b4) → ∃c0∃c1 ( useracct(c0, c1) ∧ c0 = b1 ) )",
+    "axiom6": "∀d0∀d1∀d2 ( trust(d0, d1, d2) → ∃c0∃c1 ( useracct(c0, c1) ∧ c0 = d1 ) )",
+    "axiom7": "∀d0∀d1∀d2 ( trust(d0, d1, d2) → ∃c0∃c1 ( useracct(c0, c1) ∧ c0 = d0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "useracct": {
+        "A": "useracct",
+        "A0": "u_id",
+        "A1": "name"
+      },
+      "review": {
+        "B": "review",
+        "B0": "a_id",
+        "B1": "u_id",
+        "B2": "i_id",
+        "B3": "rating",
+        "B4": "rank"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃u : u_id( (useracct(u,n)) ∧ (¬(∃u1 : u_id( ((useracct(u,n)) ∧ (∃a : a_id ∃r : rating ∃i : i_id ∃r1 : rank( review(a,u1,i,r,r1) ))) ∧ (u = u1) ))) )",
+    "free vars": "n : name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1](A))<D>(<P>[A0,A1](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1](A))<D>(<P>[A0,A1](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A0( (A(?A0,?A1)) & (~([E]?B1( ((A(?A0,?A1)) & ([E]?B0,?B3,?B2,?B4( B(?B0,?B1,?B2,?B3,?B4) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A0( (A(A0,A1)) ∧ (¬(∃B1( ((A(A0,A1)) ∧ (∃B0 ∃B3 ∃B2 ∃B4( B(B0,B1,B2,B3,B4) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A1",
+    "db_id": "epinions_1",
+    "processed_sql": "SELECT name FROM useracct WHERE u_id NOT IN (SELECT u_id FROM review)"
+  },
+  "Global Sorts": [
+    "varchar(128)",
+    "integer"
+  ],
+  "Sort Axioms": {
+    "useracct": {
+      "sortaxiom0": "u_id = integer",
+      "sortaxiom1": "name = varchar(128)"
+    },
+    "review": {
+      "sortaxiom0": "a_id = integer",
+      "sortaxiom1": "u_id = integer",
+      "sortaxiom2": "i_id = integer",
+      "sortaxiom3": "rating = integer",
+      "sortaxiom4": "rank = integer"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT name FROM useracct WHERE u_id NOT IN (SELECT u_id FROM review)"
+  },
+  "id": 3147,
+  "Predicted FOL": {
+    "string": "∃u : u_id (useracct(u, n) ∧ ¬∃a : a_id ∃i : i_id ∃r : rating ∃k : rank (review(a, u, i, r, k)))",
+    "free vars": "n : name"
+  }
+}

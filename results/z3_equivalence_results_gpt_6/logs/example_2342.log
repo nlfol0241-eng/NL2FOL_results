@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2342.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2342.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3043 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names, checking balances, and savings balances for all customers?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 3 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(64) -> StringSort()   [domain Length(x) <= 64; length <= 64]
+        float -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+        bigint -> IntSort()   [domain And(x >= -9223372036854775808, x <= 9223372036854775807); range [-9223372036854775808, 9223372036854775807]]
+      local sorts:
+        balance = float -> Float64()
+        custid = bigint -> IntSort()
+        name = varchar(64) -> StringSort()
+      symbols:
+        ACCOUNTS(custid, name)
+        CHECKING(custid, balance)
+        SAVINGS(custid, balance)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : custid ∃c1 : custid ∃c2 : custid ( ((((ACCOUNTS(c,n)) ∧ (CHECKING(c1,b))) ∧ (c = c1)) ∧ (SAVINGS(c2,b1))) ∧ (c = c2) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:custid EXISTS:∃ IDENT:c1 COLON:: IDENT:custid EXISTS:∃ IDENT:c2 COLON:: IDENT:custid LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:ACCOUNTS LPAR:( IDENT:c COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:CHECKING LPAR:( IDENT:c1 COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:SAVINGS LPAR:( IDENT:c2 COMMA:, IDENT:b1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:custid
+            EXISTS c1:custid
+              EXISTS c2:custid
+                AND
+                  AND
+                    AND
+                      AND
+                        PRED ACCOUNTS(c, n)
+                        PRED CHECKING(c1, b)
+                      EQ  c = c1
+                    PRED SAVINGS(c2, b1)
+                  EQ  c = c2
+      Predicted FOL: ∃c : custid (ACCOUNTS(c, n) ∧ CHECKING(c, cb) ∧ SAVINGS(c, sb))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:custid LPAR:( IDENT:ACCOUNTS LPAR:( IDENT:c COMMA:, IDENT:n RPAR:) AND:∧ IDENT:CHECKING LPAR:( IDENT:c COMMA:, IDENT:cb RPAR:) AND:∧ IDENT:SAVINGS LPAR:( IDENT:c COMMA:, IDENT:sb RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:custid
+            AND
+              PRED ACCOUNTS(c, n)
+              PRED CHECKING(c, cb)
+              PRED SAVINGS(c, sb)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_balance_0 : balance   Gold b <-> Predicted cb
+      FV_balance_1 : balance   Gold b1 <-> Predicted sb
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local balance, global float -> Float64()
+        b1 : local balance, global float -> Float64()
+        c : local custid, global bigint -> IntSort()
+        c1 : local custid, global bigint -> IntSort()
+        c2 : local custid, global bigint -> IntSort()
+        n : local name, global varchar(64) -> StringSort()
+      Predicted FOL:
+        c : local custid, global bigint -> IntSort()
+        cb : local balance, global float -> Float64()
+        n : local name, global varchar(64) -> StringSort()
+        sb : local balance, global float -> Float64()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_c2_3], And(D_bigint(gold_c_1), D_bigint(gold_c1_2), D_bigint(gold_c2_3), And(And(And(And(P_ACCOUNTS(gold_c_1, FV_name_0), P_CHECKING(gold_c1_2, FV_balance_0)), (gold_c_1 == gold_c1_2)), P_SAVINGS(gold_c2_3, FV_balance_1)), (gold_c_1 == gold_c2_3))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_c2):  And(D_bigint(WGOLD_c), D_bigint(WGOLD_c1), D_bigint(WGOLD_c2), And(And(And(And(P_ACCOUNTS(WGOLD_c, FV_name_0), P_CHECKING(WGOLD_c1, FV_balance_0)), (WGOLD_c == WGOLD_c1)), P_SAVINGS(WGOLD_c2, FV_balance_1)), (WGOLD_c == WGOLD_c2)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1], And(D_bigint(predicted_c_1), And(P_ACCOUNTS(predicted_c_1, FV_name_0), P_CHECKING(predicted_c_1, FV_balance_0), P_SAVINGS(predicted_c_1, FV_balance_1))))
+      predicted_skolem (witnesses WPREDICTED_c):  And(D_bigint(WPREDICTED_c), And(P_ACCOUNTS(WPREDICTED_c, FV_name_0), P_CHECKING(WPREDICTED_c, FV_balance_0), P_SAVINGS(WPREDICTED_c, FV_balance_1)))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 742 lines, 27991 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2342.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   3 assertion(s): 0 sort axiom(s), 3 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_balance_0)), Not(And(fpIsZero(FV_balance_0), fpIsNegative(FV_balance_0))))
+      [1] And(Not(fpIsNaN(FV_balance_1)), Not(And(fpIsZero(FV_balance_1), fpIsNegative(FV_balance_1))))
+      [2] Length(FV_name_0) <= 64
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 3 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_c2
+      claim: And(And(And(WGOLD_c >= -9223372036854775808, WGOLD_c <= 9223372036854775807), And(WGOLD_c1 >= -9223372036854775808, WGOLD_c1 <= 9223372036854775807), And(WGOLD_c2 >= -9223372036854775808, WGOLD_c2 <= 9223372036854775807), And(And(And(And(ACCOUNTS(WGOLD_c, FV_name_0), CHECKING(WGOLD_c1, FV_balance_0)), WGOLD_c == WGOLD_c1), SAVINGS(WGOLD_c2, FV_balance_1)), WGOLD_c == WGOLD_c2)), Not(Exists(predicted_c_1, And(And(predicted_c_1 >= -9223372036854775808, predicted_c_1 <= 9223372036854775807), And(ACCOUNTS(predicted_c_1, FV_name_0), CHECKING(predicted_c_1, FV_balance_0), SAVINGS(predicted_c_1, FV_balance_1))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 3 background assertion(s) + claim; witnesses WPREDICTED_c
+      claim: And(And(And(WPREDICTED_c >= -9223372036854775808, WPREDICTED_c <= 9223372036854775807), And(ACCOUNTS(WPREDICTED_c, FV_name_0), CHECKING(WPREDICTED_c, FV_balance_0), SAVINGS(WPREDICTED_c, FV_balance_1))), Not(Exists([gold_c_1, gold_c1_2, gold_c2_3], And(And(gold_c_1 >= -9223372036854775808, gold_c_1 <= 9223372036854775807), And(gold_c1_2 >= -9223372036854775808, gold_c1_2 <= 9223372036854775807), And(gold_c2_3 >= -9223372036854775808, gold_c2_3 <= 9223372036854775807), And(And(And(And(ACCOUNTS(gold_c_1, FV_name_0), CHECKING(gold_c1_2, FV_balance_0)), gold_c_1 == gold_c1_2), SAVINGS(gold_c2_3, FV_balance_1)), gold_c_1 == gold_c2_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

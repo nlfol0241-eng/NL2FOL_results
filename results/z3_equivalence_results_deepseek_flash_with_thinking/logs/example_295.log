@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_295.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_295.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3173 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What venues are for Neuroscience ?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        varchar(100) -> StringSort()   [domain Length(x) <= 100; length <= 100]
+      local sorts:
+        venueId = integer -> IntSort()
+        venueName = varchar(100) -> StringSort()
+      symbols:
+        venue(venueId, venueName)
+        constant Neuroscience : venueName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃v1 : venueName ( (venue(v,v1)) ∧ (v1 = 'Neuroscience') )
+        tokens: EXISTS:∃ IDENT:v1 COLON:: IDENT:venueName LPAR:( LPAR:( IDENT:venue LPAR:( IDENT:v COMMA:, IDENT:v1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:v1 EQ:= LIT:Neuroscience RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v1:venueName
+            AND
+              PRED venue(v, v1)
+              EQ  v1 = 'Neuroscience'
+      Predicted FOL: venue(x, 'Neuroscience')
+        tokens: IDENT:venue LPAR:( IDENT:x COMMA:, LIT:Neuroscience RPAR:) EOF
+        AST:
+          PRED venue(x, 'Neuroscience')
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_venueId_0 : venueId   Gold v <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 3 variable occurrences in 2 formulas
+      Gold FOL:
+        v : local venueId, global integer -> IntSort()
+        v1 : local venueName, global varchar(100) -> StringSort()
+      Predicted FOL:
+        x : local venueId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_v1_1], And(D_varchar_100_(gold_v1_1), And(P_venue(FV_venueId_0, gold_v1_1), (gold_v1_1 == L_Neuroscience))))
+      gold_skolem (witnesses WGOLD_v1):  And(D_varchar_100_(WGOLD_v1), And(P_venue(FV_venueId_0, WGOLD_v1), (WGOLD_v1 == L_Neuroscience)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_venue(FV_venueId_0, L_Neuroscience), D_varchar_100_(L_Neuroscience))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Neuroscience' at varchar(100) -> L_Neuroscience = StringVal('Neuroscience')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 711 lines, 25774 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_295.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_v1
+      claim: And(And(Length(WGOLD_v1) <= 100, And(venue(FV_venueId_0, WGOLD_v1), WGOLD_v1 == "Neuroscience")), Not(And(venue(FV_venueId_0, "Neuroscience"), Length("Neuroscience") <= 100)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(venue(FV_venueId_0, "Neuroscience"), Length("Neuroscience") <= 100), Not(Exists(gold_v1_1, And(Length(gold_v1_1) <= 100, And(venue(FV_venueId_0, gold_v1_1), gold_v1_1 == "Neuroscience")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.002 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

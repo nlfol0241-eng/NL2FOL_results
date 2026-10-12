@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2391.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2391.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4496 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the campus fee of "San Francisco State University" in year 2000?
+   [G1] took 0.004 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Campus = integer -> IntSort()
+        CampusFee = integer -> IntSort()
+        County = text -> StringSort()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        csu_fees(Campus, Year, CampusFee)
+        constant 2000 : Year
+        constant San Francisco State University : campus
+   [G2] took 0.002 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Campus ∃y : Year ∃i : Id ∃c2 : campus ∃l : Location ∃c3 : County ∃y1 : Year ( (((csu_fees(c,y,c1)) ∧ (Campuses(i,c2,l,c3,y1))) ∧ (c = i)) ∧ ((c2 = 'San Francisco State University') ∧ (y = 2000)) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Campus EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:c2 COLON:: IDENT:campus EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c3 COLON:: IDENT:County EXISTS:∃ IDENT:y1 COLON:: IDENT:Year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:csu_fees LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c2 COMMA:, IDENT:l COMMA:, IDENT:c3 COMMA:, IDENT:y1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c2 EQ:= LIT:San Francisco State University RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Campus
+            EXISTS y:Year
+              EXISTS i:Id
+                EXISTS c2:campus
+                  EXISTS l:Location
+                    EXISTS c3:County
+                      EXISTS y1:Year
+                        AND
+                          AND
+                            AND
+                              PRED csu_fees(c, y, c1)
+                              PRED Campuses(i, c2, l, c3, y1)
+                            EQ  c = i
+                          AND
+                            EQ  c2 = 'San Francisco State University'
+                            EQ  y = 2000
+      Predicted FOL: ∃i : Id ∃l : Location ∃c : County ∃y : Year ∃k : Campus (Campuses(i, 'San Francisco State University', l, c, y) ∧ i = k ∧ csu_fees(k, 2000, fee))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c COLON:: IDENT:County EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:k COLON:: IDENT:Campus LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, LIT:San Francisco State University COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:y RPAR:) AND:∧ IDENT:i EQ:= IDENT:k AND:∧ IDENT:csu_fees LPAR:( IDENT:k COMMA:, NUM:2000 COMMA:, IDENT:fee RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS l:Location
+              EXISTS c:County
+                EXISTS y:Year
+                  EXISTS k:Campus
+                    AND
+                      PRED Campuses(i, 'San Francisco State University', l, c, y)
+                      EQ  i = k
+                      PRED csu_fees(k, 2000, fee)
+   [G3] took 0.010 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_CampusFee_0 : CampusFee   Gold c1 <-> Predicted fee
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Campus, global integer -> IntSort()
+        c1 : local CampusFee, global integer -> IntSort()
+        c2 : local campus, global text -> StringSort()
+        c3 : local County, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+        y1 : local Year, global integer -> IntSort()
+      Predicted FOL:
+        c : local County, global text -> StringSort()
+        fee : local CampusFee, global integer -> IntSort()
+        i : local Id, global integer -> IntSort()
+        k : local Campus, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+   [G5] took 0.002 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_y_2, gold_i_3, gold_c2_4, gold_l_5, gold_c3_6, gold_y1_7], And(And(And(P_csu_fees(gold_c_1, gold_y_2, FV_CampusFee_0), P_Campuses(gold_i_3, gold_c2_4, gold_l_5, gold_c3_6, gold_y1_7)), (gold_c_1 == gold_i_3)), And((gold_c2_4 == L_San_Francisco_State_University), (gold_y_2 == L_v_2000_integer))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_y, WGOLD_i, WGOLD_c2, WGOLD_l, WGOLD_c3, WGOLD_y1):  And(And(And(P_csu_fees(WGOLD_c, WGOLD_y, FV_CampusFee_0), P_Campuses(WGOLD_i, WGOLD_c2, WGOLD_l, WGOLD_c3, WGOLD_y1)), (WGOLD_c == WGOLD_i)), And((WGOLD_c2 == L_San_Francisco_State_University), (WGOLD_y == L_v_2000_integer)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_l_2, predicted_c_3, predicted_y_4, predicted_k_5], And(P_Campuses(predicted_i_1, L_San_Francisco_State_University, predicted_l_2, predicted_c_3, predicted_y_4), (predicted_i_1 == predicted_k_5), P_csu_fees(predicted_k_5, L_v_2000_integer, FV_CampusFee_0)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_l, WPREDICTED_c, WPREDICTED_y, WPREDICTED_k):  And(P_Campuses(WPREDICTED_i, L_San_Francisco_State_University, WPREDICTED_l, WPREDICTED_c, WPREDICTED_y), (WPREDICTED_i == WPREDICTED_k), P_csu_fees(WPREDICTED_k, L_v_2000_integer, FV_CampusFee_0))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.003 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'San Francisco State University' at text -> L_San_Francisco_State_University = StringVal('San Francisco State University')
+      literal '2000' at integer -> L_v_2000_integer = IntVal(2000)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 759 lines, 29424 bytes
+   [G7] took 0.003 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2391.py
+   [G8] took 0.014 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_y, WGOLD_i, WGOLD_c2, WGOLD_l, WGOLD_c3, WGOLD_y1
+      claim: And(And(And(And(csu_fees(WGOLD_c, WGOLD_y, FV_CampusFee_0), Campuses(WGOLD_i, WGOLD_c2, WGOLD_l, WGOLD_c3, WGOLD_y1)), WGOLD_c == WGOLD_i), And(WGOLD_c2 == "San Francisco State University", 2000 == WGOLD_y)), Not(Exists([predicted_i_1, predicted_l_2, predicted_c_3, predicted_y_4, predicted_k_5], And(Campuses(predicted_i_1, "San Francisco State University", predicted_l_2, predicted_c_3, predicted_y_4), predicted_i_1 == predicted_k_5, csu_fees(predicted_k_5, 2000, FV_CampusFee_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.023 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.058 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_l, WPREDICTED_c, WPREDICTED_y, WPREDICTED_k
+      claim: And(And(Campuses(WPREDICTED_i, "San Francisco State University", WPREDICTED_l, WPREDICTED_c, WPREDICTED_y), WPREDICTED_i == WPREDICTED_k, csu_fees(WPREDICTED_k, 2000, FV_CampusFee_0)), Not(Exists([gold_c_1, gold_y_2, gold_i_3, gold_c2_4, gold_l_5, gold_c3_6, gold_y1_7], And(And(And(csu_fees(gold_c_1, gold_y_2, FV_CampusFee_0), Campuses(gold_i_3, gold_c2_4, gold_l_5, gold_c3_6, gold_y1_7)), gold_c_1 == gold_i_3), And(gold_c2_4 == "San Francisco State University", 2000 == gold_y_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.018 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.040 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_352.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_352.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4756 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of the candidates that have an outcome code of Pass?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        asessment_outcome_code = char(15) -> StringSort()
+        assessment_date = datetime -> IntSort()
+        candidate_id = integer -> IntSort()
+        qualification = char(15) -> StringSort()
+      symbols:
+        Candidate_Assessments(candidate_id, qualification, assessment_date, asessment_outcome_code)
+        constant Pass : asessment_outcome_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃q : qualification ∃a : assessment_date ∃a1 : asessment_outcome_code ( (Candidate_Assessments(c,q,a,a1)) ∧ (a1 = 'Pass') )
+        tokens: EXISTS:∃ IDENT:q COLON:: IDENT:qualification EXISTS:∃ IDENT:a COLON:: IDENT:assessment_date EXISTS:∃ IDENT:a1 COLON:: IDENT:asessment_outcome_code LPAR:( LPAR:( IDENT:Candidate_Assessments LPAR:( IDENT:c COMMA:, IDENT:q COMMA:, IDENT:a COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:Pass RPAR:) RPAR:) EOF
+        AST:
+          EXISTS q:qualification
+            EXISTS a:assessment_date
+              EXISTS a1:asessment_outcome_code
+                AND
+                  PRED Candidate_Assessments(c, q, a, a1)
+                  EQ  a1 = 'Pass'
+      Predicted FOL: ∃q : qualification ∃d : assessment_date (Candidate_Assessments(c, q, d, 'Pass'))
+        tokens: EXISTS:∃ IDENT:q COLON:: IDENT:qualification EXISTS:∃ IDENT:d COLON:: IDENT:assessment_date LPAR:( IDENT:Candidate_Assessments LPAR:( IDENT:c COMMA:, IDENT:q COMMA:, IDENT:d COMMA:, LIT:Pass RPAR:) RPAR:) EOF
+        AST:
+          EXISTS q:qualification
+            EXISTS d:assessment_date
+              PRED Candidate_Assessments(c, q, d, 'Pass')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_candidate_id_0 : candidate_id   Gold c <-> Predicted c
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local assessment_date, global datetime -> IntSort()
+        a1 : local asessment_outcome_code, global char(15) -> StringSort()
+        c : local candidate_id, global integer -> IntSort()
+        q : local qualification, global char(15) -> StringSort()
+      Predicted FOL:
+        c : local candidate_id, global integer -> IntSort()
+        d : local assessment_date, global datetime -> IntSort()
+        q : local qualification, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_q_1, gold_a_2, gold_a1_3], And(D_char_15_(gold_q_1), D_char_15_(gold_a1_3), And(P_Candidate_Assessments(FV_candidate_id_0, gold_q_1, gold_a_2, gold_a1_3), (gold_a1_3 == L_Pass))))
+      gold_skolem (witnesses WGOLD_q, WGOLD_a, WGOLD_a1):  And(D_char_15_(WGOLD_q), D_char_15_(WGOLD_a1), And(P_Candidate_Assessments(FV_candidate_id_0, WGOLD_q, WGOLD_a, WGOLD_a1), (WGOLD_a1 == L_Pass)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_q_1, predicted_d_2], And(D_char_15_(predicted_q_1), And(P_Candidate_Assessments(FV_candidate_id_0, predicted_q_1, predicted_d_2, L_Pass), D_char_15_(L_Pass))))
+      predicted_skolem (witnesses WPREDICTED_q, WPREDICTED_d):  And(D_char_15_(WPREDICTED_q), And(P_Candidate_Assessments(FV_candidate_id_0, WPREDICTED_q, WPREDICTED_d, L_Pass), D_char_15_(L_Pass)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Pass' at char(15) -> L_Pass = StringVal('Pass')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 732 lines, 27788 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_352.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_q, WGOLD_a, WGOLD_a1
+      claim: And(And(Length(WGOLD_q) <= 15, Length(WGOLD_a1) <= 15, And(Candidate_Assessments(FV_candidate_id_0, WGOLD_q, WGOLD_a, WGOLD_a1), WGOLD_a1 == "Pass")), Not(Exists([predicted_q_1, predicted_d_2], And(Length(predicted_q_1) <= 15, And(Candidate_Assessments(FV_candidate_id_0, predicted_q_1, predicted_d_2, "Pass"), Length("Pass") <= 15)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_q, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_q) <= 15, And(Candidate_Assessments(FV_candidate_id_0, WPREDICTED_q, WPREDICTED_d, "Pass"), Length("Pass") <= 15)), Not(Exists([gold_q_1, gold_a_2, gold_a1_3], And(Length(gold_q_1) <= 15, Length(gold_a1_3) <= 15, And(Candidate_Assessments(FV_candidate_id_0, gold_q_1, gold_a_2, gold_a1_3), gold_a1_3 == "Pass")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

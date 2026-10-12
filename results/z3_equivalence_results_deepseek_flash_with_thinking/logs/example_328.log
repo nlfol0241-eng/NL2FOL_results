@@ -1,0 +1,76 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_328.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_328.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5372 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all movies produced in 2015
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        budget = text -> StringSort()
+        mid = int -> IntSort()
+        release_year = int -> IntSort()
+        title = text -> StringSort()
+        title_aka = text -> StringSort()
+      symbols:
+        movie(mid, title, release_year, title_aka, budget)
+        constant 2015 : release_year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mid ∃r : release_year ∃t1 : title_aka ∃b : budget ( (movie(m,t,r,t1,b)) ∧ (r = 2015) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:r COLON:: IDENT:release_year EXISTS:∃ IDENT:t1 COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget LPAR:( LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:t1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= NUM:2015 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS r:release_year
+              EXISTS t1:title_aka
+                EXISTS b:budget
+                  AND
+                    PRED movie(m, t, r, t1, b)
+                    EQ  r = 2015
+      Predicted FOL: movie(x0, x1, 2015, x2, x3)
+        tokens: IDENT:movie LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, NUM:2015 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) EOF
+        AST:
+          PRED movie(x0, x1, 2015, x2, x3)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 4 (x0 : mid, x1 : title, x2 : title_aka, x3 : budget): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local budget, global text -> StringSort()
+        m : local mid, global int -> IntSort()
+        r : local release_year, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        t1 : local title_aka, global text -> StringSort()
+      Predicted FOL:
+        x0 : local mid, global int -> IntSort()
+        x1 : local title, global text -> StringSort()
+        x2 : local title_aka, global text -> StringSort()
+        x3 : local budget, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5281 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_328.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : title) but Predicted has 4 (x0 : mid, x1 : title, x2 : title_aka, x3 : budget): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

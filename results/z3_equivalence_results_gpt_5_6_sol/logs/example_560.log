@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_560.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_560.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2787 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all artist names and the year joined who are not from United States.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Artist_ID = int -> IntSort()
+        Country = text -> StringSort()
+        Name = text -> StringSort()
+        Year_Join = int -> IntSort()
+      symbols:
+        artist(Artist_ID, Name, Country, Year_Join, Age)
+        constant United States : Country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Artist_ID ∃c : Country ∃a1 : Age ( (artist(a,n,c,y,a1)) ∧ (c <> 'United States') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:a1 COLON:: IDENT:Age LPAR:( LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:y COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c NEQ:<> LIT:United States RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Artist_ID
+            EXISTS c:Country
+              EXISTS a1:Age
+                AND
+                  PRED artist(a, n, c, y, a1)
+                  NEQ  c != 'United States'
+      Predicted FOL: ∃a : Artist_ID ∃c : Country ∃g : Age (artist(a, n, c, y, g) ∧ c ≠ 'United States')
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:g COLON:: IDENT:Age LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:y COMMA:, IDENT:g RPAR:) AND:∧ IDENT:c NEQ:≠ LIT:United States RPAR:) EOF
+        AST:
+          EXISTS a:Artist_ID
+            EXISTS c:Country
+              EXISTS g:Age
+                AND
+                  PRED artist(a, n, c, y, g)
+                  NEQ  c != 'United States'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+      FV_Year_Join_0 : Year_Join   Gold y <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artist_ID, global int -> IntSort()
+        a1 : local Age, global int -> IntSort()
+        c : local Country, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        y : local Year_Join, global int -> IntSort()
+      Predicted FOL:
+        a : local Artist_ID, global int -> IntSort()
+        c : local Country, global text -> StringSort()
+        g : local Age, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        y : local Year_Join, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_a1_3], And(P_artist(gold_a_1, FV_Name_0, gold_c_2, FV_Year_Join_0, gold_a1_3), (gold_c_2 != L_United_States)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_a1):  And(P_artist(WGOLD_a, FV_Name_0, WGOLD_c, FV_Year_Join_0, WGOLD_a1), (WGOLD_c != L_United_States))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_c_2, predicted_g_3], And(P_artist(predicted_a_1, FV_Name_0, predicted_c_2, FV_Year_Join_0, predicted_g_3), (predicted_c_2 != L_United_States)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_g):  And(P_artist(WPREDICTED_a, FV_Name_0, WPREDICTED_c, FV_Year_Join_0, WPREDICTED_g), (WPREDICTED_c != L_United_States))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'United States' at text -> L_United_States = StringVal('United States')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 734 lines, 27330 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_560.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_a1
+      claim: And(And(artist(WGOLD_a, FV_Name_0, WGOLD_c, FV_Year_Join_0, WGOLD_a1), WGOLD_c != "United States"), Not(Exists([predicted_a_1, predicted_c_2, predicted_g_3], And(artist(predicted_a_1, FV_Name_0, predicted_c_2, FV_Year_Join_0, predicted_g_3), predicted_c_2 != "United States"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_g
+      claim: And(And(artist(WPREDICTED_a, FV_Name_0, WPREDICTED_c, FV_Year_Join_0, WPREDICTED_g), WPREDICTED_c != "United States"), Not(Exists([gold_a_1, gold_c_2, gold_a1_3], And(artist(gold_a_1, FV_Name_0, gold_c_2, FV_Year_Join_0, gold_a1_3), gold_c_2 != "United States"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

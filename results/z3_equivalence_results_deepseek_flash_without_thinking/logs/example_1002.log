@@ -1,0 +1,75 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1002.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1002.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2987 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and arrival times of trains?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Arrival = text -> StringSort()
+        From = text -> StringSort()
+        Name = text -> StringSort()
+        Railway_ID = int -> IntSort()
+        Train_ID = int -> IntSort()
+        Train_Num = text -> StringSort()
+      symbols:
+        train(Train_ID, Train_Num, Name, From, Arrival, Railway_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : Train_ID ∃t1 : Train_Num ∃f : From ∃r : Railway_ID ( train(t,t1,n,f,a,r) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Train_ID EXISTS:∃ IDENT:t1 COLON:: IDENT:Train_Num EXISTS:∃ IDENT:f COLON:: IDENT:From EXISTS:∃ IDENT:r COLON:: IDENT:Railway_ID LPAR:( IDENT:train LPAR:( IDENT:t COMMA:, IDENT:t1 COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Train_ID
+            EXISTS t1:Train_Num
+              EXISTS f:From
+                EXISTS r:Railway_ID
+                  PRED train(t, t1, n, f, a, r)
+      Predicted FOL: ∃x0 : Train_ID ∃x1 : Train_Num ∃x2 : Name ∃x3 : From ∃x4 : Arrival ∃x5 : Railway_ID (train(x0, x1, x2, x3, x4, x5) ∧ answer(x2, x4))
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:Train_ID EXISTS:∃ IDENT:x1 COLON:: IDENT:Train_Num EXISTS:∃ IDENT:x2 COLON:: IDENT:Name EXISTS:∃ IDENT:x3 COLON:: IDENT:From EXISTS:∃ IDENT:x4 COLON:: IDENT:Arrival EXISTS:∃ IDENT:x5 COLON:: IDENT:Railway_ID LPAR:( IDENT:train LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 RPAR:) AND:∧ IDENT:answer LPAR:( IDENT:x2 COMMA:, IDENT:x4 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:Train_ID
+            EXISTS x1:Train_Num
+              EXISTS x2:Name
+                EXISTS x3:From
+                  EXISTS x4:Arrival
+                    EXISTS x5:Railway_ID
+                      AND
+                        PRED train(x0, x1, x2, x3, x4, x5)
+                        PRED answer(x2, x4)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (n : Name, a : Arrival) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'answer' has no declared arity
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 3 more times]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 144, in infer
+    raise ValueError(f"predicate {node[1]!r} has no declared arity")
+ValueError: predicate 'answer' has no declared arity

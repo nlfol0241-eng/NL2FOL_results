@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1179.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1179.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3649 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are flight numbers of Airline "United Airlines"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Abbreviation = text -> StringSort()
+        Airline = text -> StringSort()
+        Country = text -> StringSort()
+        DestAirport = text -> StringSort()
+        FlightNo = integer -> IntSort()
+        SourceAirport = text -> StringSort()
+        a_uid = integer -> IntSort()
+        uid = integer -> IntSort()
+      symbols:
+        airlines(uid, Airline, Abbreviation, Country)
+        flights(a_uid, FlightNo, SourceAirport, DestAirport)
+        constant United Airlines : Airline
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : a_uid ∃s : SourceAirport ∃d : DestAirport ∃u : uid ∃a1 : Airline ∃a2 : Abbreviation ∃c : Country ( (((flights(a,f,s,d)) ∧ (airlines(u,a1,a2,c))) ∧ (u = a)) ∧ (a1 = 'United Airlines') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:a_uid EXISTS:∃ IDENT:s COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:d COLON:: IDENT:DestAirport EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:a1 COLON:: IDENT:Airline EXISTS:∃ IDENT:a2 COLON:: IDENT:Abbreviation EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( LPAR:( LPAR:( IDENT:flights LPAR:( IDENT:a COMMA:, IDENT:f COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:airlines LPAR:( IDENT:u COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:u EQ:= IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= LIT:United Airlines RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:a_uid
+            EXISTS s:SourceAirport
+              EXISTS d:DestAirport
+                EXISTS u:uid
+                  EXISTS a1:Airline
+                    EXISTS a2:Abbreviation
+                      EXISTS c:Country
+                        AND
+                          AND
+                            AND
+                              PRED flights(a, f, s, d)
+                              PRED airlines(u, a1, a2, c)
+                            EQ  u = a
+                          EQ  a1 = 'United Airlines'
+      Predicted FOL: ∃a0:uid ∃a2:Abbreviation ∃a3:Country (airlines(a0, 'United Airlines', a2, a3) ∧ ∃c0:a_uid ∃c2:SourceAirport ∃c3:DestAirport (flights(c0, x, c2, c3) ∧ c0 = a0))
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:uid EXISTS:∃ IDENT:a2 COLON:: IDENT:Abbreviation EXISTS:∃ IDENT:a3 COLON:: IDENT:Country LPAR:( IDENT:airlines LPAR:( IDENT:a0 COMMA:, LIT:United Airlines COMMA:, IDENT:a2 COMMA:, IDENT:a3 RPAR:) AND:∧ EXISTS:∃ IDENT:c0 COLON:: IDENT:a_uid EXISTS:∃ IDENT:c2 COLON:: IDENT:SourceAirport EXISTS:∃ IDENT:c3 COLON:: IDENT:DestAirport LPAR:( IDENT:flights LPAR:( IDENT:c0 COMMA:, IDENT:x COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) AND:∧ IDENT:c0 EQ:= IDENT:a0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:uid
+            EXISTS a2:Abbreviation
+              EXISTS a3:Country
+                AND
+                  PRED airlines(a0, 'United Airlines', a2, a3)
+                  EXISTS c0:a_uid
+                    EXISTS c2:SourceAirport
+                      EXISTS c3:DestAirport
+                        AND
+                          PRED flights(c0, x, c2, c3)
+                          EQ  c0 = a0
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_FlightNo_0 : FlightNo   Gold f <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local a_uid, global integer -> IntSort()
+        a1 : local Airline, global text -> StringSort()
+        a2 : local Abbreviation, global text -> StringSort()
+        c : local Country, global text -> StringSort()
+        d : local DestAirport, global text -> StringSort()
+        f : local FlightNo, global integer -> IntSort()
+        s : local SourceAirport, global text -> StringSort()
+        u : local uid, global integer -> IntSort()
+      Predicted FOL:
+        a0 : local uid, global integer -> IntSort()
+        a2 : local Abbreviation, global text -> StringSort()
+        a3 : local Country, global text -> StringSort()
+        c0 : local a_uid, global integer -> IntSort()
+        c2 : local SourceAirport, global text -> StringSort()
+        c3 : local DestAirport, global text -> StringSort()
+        x : local FlightNo, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_s_2, gold_d_3, gold_u_4, gold_a1_5, gold_a2_6, gold_c_7], And(And(And(P_flights(gold_a_1, FV_FlightNo_0, gold_s_2, gold_d_3), P_airlines(gold_u_4, gold_a1_5, gold_a2_6, gold_c_7)), (gold_u_4 == gold_a_1)), (gold_a1_5 == L_United_Airlines)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_s, WGOLD_d, WGOLD_u, WGOLD_a1, WGOLD_a2, WGOLD_c):  And(And(And(P_flights(WGOLD_a, FV_FlightNo_0, WGOLD_s, WGOLD_d), P_airlines(WGOLD_u, WGOLD_a1, WGOLD_a2, WGOLD_c)), (WGOLD_u == WGOLD_a)), (WGOLD_a1 == L_United_Airlines))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a2_2, predicted_a3_3], And(P_airlines(predicted_a0_1, L_United_Airlines, predicted_a2_2, predicted_a3_3), Exists([predicted_c0_4, predicted_c2_5, predicted_c3_6], And(P_flights(predicted_c0_4, FV_FlightNo_0, predicted_c2_5, predicted_c3_6), (predicted_c0_4 == predicted_a0_1)))))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a3):  And(P_airlines(WPREDICTED_a0, L_United_Airlines, WPREDICTED_a2, WPREDICTED_a3), Exists([predictedsk_c0_1, predictedsk_c2_2, predictedsk_c3_3], And(P_flights(predictedsk_c0_1, FV_FlightNo_0, predictedsk_c2_2, predictedsk_c3_3), (predictedsk_c0_1 == WPREDICTED_a0))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'United Airlines' at text -> L_United_Airlines = StringVal('United Airlines')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 759 lines, 29568 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1179.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_s, WGOLD_d, WGOLD_u, WGOLD_a1, WGOLD_a2, WGOLD_c
+      claim: And(And(And(And(flights(WGOLD_a, FV_FlightNo_0, WGOLD_s, WGOLD_d), airlines(WGOLD_u, WGOLD_a1, WGOLD_a2, WGOLD_c)), WGOLD_u == WGOLD_a), WGOLD_a1 == "United Airlines"), Not(Exists([predicted_a0_1, predicted_a2_2, predicted_a3_3], And(airlines(predicted_a0_1, "United Airlines", predicted_a2_2, predicted_a3_3), Exists([predicted_c0_4, predicted_c2_5, predicted_c3_6], And(flights(predicted_c0_4, FV_FlightNo_0, predicted_c2_5, predicted_c3_6), predicted_c0_4 == predicted_a0_1))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a3
+      claim: And(And(airlines(WPREDICTED_a0, "United Airlines", WPREDICTED_a2, WPREDICTED_a3), Exists([predictedsk_c0_1, predictedsk_c2_2, predictedsk_c3_3], And(flights(predictedsk_c0_1, FV_FlightNo_0, predictedsk_c2_2, predictedsk_c3_3), predictedsk_c0_1 == WPREDICTED_a0))), Not(Exists([gold_a_1, gold_s_2, gold_d_3, gold_u_4, gold_a1_5, gold_a2_6, gold_c_7], And(And(And(flights(gold_a_1, FV_FlightNo_0, gold_s_2, gold_d_3), airlines(gold_u_4, gold_a1_5, gold_a2_6, gold_c_7)), gold_u_4 == gold_a_1), gold_a1_5 == "United Airlines"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,119 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_885.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_885.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3391 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of companies whose headquarters are not "USA"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Assets_billion = real -> Float32()
+        Headquarters = text -> StringSort()
+        Industry = text -> StringSort()
+        Market_Value_billion = text -> StringSort()
+        Profits_billion = real -> Float32()
+        Sales_billion = real -> Float32()
+        id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        Companies(id, name, Headquarters, Industry, Sales_billion, Profits_billion, Assets_billion, Market_Value_billion)
+        constant USA : Headquarters
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃h : Headquarters ∃i1 : Industry ∃s : Sales_billion ∃p : Profits_billion ∃a : Assets_billion ∃m : Market_Value_billion ( (Companies(i,n,h,i1,s,p,a,m)) ∧ (h <> 'USA') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:h COLON:: IDENT:Headquarters EXISTS:∃ IDENT:i1 COLON:: IDENT:Industry EXISTS:∃ IDENT:s COLON:: IDENT:Sales_billion EXISTS:∃ IDENT:p COLON:: IDENT:Profits_billion EXISTS:∃ IDENT:a COLON:: IDENT:Assets_billion EXISTS:∃ IDENT:m COLON:: IDENT:Market_Value_billion LPAR:( LPAR:( IDENT:Companies LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:i1 COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h NEQ:<> LIT:USA RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS h:Headquarters
+              EXISTS i1:Industry
+                EXISTS s:Sales_billion
+                  EXISTS p:Profits_billion
+                    EXISTS a:Assets_billion
+                      EXISTS m:Market_Value_billion
+                        AND
+                          PRED Companies(i, n, h, i1, s, p, a, m)
+                          NEQ  h != 'USA'
+      Predicted FOL: ∃id:id ∃hq:Headquarters ∃ind:Industry ∃s:Sales_billion ∃p:Profits_billion ∃a:Assets_billion ∃mv:Market_Value_billion ( Companies(id, name, hq, ind, s, p, a, mv) ∧ hq ≠ USA )
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:id EXISTS:∃ IDENT:hq COLON:: IDENT:Headquarters EXISTS:∃ IDENT:ind COLON:: IDENT:Industry EXISTS:∃ IDENT:s COLON:: IDENT:Sales_billion EXISTS:∃ IDENT:p COLON:: IDENT:Profits_billion EXISTS:∃ IDENT:a COLON:: IDENT:Assets_billion EXISTS:∃ IDENT:mv COLON:: IDENT:Market_Value_billion LPAR:( IDENT:Companies LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:hq COMMA:, IDENT:ind COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:mv RPAR:) AND:∧ IDENT:hq NEQ:≠ IDENT:USA RPAR:) EOF
+        AST:
+          EXISTS id:id
+            EXISTS hq:Headquarters
+              EXISTS ind:Industry
+                EXISTS s:Sales_billion
+                  EXISTS p:Profits_billion
+                    EXISTS a:Assets_billion
+                      EXISTS mv:Market_Value_billion
+                        AND
+                          PRED Companies(id, name, hq, ind, s, p, a, mv)
+                          NEQ  hq != USA<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Assets_billion, global real -> Float32()
+        h : local Headquarters, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        i1 : local Industry, global text -> StringSort()
+        m : local Market_Value_billion, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        p : local Profits_billion, global real -> Float32()
+        s : local Sales_billion, global real -> Float32()
+      Predicted FOL:
+        a : local Assets_billion, global real -> Float32()
+        hq : local Headquarters, global text -> StringSort()
+        id : local id, global int -> IntSort()
+        ind : local Industry, global text -> StringSort()
+        mv : local Market_Value_billion, global text -> StringSort()
+        name : local name, global text -> StringSort()
+        p : local Profits_billion, global real -> Float32()
+        s : local Sales_billion, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_h_2, gold_i1_3, gold_s_4, gold_p_5, gold_a_6, gold_m_7], And(D_real(gold_s_4), D_real(gold_p_5), D_real(gold_a_6), And(P_Companies(gold_i_1, FV_name_0, gold_h_2, gold_i1_3, gold_s_4, gold_p_5, gold_a_6, gold_m_7), (gold_h_2 != L_USA))))
+      gold_skolem (witnesses WGOLD_i, WGOLD_h, WGOLD_i1, WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_m):  And(D_real(WGOLD_s), D_real(WGOLD_p), D_real(WGOLD_a), And(P_Companies(WGOLD_i, FV_name_0, WGOLD_h, WGOLD_i1, WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_m), (WGOLD_h != L_USA)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_hq_2, predicted_ind_3, predicted_s_4, predicted_p_5, predicted_a_6, predicted_mv_7], And(D_real(predicted_s_4), D_real(predicted_p_5), D_real(predicted_a_6), And(P_Companies(predicted_id_1, FV_name_0, predicted_hq_2, predicted_ind_3, predicted_s_4, predicted_p_5, predicted_a_6, predicted_mv_7), (predicted_hq_2 != L_USA))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_hq, WPREDICTED_ind, WPREDICTED_s, WPREDICTED_p, WPREDICTED_a, WPREDICTED_mv):  And(D_real(WPREDICTED_s), D_real(WPREDICTED_p), D_real(WPREDICTED_a), And(P_Companies(WPREDICTED_id, FV_name_0, WPREDICTED_hq, WPREDICTED_ind, WPREDICTED_s, WPREDICTED_p, WPREDICTED_a, WPREDICTED_mv), (WPREDICTED_hq != L_USA)))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'USA' at text -> L_USA = StringVal('USA')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 765 lines, 30104 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_885.py
+   [G8] took 0.008 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_h, WGOLD_i1, WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_m
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(Not(fpIsNaN(WGOLD_p)), Not(And(fpIsZero(WGOLD_p), fpIsNegative(WGOLD_p)))), And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(Companies(WGOLD_i, FV_name_0, WGOLD_h, WGOLD_i1, WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_m), WGOLD_h != "USA")), Not(Exists([predicted_id_1, predicted_hq_2, predicted_ind_3, predicted_s_4, predicted_p_5, predicted_a_6, predicted_mv_7], And(And(Not(fpIsNaN(predicted_s_4)), Not(And(fpIsZero(predicted_s_4), fpIsNegative(predicted_s_4)))), And(Not(fpIsNaN(predicted_p_5)), Not(And(fpIsZero(predicted_p_5), fpIsNegative(predicted_p_5)))), And(Not(fpIsNaN(predicted_a_6)), Not(And(fpIsZero(predicted_a_6), fpIsNegative(predicted_a_6)))), And(Companies(predicted_id_1, FV_name_0, predicted_hq_2, predicted_ind_3, predicted_s_4, predicted_p_5, predicted_a_6, predicted_mv_7), predicted_hq_2 != "USA")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.021 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_hq, WPREDICTED_ind, WPREDICTED_s, WPREDICTED_p, WPREDICTED_a, WPREDICTED_mv
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_s)), Not(And(fpIsZero(WPREDICTED_s), fpIsNegative(WPREDICTED_s)))), And(Not(fpIsNaN(WPREDICTED_p)), Not(And(fpIsZero(WPREDICTED_p), fpIsNegative(WPREDICTED_p)))), And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), And(Companies(WPREDICTED_id, FV_name_0, WPREDICTED_hq, WPREDICTED_ind, WPREDICTED_s, WPREDICTED_p, WPREDICTED_a, WPREDICTED_mv), WPREDICTED_hq != "USA")), Not(Exists([gold_i_1, gold_h_2, gold_i1_3, gold_s_4, gold_p_5, gold_a_6, gold_m_7], And(And(Not(fpIsNaN(gold_s_4)), Not(And(fpIsZero(gold_s_4), fpIsNegative(gold_s_4)))), And(Not(fpIsNaN(gold_p_5)), Not(And(fpIsZero(gold_p_5), fpIsNegative(gold_p_5)))), And(Not(fpIsNaN(gold_a_6)), Not(And(fpIsZero(gold_a_6), fpIsNegative(gold_a_6)))), And(Companies(gold_i_1, FV_name_0, gold_h_2, gold_i1_3, gold_s_4, gold_p_5, gold_a_6, gold_m_7), gold_h_2 != "USA")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.019 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

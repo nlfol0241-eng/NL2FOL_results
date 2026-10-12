@@ -1,0 +1,135 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3562.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3562.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6509 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find courses that ran in Fall 2009 but not in Spring 2010.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 7 local sorts, 1 predicates, 0 functions, 6 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        varchar(4) -> StringSort()   [domain Length(x) <= 4; length <= 4]
+        varchar(7) -> StringSort()   [domain Length(x) <= 7; length <= 7]
+        varchar(6) -> StringSort()   [domain Length(x) <= 6; length <= 6]
+        numeric(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+      local sorts:
+        building = varchar(15) -> StringSort()
+        course_id = varchar(8) -> StringSort()
+        room_number = varchar(7) -> StringSort()
+        sec_id = varchar(8) -> StringSort()
+        semester = varchar(6) -> StringSort()
+        time_slot_id = varchar(4) -> StringSort()
+        year = numeric(4,0) -> RealSort()
+      symbols:
+        section(course_id, sec_id, semester, year, building, room_number, time_slot_id)
+        constant 2009 : year
+        constant 2010 : year
+        constant Fall : semester
+        constant Spring : semester
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s1 : semester ∃r : room_number ∃s : sec_id ∃b : building ∃y : year ∃t : time_slot_id( (section(c,s,s1,y,b,r,t)) ∧ ((s1 = 'Fall') ∧ (y = 2009)) )) ∧ (¬(∃s1 : semester ∃r : room_number ∃s : sec_id ∃b : building ∃y : year ∃t : time_slot_id( (section(c,s,s1,y,b,r,t)) ∧ ((s1 = 'Spring') ∧ (y = 2010)) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:semester EXISTS:∃ IDENT:r COLON:: IDENT:room_number EXISTS:∃ IDENT:s COLON:: IDENT:sec_id EXISTS:∃ IDENT:b COLON:: IDENT:building EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:t COLON:: IDENT:time_slot_id LPAR:( LPAR:( IDENT:section LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:y COMMA:, IDENT:b COMMA:, IDENT:r COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s1 EQ:= LIT:Fall RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2009 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:semester EXISTS:∃ IDENT:r COLON:: IDENT:room_number EXISTS:∃ IDENT:s COLON:: IDENT:sec_id EXISTS:∃ IDENT:b COLON:: IDENT:building EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:t COLON:: IDENT:time_slot_id LPAR:( LPAR:( IDENT:section LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:y COMMA:, IDENT:b COMMA:, IDENT:r COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s1 EQ:= LIT:Spring RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2010 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s1:semester
+              EXISTS r:room_number
+                EXISTS s:sec_id
+                  EXISTS b:building
+                    EXISTS y:year
+                      EXISTS t:time_slot_id
+                        AND
+                          PRED section(c, s, s1, y, b, r, t)
+                          AND
+                            EQ  s1 = 'Fall'
+                            EQ  y = 2009
+            NOT
+              EXISTS s1:semester
+                EXISTS r:room_number
+                  EXISTS s:sec_id
+                    EXISTS b:building
+                      EXISTS y:year
+                        EXISTS t:time_slot_id
+                          AND
+                            PRED section(c, s, s1, y, b, r, t)
+                            AND
+                              EQ  s1 = 'Spring'
+                              EQ  y = 2010
+      Predicted FOL: ∃x0 : course_id ( ∃x1 : sec_id ∃x2 : semester ∃x3 : year ∃x4 : building ∃x5 : room_number ∃x6 : time_slot_id ( section(x0, x1, x2, x3, x4, x5, x6) ∧ x2 = 'Fall' ∧ x3 = 2009 ) ∧ ¬∃y1 : sec_id ∃y2 : semester ∃y3 : year ∃y4 : building ∃y5 : room_number ∃y6 : time_slot_id ( section(x0, y1, y2, y3, y4, y5, y6) ∧ y2 = 'Spring' ∧ y3 = 2010 ) )
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:course_id LPAR:( EXISTS:∃ IDENT:x1 COLON:: IDENT:sec_id EXISTS:∃ IDENT:x2 COLON:: IDENT:semester EXISTS:∃ IDENT:x3 COLON:: IDENT:year EXISTS:∃ IDENT:x4 COLON:: IDENT:building EXISTS:∃ IDENT:x5 COLON:: IDENT:room_number EXISTS:∃ IDENT:x6 COLON:: IDENT:time_slot_id LPAR:( IDENT:section LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 COMMA:, IDENT:x6 RPAR:) AND:∧ IDENT:x2 EQ:= LIT:Fall AND:∧ IDENT:x3 EQ:= NUM:2009 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:y1 COLON:: IDENT:sec_id EXISTS:∃ IDENT:y2 COLON:: IDENT:semester EXISTS:∃ IDENT:y3 COLON:: IDENT:year EXISTS:∃ IDENT:y4 COLON:: IDENT:building EXISTS:∃ IDENT:y5 COLON:: IDENT:room_number EXISTS:∃ IDENT:y6 COLON:: IDENT:time_slot_id LPAR:( IDENT:section LPAR:( IDENT:x0 COMMA:, IDENT:y1 COMMA:, IDENT:y2 COMMA:, IDENT:y3 COMMA:, IDENT:y4 COMMA:, IDENT:y5 COMMA:, IDENT:y6 RPAR:) AND:∧ IDENT:y2 EQ:= LIT:Spring AND:∧ IDENT:y3 EQ:= NUM:2010 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:course_id
+            EXISTS x1:sec_id
+              EXISTS x2:semester
+                EXISTS x3:year
+                  EXISTS x4:building
+                    EXISTS x5:room_number
+                      EXISTS x6:time_slot_id
+                        AND
+                          AND
+                            PRED section(x0, x1, x2, x3, x4, x5, x6)
+                            EQ  x2 = 'Fall'
+                            EQ  x3 = 2009
+                          NOT
+                            EXISTS y1:sec_id
+                              EXISTS y2:semester
+                                EXISTS y3:year
+                                  EXISTS y4:building
+                                    EXISTS y5:room_number
+                                      EXISTS y6:time_slot_id
+                                        AND
+                                          PRED section(x0, y1, y2, y3, y4, y5, y6)
+                                          EQ  y2 = 'Spring'
+                                          EQ  y3 = 2010
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : course_id) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local building, global varchar(15) -> StringSort()
+        c : local course_id, global varchar(8) -> StringSort()
+        r : local room_number, global varchar(7) -> StringSort()
+        s : local sec_id, global varchar(8) -> StringSort()
+        s1 : local semester, global varchar(6) -> StringSort()
+        t : local time_slot_id, global varchar(4) -> StringSort()
+        y : local year, global numeric(4,0) -> RealSort()
+      Predicted FOL:
+        x0 : local course_id, global varchar(8) -> StringSort()
+        x1 : local sec_id, global varchar(8) -> StringSort()
+        x2 : local semester, global varchar(6) -> StringSort()
+        x3 : local year, global numeric(4,0) -> RealSort()
+        x4 : local building, global varchar(15) -> StringSort()
+        x5 : local room_number, global varchar(7) -> StringSort()
+        x6 : local time_slot_id, global varchar(4) -> StringSort()
+        y1 : local sec_id, global varchar(8) -> StringSort()
+        y2 : local semester, global varchar(6) -> StringSort()
+        y3 : local year, global numeric(4,0) -> RealSort()
+        y4 : local building, global varchar(15) -> StringSort()
+        y5 : local room_number, global varchar(7) -> StringSort()
+        y6 : local time_slot_id, global varchar(4) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5809 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3562.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : course_id) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

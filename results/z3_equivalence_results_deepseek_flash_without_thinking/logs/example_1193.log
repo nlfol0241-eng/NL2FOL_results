@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1193.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1193.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4443 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all paragraph ids and texts for the document with name 'Welcome to NY'.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Document_Description = varchar(255) -> StringSort()
+        Document_ID = integer -> IntSort()
+        Document_Name = varchar(255) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Paragraph_ID = integer -> IntSort()
+        Paragraph_Text = varchar(255) -> StringSort()
+        Template_ID = integer -> IntSort()
+      symbols:
+        Documents(Document_ID, Template_ID, Document_Name, Document_Description, Other_Details)
+        Paragraphs(Paragraph_ID, Document_ID, Paragraph_Text, Other_Details)
+        constant Welcome to NY : Document_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Document_ID ∃o : Other_Details ∃d1 : Document_ID ∃t : Template_ID ∃d2 : Document_Name ∃d3 : Document_Description ∃o1 : Other_Details ( (((Paragraphs(p,d,p1,o)) ∧ (Documents(d1,t,d2,d3,o1))) ∧ (d = d1)) ∧ (d2 = 'Welcome to NY') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details EXISTS:∃ IDENT:d1 COLON:: IDENT:Document_ID EXISTS:∃ IDENT:t COLON:: IDENT:Template_ID EXISTS:∃ IDENT:d2 COLON:: IDENT:Document_Name EXISTS:∃ IDENT:d3 COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o1 COLON:: IDENT:Other_Details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Paragraphs LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:p1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Documents LPAR:( IDENT:d1 COMMA:, IDENT:t COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d2 EQ:= LIT:Welcome to NY RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            EXISTS o:Other_Details
+              EXISTS d1:Document_ID
+                EXISTS t:Template_ID
+                  EXISTS d2:Document_Name
+                    EXISTS d3:Document_Description
+                      EXISTS o1:Other_Details
+                        AND
+                          AND
+                            AND
+                              PRED Paragraphs(p, d, p1, o)
+                              PRED Documents(d1, t, d2, d3, o1)
+                            EQ  d = d1
+                          EQ  d2 = 'Welcome to NY'
+      Predicted FOL: ∃d : Document_ID ∃n : Document_Name ∃t : Template_ID ∃desc : Document_Description ∃o : Other_Details (Documents(d, t, n, desc, o) ∧ n = 'Welcome to NY' ∧ ∃p : Paragraph_ID ∃pt : Paragraph_Text ∃po : Other_Details (Paragraphs(p, d, pt, po)))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:n COLON:: IDENT:Document_Name EXISTS:∃ IDENT:t COLON:: IDENT:Template_ID EXISTS:∃ IDENT:desc COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:t COMMA:, IDENT:n COMMA:, IDENT:desc COMMA:, IDENT:o RPAR:) AND:∧ IDENT:n EQ:= LIT:Welcome to NY AND:∧ EXISTS:∃ IDENT:p COLON:: IDENT:Paragraph_ID EXISTS:∃ IDENT:pt COLON:: IDENT:Paragraph_Text EXISTS:∃ IDENT:po COLON:: IDENT:Other_Details LPAR:( IDENT:Paragraphs LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:pt COMMA:, IDENT:po RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            EXISTS n:Document_Name
+              EXISTS t:Template_ID
+                EXISTS desc:Document_Description
+                  EXISTS o:Other_Details
+                    AND
+                      PRED Documents(d, t, n, desc, o)
+                      EQ  n = 'Welcome to NY'
+                      EXISTS p:Paragraph_ID
+                        EXISTS pt:Paragraph_Text
+                          EXISTS po:Other_Details
+                            PRED Paragraphs(p, d, pt, po)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (p : Paragraph_ID, p1 : Paragraph_Text) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Document_ID, global integer -> IntSort()
+        d2 : local Document_Name, global varchar(255) -> StringSort()
+        d3 : local Document_Description, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        o1 : local Other_Details, global varchar(255) -> StringSort()
+        p : local Paragraph_ID, global integer -> IntSort()
+        p1 : local Paragraph_Text, global varchar(255) -> StringSort()
+        t : local Template_ID, global integer -> IntSort()
+      Predicted FOL:
+        d : local Document_ID, global integer -> IntSort()
+        desc : local Document_Description, global varchar(255) -> StringSort()
+        n : local Document_Name, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Paragraph_ID, global integer -> IntSort()
+        po : local Other_Details, global varchar(255) -> StringSort()
+        pt : local Paragraph_Text, global varchar(255) -> StringSort()
+        t : local Template_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5676 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1193.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (p : Paragraph_ID, p1 : Paragraph_Text) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

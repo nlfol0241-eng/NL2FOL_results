@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_628.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_628.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2438 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the companies and investors that correspond to each entrepreneur?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Company = text -> StringSort()
+        Entrepreneur_ID = int -> IntSort()
+        Investor = text -> StringSort()
+        Money_Requested = real -> Float32()
+        People_ID = int -> IntSort()
+      symbols:
+        entrepreneur(Entrepreneur_ID, People_ID, Company, Money_Requested, Investor)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Entrepreneur_ID ∃p : People_ID ∃m : Money_Requested ( entrepreneur(e,p,c,m,i) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Entrepreneur_ID EXISTS:∃ IDENT:p COLON:: IDENT:People_ID EXISTS:∃ IDENT:m COLON:: IDENT:Money_Requested LPAR:( IDENT:entrepreneur LPAR:( IDENT:e COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:m COMMA:, IDENT:i RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Entrepreneur_ID
+            EXISTS p:People_ID
+              EXISTS m:Money_Requested
+                PRED entrepreneur(e, p, c, m, i)
+      Predicted FOL: ∃e : Entrepreneur_ID ∃p : People_ID ∃c : Company ∃m : Money_Requested ∃i : Investor (entrepreneur(e, p, c, m, i) ∧ ∀c' : Company ∀i' : Investor ((entrepreneur(e, p, c', m, i') → (c' = c ∧ i' = i))))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Entrepreneur_ID EXISTS:∃ IDENT:p COLON:: IDENT:People_ID EXISTS:∃ IDENT:c COLON:: IDENT:Company EXISTS:∃ IDENT:m COLON:: IDENT:Money_Requested EXISTS:∃ IDENT:i COLON:: IDENT:Investor LPAR:( IDENT:entrepreneur LPAR:( IDENT:e COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:m COMMA:, IDENT:i RPAR:) AND:∧ FORALL:∀ IDENT:c' COLON:: IDENT:Company FORALL:∀ IDENT:i' COLON:: IDENT:Investor LPAR:( LPAR:( IDENT:entrepreneur LPAR:( IDENT:e COMMA:, IDENT:p COMMA:, IDENT:c' COMMA:, IDENT:m COMMA:, IDENT:i' RPAR:) IMPL:→ LPAR:( IDENT:c' EQ:= IDENT:c AND:∧ IDENT:i' EQ:= IDENT:i RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Entrepreneur_ID
+            EXISTS p:People_ID
+              EXISTS c:Company
+                EXISTS m:Money_Requested
+                  EXISTS i:Investor
+                    AND
+                      PRED entrepreneur(e, p, c, m, i)
+                      FORALL c':Company
+                        FORALL i':Investor
+                          IMPLIES
+                            PRED entrepreneur(e, p, c', m, i')
+                            AND
+                              EQ  c' = c
+                              EQ  i' = i
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (c : Company, i : Investor) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Company, global text -> StringSort()
+        e : local Entrepreneur_ID, global int -> IntSort()
+        i : local Investor, global text -> StringSort()
+        m : local Money_Requested, global real -> Float32()
+        p : local People_ID, global int -> IntSort()
+      Predicted FOL:
+        c : local Company, global text -> StringSort()
+        c' : local Company, global text -> StringSort()
+        e : local Entrepreneur_ID, global int -> IntSort()
+        i : local Investor, global text -> StringSort()
+        i' : local Investor, global text -> StringSort()
+        m : local Money_Requested, global real -> Float32()
+        p : local People_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5445 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_628.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (c : Company, i : Investor) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

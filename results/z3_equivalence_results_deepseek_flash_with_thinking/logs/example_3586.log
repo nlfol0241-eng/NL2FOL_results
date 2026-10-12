@@ -1,0 +1,86 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3586.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3586.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3253 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of all moviest hat have not been reviewed by Britanny Harris?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        mID = int -> IntSort()
+        name = text -> StringSort()
+        rID = int -> IntSort()
+        ratingDate = date -> IntSort()
+        stars = int -> IntSort()
+      symbols:
+        Rating(rID, mID, stars, ratingDate)
+        Reviewer(rID, name)
+        constant Brittany Harris : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s : stars ∃r1 : ratingDate ∃r : rID( Rating(r,m,s,r1) )) ∧ (¬(∃r2 : rID ∃s : stars ∃r1 : ratingDate ∃n : name ∃r : rID( (((Rating(r,m,s,r1)) ∧ (Reviewer(r2,n))) ∧ (r = r2)) ∧ (n = 'Brittany Harris') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:r2 COLON:: IDENT:rID EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Reviewer LPAR:( IDENT:r2 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Brittany Harris RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s:stars
+              EXISTS r1:ratingDate
+                EXISTS r:rID
+                  PRED Rating(r, m, s, r1)
+            NOT
+              EXISTS r2:rID
+                EXISTS s:stars
+                  EXISTS r1:ratingDate
+                    EXISTS n:name
+                      EXISTS r:rID
+                        AND
+                          AND
+                            AND
+                              PRED Rating(r, m, s, r1)
+                              PRED Reviewer(r2, n)
+                            EQ  r = r2
+                          EQ  n = 'Brittany Harris'
+      Predicted FOL: ∃ title : title ∃ year : year ∃ director : director ( Movie(mID, title, year, director) ∧ ¬∃ rID : rID ∃ stars : stars ∃ ratingDate : ratingDate ( Reviewer(rID, 'Brittany Harris') ∧ Rating(rID, mID, stars, ratingDate) ) )
+        tokens: EXISTS:∃ IDENT:title COLON:: IDENT:title EXISTS:∃ IDENT:year COLON:: IDENT:year EXISTS:∃ IDENT:director COLON:: IDENT:director LPAR:( IDENT:Movie LPAR:( IDENT:mID COMMA:, IDENT:title COMMA:, IDENT:year COMMA:, IDENT:director RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:rID COLON:: IDENT:rID EXISTS:∃ IDENT:stars COLON:: IDENT:stars EXISTS:∃ IDENT:ratingDate COLON:: IDENT:ratingDate LPAR:( IDENT:Reviewer LPAR:( IDENT:rID COMMA:, LIT:Brittany Harris RPAR:) AND:∧ IDENT:Rating LPAR:( IDENT:rID COMMA:, IDENT:mID COMMA:, IDENT:stars COMMA:, IDENT:ratingDate RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS title:title
+            EXISTS year:year
+              EXISTS director:director
+                AND
+                  PRED Movie(mID, title, year, director)
+                  NOT
+                    EXISTS rID:rID
+                      EXISTS stars:stars
+                        EXISTS ratingDate:ratingDate
+                          AND
+                            PRED Reviewer(rID, 'Brittany Harris')
+                            PRED Rating(rID, mID, stars, ratingDate)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_mID_0 : mID   Gold m <-> Predicted mID
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: unknown sort 'title'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 131, in infer
+    env.assign(node[2], sig.g(node[3]))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\signature.py", line 97, in g
+    raise ValueError(f"unknown sort {local_sort!r}")
+ValueError: unknown sort 'title'

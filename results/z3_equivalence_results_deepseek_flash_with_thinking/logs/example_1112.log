@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1112.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1112.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3505 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the description of the budget type that has the code ORG.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Budget_Type_Code = char(15) -> StringSort()
+        Budget_Type_Description = varchar(255) -> StringSort()
+      symbols:
+        Ref_Budget_Codes(Budget_Type_Code, Budget_Type_Description)
+        constant ORG : Budget_Type_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : Budget_Type_Code ( (Ref_Budget_Codes(b,b1)) ∧ (b = 'ORG') )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Budget_Type_Code LPAR:( LPAR:( IDENT:Ref_Budget_Codes LPAR:( IDENT:b COMMA:, IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= LIT:ORG RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Budget_Type_Code
+            AND
+              PRED Ref_Budget_Codes(b, b1)
+              EQ  b = 'ORG'
+      Predicted FOL: Ref_Budget_Codes('ORG', y)
+        tokens: IDENT:Ref_Budget_Codes LPAR:( LIT:ORG COMMA:, IDENT:y RPAR:) EOF
+        AST:
+          PRED Ref_Budget_Codes('ORG', y)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Budget_Type_Description_0 : Budget_Type_Description   Gold b1 <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 3 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Budget_Type_Code, global char(15) -> StringSort()
+        b1 : local Budget_Type_Description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        y : local Budget_Type_Description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1], And(D_char_15_(gold_b_1), And(P_Ref_Budget_Codes(gold_b_1, FV_Budget_Type_Description_0), (gold_b_1 == L_ORG))))
+      gold_skolem (witnesses WGOLD_b):  And(D_char_15_(WGOLD_b), And(P_Ref_Budget_Codes(WGOLD_b, FV_Budget_Type_Description_0), (WGOLD_b == L_ORG)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_Ref_Budget_Codes(L_ORG, FV_Budget_Type_Description_0), D_char_15_(L_ORG))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'ORG' at char(15) -> L_ORG = StringVal('ORG')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 715 lines, 26237 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1112.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Budget_Type_Description_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_b
+      claim: And(And(Length(WGOLD_b) <= 15, And(Ref_Budget_Codes(WGOLD_b, FV_Budget_Type_Description_0), WGOLD_b == "ORG")), Not(And(Ref_Budget_Codes("ORG", FV_Budget_Type_Description_0), Length("ORG") <= 15)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Ref_Budget_Codes("ORG", FV_Budget_Type_Description_0), Length("ORG") <= 15), Not(Exists(gold_b_1, And(Length(gold_b_1) <= 15, And(Ref_Budget_Codes(gold_b_1, FV_Budget_Type_Description_0), gold_b_1 == "ORG")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.002 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

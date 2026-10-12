@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_842.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_842.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4757 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name and description of the role with code "MG".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Role_Code = char(15) -> StringSort()
+        Role_Description = varchar(255) -> StringSort()
+        Role_Name = varchar(255) -> StringSort()
+      symbols:
+        Roles(Role_Code, Role_Name, Role_Description)
+        constant MG : Role_Code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Role_Code ( (Roles(r,r1,r2)) ∧ (r = 'MG') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Role_Code LPAR:( LPAR:( IDENT:Roles LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:MG RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Role_Code
+            AND
+              PRED Roles(r, r1, r2)
+              EQ  r = 'MG'
+      Predicted FOL: ∃x : Role_Name ∃y : Role_Description Roles('MG', x, y)
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Role_Name EXISTS:∃ IDENT:y COLON:: IDENT:Role_Description IDENT:Roles LPAR:( LIT:MG COMMA:, IDENT:x COMMA:, IDENT:y RPAR:) EOF
+        AST:
+          EXISTS x:Role_Name
+            EXISTS y:Role_Description
+              PRED Roles('MG', x, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x, y do not occur free in the formula
+   2 shared answer variable(s)
+      FV_Role_Description_0 : Role_Description   Gold r2 <-> Predicted y
+      FV_Role_Name_0 : Role_Name   Gold r1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        r : local Role_Code, global char(15) -> StringSort()
+        r1 : local Role_Name, global varchar(255) -> StringSort()
+        r2 : local Role_Description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        x : local Role_Name, global varchar(255) -> StringSort()
+        y : local Role_Description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1], And(D_char_15_(gold_r_1), And(P_Roles(gold_r_1, FV_Role_Name_0, FV_Role_Description_0), (gold_r_1 == L_MG))))
+      gold_skolem (witnesses WGOLD_r):  And(D_char_15_(WGOLD_r), And(P_Roles(WGOLD_r, FV_Role_Name_0, FV_Role_Description_0), (WGOLD_r == L_MG)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2], And(D_varchar_255_(predicted_x_1), D_varchar_255_(predicted_y_2), And(P_Roles(L_MG, predicted_x_1, predicted_y_2), D_char_15_(L_MG))))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y):  And(D_varchar_255_(WPREDICTED_x), D_varchar_255_(WPREDICTED_y), And(P_Roles(L_MG, WPREDICTED_x, WPREDICTED_y), D_char_15_(L_MG)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'MG' at char(15) -> L_MG = StringVal('MG')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 727 lines, 27101 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_842.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Role_Description_0) <= 255
+      [1] Length(FV_Role_Name_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_r
+      claim: And(And(Length(WGOLD_r) <= 15, And(Roles(WGOLD_r, FV_Role_Name_0, FV_Role_Description_0), WGOLD_r == "MG")), Not(Exists([predicted_x_1, predicted_y_2], And(Length(predicted_x_1) <= 255, Length(predicted_y_2) <= 255, And(Roles("MG", predicted_x_1, predicted_y_2), Length("MG") <= 15)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y
+      claim: And(And(Length(WPREDICTED_x) <= 255, Length(WPREDICTED_y) <= 255, And(Roles("MG", WPREDICTED_x, WPREDICTED_y), Length("MG") <= 15)), Not(Exists(gold_r_1, And(Length(gold_r_1) <= 15, And(Roles(gold_r_1, FV_Role_Name_0, FV_Role_Description_0), gold_r_1 == "MG")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.003 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 5 relation tuple(s) listed, 4 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x : Role_Name = ''
+          y : Role_Description = 'M'
+        free (answer) variables:
+          FV_Role_Description_0 : Role_Description = ''
+          FV_Role_Name_0 : Role_Name = ''
+        literals / constants:
+          MG : Role_Code = 'MG'
+        relations (each value tagged with the local sort of its position):
+          Roles(Role_Code, Role_Name, Role_Description):
+            Roles(Role_Code='', Role_Name='', Role_Description='A')
+            Roles(Role_Code='', Role_Name='A', Role_Description='B')
+            Roles(Role_Code='', Role_Name='B', Role_Description='')
+            Roles(Role_Code='', Role_Name='M', Role_Description='')
+            Roles(Role_Code='MG', Role_Name='', Role_Description='M')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Role_Code        : {'', 'MG'}
+          Role_Description : {'', 'A', 'B', 'M'}
+          Role_Name        : {'', 'A', 'B', 'M'}
+        values shared across local sorts (joins):
+          '' : Role_Description, Role_Name
+          'A' : Role_Description, Role_Name
+          'B' : Role_Description, Role_Name
+          'M' : Role_Description, Role_Name
+   [R3] took 0.043 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

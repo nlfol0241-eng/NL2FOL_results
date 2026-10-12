@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1770.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1770.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5761 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What roles did staff members play between '2003-04-19 15:06:20' and '2016-03-15 00:33:18'?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+      local sorts:
+        date_from = datetime -> IntSort()
+        date_to = datetime -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        project_id = integer -> IntSort()
+        role_code = varchar(10) -> StringSort()
+        staff_id = real -> Float32()
+      symbols:
+        Project_Staff(staff_id, project_id, role_code, date_from, date_to, other_details)
+        constant 2003-04-19 15:06:20 : date_from
+        constant 2016-03-15 00:33:18 : date_to
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : staff_id ∃p : project_id ∃d : date_from ∃d1 : date_to ∃o : other_details ( (Project_Staff(s,p,r,d,d1,o)) ∧ ((d > '2003-04-19 15:06:20') ∧ (d1 < '2016-03-15 00:33:18')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:staff_id EXISTS:∃ IDENT:p COLON:: IDENT:project_id EXISTS:∃ IDENT:d COLON:: IDENT:date_from EXISTS:∃ IDENT:d1 COLON:: IDENT:date_to EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( IDENT:Project_Staff LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:d GT:> LIT:2003-04-19 15:06:20 RPAR:) AND:∧ LPAR:( IDENT:d1 LT:< LIT:2016-03-15 00:33:18 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:staff_id
+            EXISTS p:project_id
+              EXISTS d:date_from
+                EXISTS d1:date_to
+                  EXISTS o:other_details
+                    AND
+                      PRED Project_Staff(s, p, r, d, d1, o)
+                      AND
+                        CMP  d > '2003-04-19 15:06:20'
+                        CMP  d1 < '2016-03-15 00:33:18'
+      Predicted FOL: ∃s : staff_id ∃p : project_id ∃r : role_code ∃d1 : date_from ∃d2 : date_to ∃o : other_details (Project_Staff(s, p, r, d1, d2, o) ∧ d1 ≥ '2003-04-19 15:06:20' ∧ d2 ≤ '2016-03-15 00:33:18')
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:staff_id EXISTS:∃ IDENT:p COLON:: IDENT:project_id EXISTS:∃ IDENT:r COLON:: IDENT:role_code EXISTS:∃ IDENT:d1 COLON:: IDENT:date_from EXISTS:∃ IDENT:d2 COLON:: IDENT:date_to EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Project_Staff LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:o RPAR:) AND:∧ IDENT:d1 GE:≥ LIT:2003-04-19 15:06:20 AND:∧ IDENT:d2 LE:≤ LIT:2016-03-15 00:33:18 RPAR:) EOF
+        AST:
+          EXISTS s:staff_id
+            EXISTS p:project_id
+              EXISTS r:role_code
+                EXISTS d1:date_from
+                  EXISTS d2:date_to
+                    EXISTS o:other_details
+                      AND
+                        PRED Project_Staff(s, p, r, d1, d2, o)
+                        CMP  d1 >= '2003-04-19 15:06:20'
+                        CMP  d2 <= '2016-03-15 00:33:18'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (r : role_code) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_from, global datetime -> IntSort()
+        d1 : local date_to, global datetime -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        p : local project_id, global integer -> IntSort()
+        r : local role_code, global varchar(10) -> StringSort()
+        s : local staff_id, global real -> Float32()
+      Predicted FOL:
+        d1 : local date_from, global datetime -> IntSort()
+        d2 : local date_to, global datetime -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        p : local project_id, global integer -> IntSort()
+        r : local role_code, global varchar(10) -> StringSort()
+        s : local staff_id, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5524 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1770.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (r : role_code) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

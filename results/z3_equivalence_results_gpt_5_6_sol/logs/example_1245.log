@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1245.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1245.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2624 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name of singers whose birth year is either 1948 or 1949?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Birth_Year = real -> Float32()
+        Citizenship = text -> StringSort()
+        Name = text -> StringSort()
+        Net_Worth_Millions = real -> Float32()
+        Singer_ID = int -> IntSort()
+      symbols:
+        singer(Singer_ID, Name, Birth_Year, Net_Worth_Millions, Citizenship)
+        constant 1948 : Birth_Year
+        constant 1949 : Birth_Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Singer_ID ∃b : Birth_Year ∃n1 : Net_Worth_Millions ∃c : Citizenship ( (singer(s,n,b,n1,c)) ∧ ((b = 1948) ∨ (b = 1949)) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:b COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:n1 COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:c COLON:: IDENT:Citizenship LPAR:( LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:n1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:b EQ:= NUM:1948 RPAR:) OR:∨ LPAR:( IDENT:b EQ:= NUM:1949 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Singer_ID
+            EXISTS b:Birth_Year
+              EXISTS n1:Net_Worth_Millions
+                EXISTS c:Citizenship
+                  AND
+                    PRED singer(s, n, b, n1, c)
+                    OR
+                      EQ  b = 1948
+                      EQ  b = 1949
+      Predicted FOL: ∃i:Singer_ID ∃y:Birth_Year ∃w:Net_Worth_Millions ∃c:Citizenship (singer(i, n, y, w, c) ∧ (y = 1948 ∨ y = 1949))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:y COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:w COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:c COLON:: IDENT:Citizenship LPAR:( IDENT:singer LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:w COMMA:, IDENT:c RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:1948 OR:∨ IDENT:y EQ:= NUM:1949 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Singer_ID
+            EXISTS y:Birth_Year
+              EXISTS w:Net_Worth_Millions
+                EXISTS c:Citizenship
+                  AND
+                    PRED singer(i, n, y, w, c)
+                    OR
+                      EQ  y = 1948
+                      EQ  y = 1949
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Birth_Year, global real -> Float32()
+        c : local Citizenship, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Net_Worth_Millions, global real -> Float32()
+        s : local Singer_ID, global int -> IntSort()
+      Predicted FOL:
+        c : local Citizenship, global text -> StringSort()
+        i : local Singer_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        w : local Net_Worth_Millions, global real -> Float32()
+        y : local Birth_Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_b_2, gold_n1_3, gold_c_4], And(D_real(gold_b_2), D_real(gold_n1_3), And(P_singer(gold_s_1, FV_Name_0, gold_b_2, gold_n1_3, gold_c_4), Or((gold_b_2 == L_v_1948_real), (gold_b_2 == L_v_1949_real)))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_b, WGOLD_n1, WGOLD_c):  And(D_real(WGOLD_b), D_real(WGOLD_n1), And(P_singer(WGOLD_s, FV_Name_0, WGOLD_b, WGOLD_n1, WGOLD_c), Or((WGOLD_b == L_v_1948_real), (WGOLD_b == L_v_1949_real))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_y_2, predicted_w_3, predicted_c_4], And(D_real(predicted_y_2), D_real(predicted_w_3), And(P_singer(predicted_i_1, FV_Name_0, predicted_y_2, predicted_w_3, predicted_c_4), Or((predicted_y_2 == L_v_1948_real), (predicted_y_2 == L_v_1949_real)))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_y, WPREDICTED_w, WPREDICTED_c):  And(D_real(WPREDICTED_y), D_real(WPREDICTED_w), And(P_singer(WPREDICTED_i, FV_Name_0, WPREDICTED_y, WPREDICTED_w, WPREDICTED_c), Or((WPREDICTED_y == L_v_1948_real), (WPREDICTED_y == L_v_1949_real))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1948' at real -> L_v_1948_real = FPVal(1948.0, Float32())
+      literal '1949' at real -> L_v_1949_real = FPVal(1949.0, Float32())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 743 lines, 28388 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1245.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_b, WGOLD_n1, WGOLD_c
+      claim: And(And(And(Not(fpIsNaN(WGOLD_b)), Not(And(fpIsZero(WGOLD_b), fpIsNegative(WGOLD_b)))), And(Not(fpIsNaN(WGOLD_n1)), Not(And(fpIsZero(WGOLD_n1), fpIsNegative(WGOLD_n1)))), And(singer(WGOLD_s, FV_Name_0, WGOLD_b, WGOLD_n1, WGOLD_c), Or(1.90234375*(2**10) == WGOLD_b, 1.9033203125*(2**10) == WGOLD_b))), Not(Exists([predicted_i_1, predicted_y_2, predicted_w_3, predicted_c_4], And(And(Not(fpIsNaN(predicted_y_2)), Not(And(fpIsZero(predicted_y_2), fpIsNegative(predicted_y_2)))), And(Not(fpIsNaN(predicted_w_3)), Not(And(fpIsZero(predicted_w_3), fpIsNegative(predicted_w_3)))), And(singer(predicted_i_1, FV_Name_0, predicted_y_2, predicted_w_3, predicted_c_4), Or(1.90234375*(2**10) == predicted_y_2, 1.9033203125*(2**10) == predicted_y_2))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_y, WPREDICTED_w, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_y)), Not(And(fpIsZero(WPREDICTED_y), fpIsNegative(WPREDICTED_y)))), And(Not(fpIsNaN(WPREDICTED_w)), Not(And(fpIsZero(WPREDICTED_w), fpIsNegative(WPREDICTED_w)))), And(singer(WPREDICTED_i, FV_Name_0, WPREDICTED_y, WPREDICTED_w, WPREDICTED_c), Or(1.90234375*(2**10) == WPREDICTED_y, 1.9033203125*(2**10) == WPREDICTED_y))), Not(Exists([gold_s_1, gold_b_2, gold_n1_3, gold_c_4], And(And(Not(fpIsNaN(gold_b_2)), Not(And(fpIsZero(gold_b_2), fpIsNegative(gold_b_2)))), And(Not(fpIsNaN(gold_n1_3)), Not(And(fpIsZero(gold_n1_3), fpIsNegative(gold_n1_3)))), And(singer(gold_s_1, FV_Name_0, gold_b_2, gold_n1_3, gold_c_4), Or(1.90234375*(2**10) == gold_b_2, 1.9033203125*(2**10) == gold_b_2))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3308.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3308.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3284 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the authors who do not have submission to any workshop.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Author = text -> StringSort()
+        College = text -> StringSort()
+        Result = text -> StringSort()
+        Scores = real -> Float32()
+        Submission_ID = int -> IntSort()
+        Workshop_ID = int -> IntSort()
+      symbols:
+        Acceptance(Submission_ID, Workshop_ID, Result)
+        submission(Submission_ID, Scores, Author, College)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s1 : Scores ∃c : College ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (¬(∃s2 : Submission_ID( ((submission(s,s1,a,c)) ∧ (∃r : Result ∃w : Workshop_ID( Acceptance(s2,w,r) ))) ∧ (s = s2) ))) )
+        tokens: EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:c COLON:: IDENT:College EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:Submission_ID LPAR:( LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:Result EXISTS:∃ IDENT:w COLON:: IDENT:Workshop_ID LPAR:( IDENT:Acceptance LPAR:( IDENT:s2 COMMA:, IDENT:w COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s1:Scores
+            EXISTS c:College
+              EXISTS s:Submission_ID
+                AND
+                  PRED submission(s, s1, a, c)
+                  NOT
+                    EXISTS s2:Submission_ID
+                      AND
+                        AND
+                          PRED submission(s, s1, a, c)
+                          EXISTS r:Result
+                            EXISTS w:Workshop_ID
+                              PRED Acceptance(s2, w, r)
+                        EQ  s = s2
+      Predicted FOL: ∃s : Submission_ID ∃sc : Scores ∃c : College (submission(s, sc, x, c) ∧ ¬∃w : Workshop_ID ∃r : Result Acceptance(s, w, r))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:sc COLON:: IDENT:Scores EXISTS:∃ IDENT:c COLON:: IDENT:College LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:sc COMMA:, IDENT:x COMMA:, IDENT:c RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:w COLON:: IDENT:Workshop_ID EXISTS:∃ IDENT:r COLON:: IDENT:Result IDENT:Acceptance LPAR:( IDENT:s COMMA:, IDENT:w COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Submission_ID
+            EXISTS sc:Scores
+              EXISTS c:College
+                AND
+                  PRED submission(s, sc, x, c)
+                  NOT
+                    EXISTS w:Workshop_ID
+                      EXISTS r:Result
+                        PRED Acceptance(s, w, r)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Author_0 : Author   Gold a <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        s : local Submission_ID, global int -> IntSort()
+        s1 : local Scores, global real -> Float32()
+        s2 : local Submission_ID, global int -> IntSort()
+        w : local Workshop_ID, global int -> IntSort()
+      Predicted FOL:
+        c : local College, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        s : local Submission_ID, global int -> IntSort()
+        sc : local Scores, global real -> Float32()
+        w : local Workshop_ID, global int -> IntSort()
+        x : local Author, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s1_1, gold_c_2, gold_s_3], And(D_real(gold_s1_1), And(P_submission(gold_s_3, gold_s1_1, FV_Author_0, gold_c_2), Not(Exists([gold_s2_4], And(And(P_submission(gold_s_3, gold_s1_1, FV_Author_0, gold_c_2), Exists([gold_r_5, gold_w_6], P_Acceptance(gold_s2_4, gold_w_6, gold_r_5))), (gold_s_3 == gold_s2_4)))))))
+      gold_skolem (witnesses WGOLD_s1, WGOLD_c, WGOLD_s):  And(D_real(WGOLD_s1), And(P_submission(WGOLD_s, WGOLD_s1, FV_Author_0, WGOLD_c), Not(Exists([goldsk_s2_1], And(And(P_submission(WGOLD_s, WGOLD_s1, FV_Author_0, WGOLD_c), Exists([goldsk_r_2, goldsk_w_3], P_Acceptance(goldsk_s2_1, goldsk_w_3, goldsk_r_2))), (WGOLD_s == goldsk_s2_1))))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_sc_2, predicted_c_3], And(D_real(predicted_sc_2), And(P_submission(predicted_s_1, predicted_sc_2, FV_Author_0, predicted_c_3), Not(Exists([predicted_w_4, predicted_r_5], P_Acceptance(predicted_s_1, predicted_w_4, predicted_r_5))))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_sc, WPREDICTED_c):  And(D_real(WPREDICTED_sc), And(P_submission(WPREDICTED_s, WPREDICTED_sc, FV_Author_0, WPREDICTED_c), Not(Exists([predictedsk_w_1, predictedsk_r_2], P_Acceptance(WPREDICTED_s, predictedsk_w_1, predictedsk_r_2)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 748 lines, 28995 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3308.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s1, WGOLD_c, WGOLD_s
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s1)), Not(And(fpIsZero(WGOLD_s1), fpIsNegative(WGOLD_s1)))), And(submission(WGOLD_s, WGOLD_s1, FV_Author_0, WGOLD_c), Not(Exists(goldsk_s2_1, And(And(submission(WGOLD_s, WGOLD_s1, FV_Author_0, WGOLD_c), Exists([goldsk_r_2, goldsk_w_3], Acceptance(goldsk_s2_1, goldsk_w_3, goldsk_r_2))), WGOLD_s == goldsk_s2_1))))), Not(Exists([predicted_s_1, predicted_sc_2, predicted_c_3], And(And(Not(fpIsNaN(predicted_sc_2)), Not(And(fpIsZero(predicted_sc_2), fpIsNegative(predicted_sc_2)))), And(submission(predicted_s_1, predicted_sc_2, FV_Author_0, predicted_c_3), Not(Exists([predicted_w_4, predicted_r_5], Acceptance(predicted_s_1, predicted_w_4, predicted_r_5))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.054 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_sc, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_sc)), Not(And(fpIsZero(WPREDICTED_sc), fpIsNegative(WPREDICTED_sc)))), And(submission(WPREDICTED_s, WPREDICTED_sc, FV_Author_0, WPREDICTED_c), Not(Exists([predictedsk_w_1, predictedsk_r_2], Acceptance(WPREDICTED_s, predictedsk_w_1, predictedsk_r_2))))), Not(Exists([gold_s1_1, gold_c_2, gold_s_3], And(And(Not(fpIsNaN(gold_s1_1)), Not(And(fpIsZero(gold_s1_1), fpIsNegative(gold_s1_1)))), And(submission(gold_s_3, gold_s1_1, FV_Author_0, gold_c_2), Not(Exists(gold_s2_4, And(And(submission(gold_s_3, gold_s1_1, FV_Author_0, gold_c_2), Exists([gold_r_5, gold_w_6], Acceptance(gold_s2_4, gold_w_6, gold_r_5))), gold_s_3 == gold_s2_4))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

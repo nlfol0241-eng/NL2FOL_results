@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_603.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_603.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4448 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the description of document status code 'working'?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        document_status_code = char(15) -> StringSort()
+        document_status_description = varchar(255) -> StringSort()
+      symbols:
+        Ref_Document_Status(document_status_code, document_status_description)
+        constant working : document_status_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : document_status_code ( (Ref_Document_Status(d,d1)) ∧ (d = 'working') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_status_code LPAR:( LPAR:( IDENT:Ref_Document_Status LPAR:( IDENT:d COMMA:, IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:working RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:document_status_code
+            AND
+              PRED Ref_Document_Status(d, d1)
+              EQ  d = 'working'
+      Predicted FOL: Ref_Document_Status('working', description)
+        tokens: IDENT:Ref_Document_Status LPAR:( LIT:working COMMA:, IDENT:description RPAR:) EOF
+        AST:
+          PRED Ref_Document_Status('working', description)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_document_status_description_0 : document_status_description   Gold d1 <-> Predicted description
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 3 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local document_status_code, global char(15) -> StringSort()
+        d1 : local document_status_description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        description : local document_status_description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1], And(D_char_15_(gold_d_1), And(P_Ref_Document_Status(gold_d_1, FV_document_status_description_0), (gold_d_1 == L_working))))
+      gold_skolem (witnesses WGOLD_d):  And(D_char_15_(WGOLD_d), And(P_Ref_Document_Status(WGOLD_d, FV_document_status_description_0), (WGOLD_d == L_working)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_Ref_Document_Status(L_working, FV_document_status_description_0), D_char_15_(L_working))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'working' at char(15) -> L_working = StringVal('working')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 715 lines, 26413 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_603.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_document_status_description_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d
+      claim: And(And(Length(WGOLD_d) <= 15, And(Ref_Document_Status(WGOLD_d, FV_document_status_description_0), WGOLD_d == "working")), Not(And(Ref_Document_Status("working", FV_document_status_description_0), Length("working") <= 15)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Ref_Document_Status("working", FV_document_status_description_0), Length("working") <= 15), Not(Exists(gold_d_1, And(Length(gold_d_1) <= 15, And(Ref_Document_Status(gold_d_1, FV_document_status_description_0), gold_d_1 == "working")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

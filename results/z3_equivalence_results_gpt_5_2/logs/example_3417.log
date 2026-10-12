@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3417.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3417.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5208 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the id of the courses that do not have any prerequisite?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        numeric(2,0) -> RealSort()   [domain And(IsInt(x), x > -100, x < 100); 2 digits, 0 after the point]
+      local sorts:
+        course_id = varchar(8) -> StringSort()
+        credits = numeric(2,0) -> RealSort()
+        dept_name = varchar(20) -> StringSort()
+        prereq_id = varchar(8) -> StringSort()
+        title = varchar(50) -> StringSort()
+      symbols:
+        course(course_id, title, dept_name, credits)
+        prereq(course_id, prereq_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃d : dept_name ∃t : title ∃c1 : credits( course(c,t,d,c1) )) ∧ (¬(∃p : prereq_id( prereq(c,p) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:c1 COLON:: IDENT:credits LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:prereq_id LPAR:( IDENT:prereq LPAR:( IDENT:c COMMA:, IDENT:p RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS d:dept_name
+              EXISTS t:title
+                EXISTS c1:credits
+                  PRED course(c, t, d, c1)
+            NOT
+              EXISTS p:prereq_id
+                PRED prereq(c, p)
+      Predicted FOL: ∃t:title ∃d:dept_name ∃c:credits ( course(x, t, d, c) ∧ ¬∃p:prereq_id prereq(x, p) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:c COLON:: IDENT:credits LPAR:( IDENT:course LPAR:( IDENT:x COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:p COLON:: IDENT:prereq_id IDENT:prereq LPAR:( IDENT:x COMMA:, IDENT:p RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:title
+            EXISTS d:dept_name
+              EXISTS c:credits
+                AND
+                  PRED course(x, t, d, c)
+                  NOT
+                    EXISTS p:prereq_id
+                      PRED prereq(x, p)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_course_id_0 : course_id   Gold c <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global varchar(8) -> StringSort()
+        c1 : local credits, global numeric(2,0) -> RealSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        p : local prereq_id, global varchar(8) -> StringSort()
+        t : local title, global varchar(50) -> StringSort()
+      Predicted FOL:
+        c : local credits, global numeric(2,0) -> RealSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        p : local prereq_id, global varchar(8) -> StringSort()
+        t : local title, global varchar(50) -> StringSort()
+        x : local course_id, global varchar(8) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_d_1, gold_t_2, gold_c1_3], And(D_varchar_20_(gold_d_1), D_varchar_50_(gold_t_2), D_numeric_2_0_(gold_c1_3), P_course(FV_course_id_0, gold_t_2, gold_d_1, gold_c1_3))), Not(Exists([gold_p_4], And(D_varchar_8_(gold_p_4), P_prereq(FV_course_id_0, gold_p_4)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_t_1, predicted_d_2, predicted_c_3], And(D_varchar_50_(predicted_t_1), D_varchar_20_(predicted_d_2), D_numeric_2_0_(predicted_c_3), And(P_course(FV_course_id_0, predicted_t_1, predicted_d_2, predicted_c_3), Not(Exists([predicted_p_4], And(D_varchar_8_(predicted_p_4), P_prereq(FV_course_id_0, predicted_p_4)))))))
+      predicted_skolem (witnesses WPREDICTED_t, WPREDICTED_d, WPREDICTED_c):  And(D_varchar_50_(WPREDICTED_t), D_varchar_20_(WPREDICTED_d), D_numeric_2_0_(WPREDICTED_c), And(P_course(FV_course_id_0, WPREDICTED_t, WPREDICTED_d, WPREDICTED_c), Not(Exists([predictedsk_p_1], And(D_varchar_8_(predictedsk_p_1), P_prereq(FV_course_id_0, predictedsk_p_1))))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 744 lines, 28230 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3417.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_course_id_0) <= 8
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_d_1, gold_t_2, gold_c1_3], And(Length(gold_d_1) <= 20, Length(gold_t_2) <= 50, And(IsInt(gold_c1_3), gold_c1_3 > -100, gold_c1_3 < 100), course(FV_course_id_0, gold_t_2, gold_d_1, gold_c1_3))), Not(Exists(gold_p_4, And(Length(gold_p_4) <= 8, prereq(FV_course_id_0, gold_p_4))))), Not(Exists([predicted_t_1, predicted_d_2, predicted_c_3], And(Length(predicted_t_1) <= 50, Length(predicted_d_2) <= 20, And(IsInt(predicted_c_3), predicted_c_3 > -100, predicted_c_3 < 100), And(course(FV_course_id_0, predicted_t_1, predicted_d_2, predicted_c_3), Not(Exists(predicted_p_4, And(Length(predicted_p_4) <= 8, prereq(FV_course_id_0, predicted_p_4)))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_t, WPREDICTED_d, WPREDICTED_c
+      claim: And(And(Length(WPREDICTED_t) <= 50, Length(WPREDICTED_d) <= 20, And(IsInt(WPREDICTED_c), WPREDICTED_c > -100, WPREDICTED_c < 100), And(course(FV_course_id_0, WPREDICTED_t, WPREDICTED_d, WPREDICTED_c), Not(Exists(predictedsk_p_1, And(Length(predictedsk_p_1) <= 8, prereq(FV_course_id_0, predictedsk_p_1)))))), Not(And(Exists([gold_d_1, gold_t_2, gold_c1_3], And(Length(gold_d_1) <= 20, Length(gold_t_2) <= 50, And(IsInt(gold_c1_3), gold_c1_3 > -100, gold_c1_3 < 100), course(FV_course_id_0, gold_t_2, gold_d_1, gold_c1_3))), Not(Exists(gold_p_4, And(Length(gold_p_4) <= 8, prereq(FV_course_id_0, gold_p_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

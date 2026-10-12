@@ -1,0 +1,93 @@
+{
+  "NL": "List the names of members who did not attend any performance.",
+  "Vocabulary": {
+    "Predicates": [
+      "member",
+      "member_attendance"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "member": [
+        "Member_ID",
+        "Name",
+        "Nationality",
+        "Role"
+      ],
+      "member_attendance": [
+        "Member_ID",
+        "Performance_ID",
+        "Num_of_Pieces"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( member(a0, a1, a2, a3) ∧ member(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( performance(b0, b1, b2, b3, b4) ∧ performance(b0', b1', b2', b3', b4') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( member_attendance(c0, c1, c2) ∧ member_attendance(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( member_attendance(c0, c1, c2) → ∃b0∃b1∃b2∃b3∃b4 ( performance(b0, b1, b2, b3, b4) ∧ b0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( member_attendance(c0, c1, c2) → ∃a0∃a1∃a2∃a3 ( member(a0, a1, a2, a3) ∧ a0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "member": {
+        "A": "member",
+        "A0": "Member_ID",
+        "A1": "Name",
+        "A2": "Nationality",
+        "A3": "Role"
+      },
+      "member_attendance": {
+        "B": "member_attendance",
+        "B0": "Member_ID",
+        "B1": "Performance_ID",
+        "B2": "Num_of_Pieces"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃n1 : Nationality ∃r : Role ∃m : Member_ID( (member(m,n,n1,r)) ∧ (¬(∃m1 : Member_ID( ((member(m,n,n1,r)) ∧ (∃n2 : Num_of_Pieces ∃p : Performance_ID( member_attendance(m1,p,n2) ))) ∧ (m = m1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "RC": "[E]?A2,?A3,?A0( (A(?A0,?A1,?A2,?A3)) & (~([E]?B0( ((A(?A0,?A1,?A2,?A3)) & ([E]?B2,?B1( B(?B0,?B1,?B2) ))) & (?A0 = ?B0) ))) )",
+    "string": "∃A2 ∃A3 ∃A0( (A(A0,A1,A2,A3)) ∧ (¬(∃B0( ((A(A0,A1,A2,A3)) ∧ (∃B2 ∃B1( B(B0,B1,B2) ))) ∧ (A0 = B0) ))) )",
+    "free variables": "A1",
+    "db_id": "performance_attendance",
+    "processed_sql": "SELECT Name FROM \"member\" WHERE Member_ID NOT IN (SELECT Member_ID FROM member_attendance)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "member": {
+      "sortaxiom0": "Member_ID = text",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Nationality = text",
+      "sortaxiom3": "Role = text"
+    },
+    "member_attendance": {
+      "sortaxiom0": "Member_ID = text",
+      "sortaxiom1": "Performance_ID = real",
+      "sortaxiom2": "Num_of_Pieces = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Name FROM member WHERE Member_ID NOT IN (SELECT Member_ID FROM member_attendance)"
+  },
+  "id": 3121,
+  "Predicted FOL": {
+    "string": "∃m : Member_ID ∃n : Name ∃nat : Nationality ∃r : Role (member(m, n, nat, r) ∧ ¬∃p : Performance_ID ∃k : Num_of_Pieces member_attendance(m, p, k))",
+    "free vars": ""
+  }
+}

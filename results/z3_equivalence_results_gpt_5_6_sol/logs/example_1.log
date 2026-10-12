@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3211 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are  the different countries with singers above age 20?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        bool -> BoolSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Country = text -> StringSort()
+        Is_male = bool -> BoolSort()
+        Name = text -> StringSort()
+        Singer_ID = text -> StringSort()
+        Song_Name = text -> StringSort()
+        Song_release_year = text -> StringSort()
+      symbols:
+        singer(Singer_ID, Name, Country, Song_Name, Song_release_year, Age, Is_male)
+        constant 20 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Singer_ID ∃n : Name ∃s1 : Song_Name ∃s2 : Song_release_year ∃a : Age ∃i : Is_male ( (singer(s,n,c,s1,s2,a,i)) ∧ (a > 20) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:s1 COLON:: IDENT:Song_Name EXISTS:∃ IDENT:s2 COLON:: IDENT:Song_release_year EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:i COLON:: IDENT:Is_male LPAR:( LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:s1 COMMA:, IDENT:s2 COMMA:, IDENT:a COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:20 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Singer_ID
+            EXISTS n:Name
+              EXISTS s1:Song_Name
+                EXISTS s2:Song_release_year
+                  EXISTS a:Age
+                    EXISTS i:Is_male
+                      AND
+                        PRED singer(s, n, c, s1, s2, a, i)
+                        CMP  a > 20
+      Predicted FOL: ∃id:Singer_ID ∃name:Name ∃song:Song_Name ∃year:Song_release_year ∃age:Age ∃male:Is_male (singer(id, name, country, song, year, age, male) ∧ age > 20)
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:name COLON:: IDENT:Name EXISTS:∃ IDENT:song COLON:: IDENT:Song_Name EXISTS:∃ IDENT:year COLON:: IDENT:Song_release_year EXISTS:∃ IDENT:age COLON:: IDENT:Age EXISTS:∃ IDENT:male COLON:: IDENT:Is_male LPAR:( IDENT:singer LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:country COMMA:, IDENT:song COMMA:, IDENT:year COMMA:, IDENT:age COMMA:, IDENT:male RPAR:) AND:∧ IDENT:age GT:> NUM:20 RPAR:) EOF
+        AST:
+          EXISTS id:Singer_ID
+            EXISTS name:Name
+              EXISTS song:Song_Name
+                EXISTS year:Song_release_year
+                  EXISTS age:Age
+                    EXISTS male:Is_male
+                      AND
+                        PRED singer(id, name, country, song, year, age, male)
+                        CMP  age > 20
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Country_0 : Country   Gold c <-> Predicted country
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        c : local Country, global text -> StringSort()
+        i : local Is_male, global bool -> BoolSort()
+        n : local Name, global text -> StringSort()
+        s : local Singer_ID, global text -> StringSort()
+        s1 : local Song_Name, global text -> StringSort()
+        s2 : local Song_release_year, global text -> StringSort()
+      Predicted FOL:
+        age : local Age, global int -> IntSort()
+        country : local Country, global text -> StringSort()
+        id : local Singer_ID, global text -> StringSort()
+        male : local Is_male, global bool -> BoolSort()
+        name : local Name, global text -> StringSort()
+        song : local Song_Name, global text -> StringSort()
+        year : local Song_release_year, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_n_2, gold_s1_3, gold_s2_4, gold_a_5, gold_i_6], And(P_singer(gold_s_1, gold_n_2, FV_Country_0, gold_s1_3, gold_s2_4, gold_a_5, gold_i_6), (gold_a_5 > L_v_20_int)))
+      gold_skolem (witnesses WGOLD_s, WGOLD_n, WGOLD_s1, WGOLD_s2, WGOLD_a, WGOLD_i):  And(P_singer(WGOLD_s, WGOLD_n, FV_Country_0, WGOLD_s1, WGOLD_s2, WGOLD_a, WGOLD_i), (WGOLD_a > L_v_20_int))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_name_2, predicted_song_3, predicted_year_4, predicted_age_5, predicted_male_6], And(P_singer(predicted_id_1, predicted_name_2, FV_Country_0, predicted_song_3, predicted_year_4, predicted_age_5, predicted_male_6), (predicted_age_5 > L_v_20_int)))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_name, WPREDICTED_song, WPREDICTED_year, WPREDICTED_age, WPREDICTED_male):  And(P_singer(WPREDICTED_id, WPREDICTED_name, FV_Country_0, WPREDICTED_song, WPREDICTED_year, WPREDICTED_age, WPREDICTED_male), (WPREDICTED_age > L_v_20_int))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '20' at int -> L_v_20_int = IntVal(20)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 756 lines, 29006 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_n, WGOLD_s1, WGOLD_s2, WGOLD_a, WGOLD_i
+      claim: And(And(singer(WGOLD_s, WGOLD_n, FV_Country_0, WGOLD_s1, WGOLD_s2, WGOLD_a, WGOLD_i), 20 < WGOLD_a), Not(Exists([predicted_id_1, predicted_name_2, predicted_song_3, predicted_year_4, predicted_age_5, predicted_male_6], And(singer(predicted_id_1, predicted_name_2, FV_Country_0, predicted_song_3, predicted_year_4, predicted_age_5, predicted_male_6), 20 < predicted_age_5))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_name, WPREDICTED_song, WPREDICTED_year, WPREDICTED_age, WPREDICTED_male
+      claim: And(And(singer(WPREDICTED_id, WPREDICTED_name, FV_Country_0, WPREDICTED_song, WPREDICTED_year, WPREDICTED_age, WPREDICTED_male), 20 < WPREDICTED_age), Not(Exists([gold_s_1, gold_n_2, gold_s1_3, gold_s2_4, gold_a_5, gold_i_6], And(singer(gold_s_1, gold_n_2, FV_Country_0, gold_s1_3, gold_s2_4, gold_a_5, gold_i_6), 20 < gold_a_5))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

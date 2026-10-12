@@ -1,0 +1,81 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1263.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1263.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3611 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the major cities in kansas
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        city_name = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        city(city_name, population, country_name, state_name)
+        constant 150000 : population
+        constant kansas : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : population ∃c1 : country_name ∃s : state_name ( (city(c,p,c1,s)) ∧ ((p > 150000) ∧ (s = 'kansas')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c1 COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:p GT:> NUM:150000 RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:kansas RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:population
+            EXISTS c1:country_name
+              EXISTS s:state_name
+                AND
+                  PRED city(c, p, c1, s)
+                  AND
+                    CMP  p > 150000
+                    EQ  s = 'kansas'
+      Predicted FOL: ∃x : city_name ∃y : population ∃z : country_name ( city(x, y, z, 'kansas') ∧ y > 150000 )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:city_name EXISTS:∃ IDENT:y COLON:: IDENT:population EXISTS:∃ IDENT:z COLON:: IDENT:country_name LPAR:( IDENT:city LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, LIT:kansas RPAR:) AND:∧ IDENT:y GT:> NUM:150000 RPAR:) EOF
+        AST:
+          EXISTS x:city_name
+            EXISTS y:population
+              EXISTS z:country_name
+                AND
+                  PRED city(x, y, z, 'kansas')
+                  CMP  y > 150000
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : city_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local city_name, global text -> StringSort()
+        c1 : local country_name, global varchar(3) -> StringSort()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        x : local city_name, global text -> StringSort()
+        y : local population, global integer -> IntSort()
+        z : local country_name, global varchar(3) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5286 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1263.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : city_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

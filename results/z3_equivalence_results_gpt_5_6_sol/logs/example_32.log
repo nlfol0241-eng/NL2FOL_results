@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_32.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_32.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3428 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show template ids, version numbers, and template type codes for all templates.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Date_Effective_From = datetime -> IntSort()
+        Date_Effective_To = datetime -> IntSort()
+        Template_Details = varchar(255) -> StringSort()
+        Template_ID = integer -> IntSort()
+        Template_Type_Code = char(15) -> StringSort()
+        Version_Number = integer -> IntSort()
+      symbols:
+        Templates(Template_ID, Version_Number, Template_Type_Code, Date_Effective_From, Date_Effective_To, Template_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Date_Effective_From ∃d1 : Date_Effective_To ∃t2 : Template_Details ( Templates(t,v,t1,d,d1,t2) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Date_Effective_From EXISTS:∃ IDENT:d1 COLON:: IDENT:Date_Effective_To EXISTS:∃ IDENT:t2 COLON:: IDENT:Template_Details LPAR:( IDENT:Templates LPAR:( IDENT:t COMMA:, IDENT:v COMMA:, IDENT:t1 COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:t2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Date_Effective_From
+            EXISTS d1:Date_Effective_To
+              EXISTS t2:Template_Details
+                PRED Templates(t, v, t1, d, d1, t2)
+      Predicted FOL: ∃dateFrom : Date_Effective_From ∃dateTo : Date_Effective_To ∃details : Template_Details Templates(templateId, versionNumber, templateTypeCode, dateFrom, dateTo, details)
+        tokens: EXISTS:∃ IDENT:dateFrom COLON:: IDENT:Date_Effective_From EXISTS:∃ IDENT:dateTo COLON:: IDENT:Date_Effective_To EXISTS:∃ IDENT:details COLON:: IDENT:Template_Details IDENT:Templates LPAR:( IDENT:templateId COMMA:, IDENT:versionNumber COMMA:, IDENT:templateTypeCode COMMA:, IDENT:dateFrom COMMA:, IDENT:dateTo COMMA:, IDENT:details RPAR:) EOF
+        AST:
+          EXISTS dateFrom:Date_Effective_From
+            EXISTS dateTo:Date_Effective_To
+              EXISTS details:Template_Details
+                PRED Templates(templateId, versionNumber, templateTypeCode, dateFrom, dateTo, details)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Template_ID_0 : Template_ID   Gold t <-> Predicted templateId
+      FV_Template_Type_Code_0 : Template_Type_Code   Gold t1 <-> Predicted templateTypeCode
+      FV_Version_Number_0 : Version_Number   Gold v <-> Predicted versionNumber
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Date_Effective_From, global datetime -> IntSort()
+        d1 : local Date_Effective_To, global datetime -> IntSort()
+        t : local Template_ID, global integer -> IntSort()
+        t1 : local Template_Type_Code, global char(15) -> StringSort()
+        t2 : local Template_Details, global varchar(255) -> StringSort()
+        v : local Version_Number, global integer -> IntSort()
+      Predicted FOL:
+        dateFrom : local Date_Effective_From, global datetime -> IntSort()
+        dateTo : local Date_Effective_To, global datetime -> IntSort()
+        details : local Template_Details, global varchar(255) -> StringSort()
+        templateId : local Template_ID, global integer -> IntSort()
+        templateTypeCode : local Template_Type_Code, global char(15) -> StringSort()
+        versionNumber : local Version_Number, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_t2_3], And(D_varchar_255_(gold_t2_3), P_Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, gold_d_1, gold_d1_2, gold_t2_3)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_t2):  And(D_varchar_255_(WGOLD_t2), P_Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, WGOLD_d, WGOLD_d1, WGOLD_t2))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_dateFrom_1, predicted_dateTo_2, predicted_details_3], And(D_varchar_255_(predicted_details_3), P_Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, predicted_dateFrom_1, predicted_dateTo_2, predicted_details_3)))
+      predicted_skolem (witnesses WPREDICTED_dateFrom, WPREDICTED_dateTo, WPREDICTED_details):  And(D_varchar_255_(WPREDICTED_details), P_Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, WPREDICTED_dateFrom, WPREDICTED_dateTo, WPREDICTED_details))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 748 lines, 29119 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_32.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Template_Type_Code_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_t2
+      claim: And(And(Length(WGOLD_t2) <= 255, Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, WGOLD_d, WGOLD_d1, WGOLD_t2)), Not(Exists([predicted_dateFrom_1, predicted_dateTo_2, predicted_details_3], And(Length(predicted_details_3) <= 255, Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, predicted_dateFrom_1, predicted_dateTo_2, predicted_details_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_dateFrom, WPREDICTED_dateTo, WPREDICTED_details
+      claim: And(And(Length(WPREDICTED_details) <= 255, Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, WPREDICTED_dateFrom, WPREDICTED_dateTo, WPREDICTED_details)), Not(Exists([gold_d_1, gold_d1_2, gold_t2_3], And(Length(gold_t2_3) <= 255, Templates(FV_Template_ID_0, FV_Version_Number_0, FV_Template_Type_Code_0, gold_d_1, gold_d1_2, gold_t2_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

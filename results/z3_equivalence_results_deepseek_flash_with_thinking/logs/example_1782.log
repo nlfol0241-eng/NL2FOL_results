@@ -1,0 +1,229 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1782.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1782.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3237 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of members and names of colleges they go to.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        College_ID = int -> IntSort()
+        College_Location = text -> StringSort()
+        Country = text -> StringSort()
+        Leader_Name = text -> StringSort()
+        Member_ID = int -> IntSort()
+        Name = text -> StringSort()
+      symbols:
+        college(College_ID, Name, Leader_Name, College_Location)
+        member(Member_ID, Name, Country, College_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : College_ID ∃l : Leader_Name ∃c1 : College_Location ∃m : Member_ID ∃c2 : Country ∃c3 : College_ID ( ((college(c,n,l,c1)) ∧ (member(m,n1,c2,c3))) ∧ (c = c3) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:College_ID EXISTS:∃ IDENT:l COLON:: IDENT:Leader_Name EXISTS:∃ IDENT:c1 COLON:: IDENT:College_Location EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c2 COLON:: IDENT:Country EXISTS:∃ IDENT:c3 COLON:: IDENT:College_ID LPAR:( LPAR:( LPAR:( IDENT:college LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n1 COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:College_ID
+            EXISTS l:Leader_Name
+              EXISTS c1:College_Location
+                EXISTS m:Member_ID
+                  EXISTS c2:Country
+                    EXISTS c3:College_ID
+                      AND
+                        AND
+                          PRED college(c, n, l, c1)
+                          PRED member(m, n1, c2, c3)
+                        EQ  c = c3
+      Predicted FOL: ∃ mID : Member_ID ∃ country : Country ∃ cID : College_ID ∃ leader : Leader_Name ∃ loc : College_Location ( member(mID, mName, country, cID) ∧ college(cID, cName, leader, loc) )
+        tokens: EXISTS:∃ IDENT:mID COLON:: IDENT:Member_ID EXISTS:∃ IDENT:country COLON:: IDENT:Country EXISTS:∃ IDENT:cID COLON:: IDENT:College_ID EXISTS:∃ IDENT:leader COLON:: IDENT:Leader_Name EXISTS:∃ IDENT:loc COLON:: IDENT:College_Location LPAR:( IDENT:member LPAR:( IDENT:mID COMMA:, IDENT:mName COMMA:, IDENT:country COMMA:, IDENT:cID RPAR:) AND:∧ IDENT:college LPAR:( IDENT:cID COMMA:, IDENT:cName COMMA:, IDENT:leader COMMA:, IDENT:loc RPAR:) RPAR:) EOF
+        AST:
+          EXISTS mID:Member_ID
+            EXISTS country:Country
+              EXISTS cID:College_ID
+                EXISTS leader:Leader_Name
+                  EXISTS loc:College_Location
+                    AND
+                      PRED member(mID, mName, country, cID)
+                      PRED college(cID, cName, leader, loc)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted mName
+      FV_Name_1 : Name   Gold n1 <-> Predicted cName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local College_ID, global int -> IntSort()
+        c1 : local College_Location, global text -> StringSort()
+        c2 : local Country, global text -> StringSort()
+        c3 : local College_ID, global int -> IntSort()
+        l : local Leader_Name, global text -> StringSort()
+        m : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Name, global text -> StringSort()
+      Predicted FOL:
+        cID : local College_ID, global int -> IntSort()
+        cName : local Name, global text -> StringSort()
+        country : local Country, global text -> StringSort()
+        leader : local Leader_Name, global text -> StringSort()
+        loc : local College_Location, global text -> StringSort()
+        mID : local Member_ID, global int -> IntSort()
+        mName : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_l_2, gold_c1_3, gold_m_4, gold_c2_5, gold_c3_6], And(And(P_college(gold_c_1, FV_Name_0, gold_l_2, gold_c1_3), P_member(gold_m_4, FV_Name_1, gold_c2_5, gold_c3_6)), (gold_c_1 == gold_c3_6)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_l, WGOLD_c1, WGOLD_m, WGOLD_c2, WGOLD_c3):  And(And(P_college(WGOLD_c, FV_Name_0, WGOLD_l, WGOLD_c1), P_member(WGOLD_m, FV_Name_1, WGOLD_c2, WGOLD_c3)), (WGOLD_c == WGOLD_c3))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_mID_1, predicted_country_2, predicted_cID_3, predicted_leader_4, predicted_loc_5], And(P_member(predicted_mID_1, FV_Name_0, predicted_country_2, predicted_cID_3), P_college(predicted_cID_3, FV_Name_1, predicted_leader_4, predicted_loc_5)))
+      predicted_skolem (witnesses WPREDICTED_mID, WPREDICTED_country, WPREDICTED_cID, WPREDICTED_leader, WPREDICTED_loc):  And(P_member(WPREDICTED_mID, FV_Name_0, WPREDICTED_country, WPREDICTED_cID), P_college(WPREDICTED_cID, FV_Name_1, WPREDICTED_leader, WPREDICTED_loc))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 752 lines, 29075 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1782.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_l, WGOLD_c1, WGOLD_m, WGOLD_c2, WGOLD_c3
+      claim: And(And(And(college(WGOLD_c, FV_Name_0, WGOLD_l, WGOLD_c1), member(WGOLD_m, FV_Name_1, WGOLD_c2, WGOLD_c3)), WGOLD_c == WGOLD_c3), Not(Exists([predicted_mID_1, predicted_country_2, predicted_cID_3, predicted_leader_4, predicted_loc_5], And(member(predicted_mID_1, FV_Name_0, predicted_country_2, predicted_cID_3), college(predicted_cID_3, FV_Name_1, predicted_leader_4, predicted_loc_5)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 25 relation tuple(s) listed, 23 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          c : College_ID = 2
+          l : Leader_Name = '!1!'
+          c1 : College_Location = '!2!'
+          m : Member_ID = 3
+          c2 : Country = '!4!'
+          c3 : College_ID = 2
+        free (answer) variables:
+          FV_Name_0 : Name = '!0!'
+          FV_Name_1 : Name = '!3!'
+        relations (each value tagged with the local sort of its position):
+          college(College_ID, Name, Leader_Name, College_Location):
+            college(College_ID=0, Name='', Leader_Name='', College_Location='!0!')
+            college(College_ID=0, Name='', Leader_Name='', College_Location='!3!')
+            college(College_ID=0, Name='', Leader_Name='', College_Location='!4!')
+            college(College_ID=0, Name='', Leader_Name='!2!', College_Location='')
+            college(College_ID=0, Name='', Leader_Name='!3!', College_Location='')
+            college(College_ID=0, Name='', Leader_Name='!4!', College_Location='')
+            college(College_ID=0, Name='!1!', Leader_Name='', College_Location='')
+            college(College_ID=0, Name='!2!', Leader_Name='', College_Location='')
+            college(College_ID=0, Name='!4!', Leader_Name='', College_Location='')
+            college(College_ID=2, Name='!0!', Leader_Name='!1!', College_Location='!2!')
+            college(College_ID=3, Name='', Leader_Name='!0!', College_Location='!1!')
+            college(College_ID=4, Name='', Leader_Name='', College_Location='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          member(Member_ID, Name, Country, College_ID):
+            member(Member_ID=0, Name='', Country='', College_ID=0)
+            member(Member_ID=0, Name='', Country='', College_ID=4)
+            member(Member_ID=0, Name='', Country='!0!', College_ID=0)
+            member(Member_ID=0, Name='', Country='!1!', College_ID=0)
+            member(Member_ID=0, Name='', Country='!2!', College_ID=0)
+            member(Member_ID=0, Name='', Country='!3!', College_ID=0)
+            member(Member_ID=0, Name='!1!', Country='', College_ID=0)
+            member(Member_ID=0, Name='!2!', Country='', College_ID=0)
+            member(Member_ID=0, Name='!4!', Country='', College_ID=0)
+            member(Member_ID=2, Name='', Country='', College_ID=0)
+            member(Member_ID=3, Name='!0!', Country='!4!', College_ID=2)
+            member(Member_ID=3, Name='!3!', Country='!4!', College_ID=2)
+            member(Member_ID=4, Name='', Country='', College_ID=3)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          College_ID       : {0, 2, 3, 4}
+          College_Location : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+          Country          : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+          Leader_Name      : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+          Member_ID        : {0, 2, 3, 4}
+          Name             : {'', '!0!', '!1!', '!2!', '!3!', '!4!'}
+        values shared across local sorts (joins):
+          0 : College_ID, Member_ID
+          2 : College_ID, Member_ID
+          3 : College_ID, Member_ID
+          4 : College_ID, Member_ID
+          '!0!' : College_Location, Country, Leader_Name, Name
+          '!1!' : College_Location, Country, Leader_Name, Name
+          '!2!' : College_Location, Country, Leader_Name, Name
+          '!3!' : College_Location, Country, Leader_Name, Name
+          '!4!' : College_Location, Country, Leader_Name, Name
+          '' : College_Location, Country, Leader_Name, Name
+   [R2] took 0.100 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_mID, WPREDICTED_country, WPREDICTED_cID, WPREDICTED_leader, WPREDICTED_loc
+      claim: And(And(member(WPREDICTED_mID, FV_Name_0, WPREDICTED_country, WPREDICTED_cID), college(WPREDICTED_cID, FV_Name_1, WPREDICTED_leader, WPREDICTED_loc)), Not(Exists([gold_c_1, gold_l_2, gold_c1_3, gold_m_4, gold_c2_5, gold_c3_6], And(And(college(gold_c_1, FV_Name_0, gold_l_2, gold_c1_3), member(gold_m_4, FV_Name_1, gold_c2_5, gold_c3_6)), gold_c_1 == gold_c3_6))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.004 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 22 relation tuple(s) listed, 20 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          mID : Member_ID = 2
+          country : Country = 'B'
+          cID : College_ID = 3
+          leader : Leader_Name = ''
+          loc : College_Location = ''
+        free (answer) variables:
+          FV_Name_0 : Name = 'B'
+          FV_Name_1 : Name = ''
+        relations (each value tagged with the local sort of its position):
+          college(College_ID, Name, Leader_Name, College_Location):
+            college(College_ID=0, Name='', Leader_Name='', College_Location='!0!')
+            college(College_ID=0, Name='', Leader_Name='', College_Location='A')
+            college(College_ID=0, Name='', Leader_Name='', College_Location='B')
+            college(College_ID=0, Name='', Leader_Name='!1!', College_Location='')
+            college(College_ID=0, Name='', Leader_Name='A', College_Location='')
+            college(College_ID=0, Name='', Leader_Name='B', College_Location='')
+            college(College_ID=0, Name='!0!', Leader_Name='', College_Location='')
+            college(College_ID=0, Name='!1!', Leader_Name='', College_Location='')
+            college(College_ID=2, Name='', Leader_Name='', College_Location='')
+            college(College_ID=3, Name='', Leader_Name='', College_Location='')
+            college(College_ID=4, Name='A', Leader_Name='!0!', College_Location='!1!')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          member(Member_ID, Name, Country, College_ID):
+            member(Member_ID=0, Name='', Country='', College_ID=0)
+            member(Member_ID=0, Name='', Country='', College_ID=2)
+            member(Member_ID=0, Name='', Country='!0!', College_ID=0)
+            member(Member_ID=0, Name='', Country='!1!', College_ID=0)
+            member(Member_ID=0, Name='', Country='A', College_ID=0)
+            member(Member_ID=0, Name='!0!', Country='', College_ID=0)
+            member(Member_ID=0, Name='!1!', Country='', College_ID=0)
+            member(Member_ID=2, Name='', Country='B', College_ID=3)
+            member(Member_ID=2, Name='B', Country='B', College_ID=3)
+            member(Member_ID=3, Name='A', Country='', College_ID=4)
+            member(Member_ID=4, Name='', Country='', College_ID=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          College_ID       : {0, 2, 3, 4}
+          College_Location : {'', '!0!', '!1!', 'A', 'B'}
+          Country          : {'', '!0!', '!1!', 'A', 'B'}
+          Leader_Name      : {'', '!0!', '!1!', 'A', 'B'}
+          Member_ID        : {0, 2, 3, 4}
+          Name             : {'', '!0!', '!1!', 'A', 'B'}
+        values shared across local sorts (joins):
+          0 : College_ID, Member_ID
+          2 : College_ID, Member_ID
+          3 : College_ID, Member_ID
+          4 : College_ID, Member_ID
+          '!0!' : College_Location, Country, Leader_Name, Name
+          '!1!' : College_Location, Country, Leader_Name, Name
+          '' : College_Location, Country, Leader_Name, Name
+          'A' : College_Location, Country, Leader_Name, Name
+          'B' : College_Location, Country, Leader_Name, Name
+   [R3] took 0.062 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

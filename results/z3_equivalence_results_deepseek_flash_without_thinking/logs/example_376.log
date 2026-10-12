@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_376.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_376.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2760 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name and email of the users who have more than 1000 followers.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int(11) -> IntSort()
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+      local sorts:
+        email = varchar(255) -> StringSort()
+        followers = int(11) -> IntSort()
+        name = varchar(255) -> StringSort()
+        partitionid = int(11) -> IntSort()
+        uid = int(11) -> IntSort()
+      symbols:
+        user_profiles(uid, name, email, partitionid, followers)
+        constant 1000 : followers
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃p : partitionid ∃f : followers ( (user_profiles(u,n,e,p,f)) ∧ (f > 1000) )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:p COLON:: IDENT:partitionid EXISTS:∃ IDENT:f COLON:: IDENT:followers LPAR:( LPAR:( IDENT:user_profiles LPAR:( IDENT:u COMMA:, IDENT:n COMMA:, IDENT:e COMMA:, IDENT:p COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f GT:> NUM:1000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS p:partitionid
+              EXISTS f:followers
+                AND
+                  PRED user_profiles(u, n, e, p, f)
+                  CMP  f > 1000
+      Predicted FOL: ∃x_uid : uid ∃x_name : name ∃x_email : email ∃x_partitionid : partitionid ∃x_followers : followers (user_profiles(x_uid, x_name, x_email, x_partitionid, x_followers) ∧ x_followers > 1000)
+        tokens: EXISTS:∃ IDENT:x_uid COLON:: IDENT:uid EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:x_email COLON:: IDENT:email EXISTS:∃ IDENT:x_partitionid COLON:: IDENT:partitionid EXISTS:∃ IDENT:x_followers COLON:: IDENT:followers LPAR:( IDENT:user_profiles LPAR:( IDENT:x_uid COMMA:, IDENT:x_name COMMA:, IDENT:x_email COMMA:, IDENT:x_partitionid COMMA:, IDENT:x_followers RPAR:) AND:∧ IDENT:x_followers GT:> NUM:1000 RPAR:) EOF
+        AST:
+          EXISTS x_uid:uid
+            EXISTS x_name:name
+              EXISTS x_email:email
+                EXISTS x_partitionid:partitionid
+                  EXISTS x_followers:followers
+                    AND
+                      PRED user_profiles(x_uid, x_name, x_email, x_partitionid, x_followers)
+                      CMP  x_followers > 1000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (n : name, e : email) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local email, global varchar(255) -> StringSort()
+        f : local followers, global int(11) -> IntSort()
+        n : local name, global varchar(255) -> StringSort()
+        p : local partitionid, global int(11) -> IntSort()
+        u : local uid, global int(11) -> IntSort()
+      Predicted FOL:
+        x_email : local email, global varchar(255) -> StringSort()
+        x_followers : local followers, global int(11) -> IntSort()
+        x_name : local name, global varchar(255) -> StringSort()
+        x_partitionid : local partitionid, global int(11) -> IntSort()
+        x_uid : local uid, global int(11) -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5413 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_376.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (n : name, e : email) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

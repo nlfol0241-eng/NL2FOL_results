@@ -1,0 +1,105 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_400.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_400.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3348 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the origins of all flights that are headed to Honolulu?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        varchar2(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        number(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+        number(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        number(7,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000, x < 100000); 7 digits, 2 after the point]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        arrival_date = date -> IntSort()
+        departure_date = date -> IntSort()
+        destination = varchar2(20) -> StringSort()
+        distance = number(6,0) -> RealSort()
+        flno = number(4,0) -> RealSort()
+        origin = varchar2(20) -> StringSort()
+        price = number(7,2) -> RealSort()
+      symbols:
+        flight(flno, origin, destination, distance, departure_date, arrival_date, price, aid)
+        constant Honolulu : destination
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : flno ∃d : destination ∃d1 : distance ∃d2 : departure_date ∃a : arrival_date ∃p : price ∃a1 : aid ( (flight(f,o,d,d1,d2,a,p,a1)) ∧ (d = 'Honolulu') )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:flno EXISTS:∃ IDENT:d COLON:: IDENT:destination EXISTS:∃ IDENT:d1 COLON:: IDENT:distance EXISTS:∃ IDENT:d2 COLON:: IDENT:departure_date EXISTS:∃ IDENT:a COLON:: IDENT:arrival_date EXISTS:∃ IDENT:p COLON:: IDENT:price EXISTS:∃ IDENT:a1 COLON:: IDENT:aid LPAR:( LPAR:( IDENT:flight LPAR:( IDENT:f COMMA:, IDENT:o COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:a COMMA:, IDENT:p COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Honolulu RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:flno
+            EXISTS d:destination
+              EXISTS d1:distance
+                EXISTS d2:departure_date
+                  EXISTS a:arrival_date
+                    EXISTS p:price
+                      EXISTS a1:aid
+                        AND
+                          PRED flight(f, o, d, d1, d2, a, p, a1)
+                          EQ  d = 'Honolulu'
+      Predicted FOL: ∃x_origin : origin (flight(x_flno, x_origin, x_destination, x_distance, x_departure_date, x_arrival_date, x_price, x_aid) ∧ x_destination = 'Honolulu')
+        tokens: EXISTS:∃ IDENT:x_origin COLON:: IDENT:origin LPAR:( IDENT:flight LPAR:( IDENT:x_flno COMMA:, IDENT:x_origin COMMA:, IDENT:x_destination COMMA:, IDENT:x_distance COMMA:, IDENT:x_departure_date COMMA:, IDENT:x_arrival_date COMMA:, IDENT:x_price COMMA:, IDENT:x_aid RPAR:) AND:∧ IDENT:x_destination EQ:= LIT:Honolulu RPAR:) EOF
+        AST:
+          EXISTS x_origin:origin
+            AND
+              PRED flight(x_flno, x_origin, x_destination, x_distance, x_departure_date, x_arrival_date, x_price, x_aid)
+              EQ  x_destination = 'Honolulu'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) x_flno, x_destination, x_distance, x_departure_date, x_arrival_date, x_price, x_aid occur free in the formula but are not declared in 'free vars'
+   WARNING: Predicted FOL: declared free variable(s) x_origin do not occur free in the formula
+   1 shared answer variable(s)
+      FV_origin_0 : origin   Gold o <-> Predicted x_origin
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local arrival_date, global date -> IntSort()
+        a1 : local aid, global number(9,0) -> RealSort()
+        d : local destination, global varchar2(20) -> StringSort()
+        d1 : local distance, global number(6,0) -> RealSort()
+        d2 : local departure_date, global date -> IntSort()
+        f : local flno, global number(4,0) -> RealSort()
+        o : local origin, global varchar2(20) -> StringSort()
+        p : local price, global number(7,2) -> RealSort()
+      Predicted FOL:
+        x_aid : local aid, global number(9,0) -> RealSort()
+        x_arrival_date : local arrival_date, global date -> IntSort()
+        x_departure_date : local departure_date, global date -> IntSort()
+        x_destination : local destination, global varchar2(20) -> StringSort()
+        x_distance : local distance, global number(6,0) -> RealSort()
+        x_flno : local flno, global number(4,0) -> RealSort()
+        x_origin : local origin, global varchar2(20) -> StringSort()
+        x_price : local price, global number(7,2) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_f_1, gold_d_2, gold_d1_3, gold_d2_4, gold_a_5, gold_p_6, gold_a1_7], And(D_number_4_0_(gold_f_1), D_varchar2_20_(gold_d_2), D_number_6_0_(gold_d1_3), D_number_7_2_(gold_p_6), D_number_9_0_(gold_a1_7), And(P_flight(gold_f_1, FV_origin_0, gold_d_2, gold_d1_3, gold_d2_4, gold_a_5, gold_p_6, gold_a1_7), (gold_d_2 == L_Honolulu))))
+      gold_skolem (witnesses WGOLD_f, WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_a, WGOLD_p, WGOLD_a1):  And(D_number_4_0_(WGOLD_f), D_varchar2_20_(WGOLD_d), D_number_6_0_(WGOLD_d1), D_number_7_2_(WGOLD_p), D_number_9_0_(WGOLD_a1), And(P_flight(WGOLD_f, FV_origin_0, WGOLD_d, WGOLD_d1, WGOLD_d2, WGOLD_a, WGOLD_p, WGOLD_a1), (WGOLD_d == L_Honolulu)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'x_flno'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in formula
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 127, in <genexpr>
+    return "And(" + ", ".join(self.formula(f) for f in node[1]) + ")"
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'x_flno'

@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3697.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3697.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3875 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the titles of all movies that were not reviewed by Chris Jackson?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        name = text -> StringSort()
+        rID = int -> IntSort()
+        ratingDate = date -> IntSort()
+        stars = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        Rating(rID, mID, stars, ratingDate)
+        Reviewer(rID, name)
+        constant Chris Jackson : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃y : year ∃d : director ∃m : mID( Movie(m,t,y,d) )) ∧ (¬(∃r : rID ∃r1 : ratingDate ∃y : year ∃s : stars ∃r2 : rID ∃m1 : mID ∃d : director ∃m : mID ∃n : name( (((((Rating(r,m1,s,r1)) ∧ (Movie(m,t,y,d))) ∧ (m1 = m)) ∧ (Reviewer(r2,n))) ∧ (r = r2)) ∧ (n = 'Chris Jackson') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:d COLON:: IDENT:director EXISTS:∃ IDENT:m COLON:: IDENT:mID LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:rID EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:r2 COLON:: IDENT:rID EXISTS:∃ IDENT:m1 COLON:: IDENT:mID EXISTS:∃ IDENT:d COLON:: IDENT:director EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m1 COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m1 EQ:= IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Reviewer LPAR:( IDENT:r2 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Chris Jackson RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS y:year
+              EXISTS d:director
+                EXISTS m:mID
+                  PRED Movie(m, t, y, d)
+            NOT
+              EXISTS r:rID
+                EXISTS r1:ratingDate
+                  EXISTS y:year
+                    EXISTS s:stars
+                      EXISTS r2:rID
+                        EXISTS m1:mID
+                          EXISTS d:director
+                            EXISTS m:mID
+                              EXISTS n:name
+                                AND
+                                  AND
+                                    AND
+                                      AND
+                                        AND
+                                          PRED Rating(r, m1, s, r1)
+                                          PRED Movie(m, t, y, d)
+                                        EQ  m1 = m
+                                      PRED Reviewer(r2, n)
+                                    EQ  r = r2
+                                  EQ  n = 'Chris Jackson'
+      Predicted FOL: ∃r : rID (Reviewer(r, 'Chris Jackson') ∧ ∀m : mID ∀t : title ∀y : year ∀d : director (Movie(m, t, y, d) → ¬∃s : stars ∃rd : date Rating(r, m, s, rd)))
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( IDENT:Reviewer LPAR:( IDENT:r COMMA:, LIT:Chris Jackson RPAR:) AND:∧ FORALL:∀ IDENT:m COLON:: IDENT:mID FORALL:∀ IDENT:t COLON:: IDENT:title FORALL:∀ IDENT:y COLON:: IDENT:year FORALL:∀ IDENT:d COLON:: IDENT:director LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) IMPL:→ NOT:¬ EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:rd COLON:: IDENT:date IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:rd RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:rID
+            AND
+              PRED Reviewer(r, 'Chris Jackson')
+              FORALL m:mID
+                FORALL t:title
+                  FORALL y:year
+                    FORALL d:director
+                      IMPLIES
+                        PRED Movie(m, t, y, d)
+                        NOT
+                          EXISTS s:stars
+                            EXISTS rd:date
+                              PRED Rating(r, m, s, rd)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        m1 : local mID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        r : local rID, global int -> IntSort()
+        r1 : local ratingDate, global date -> IntSort()
+        r2 : local rID, global int -> IntSort()
+        s : local stars, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        r : local rID, global int -> IntSort()
+        rd : local date, global date -> IntSort()
+        s : local stars, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5585 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3697.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

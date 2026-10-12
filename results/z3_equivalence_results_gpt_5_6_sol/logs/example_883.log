@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_883.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_883.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4206 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the type of the document named "David CV"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        integer -> IntSort()
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        access_count = integer -> IntSort()
+        document_code = varchar(15) -> StringSort()
+        document_name = varchar(80) -> StringSort()
+        document_structure_code = varchar(15) -> StringSort()
+        document_type_code = varchar(15) -> StringSort()
+      symbols:
+        Documents(document_code, document_structure_code, document_type_code, access_count, document_name)
+        constant David CV : document_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : document_code ∃d1 : document_structure_code ∃a : access_count ∃d3 : document_name ( (Documents(d,d1,d2,a,d3)) ∧ (d3 = 'David CV') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_code EXISTS:∃ IDENT:d1 COLON:: IDENT:document_structure_code EXISTS:∃ IDENT:a COLON:: IDENT:access_count EXISTS:∃ IDENT:d3 COLON:: IDENT:document_name LPAR:( LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:a COMMA:, IDENT:d3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d3 EQ:= LIT:David CV RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:document_code
+            EXISTS d1:document_structure_code
+              EXISTS a:access_count
+                EXISTS d3:document_name
+                  AND
+                    PRED Documents(d, d1, d2, a, d3)
+                    EQ  d3 = 'David CV'
+      Predicted FOL: ∃d : document_code ∃s : document_structure_code ∃a : access_count Documents(d, s, t, a, 'David CV')
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_code EXISTS:∃ IDENT:s COLON:: IDENT:document_structure_code EXISTS:∃ IDENT:a COLON:: IDENT:access_count IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:s COMMA:, IDENT:t COMMA:, IDENT:a COMMA:, LIT:David CV RPAR:) EOF
+        AST:
+          EXISTS d:document_code
+            EXISTS s:document_structure_code
+              EXISTS a:access_count
+                PRED Documents(d, s, t, a, 'David CV')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_document_type_code_0 : document_type_code   Gold d2 <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local access_count, global integer -> IntSort()
+        d : local document_code, global varchar(15) -> StringSort()
+        d1 : local document_structure_code, global varchar(15) -> StringSort()
+        d2 : local document_type_code, global varchar(15) -> StringSort()
+        d3 : local document_name, global varchar(80) -> StringSort()
+      Predicted FOL:
+        a : local access_count, global integer -> IntSort()
+        d : local document_code, global varchar(15) -> StringSort()
+        s : local document_structure_code, global varchar(15) -> StringSort()
+        t : local document_type_code, global varchar(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_a_3, gold_d3_4], And(D_varchar_15_(gold_d_1), D_varchar_15_(gold_d1_2), D_varchar_80_(gold_d3_4), And(P_Documents(gold_d_1, gold_d1_2, FV_document_type_code_0, gold_a_3, gold_d3_4), (gold_d3_4 == L_David_CV))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_a, WGOLD_d3):  And(D_varchar_15_(WGOLD_d), D_varchar_15_(WGOLD_d1), D_varchar_80_(WGOLD_d3), And(P_Documents(WGOLD_d, WGOLD_d1, FV_document_type_code_0, WGOLD_a, WGOLD_d3), (WGOLD_d3 == L_David_CV)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_s_2, predicted_a_3], And(D_varchar_15_(predicted_d_1), D_varchar_15_(predicted_s_2), And(P_Documents(predicted_d_1, predicted_s_2, FV_document_type_code_0, predicted_a_3, L_David_CV), D_varchar_80_(L_David_CV))))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_s, WPREDICTED_a):  And(D_varchar_15_(WPREDICTED_d), D_varchar_15_(WPREDICTED_s), And(P_Documents(WPREDICTED_d, WPREDICTED_s, FV_document_type_code_0, WPREDICTED_a, L_David_CV), D_varchar_80_(L_David_CV)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'David CV' at varchar(80) -> L_David_CV = StringVal('David CV')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 742 lines, 28664 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_883.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_document_type_code_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_a, WGOLD_d3
+      claim: And(And(Length(WGOLD_d) <= 15, Length(WGOLD_d1) <= 15, Length(WGOLD_d3) <= 80, And(Documents(WGOLD_d, WGOLD_d1, FV_document_type_code_0, WGOLD_a, WGOLD_d3), WGOLD_d3 == "David CV")), Not(Exists([predicted_d_1, predicted_s_2, predicted_a_3], And(Length(predicted_d_1) <= 15, Length(predicted_s_2) <= 15, And(Documents(predicted_d_1, predicted_s_2, FV_document_type_code_0, predicted_a_3, "David CV"), Length("David CV") <= 80)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_s, WPREDICTED_a
+      claim: And(And(Length(WPREDICTED_d) <= 15, Length(WPREDICTED_s) <= 15, And(Documents(WPREDICTED_d, WPREDICTED_s, FV_document_type_code_0, WPREDICTED_a, "David CV"), Length("David CV") <= 80)), Not(Exists([gold_d_1, gold_d1_2, gold_a_3, gold_d3_4], And(Length(gold_d_1) <= 15, Length(gold_d1_2) <= 15, Length(gold_d3_4) <= 80, And(Documents(gold_d_1, gold_d1_2, FV_document_type_code_0, gold_a_3, gold_d3_4), gold_d3_4 == "David CV")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

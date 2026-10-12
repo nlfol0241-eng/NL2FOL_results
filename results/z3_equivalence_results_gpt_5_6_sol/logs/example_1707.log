@@ -1,0 +1,119 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1707.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1707.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3975 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which channels are broadcast in the morning? Give me the channel names.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Channel_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Owner = text -> StringSort()
+        Program_ID = int -> IntSort()
+        Rating_in_percent = real -> Float32()
+        Share_in_percent = real -> Float32()
+        Time_of_day = text -> StringSort()
+      symbols:
+        broadcast(Channel_ID, Program_ID, Time_of_day)
+        channel(Channel_ID, Name, Owner, Share_in_percent, Rating_in_percent)
+        constant Morning : Time_of_day
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Channel_ID ∃o : Owner ∃s : Share_in_percent ∃r : Rating_in_percent ∃c1 : Channel_ID ∃p : Program_ID ∃t : Time_of_day ( (((channel(c,n,o,s,r)) ∧ (broadcast(c1,p,t))) ∧ (c = c1)) ∧ (t = 'Morning') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:o COLON:: IDENT:Owner EXISTS:∃ IDENT:s COLON:: IDENT:Share_in_percent EXISTS:∃ IDENT:r COLON:: IDENT:Rating_in_percent EXISTS:∃ IDENT:c1 COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID EXISTS:∃ IDENT:t COLON:: IDENT:Time_of_day LPAR:( LPAR:( LPAR:( LPAR:( IDENT:channel LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:s COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:broadcast LPAR:( IDENT:c1 COMMA:, IDENT:p COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Morning RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Channel_ID
+            EXISTS o:Owner
+              EXISTS s:Share_in_percent
+                EXISTS r:Rating_in_percent
+                  EXISTS c1:Channel_ID
+                    EXISTS p:Program_ID
+                      EXISTS t:Time_of_day
+                        AND
+                          AND
+                            AND
+                              PRED channel(c, n, o, s, r)
+                              PRED broadcast(c1, p, t)
+                            EQ  c = c1
+                          EQ  t = 'Morning'
+      Predicted FOL: ∃c : Channel_ID ∃o : Owner ∃s : Share_in_percent ∃r : Rating_in_percent ∃p : Program_ID (channel(c, n, o, s, r) ∧ broadcast(c, p, Morning))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:o COLON:: IDENT:Owner EXISTS:∃ IDENT:s COLON:: IDENT:Share_in_percent EXISTS:∃ IDENT:r COLON:: IDENT:Rating_in_percent EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID LPAR:( IDENT:channel LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:s COMMA:, IDENT:r RPAR:) AND:∧ IDENT:broadcast LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:Morning RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Channel_ID
+            EXISTS o:Owner
+              EXISTS s:Share_in_percent
+                EXISTS r:Rating_in_percent
+                  EXISTS p:Program_ID
+                    AND
+                      PRED channel(c, n, o, s, r)
+                      PRED broadcast(c, p, Morning<const>)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Channel_ID, global int -> IntSort()
+        c1 : local Channel_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        o : local Owner, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+        r : local Rating_in_percent, global real -> Float32()
+        s : local Share_in_percent, global real -> Float32()
+        t : local Time_of_day, global text -> StringSort()
+      Predicted FOL:
+        c : local Channel_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        o : local Owner, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+        r : local Rating_in_percent, global real -> Float32()
+        s : local Share_in_percent, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_o_2, gold_s_3, gold_r_4, gold_c1_5, gold_p_6, gold_t_7], And(D_real(gold_s_3), D_real(gold_r_4), And(And(And(P_channel(gold_c_1, FV_Name_0, gold_o_2, gold_s_3, gold_r_4), P_broadcast(gold_c1_5, gold_p_6, gold_t_7)), (gold_c_1 == gold_c1_5)), (gold_t_7 == L_Morning))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_r, WGOLD_c1, WGOLD_p, WGOLD_t):  And(D_real(WGOLD_s), D_real(WGOLD_r), And(And(And(P_channel(WGOLD_c, FV_Name_0, WGOLD_o, WGOLD_s, WGOLD_r), P_broadcast(WGOLD_c1, WGOLD_p, WGOLD_t)), (WGOLD_c == WGOLD_c1)), (WGOLD_t == L_Morning)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_o_2, predicted_s_3, predicted_r_4, predicted_p_5], And(D_real(predicted_s_3), D_real(predicted_r_4), And(P_channel(predicted_c_1, FV_Name_0, predicted_o_2, predicted_s_3, predicted_r_4), P_broadcast(predicted_c_1, predicted_p_5, L_Morning))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_o, WPREDICTED_s, WPREDICTED_r, WPREDICTED_p):  And(D_real(WPREDICTED_s), D_real(WPREDICTED_r), And(P_channel(WPREDICTED_c, FV_Name_0, WPREDICTED_o, WPREDICTED_s, WPREDICTED_r), P_broadcast(WPREDICTED_c, WPREDICTED_p, L_Morning)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Morning' at text -> L_Morning = StringVal('Morning')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 760 lines, 29568 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1707.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_r, WGOLD_c1, WGOLD_p, WGOLD_t
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(Not(fpIsNaN(WGOLD_r)), Not(And(fpIsZero(WGOLD_r), fpIsNegative(WGOLD_r)))), And(And(And(channel(WGOLD_c, FV_Name_0, WGOLD_o, WGOLD_s, WGOLD_r), broadcast(WGOLD_c1, WGOLD_p, WGOLD_t)), WGOLD_c == WGOLD_c1), WGOLD_t == "Morning")), Not(Exists([predicted_c_1, predicted_o_2, predicted_s_3, predicted_r_4, predicted_p_5], And(And(Not(fpIsNaN(predicted_s_3)), Not(And(fpIsZero(predicted_s_3), fpIsNegative(predicted_s_3)))), And(Not(fpIsNaN(predicted_r_4)), Not(And(fpIsZero(predicted_r_4), fpIsNegative(predicted_r_4)))), And(channel(predicted_c_1, FV_Name_0, predicted_o_2, predicted_s_3, predicted_r_4), broadcast(predicted_c_1, predicted_p_5, "Morning"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.023 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_o, WPREDICTED_s, WPREDICTED_r, WPREDICTED_p
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_s)), Not(And(fpIsZero(WPREDICTED_s), fpIsNegative(WPREDICTED_s)))), And(Not(fpIsNaN(WPREDICTED_r)), Not(And(fpIsZero(WPREDICTED_r), fpIsNegative(WPREDICTED_r)))), And(channel(WPREDICTED_c, FV_Name_0, WPREDICTED_o, WPREDICTED_s, WPREDICTED_r), broadcast(WPREDICTED_c, WPREDICTED_p, "Morning"))), Not(Exists([gold_c_1, gold_o_2, gold_s_3, gold_r_4, gold_c1_5, gold_p_6, gold_t_7], And(And(Not(fpIsNaN(gold_s_3)), Not(And(fpIsZero(gold_s_3), fpIsNegative(gold_s_3)))), And(Not(fpIsNaN(gold_r_4)), Not(And(fpIsZero(gold_r_4), fpIsNegative(gold_r_4)))), And(And(And(channel(gold_c_1, FV_Name_0, gold_o_2, gold_s_3, gold_r_4), broadcast(gold_c1_5, gold_p_6, gold_t_7)), gold_c_1 == gold_c1_5), gold_t_7 == "Morning")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.015 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

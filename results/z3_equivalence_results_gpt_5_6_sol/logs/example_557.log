@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_557.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_557.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2703 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name, open date, and organizer for all churches.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Church_ID = int -> IntSort()
+        Continuation_of = text -> StringSort()
+        Name = text -> StringSort()
+        Open_Date = int -> IntSort()
+        Organized_by = text -> StringSort()
+      symbols:
+        church(Church_ID, Name, Organized_by, Open_Date, Continuation_of)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Church_ID ∃c1 : Continuation_of ( church(c,n,o,o1,c1) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Church_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Continuation_of LPAR:( IDENT:church LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:o1 COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Church_ID
+            EXISTS c1:Continuation_of
+              PRED church(c, n, o, o1, c1)
+      Predicted FOL: ∃churchID : Church_ID ∃continuation : Continuation_of church(churchID, name, organizer, openDate, continuation)
+        tokens: EXISTS:∃ IDENT:churchID COLON:: IDENT:Church_ID EXISTS:∃ IDENT:continuation COLON:: IDENT:Continuation_of IDENT:church LPAR:( IDENT:churchID COMMA:, IDENT:name COMMA:, IDENT:organizer COMMA:, IDENT:openDate COMMA:, IDENT:continuation RPAR:) EOF
+        AST:
+          EXISTS churchID:Church_ID
+            EXISTS continuation:Continuation_of
+              PRED church(churchID, name, organizer, openDate, continuation)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+      FV_Open_Date_0 : Open_Date   Gold o1 <-> Predicted openDate
+      FV_Organized_by_0 : Organized_by   Gold o <-> Predicted organizer
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Church_ID, global int -> IntSort()
+        c1 : local Continuation_of, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        o : local Organized_by, global text -> StringSort()
+        o1 : local Open_Date, global int -> IntSort()
+      Predicted FOL:
+        churchID : local Church_ID, global int -> IntSort()
+        continuation : local Continuation_of, global text -> StringSort()
+        name : local Name, global text -> StringSort()
+        openDate : local Open_Date, global int -> IntSort()
+        organizer : local Organized_by, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2], P_church(gold_c_1, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, gold_c1_2))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1):  P_church(WGOLD_c, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, WGOLD_c1)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_churchID_1, predicted_continuation_2], P_church(predicted_churchID_1, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, predicted_continuation_2))
+      predicted_skolem (witnesses WPREDICTED_churchID, WPREDICTED_continuation):  P_church(WPREDICTED_churchID, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, WPREDICTED_continuation)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 27217 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_557.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1
+      claim: And(church(WGOLD_c, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, WGOLD_c1), Not(Exists([predicted_churchID_1, predicted_continuation_2], church(predicted_churchID_1, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, predicted_continuation_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_churchID, WPREDICTED_continuation
+      claim: And(church(WPREDICTED_churchID, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, WPREDICTED_continuation), Not(Exists([gold_c_1, gold_c1_2], church(gold_c_1, FV_Name_0, FV_Organized_by_0, FV_Open_Date_0, gold_c1_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

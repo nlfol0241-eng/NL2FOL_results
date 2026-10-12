@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3124.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5857 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the title of course that is provided by both Statistics and Psychology departments.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        numeric(2,0) -> RealSort()   [domain And(IsInt(x), x > -100, x < 100); 2 digits, 0 after the point]
+      local sorts:
+        course_id = varchar(8) -> StringSort()
+        credits = numeric(2,0) -> RealSort()
+        dept_name = varchar(20) -> StringSort()
+        title = varchar(50) -> StringSort()
+      symbols:
+        course(course_id, title, dept_name, credits)
+        constant Psychology : dept_name
+        constant Statistics : dept_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃d : dept_name ∃c1 : credits ∃c : course_id( (course(c,t,d,c1)) ∧ (d = 'Statistics') )) ∧ (¬((∃d : dept_name ∃c1 : credits ∃c : course_id( (course(c,t,d,c1)) ∧ (d = 'Statistics') )) ∧ (¬(∃d : dept_name ∃c1 : credits ∃c : course_id( (course(c,t,d,c1)) ∧ (d = 'Psychology') )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:c1 COLON:: IDENT:credits EXISTS:∃ IDENT:c COLON:: IDENT:course_id LPAR:( LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Statistics RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:c1 COLON:: IDENT:credits EXISTS:∃ IDENT:c COLON:: IDENT:course_id LPAR:( LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Statistics RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:c1 COLON:: IDENT:credits EXISTS:∃ IDENT:c COLON:: IDENT:course_id LPAR:( LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Psychology RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS d:dept_name
+              EXISTS c1:credits
+                EXISTS c:course_id
+                  AND
+                    PRED course(c, t, d, c1)
+                    EQ  d = 'Statistics'
+            NOT
+              AND
+                EXISTS d:dept_name
+                  EXISTS c1:credits
+                    EXISTS c:course_id
+                      AND
+                        PRED course(c, t, d, c1)
+                        EQ  d = 'Statistics'
+                NOT
+                  EXISTS d:dept_name
+                    EXISTS c1:credits
+                      EXISTS c:course_id
+                        AND
+                          PRED course(c, t, d, c1)
+                          EQ  d = 'Psychology'
+      Predicted FOL: ∃c0:course_id ∃c3:credits ( course(c0, t, Statistics, c3) ∧ course(c0, t, Psychology, c3) )
+        tokens: EXISTS:∃ IDENT:c0 COLON:: IDENT:course_id EXISTS:∃ IDENT:c3 COLON:: IDENT:credits LPAR:( IDENT:course LPAR:( IDENT:c0 COMMA:, IDENT:t COMMA:, IDENT:Statistics COMMA:, IDENT:c3 RPAR:) AND:∧ IDENT:course LPAR:( IDENT:c0 COMMA:, IDENT:t COMMA:, IDENT:Psychology COMMA:, IDENT:c3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c0:course_id
+            EXISTS c3:credits
+              AND
+                PRED course(c0, t, Statistics<const>, c3)
+                PRED course(c0, t, Psychology<const>, c3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global varchar(8) -> StringSort()
+        c1 : local credits, global numeric(2,0) -> RealSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        t : local title, global varchar(50) -> StringSort()
+      Predicted FOL:
+        c0 : local course_id, global varchar(8) -> StringSort()
+        c3 : local credits, global numeric(2,0) -> RealSort()
+        t : local title, global varchar(50) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_d_1, gold_c1_2, gold_c_3], And(D_varchar_20_(gold_d_1), D_numeric_2_0_(gold_c1_2), D_varchar_8_(gold_c_3), And(P_course(gold_c_3, FV_title_0, gold_d_1, gold_c1_2), (gold_d_1 == L_Statistics)))), Not(And(Exists([gold_d_4, gold_c1_5, gold_c_6], And(D_varchar_20_(gold_d_4), D_numeric_2_0_(gold_c1_5), D_varchar_8_(gold_c_6), And(P_course(gold_c_6, FV_title_0, gold_d_4, gold_c1_5), (gold_d_4 == L_Statistics)))), Not(Exists([gold_d_7, gold_c1_8, gold_c_9], And(D_varchar_20_(gold_d_7), D_numeric_2_0_(gold_c1_8), D_varchar_8_(gold_c_9), And(P_course(gold_c_9, FV_title_0, gold_d_7, gold_c1_8), (gold_d_7 == L_Psychology))))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c0_1, predicted_c3_2], And(D_varchar_8_(predicted_c0_1), D_numeric_2_0_(predicted_c3_2), And(And(P_course(predicted_c0_1, FV_title_0, L_Statistics, predicted_c3_2), D_varchar_20_(L_Statistics)), And(P_course(predicted_c0_1, FV_title_0, L_Psychology, predicted_c3_2), D_varchar_20_(L_Psychology)))))
+      predicted_skolem (witnesses WPREDICTED_c0, WPREDICTED_c3):  And(D_varchar_8_(WPREDICTED_c0), D_numeric_2_0_(WPREDICTED_c3), And(And(P_course(WPREDICTED_c0, FV_title_0, L_Statistics, WPREDICTED_c3), D_varchar_20_(L_Statistics)), And(P_course(WPREDICTED_c0, FV_title_0, L_Psychology, WPREDICTED_c3), D_varchar_20_(L_Psychology))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Psychology' at varchar(20) -> L_Psychology = StringVal('Psychology')
+      literal 'Statistics' at varchar(20) -> L_Statistics = StringVal('Statistics')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 743 lines, 28720 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_title_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_d_1, gold_c1_2, gold_c_3], And(Length(gold_d_1) <= 20, And(IsInt(gold_c1_2), gold_c1_2 > -100, gold_c1_2 < 100), Length(gold_c_3) <= 8, And(course(gold_c_3, FV_title_0, gold_d_1, gold_c1_2), gold_d_1 == "Statistics"))), Not(And(Exists([gold_d_4, gold_c1_5, gold_c_6], And(Length(gold_d_4) <= 20, And(IsInt(gold_c1_5), gold_c1_5 > -100, gold_c1_5 < 100), Length(gold_c_6) <= 8, And(course(gold_c_6, FV_title_0, gold_d_4, gold_c1_5), gold_d_4 == "Statistics"))), Not(Exists([gold_d_7, gold_c1_8, gold_c_9], And(Length(gold_d_7) <= 20, And(IsInt(gold_c1_8), gold_c1_8 > -100, gold_c1_8 < 100), Length(gold_c_9) <= 8, And(course(gold_c_9, FV_title_0, gold_d_7, gold_c1_8), gold_d_7 == "Psychology"))))))), Not(Exists([predicted_c0_1, predicted_c3_2], And(Length(predicted_c0_1) <= 8, And(IsInt(predicted_c3_2), predicted_c3_2 > -100, predicted_c3_2 < 100), And(And(course(predicted_c0_1, FV_title_0, "Statistics", predicted_c3_2), Length("Statistics") <= 20), And(course(predicted_c0_1, FV_title_0, "Psychology", predicted_c3_2), Length("Psychology") <= 20))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.011 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R2] check gold |= predicted: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py", line 691, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py", line 719, in _main
+    r1 = _check("R2", "gold |= predicted ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py", line 673, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py", line 571, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py", line 495, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py", line 375, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3124.py", line 375, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

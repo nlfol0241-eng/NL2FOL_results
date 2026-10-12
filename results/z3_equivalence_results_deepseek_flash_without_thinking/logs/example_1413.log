@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1413.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1413.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3544 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give me the names of members whose address is in Harford or Waterbury.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Address = text -> StringSort()
+        Age = int -> IntSort()
+        Level_of_membership = int -> IntSort()
+        Member_ID = int -> IntSort()
+        Membership_card = text -> StringSort()
+        Name = text -> StringSort()
+        Time_of_purchase = int -> IntSort()
+      symbols:
+        member(Member_ID, Name, Membership_card, Age, Time_of_purchase, Level_of_membership, Address)
+        constant Harford : Address
+        constant Waterbury : Address
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Member_ID ∃m1 : Membership_card ∃a : Age ∃t : Time_of_purchase ∃l : Level_of_membership ∃a1 : Address ( (member(m,n,m1,a,t,l,a1)) ∧ ((a1 = 'Harford') ∨ (a1 = 'Waterbury')) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:m1 COLON:: IDENT:Membership_card EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:t COLON:: IDENT:Time_of_purchase EXISTS:∃ IDENT:l COLON:: IDENT:Level_of_membership EXISTS:∃ IDENT:a1 COLON:: IDENT:Address LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:m1 COMMA:, IDENT:a COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a1 EQ:= LIT:Harford RPAR:) OR:∨ LPAR:( IDENT:a1 EQ:= LIT:Waterbury RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS m1:Membership_card
+              EXISTS a:Age
+                EXISTS t:Time_of_purchase
+                  EXISTS l:Level_of_membership
+                    EXISTS a1:Address
+                      AND
+                        PRED member(m, n, m1, a, t, l, a1)
+                        OR
+                          EQ  a1 = 'Harford'
+                          EQ  a1 = 'Waterbury'
+      Predicted FOL: ∃m : Member_ID ∃n : Name ∃c : Membership_card ∃a : Age ∃t : Time_of_purchase ∃l : Level_of_membership ∃d : Address (member(m, n, c, a, t, l, d) ∧ (d = Harford ∨ d = Waterbury))
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:c COLON:: IDENT:Membership_card EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:t COLON:: IDENT:Time_of_purchase EXISTS:∃ IDENT:l COLON:: IDENT:Level_of_membership EXISTS:∃ IDENT:d COLON:: IDENT:Address LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:a COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:d RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:Harford OR:∨ IDENT:d EQ:= IDENT:Waterbury RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS n:Name
+              EXISTS c:Membership_card
+                EXISTS a:Age
+                  EXISTS t:Time_of_purchase
+                    EXISTS l:Level_of_membership
+                      EXISTS d:Address
+                        AND
+                          PRED member(m, n, c, a, t, l, d)
+                          OR
+                            EQ  d = Harford<const>
+                            EQ  d = Waterbury<const>
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        a1 : local Address, global text -> StringSort()
+        l : local Level_of_membership, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        m1 : local Membership_card, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        t : local Time_of_purchase, global int -> IntSort()
+      Predicted FOL:
+        a : local Age, global int -> IntSort()
+        c : local Membership_card, global text -> StringSort()
+        d : local Address, global text -> StringSort()
+        l : local Level_of_membership, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        t : local Time_of_purchase, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5487 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1413.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

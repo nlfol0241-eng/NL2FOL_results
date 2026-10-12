@@ -1,0 +1,134 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1337.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3338 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct ages of the heads who are acting?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        age = real -> Float32()
+        born_state = text -> StringSort()
+        department_ID = int -> IntSort()
+        head_ID = int -> IntSort()
+        name = text -> StringSort()
+        temporary_acting = text -> StringSort()
+      symbols:
+        head(head_ID, name, born_state, age)
+        management(department_ID, head_ID, temporary_acting)
+        constant Yes : temporary_acting
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : department_ID ∃h : head_ID ∃t : temporary_acting ∃h1 : head_ID ∃n : name ∃b : born_state ( (((management(d,h,t)) ∧ (head(h1,n,b,a))) ∧ (h1 = h)) ∧ (t = 'Yes') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:department_ID EXISTS:∃ IDENT:h COLON:: IDENT:head_ID EXISTS:∃ IDENT:t COLON:: IDENT:temporary_acting EXISTS:∃ IDENT:h1 COLON:: IDENT:head_ID EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:b COLON:: IDENT:born_state LPAR:( LPAR:( LPAR:( LPAR:( IDENT:management LPAR:( IDENT:d COMMA:, IDENT:h COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:head LPAR:( IDENT:h1 COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h1 EQ:= IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:department_ID
+            EXISTS h:head_ID
+              EXISTS t:temporary_acting
+                EXISTS h1:head_ID
+                  EXISTS n:name
+                    EXISTS b:born_state
+                      AND
+                        AND
+                          AND
+                            PRED management(d, h, t)
+                            PRED head(h1, n, b, a)
+                          EQ  h1 = h
+                        EQ  t = 'Yes'
+      Predicted FOL: ∃h : head_ID ∃n : name ∃b : born_state ∃a : age ( head(h, n, b, a) ∧ ∃d : department_ID ∃t : temporary_acting ( management(d, h, t) ∧ t = 'Yes' ) )
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:head_ID EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:b COLON:: IDENT:born_state EXISTS:∃ IDENT:a COLON:: IDENT:age LPAR:( IDENT:head LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:a RPAR:) AND:∧ EXISTS:∃ IDENT:d COLON:: IDENT:department_ID EXISTS:∃ IDENT:t COLON:: IDENT:temporary_acting LPAR:( IDENT:management LPAR:( IDENT:d COMMA:, IDENT:h COMMA:, IDENT:t RPAR:) AND:∧ IDENT:t EQ:= LIT:Yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:head_ID
+            EXISTS n:name
+              EXISTS b:born_state
+                EXISTS a:age
+                  AND
+                    PRED head(h, n, b, a)
+                    EXISTS d:department_ID
+                      EXISTS t:temporary_acting
+                        AND
+                          PRED management(d, h, t)
+                          EQ  t = 'Yes'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) a do not occur free in the formula
+   1 shared answer variable(s)
+      FV_age_0 : age   Gold a <-> Predicted a
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global real -> Float32()
+        b : local born_state, global text -> StringSort()
+        d : local department_ID, global int -> IntSort()
+        h : local head_ID, global int -> IntSort()
+        h1 : local head_ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        t : local temporary_acting, global text -> StringSort()
+      Predicted FOL:
+        a : local age, global real -> Float32()
+        b : local born_state, global text -> StringSort()
+        d : local department_ID, global int -> IntSort()
+        h : local head_ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        t : local temporary_acting, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_h_2, gold_t_3, gold_h1_4, gold_n_5, gold_b_6], And(And(And(P_management(gold_d_1, gold_h_2, gold_t_3), P_head(gold_h1_4, gold_n_5, gold_b_6, FV_age_0)), (gold_h1_4 == gold_h_2)), (gold_t_3 == L_Yes)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_h, WGOLD_t, WGOLD_h1, WGOLD_n, WGOLD_b):  And(And(And(P_management(WGOLD_d, WGOLD_h, WGOLD_t), P_head(WGOLD_h1, WGOLD_n, WGOLD_b, FV_age_0)), (WGOLD_h1 == WGOLD_h)), (WGOLD_t == L_Yes))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_h_1, predicted_n_2, predicted_b_3, predicted_a_4], And(D_real(predicted_a_4), And(P_head(predicted_h_1, predicted_n_2, predicted_b_3, predicted_a_4), Exists([predicted_d_5, predicted_t_6], And(P_management(predicted_d_5, predicted_h_1, predicted_t_6), (predicted_t_6 == L_Yes))))))
+      predicted_skolem (witnesses WPREDICTED_h, WPREDICTED_n, WPREDICTED_b, WPREDICTED_a):  And(D_real(WPREDICTED_a), And(P_head(WPREDICTED_h, WPREDICTED_n, WPREDICTED_b, WPREDICTED_a), Exists([predictedsk_d_1, predictedsk_t_2], And(P_management(predictedsk_d_1, WPREDICTED_h, predictedsk_t_2), (predictedsk_t_2 == L_Yes)))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Yes' at text -> L_Yes = StringVal('Yes')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 757 lines, 29173 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_age_0)), Not(And(fpIsZero(FV_age_0), fpIsNegative(FV_age_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_h, WGOLD_t, WGOLD_h1, WGOLD_n, WGOLD_b
+      claim: And(And(And(And(management(WGOLD_d, WGOLD_h, WGOLD_t), head(WGOLD_h1, WGOLD_n, WGOLD_b, FV_age_0)), WGOLD_h1 == WGOLD_h), WGOLD_t == "Yes"), Not(Exists([predicted_h_1, predicted_n_2, predicted_b_3, predicted_a_4], And(And(Not(fpIsNaN(predicted_a_4)), Not(And(fpIsZero(predicted_a_4), fpIsNegative(predicted_a_4)))), And(head(predicted_h_1, predicted_n_2, predicted_b_3, predicted_a_4), Exists([predicted_d_5, predicted_t_6], And(management(predicted_d_5, predicted_h_1, predicted_t_6), predicted_t_6 == "Yes")))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_h, WPREDICTED_n, WPREDICTED_b, WPREDICTED_a
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), And(head(WPREDICTED_h, WPREDICTED_n, WPREDICTED_b, WPREDICTED_a), Exists([predictedsk_d_1, predictedsk_t_2], And(management(predictedsk_d_1, WPREDICTED_h, predictedsk_t_2), predictedsk_t_2 == "Yes")))), Not(Exists([gold_d_1, gold_h_2, gold_t_3, gold_h1_4, gold_n_5, gold_b_6], And(And(And(management(gold_d_1, gold_h_2, gold_t_3), head(gold_h1_4, gold_n_5, gold_b_6, FV_age_0)), gold_h1_4 == gold_h_2), gold_t_3 == "Yes"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py", line 705, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py", line 736, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py", line 687, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py", line 585, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py", line 509, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py", line 389, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1337.py", line 389, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_847.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_847.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5269 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the id for the employee called Ebba?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Date_of_Birth = datetime -> IntSort()
+        Employee_ID = integer -> IntSort()
+        Employee_Name = varchar(255) -> StringSort()
+        Gender_MFU = char(1) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Role_Code = char(15) -> StringSort()
+      symbols:
+        Employees(Employee_ID, Role_Code, Employee_Name, Gender_MFU, Date_of_Birth, Other_Details)
+        constant Ebba : Employee_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : Role_Code ∃e1 : Employee_Name ∃g : Gender_MFU ∃d : Date_of_Birth ∃o : Other_Details ( (Employees(e,r,e1,g,d,o)) ∧ (e1 = 'Ebba') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:Role_Code EXISTS:∃ IDENT:e1 COLON:: IDENT:Employee_Name EXISTS:∃ IDENT:g COLON:: IDENT:Gender_MFU EXISTS:∃ IDENT:d COLON:: IDENT:Date_of_Birth EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( LPAR:( IDENT:Employees LPAR:( IDENT:e COMMA:, IDENT:r COMMA:, IDENT:e1 COMMA:, IDENT:g COMMA:, IDENT:d COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e1 EQ:= LIT:Ebba RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:Role_Code
+            EXISTS e1:Employee_Name
+              EXISTS g:Gender_MFU
+                EXISTS d:Date_of_Birth
+                  EXISTS o:Other_Details
+                    AND
+                      PRED Employees(e, r, e1, g, d, o)
+                      EQ  e1 = 'Ebba'
+      Predicted FOL: ∃x0:Employee_ID ∃x1:Role_Code ∃x3:Gender_MFU ∃x4:Date_of_Birth ∃x5:Other_Details (Employees(x0, x1, Ebba, x3, x4, x5) ∧ id = x0)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:Employee_ID EXISTS:∃ IDENT:x1 COLON:: IDENT:Role_Code EXISTS:∃ IDENT:x3 COLON:: IDENT:Gender_MFU EXISTS:∃ IDENT:x4 COLON:: IDENT:Date_of_Birth EXISTS:∃ IDENT:x5 COLON:: IDENT:Other_Details LPAR:( IDENT:Employees LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:Ebba COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 RPAR:) AND:∧ IDENT:id EQ:= IDENT:x0 RPAR:) EOF
+        AST:
+          EXISTS x0:Employee_ID
+            EXISTS x1:Role_Code
+              EXISTS x3:Gender_MFU
+                EXISTS x4:Date_of_Birth
+                  EXISTS x5:Other_Details
+                    AND
+                      PRED Employees(x0, x1, Ebba<const>, x3, x4, x5)
+                      EQ  id = x0
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Employee_ID_0 : Employee_ID   Gold e <-> Predicted id
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Date_of_Birth, global datetime -> IntSort()
+        e : local Employee_ID, global integer -> IntSort()
+        e1 : local Employee_Name, global varchar(255) -> StringSort()
+        g : local Gender_MFU, global char(1) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        r : local Role_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        id : local Employee_ID, global integer -> IntSort()
+        x0 : local Employee_ID, global integer -> IntSort()
+        x1 : local Role_Code, global char(15) -> StringSort()
+        x3 : local Gender_MFU, global char(1) -> StringSort()
+        x4 : local Date_of_Birth, global datetime -> IntSort()
+        x5 : local Other_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_e1_2, gold_g_3, gold_d_4, gold_o_5], And(D_char_15_(gold_r_1), D_varchar_255_(gold_e1_2), D_char_1_(gold_g_3), D_varchar_255_(gold_o_5), And(P_Employees(FV_Employee_ID_0, gold_r_1, gold_e1_2, gold_g_3, gold_d_4, gold_o_5), (gold_e1_2 == L_Ebba))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_e1, WGOLD_g, WGOLD_d, WGOLD_o):  And(D_char_15_(WGOLD_r), D_varchar_255_(WGOLD_e1), D_char_1_(WGOLD_g), D_varchar_255_(WGOLD_o), And(P_Employees(FV_Employee_ID_0, WGOLD_r, WGOLD_e1, WGOLD_g, WGOLD_d, WGOLD_o), (WGOLD_e1 == L_Ebba)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x0_1, predicted_x1_2, predicted_x3_3, predicted_x4_4, predicted_x5_5], And(D_char_15_(predicted_x1_2), D_char_1_(predicted_x3_3), D_varchar_255_(predicted_x5_5), And(And(P_Employees(predicted_x0_1, predicted_x1_2, L_Ebba, predicted_x3_3, predicted_x4_4, predicted_x5_5), D_varchar_255_(L_Ebba)), (FV_Employee_ID_0 == predicted_x0_1))))
+      predicted_skolem (witnesses WPREDICTED_x0, WPREDICTED_x1, WPREDICTED_x3, WPREDICTED_x4, WPREDICTED_x5):  And(D_char_15_(WPREDICTED_x1), D_char_1_(WPREDICTED_x3), D_varchar_255_(WPREDICTED_x5), And(And(P_Employees(WPREDICTED_x0, WPREDICTED_x1, L_Ebba, WPREDICTED_x3, WPREDICTED_x4, WPREDICTED_x5), D_varchar_255_(L_Ebba)), (FV_Employee_ID_0 == WPREDICTED_x0)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Ebba' at varchar(255) -> L_Ebba = StringVal('Ebba')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 761 lines, 29684 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_847.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_e1, WGOLD_g, WGOLD_d, WGOLD_o
+      claim: And(And(Length(WGOLD_r) <= 15, Length(WGOLD_e1) <= 255, Length(WGOLD_g) <= 1, Length(WGOLD_o) <= 255, And(Employees(FV_Employee_ID_0, WGOLD_r, WGOLD_e1, WGOLD_g, WGOLD_d, WGOLD_o), WGOLD_e1 == "Ebba")), Not(Exists([predicted_x0_1, predicted_x1_2, predicted_x3_3, predicted_x4_4, predicted_x5_5], And(Length(predicted_x1_2) <= 15, Length(predicted_x3_3) <= 1, Length(predicted_x5_5) <= 255, And(And(Employees(predicted_x0_1, predicted_x1_2, "Ebba", predicted_x3_3, predicted_x4_4, predicted_x5_5), Length("Ebba") <= 255), FV_Employee_ID_0 == predicted_x0_1)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x0, WPREDICTED_x1, WPREDICTED_x3, WPREDICTED_x4, WPREDICTED_x5
+      claim: And(And(Length(WPREDICTED_x1) <= 15, Length(WPREDICTED_x3) <= 1, Length(WPREDICTED_x5) <= 255, And(And(Employees(WPREDICTED_x0, WPREDICTED_x1, "Ebba", WPREDICTED_x3, WPREDICTED_x4, WPREDICTED_x5), Length("Ebba") <= 255), FV_Employee_ID_0 == WPREDICTED_x0)), Not(Exists([gold_r_1, gold_e1_2, gold_g_3, gold_d_4, gold_o_5], And(Length(gold_r_1) <= 15, Length(gold_e1_2) <= 255, Length(gold_g_3) <= 1, Length(gold_o_5) <= 255, And(Employees(FV_Employee_ID_0, gold_r_1, gold_e1_2, gold_g_3, gold_d_4, gold_o_5), gold_e1_2 == "Ebba")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

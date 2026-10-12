@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3126.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3126.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5644 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of the courses that do not have any prerequisite?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        numeric(2,0) -> RealSort()   [domain And(IsInt(x), x > -100, x < 100); 2 digits, 0 after the point]
+      local sorts:
+        course_id = varchar(8) -> StringSort()
+        credits = numeric(2,0) -> RealSort()
+        dept_name = varchar(20) -> StringSort()
+        prereq_id = varchar(8) -> StringSort()
+        title = varchar(50) -> StringSort()
+      symbols:
+        course(course_id, title, dept_name, credits)
+        prereq(course_id, prereq_id)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : dept_name ∃c1 : credits ∃c : course_id( (course(c,t,d,c1)) ∧ (¬(∃c2 : course_id( ((course(c,t,d,c1)) ∧ (∃p : prereq_id( prereq(c2,p) ))) ∧ (c = c2) ))) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:c1 COLON:: IDENT:credits EXISTS:∃ IDENT:c COLON:: IDENT:course_id LPAR:( LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c2 COLON:: IDENT:course_id LPAR:( LPAR:( LPAR:( IDENT:course LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:prereq_id LPAR:( IDENT:prereq LPAR:( IDENT:c2 COMMA:, IDENT:p RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:dept_name
+            EXISTS c1:credits
+              EXISTS c:course_id
+                AND
+                  PRED course(c, t, d, c1)
+                  NOT
+                    EXISTS c2:course_id
+                      AND
+                        AND
+                          PRED course(c, t, d, c1)
+                          EXISTS p:prereq_id
+                            PRED prereq(c2, p)
+                        EQ  c = c2
+      Predicted FOL: ∃x_course_id : course_id ∃x_title : title ∃x_dept_name : dept_name ∃x_credits : credits ( course(x_course_id, x_title, x_dept_name, x_credits) ∧ ¬∃y_course_id : course_id ∃y_prereq_id : prereq_id ( prereq(y_course_id, y_prereq_id) ∧ y_course_id = x_course_id ) )
+        tokens: EXISTS:∃ IDENT:x_course_id COLON:: IDENT:course_id EXISTS:∃ IDENT:x_title COLON:: IDENT:title EXISTS:∃ IDENT:x_dept_name COLON:: IDENT:dept_name EXISTS:∃ IDENT:x_credits COLON:: IDENT:credits LPAR:( IDENT:course LPAR:( IDENT:x_course_id COMMA:, IDENT:x_title COMMA:, IDENT:x_dept_name COMMA:, IDENT:x_credits RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:y_course_id COLON:: IDENT:course_id EXISTS:∃ IDENT:y_prereq_id COLON:: IDENT:prereq_id LPAR:( IDENT:prereq LPAR:( IDENT:y_course_id COMMA:, IDENT:y_prereq_id RPAR:) AND:∧ IDENT:y_course_id EQ:= IDENT:x_course_id RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x_course_id:course_id
+            EXISTS x_title:title
+              EXISTS x_dept_name:dept_name
+                EXISTS x_credits:credits
+                  AND
+                    PRED course(x_course_id, x_title, x_dept_name, x_credits)
+                    NOT
+                      EXISTS y_course_id:course_id
+                        EXISTS y_prereq_id:prereq_id
+                          AND
+                            PRED prereq(y_course_id, y_prereq_id)
+                            EQ  y_course_id = x_course_id
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global varchar(8) -> StringSort()
+        c1 : local credits, global numeric(2,0) -> RealSort()
+        c2 : local course_id, global varchar(8) -> StringSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        p : local prereq_id, global varchar(8) -> StringSort()
+        t : local title, global varchar(50) -> StringSort()
+      Predicted FOL:
+        x_course_id : local course_id, global varchar(8) -> StringSort()
+        x_credits : local credits, global numeric(2,0) -> RealSort()
+        x_dept_name : local dept_name, global varchar(20) -> StringSort()
+        x_title : local title, global varchar(50) -> StringSort()
+        y_course_id : local course_id, global varchar(8) -> StringSort()
+        y_prereq_id : local prereq_id, global varchar(8) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5548 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3126.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

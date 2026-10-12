@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1382.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1382.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6254 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List Aerosmith's albums.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        artist_id = integer -> IntSort()
+        id = integer -> IntSort()
+        name = text -> StringSort()
+        title = text -> StringSort()
+      symbols:
+        albums(id, title, artist_id)
+        artists(id, name)
+        constant Aerosmith : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃a : artist_id ∃i1 : id ∃n : name ( (((albums(i,t,a)) ∧ (artists(i1,n))) ∧ (a = i1)) ∧ (n = 'Aerosmith') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:a COLON:: IDENT:artist_id EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:albums LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:artists LPAR:( IDENT:i1 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Aerosmith RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS a:artist_id
+              EXISTS i1:id
+                EXISTS n:name
+                  AND
+                    AND
+                      AND
+                        PRED albums(i, t, a)
+                        PRED artists(i1, n)
+                      EQ  a = i1
+                    EQ  n = 'Aerosmith'
+      Predicted FOL: ∃a0:id ( artists(a0, 'Aerosmith') ∧ ∃b0:id ∃b1:title ∃b2:artist_id ( albums(b0, b1, b2) ∧ b2 = a0 ) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:id LPAR:( IDENT:artists LPAR:( IDENT:a0 COMMA:, LIT:Aerosmith RPAR:) AND:∧ EXISTS:∃ IDENT:b0 COLON:: IDENT:id EXISTS:∃ IDENT:b1 COLON:: IDENT:title EXISTS:∃ IDENT:b2 COLON:: IDENT:artist_id LPAR:( IDENT:albums LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 RPAR:) AND:∧ IDENT:b2 EQ:= IDENT:a0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:id
+            AND
+              PRED artists(a0, 'Aerosmith')
+              EXISTS b0:id
+                EXISTS b1:title
+                  EXISTS b2:artist_id
+                    AND
+                      PRED albums(b0, b1, b2)
+                      EQ  b2 = a0
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_id, global integer -> IntSort()
+        i : local id, global integer -> IntSort()
+        i1 : local id, global integer -> IntSort()
+        n : local name, global text -> StringSort()
+        t : local title, global text -> StringSort()
+      Predicted FOL:
+        a0 : local id, global integer -> IntSort()
+        b0 : local id, global integer -> IntSort()
+        b1 : local title, global text -> StringSort()
+        b2 : local artist_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5296 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1382.py
+   [G8] took 0.006 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

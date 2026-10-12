@@ -1,0 +1,135 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1775.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1775.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2881 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who are the friends of Bob?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        age = integer -> IntSort()
+        city = text -> StringSort()
+        friend = varchar(20) -> StringSort()
+        gender = text -> StringSort()
+        job = text -> StringSort()
+        name = varchar(20) -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        Person(name, age, city, gender, job)
+        PersonFriend(name, friend, year)
+        constant Bob : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃a : age ∃c : city ∃g : gender ∃j : job ∃n1 : name ∃y : year ( (((Person(n,a,c,g,j)) ∧ (PersonFriend(n1,f,y))) ∧ (n = n1)) ∧ (n = 'Bob') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:a COLON:: IDENT:age EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:PersonFriend LPAR:( IDENT:n1 COMMA:, IDENT:f COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= IDENT:n1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Bob RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS a:age
+              EXISTS c:city
+                EXISTS g:gender
+                  EXISTS j:job
+                    EXISTS n1:name
+                      EXISTS y:year
+                        AND
+                          AND
+                            AND
+                              PRED Person(n, a, c, g, j)
+                              PRED PersonFriend(n1, f, y)
+                            EQ  n = n1
+                          EQ  n = 'Bob'
+      Predicted FOL: ∃y : year (PersonFriend('Bob', x, y))
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( IDENT:PersonFriend LPAR:( LIT:Bob COMMA:, IDENT:x COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:year
+            PRED PersonFriend('Bob', x, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_friend_0 : friend   Gold f <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        f : local friend, global varchar(20) -> StringSort()
+        g : local gender, global text -> StringSort()
+        j : local job, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        n1 : local name, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        x : local friend, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5, gold_n1_6, gold_y_7], And(D_varchar_20_(gold_n_1), D_varchar_20_(gold_n1_6), And(And(And(P_Person(gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5), P_PersonFriend(gold_n1_6, FV_friend_0, gold_y_7)), (gold_n_1 == gold_n1_6)), (gold_n_1 == L_Bob))))
+      gold_skolem (witnesses WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_n1, WGOLD_y):  And(D_varchar_20_(WGOLD_n), D_varchar_20_(WGOLD_n1), And(And(And(P_Person(WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), P_PersonFriend(WGOLD_n1, FV_friend_0, WGOLD_y)), (WGOLD_n == WGOLD_n1)), (WGOLD_n == L_Bob)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_y_1], And(P_PersonFriend(L_Bob, FV_friend_0, predicted_y_1), D_varchar_20_(L_Bob)))
+      predicted_skolem (witnesses WPREDICTED_y):  And(P_PersonFriend(L_Bob, FV_friend_0, WPREDICTED_y), D_varchar_20_(L_Bob))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Bob' at varchar(20) -> L_Bob = StringVal('Bob')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 749 lines, 28082 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1775.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_friend_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_n1, WGOLD_y
+      claim: And(And(Length(WGOLD_n) <= 20, Length(WGOLD_n1) <= 20, And(And(And(Person(WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), PersonFriend(WGOLD_n1, FV_friend_0, WGOLD_y)), WGOLD_n == WGOLD_n1), WGOLD_n == "Bob")), Not(Exists(predicted_y_1, And(PersonFriend("Bob", FV_friend_0, predicted_y_1), Length("Bob") <= 20))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_y
+      claim: And(And(PersonFriend("Bob", FV_friend_0, WPREDICTED_y), Length("Bob") <= 20), Not(Exists([gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5, gold_n1_6, gold_y_7], And(Length(gold_n_1) <= 20, Length(gold_n1_6) <= 20, And(And(And(Person(gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5), PersonFriend(gold_n1_6, FV_friend_0, gold_y_7)), gold_n_1 == gold_n1_6), gold_n_1 == "Bob")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.004 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 4 relation tuple(s) listed, 3 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          y : year = 2
+        free (answer) variables:
+          FV_friend_0 : friend = ''
+        literals / constants:
+          Bob : name = 'Bob'
+        relations (each value tagged with the local sort of its position):
+          Person(name, age, city, gender, job):
+            <empty over the values of this model>
+          PersonFriend(name, friend, year):
+            PersonFriend(name='', friend='A', year=3)
+            PersonFriend(name='', friend='Bob', year=0)
+            PersonFriend(name='A', friend='', year=0)
+            PersonFriend(name='Bob', friend='', year=2)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          friend : {'', 'A', 'Bob'}
+          name   : {'', 'A', 'Bob'}
+          year   : {0, 2, 3}
+        values shared across local sorts (joins):
+          '' : friend, name
+          'A' : friend, name
+          'Bob' : friend, name
+   [R3] took 0.019 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

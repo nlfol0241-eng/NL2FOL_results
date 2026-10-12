@@ -1,0 +1,84 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_562.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_562.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2749 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show theme and year for all exhibitions with ticket prices lower than 15.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Artist_ID = int -> IntSort()
+        Exhibition_ID = int -> IntSort()
+        Theme = text -> StringSort()
+        Ticket_Price = real -> Float32()
+        Year = int -> IntSort()
+      symbols:
+        exhibition(Exhibition_ID, Year, Theme, Artist_ID, Ticket_Price)
+        constant 15 : Ticket_Price
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Exhibition_ID ∃a : Artist_ID ∃t1 : Ticket_Price ( (exhibition(e,y,t,a,t1)) ∧ (t1 < 15) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Exhibition_ID EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:t1 COLON:: IDENT:Ticket_Price LPAR:( LPAR:( IDENT:exhibition LPAR:( IDENT:e COMMA:, IDENT:y COMMA:, IDENT:t COMMA:, IDENT:a COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t1 LT:< NUM:15 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Exhibition_ID
+            EXISTS a:Artist_ID
+              EXISTS t1:Ticket_Price
+                AND
+                  PRED exhibition(e, y, t, a, t1)
+                  CMP  t1 < 15
+      Predicted FOL: ∃e : Exhibition_ID ∃y : Year ∃t : Theme ∃a : Artist_ID ∃p : Ticket_Price (exhibition(e, y, t, a, p) ∧ p < 15)
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Exhibition_ID EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:t COLON:: IDENT:Theme EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:p COLON:: IDENT:Ticket_Price LPAR:( IDENT:exhibition LPAR:( IDENT:e COMMA:, IDENT:y COMMA:, IDENT:t COMMA:, IDENT:a COMMA:, IDENT:p RPAR:) AND:∧ IDENT:p LT:< NUM:15 RPAR:) EOF
+        AST:
+          EXISTS e:Exhibition_ID
+            EXISTS y:Year
+              EXISTS t:Theme
+                EXISTS a:Artist_ID
+                  EXISTS p:Ticket_Price
+                    AND
+                      PRED exhibition(e, y, t, a, p)
+                      CMP  p < 15
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (y : Year, t : Theme) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artist_ID, global int -> IntSort()
+        e : local Exhibition_ID, global int -> IntSort()
+        t : local Theme, global text -> StringSort()
+        t1 : local Ticket_Price, global real -> Float32()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        a : local Artist_ID, global int -> IntSort()
+        e : local Exhibition_ID, global int -> IntSort()
+        p : local Ticket_Price, global real -> Float32()
+        t : local Theme, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5346 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_562.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (y : Year, t : Theme) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

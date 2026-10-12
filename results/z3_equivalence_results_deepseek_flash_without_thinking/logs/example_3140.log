@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3140.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3140.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3707 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of people that have not been on the affirmative side of debates.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        bool -> BoolSort()
+        text -> StringSort()
+      local sorts:
+        Affirmative = int -> IntSort()
+        Age = int -> IntSort()
+        Debate_ID = int -> IntSort()
+        District = text -> StringSort()
+        If_Affirmative_Win = bool -> BoolSort()
+        Name = text -> StringSort()
+        Negative = int -> IntSort()
+        Party = text -> StringSort()
+        People_ID = int -> IntSort()
+      symbols:
+        debate_people(Debate_ID, Affirmative, Negative, If_Affirmative_Win)
+        people(People_ID, District, Name, Party, Age)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : District ∃a : Age ∃p1 : Party ∃p : People_ID( (people(p,d,n,p1,a)) ∧ (¬(∃a1 : Affirmative( ((people(p,d,n,p1,a)) ∧ (∃d1 : Debate_ID ∃i : If_Affirmative_Win ∃n1 : Negative( debate_people(d1,a1,n1,i) ))) ∧ (p = a1) ))) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:District EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:p1 COLON:: IDENT:Party EXISTS:∃ IDENT:p COLON:: IDENT:People_ID LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:n COMMA:, IDENT:p1 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a1 COLON:: IDENT:Affirmative LPAR:( LPAR:( LPAR:( IDENT:people LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:n COMMA:, IDENT:p1 COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:d1 COLON:: IDENT:Debate_ID EXISTS:∃ IDENT:i COLON:: IDENT:If_Affirmative_Win EXISTS:∃ IDENT:n1 COLON:: IDENT:Negative LPAR:( IDENT:debate_people LPAR:( IDENT:d1 COMMA:, IDENT:a1 COMMA:, IDENT:n1 COMMA:, IDENT:i RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:a1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:District
+            EXISTS a:Age
+              EXISTS p1:Party
+                EXISTS p:People_ID
+                  AND
+                    PRED people(p, d, n, p1, a)
+                    NOT
+                      EXISTS a1:Affirmative
+                        AND
+                          AND
+                            PRED people(p, d, n, p1, a)
+                            EXISTS d1:Debate_ID
+                              EXISTS i:If_Affirmative_Win
+                                EXISTS n1:Negative
+                                  PRED debate_people(d1, a1, n1, i)
+                          EQ  p = a1
+      Predicted FOL: ∃d : Debate_ID ∃a : Affirmative ∃n : Negative ∃w : If_Affirmative_Win (debate_people(d, a, n, w) ∧ people(a, District, Name, Party, Age))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Debate_ID EXISTS:∃ IDENT:a COLON:: IDENT:Affirmative EXISTS:∃ IDENT:n COLON:: IDENT:Negative EXISTS:∃ IDENT:w COLON:: IDENT:If_Affirmative_Win LPAR:( IDENT:debate_people LPAR:( IDENT:d COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:w RPAR:) AND:∧ IDENT:people LPAR:( IDENT:a COMMA:, IDENT:District COMMA:, IDENT:Name COMMA:, IDENT:Party COMMA:, IDENT:Age RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Debate_ID
+            EXISTS a:Affirmative
+              EXISTS n:Negative
+                EXISTS w:If_Affirmative_Win
+                  AND
+                    PRED debate_people(d, a, n, w)
+                    PRED people(a, District, Name, Party, Age)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) District, Name, Party, Age occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        a1 : local Affirmative, global int -> IntSort()
+        d : local District, global text -> StringSort()
+        d1 : local Debate_ID, global int -> IntSort()
+        i : local If_Affirmative_Win, global bool -> BoolSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Negative, global int -> IntSort()
+        p : local People_ID, global int -> IntSort()
+        p1 : local Party, global text -> StringSort()
+      Predicted FOL:
+        Age : local Age, global int -> IntSort()
+        District : local District, global text -> StringSort()
+        Name : local Name, global text -> StringSort()
+        Party : local Party, global text -> StringSort()
+        a : local Affirmative, global int -> IntSort()
+        d : local Debate_ID, global int -> IntSort()
+        n : local Negative, global int -> IntSort()
+        w : local If_Affirmative_Win, global bool -> BoolSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5624 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3140.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) District, Name, Party, Age occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

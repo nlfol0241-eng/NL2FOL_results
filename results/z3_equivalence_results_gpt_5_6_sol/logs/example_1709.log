@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1709.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1709.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3364 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of all the channels owned by either CCTV or HBS
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Channel_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Owner = text -> StringSort()
+        Rating_in_percent = real -> Float32()
+        Share_in_percent = real -> Float32()
+      symbols:
+        channel(Channel_ID, Name, Owner, Share_in_percent, Rating_in_percent)
+        constant CCTV : Owner
+        constant HBS : Owner
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Channel_ID ∃o : Owner ∃s : Share_in_percent ∃r : Rating_in_percent ( (channel(c,n,o,s,r)) ∧ ((o = 'CCTV') ∨ (o = 'HBS')) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:o COLON:: IDENT:Owner EXISTS:∃ IDENT:s COLON:: IDENT:Share_in_percent EXISTS:∃ IDENT:r COLON:: IDENT:Rating_in_percent LPAR:( LPAR:( IDENT:channel LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:s COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:o EQ:= LIT:CCTV RPAR:) OR:∨ LPAR:( IDENT:o EQ:= LIT:HBS RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Channel_ID
+            EXISTS o:Owner
+              EXISTS s:Share_in_percent
+                EXISTS r:Rating_in_percent
+                  AND
+                    PRED channel(c, n, o, s, r)
+                    OR
+                      EQ  o = 'CCTV'
+                      EQ  o = 'HBS'
+      Predicted FOL: ∃id : Channel_ID ∃owner : Owner ∃share : Share_in_percent ∃rating : Rating_in_percent (channel(id, name, owner, share, rating) ∧ (owner = CCTV ∨ owner = HBS))
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:owner COLON:: IDENT:Owner EXISTS:∃ IDENT:share COLON:: IDENT:Share_in_percent EXISTS:∃ IDENT:rating COLON:: IDENT:Rating_in_percent LPAR:( IDENT:channel LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:owner COMMA:, IDENT:share COMMA:, IDENT:rating RPAR:) AND:∧ LPAR:( IDENT:owner EQ:= IDENT:CCTV OR:∨ IDENT:owner EQ:= IDENT:HBS RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:Channel_ID
+            EXISTS owner:Owner
+              EXISTS share:Share_in_percent
+                EXISTS rating:Rating_in_percent
+                  AND
+                    PRED channel(id, name, owner, share, rating)
+                    OR
+                      EQ  owner = CCTV<const>
+                      EQ  owner = HBS<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Channel_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        o : local Owner, global text -> StringSort()
+        r : local Rating_in_percent, global real -> Float32()
+        s : local Share_in_percent, global real -> Float32()
+      Predicted FOL:
+        id : local Channel_ID, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+        owner : local Owner, global text -> StringSort()
+        rating : local Rating_in_percent, global real -> Float32()
+        share : local Share_in_percent, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_o_2, gold_s_3, gold_r_4], And(D_real(gold_s_3), D_real(gold_r_4), And(P_channel(gold_c_1, FV_Name_0, gold_o_2, gold_s_3, gold_r_4), Or((gold_o_2 == L_CCTV), (gold_o_2 == L_HBS)))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_r):  And(D_real(WGOLD_s), D_real(WGOLD_r), And(P_channel(WGOLD_c, FV_Name_0, WGOLD_o, WGOLD_s, WGOLD_r), Or((WGOLD_o == L_CCTV), (WGOLD_o == L_HBS))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_owner_2, predicted_share_3, predicted_rating_4], And(D_real(predicted_share_3), D_real(predicted_rating_4), And(P_channel(predicted_id_1, FV_Name_0, predicted_owner_2, predicted_share_3, predicted_rating_4), Or((predicted_owner_2 == L_CCTV), (predicted_owner_2 == L_HBS)))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_owner, WPREDICTED_share, WPREDICTED_rating):  And(D_real(WPREDICTED_share), D_real(WPREDICTED_rating), And(P_channel(WPREDICTED_id, FV_Name_0, WPREDICTED_owner, WPREDICTED_share, WPREDICTED_rating), Or((WPREDICTED_owner == L_CCTV), (WPREDICTED_owner == L_HBS))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'CCTV' at text -> L_CCTV = StringVal('CCTV')
+      literal 'HBS' at text -> L_HBS = StringVal('HBS')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 743 lines, 28492 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1709.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_o, WGOLD_s, WGOLD_r
+      claim: And(And(And(Not(fpIsNaN(WGOLD_s)), Not(And(fpIsZero(WGOLD_s), fpIsNegative(WGOLD_s)))), And(Not(fpIsNaN(WGOLD_r)), Not(And(fpIsZero(WGOLD_r), fpIsNegative(WGOLD_r)))), And(channel(WGOLD_c, FV_Name_0, WGOLD_o, WGOLD_s, WGOLD_r), Or(WGOLD_o == "CCTV", WGOLD_o == "HBS"))), Not(Exists([predicted_id_1, predicted_owner_2, predicted_share_3, predicted_rating_4], And(And(Not(fpIsNaN(predicted_share_3)), Not(And(fpIsZero(predicted_share_3), fpIsNegative(predicted_share_3)))), And(Not(fpIsNaN(predicted_rating_4)), Not(And(fpIsZero(predicted_rating_4), fpIsNegative(predicted_rating_4)))), And(channel(predicted_id_1, FV_Name_0, predicted_owner_2, predicted_share_3, predicted_rating_4), Or(predicted_owner_2 == "CCTV", predicted_owner_2 == "HBS"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.020 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_owner, WPREDICTED_share, WPREDICTED_rating
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_share)), Not(And(fpIsZero(WPREDICTED_share), fpIsNegative(WPREDICTED_share)))), And(Not(fpIsNaN(WPREDICTED_rating)), Not(And(fpIsZero(WPREDICTED_rating), fpIsNegative(WPREDICTED_rating)))), And(channel(WPREDICTED_id, FV_Name_0, WPREDICTED_owner, WPREDICTED_share, WPREDICTED_rating), Or(WPREDICTED_owner == "CCTV", WPREDICTED_owner == "HBS"))), Not(Exists([gold_c_1, gold_o_2, gold_s_3, gold_r_4], And(And(Not(fpIsNaN(gold_s_3)), Not(And(fpIsZero(gold_s_3), fpIsNegative(gold_s_3)))), And(Not(fpIsNaN(gold_r_4)), Not(And(fpIsZero(gold_r_4), fpIsNegative(gold_r_4)))), And(channel(gold_c_1, FV_Name_0, gold_o_2, gold_s_3, gold_r_4), Or(gold_o_2 == "CCTV", gold_o_2 == "HBS"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.016 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

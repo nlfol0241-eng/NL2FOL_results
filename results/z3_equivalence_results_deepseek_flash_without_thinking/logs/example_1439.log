@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1439.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1439.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4254 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: For each player, what are their name, season, and country that they belong to?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 12 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Capital = text -> StringSort()
+        College = text -> StringSort()
+        Country = int -> IntSort()
+        Country_id = int -> IntSort()
+        Country_name = text -> StringSort()
+        Draft_Class = text -> StringSort()
+        Draft_Pick_Number = int -> IntSort()
+        Official_native_language = text -> StringSort()
+        Player = text -> StringSort()
+        Position = text -> StringSort()
+        Season = real -> Float32()
+        Team = int -> IntSort()
+      symbols:
+        country(Country_id, Country_name, Capital, Official_native_language)
+        match_season(Season, Player, Position, Country, Team, Draft_Pick_Number, Draft_Class, College)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Country_id ∃c2 : Capital ∃o : Official_native_language ∃p1 : Position ∃c3 : Country ∃t : Team ∃d : Draft_Pick_Number ∃d1 : Draft_Class ∃c4 : College ( ((country(c,c1,c2,o)) ∧ (match_season(s,p,p1,c3,t,d,d1,c4))) ∧ (c = c3) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Country_id EXISTS:∃ IDENT:c2 COLON:: IDENT:Capital EXISTS:∃ IDENT:o COLON:: IDENT:Official_native_language EXISTS:∃ IDENT:p1 COLON:: IDENT:Position EXISTS:∃ IDENT:c3 COLON:: IDENT:Country EXISTS:∃ IDENT:t COLON:: IDENT:Team EXISTS:∃ IDENT:d COLON:: IDENT:Draft_Pick_Number EXISTS:∃ IDENT:d1 COLON:: IDENT:Draft_Class EXISTS:∃ IDENT:c4 COLON:: IDENT:College LPAR:( LPAR:( LPAR:( IDENT:country LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:match_season LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:c3 COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:c4 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Country_id
+            EXISTS c2:Capital
+              EXISTS o:Official_native_language
+                EXISTS p1:Position
+                  EXISTS c3:Country
+                    EXISTS t:Team
+                      EXISTS d:Draft_Pick_Number
+                        EXISTS d1:Draft_Class
+                          EXISTS c4:College
+                            AND
+                              AND
+                                PRED country(c, c1, c2, o)
+                                PRED match_season(s, p, p1, c3, t, d, d1, c4)
+                              EQ  c = c3
+      Predicted FOL: ∀p : Player ∃n : Player ∃s : Season ∃c : Country ( match_season(s, n, p, c, t, d, dc, col) ∧ country(c, cn, cap, lang) )
+        tokens: FORALL:∀ IDENT:p COLON:: IDENT:Player EXISTS:∃ IDENT:n COLON:: IDENT:Player EXISTS:∃ IDENT:s COLON:: IDENT:Season EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( IDENT:match_season LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:dc COMMA:, IDENT:col RPAR:) AND:∧ IDENT:country LPAR:( IDENT:c COMMA:, IDENT:cn COMMA:, IDENT:cap COMMA:, IDENT:lang RPAR:) RPAR:) EOF
+        AST:
+          FORALL p:Player
+            EXISTS n:Player
+              EXISTS s:Season
+                EXISTS c:Country
+                  AND
+                    PRED match_season(s, n, p, c, t, d, dc, col)
+                    PRED country(c, cn, cap, lang)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) t, d, dc, col, cn, cap, lang occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 3 free variable(s) (c1 : Country_name, s : Season, p : Player) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 23 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country_id, global int -> IntSort()
+        c1 : local Country_name, global text -> StringSort()
+        c2 : local Capital, global text -> StringSort()
+        c3 : local Country, global int -> IntSort()
+        c4 : local College, global text -> StringSort()
+        d : local Draft_Pick_Number, global int -> IntSort()
+        d1 : local Draft_Class, global text -> StringSort()
+        o : local Official_native_language, global text -> StringSort()
+        p : local Player, global text -> StringSort()
+        p1 : local Position, global text -> StringSort()
+        s : local Season, global real -> Float32()
+        t : local Team, global int -> IntSort()
+      Predicted FOL:
+        c : local Country, global int -> IntSort()
+        cap : local Capital, global text -> StringSort()
+        cn : local Country_name, global text -> StringSort()
+        col : local College, global text -> StringSort()
+        d : local Draft_Pick_Number, global int -> IntSort()
+        dc : local Draft_Class, global text -> StringSort()
+        lang : local Official_native_language, global text -> StringSort()
+        n : local Player, global text -> StringSort()
+        p : local Player, global text -> StringSort()
+        s : local Season, global real -> Float32()
+        t : local Team, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5679 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1439.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (c1 : Country_name, s : Season, p : Player) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) t, d, dc, col, cn, cap, lang occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

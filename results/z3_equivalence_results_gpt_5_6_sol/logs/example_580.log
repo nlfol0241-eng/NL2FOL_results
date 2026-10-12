@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_580.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_580.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2610 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the names of wrestlers with fewer than 100 days held.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        Days_held = text -> StringSort()
+        Event = text -> StringSort()
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        Reign = text -> StringSort()
+        Wrestler_ID = text -> StringSort()
+      symbols:
+        wrestler(Wrestler_ID, Name, Reign, Days_held, Location, Event)
+        constant 100 : Days_held
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃w : Wrestler_ID ∃r : Reign ∃d : Days_held ∃l : Location ∃e : Event ( (wrestler(w,n,r,d,l,e)) ∧ (d < 100) )
+        tokens: EXISTS:∃ IDENT:w COLON:: IDENT:Wrestler_ID EXISTS:∃ IDENT:r COLON:: IDENT:Reign EXISTS:∃ IDENT:d COLON:: IDENT:Days_held EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:e COLON:: IDENT:Event LPAR:( LPAR:( IDENT:wrestler LPAR:( IDENT:w COMMA:, IDENT:n COMMA:, IDENT:r COMMA:, IDENT:d COMMA:, IDENT:l COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d LT:< NUM:100 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS w:Wrestler_ID
+            EXISTS r:Reign
+              EXISTS d:Days_held
+                EXISTS l:Location
+                  EXISTS e:Event
+                    AND
+                      PRED wrestler(w, n, r, d, l, e)
+                      CMP  d < 100
+      Predicted FOL: ∃id : Wrestler_ID ∃reign : Reign ∃days : Days_held ∃location : Location ∃event : Event (wrestler(id, name, reign, days, location, event) ∧ days < 100)
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Wrestler_ID EXISTS:∃ IDENT:reign COLON:: IDENT:Reign EXISTS:∃ IDENT:days COLON:: IDENT:Days_held EXISTS:∃ IDENT:location COLON:: IDENT:Location EXISTS:∃ IDENT:event COLON:: IDENT:Event LPAR:( IDENT:wrestler LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:reign COMMA:, IDENT:days COMMA:, IDENT:location COMMA:, IDENT:event RPAR:) AND:∧ IDENT:days LT:< NUM:100 RPAR:) EOF
+        AST:
+          EXISTS id:Wrestler_ID
+            EXISTS reign:Reign
+              EXISTS days:Days_held
+                EXISTS location:Location
+                  EXISTS event:Event
+                    AND
+                      PRED wrestler(id, name, reign, days, location, event)
+                      CMP  days < 100
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Days_held, global text -> StringSort()
+        e : local Event, global text -> StringSort()
+        l : local Location, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        r : local Reign, global text -> StringSort()
+        w : local Wrestler_ID, global text -> StringSort()
+      Predicted FOL:
+        days : local Days_held, global text -> StringSort()
+        event : local Event, global text -> StringSort()
+        id : local Wrestler_ID, global text -> StringSort()
+        location : local Location, global text -> StringSort()
+        name : local Name, global text -> StringSort()
+        reign : local Reign, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_w_1, gold_r_2, gold_d_3, gold_l_4, gold_e_5], And(P_wrestler(gold_w_1, FV_Name_0, gold_r_2, gold_d_3, gold_l_4, gold_e_5), (gold_d_3 < L_v_100)))
+      gold_skolem (witnesses WGOLD_w, WGOLD_r, WGOLD_d, WGOLD_l, WGOLD_e):  And(P_wrestler(WGOLD_w, FV_Name_0, WGOLD_r, WGOLD_d, WGOLD_l, WGOLD_e), (WGOLD_d < L_v_100))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_reign_2, predicted_days_3, predicted_location_4, predicted_event_5], And(P_wrestler(predicted_id_1, FV_Name_0, predicted_reign_2, predicted_days_3, predicted_location_4, predicted_event_5), (predicted_days_3 < L_v_100)))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_reign, WPREDICTED_days, WPREDICTED_location, WPREDICTED_event):  And(P_wrestler(WPREDICTED_id, FV_Name_0, WPREDICTED_reign, WPREDICTED_days, WPREDICTED_location, WPREDICTED_event), (WPREDICTED_days < L_v_100))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '100' at text -> L_v_100 = StringVal('100')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 744 lines, 28361 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_580.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_w, WGOLD_r, WGOLD_d, WGOLD_l, WGOLD_e
+      claim: And(And(wrestler(WGOLD_w, FV_Name_0, WGOLD_r, WGOLD_d, WGOLD_l, WGOLD_e), str.<(WGOLD_d, "100")), Not(Exists([predicted_id_1, predicted_reign_2, predicted_days_3, predicted_location_4, predicted_event_5], And(wrestler(predicted_id_1, FV_Name_0, predicted_reign_2, predicted_days_3, predicted_location_4, predicted_event_5), str.<(predicted_days_3, "100")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_reign, WPREDICTED_days, WPREDICTED_location, WPREDICTED_event
+      claim: And(And(wrestler(WPREDICTED_id, FV_Name_0, WPREDICTED_reign, WPREDICTED_days, WPREDICTED_location, WPREDICTED_event), str.<(WPREDICTED_days, "100")), Not(Exists([gold_w_1, gold_r_2, gold_d_3, gold_l_4, gold_e_5], And(wrestler(gold_w_1, FV_Name_0, gold_r_2, gold_d_3, gold_l_4, gold_e_5), str.<(gold_d_3, "100")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

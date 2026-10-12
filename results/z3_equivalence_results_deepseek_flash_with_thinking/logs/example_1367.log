@@ -1,0 +1,224 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1367.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1367.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3172 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who are the nominees who were nominated for either of the Bob Fosse or Cleavant Derricks awards?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Award = text -> StringSort()
+        Category = text -> StringSort()
+        Musical_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Nominee = text -> StringSort()
+        Result = text -> StringSort()
+        Year = int -> IntSort()
+      symbols:
+        musical(Musical_ID, Name, Year, Award, Category, Nominee, Result)
+        constant Cleavant Derricks : Award
+        constant Tony Award : Award
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Musical_ID ∃n : Name ∃y : Year ∃a : Award ∃c : Category ∃r : Result ( (musical(m,n,y,a,c,n1,r)) ∧ ((a = 'Tony Award') ∨ (a = 'Cleavant Derricks')) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Musical_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:a COLON:: IDENT:Award EXISTS:∃ IDENT:c COLON:: IDENT:Category EXISTS:∃ IDENT:r COLON:: IDENT:Result LPAR:( LPAR:( IDENT:musical LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:n1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a EQ:= LIT:Tony Award RPAR:) OR:∨ LPAR:( IDENT:a EQ:= LIT:Cleavant Derricks RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Musical_ID
+            EXISTS n:Name
+              EXISTS y:Year
+                EXISTS a:Award
+                  EXISTS c:Category
+                    EXISTS r:Result
+                      AND
+                        PRED musical(m, n, y, a, c, n1, r)
+                        OR
+                          EQ  a = 'Tony Award'
+                          EQ  a = 'Cleavant Derricks'
+      Predicted FOL: ∃m : Musical_ID ∃n : Name ∃y : Year ∃c : Category ∃r : Result (musical(m, n, y, 'Bob Fosse', c, x, r) ∨ musical(m, n, y, 'Cleavant Derricks', c, x, r))
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Musical_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c COLON:: IDENT:Category EXISTS:∃ IDENT:r COLON:: IDENT:Result LPAR:( IDENT:musical LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, LIT:Bob Fosse COMMA:, IDENT:c COMMA:, IDENT:x COMMA:, IDENT:r RPAR:) OR:∨ IDENT:musical LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, LIT:Cleavant Derricks COMMA:, IDENT:c COMMA:, IDENT:x COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Musical_ID
+            EXISTS n:Name
+              EXISTS y:Year
+                EXISTS c:Category
+                  EXISTS r:Result
+                    OR
+                      PRED musical(m, n, y, 'Bob Fosse', c, x, r)
+                      PRED musical(m, n, y, 'Cleavant Derricks', c, x, r)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Nominee_0 : Nominee   Gold n1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Award, global text -> StringSort()
+        c : local Category, global text -> StringSort()
+        m : local Musical_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nominee, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        c : local Category, global text -> StringSort()
+        m : local Musical_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        x : local Nominee, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_n_2, gold_y_3, gold_a_4, gold_c_5, gold_r_6], And(P_musical(gold_m_1, gold_n_2, gold_y_3, gold_a_4, gold_c_5, FV_Nominee_0, gold_r_6), Or((gold_a_4 == L_Tony_Award), (gold_a_4 == L_Cleavant_Derricks))))
+      gold_skolem (witnesses WGOLD_m, WGOLD_n, WGOLD_y, WGOLD_a, WGOLD_c, WGOLD_r):  And(P_musical(WGOLD_m, WGOLD_n, WGOLD_y, WGOLD_a, WGOLD_c, FV_Nominee_0, WGOLD_r), Or((WGOLD_a == L_Tony_Award), (WGOLD_a == L_Cleavant_Derricks)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_n_2, predicted_y_3, predicted_c_4, predicted_r_5], Or(P_musical(predicted_m_1, predicted_n_2, predicted_y_3, L_Bob_Fosse, predicted_c_4, FV_Nominee_0, predicted_r_5), P_musical(predicted_m_1, predicted_n_2, predicted_y_3, L_Cleavant_Derricks, predicted_c_4, FV_Nominee_0, predicted_r_5)))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_n, WPREDICTED_y, WPREDICTED_c, WPREDICTED_r):  Or(P_musical(WPREDICTED_m, WPREDICTED_n, WPREDICTED_y, L_Bob_Fosse, WPREDICTED_c, FV_Nominee_0, WPREDICTED_r), P_musical(WPREDICTED_m, WPREDICTED_n, WPREDICTED_y, L_Cleavant_Derricks, WPREDICTED_c, FV_Nominee_0, WPREDICTED_r))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 3 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Bob Fosse' at text -> L_Bob_Fosse = StringVal('Bob Fosse')
+      literal 'Cleavant Derricks' at text -> L_Cleavant_Derricks = StringVal('Cleavant Derricks')
+      literal 'Tony Award' at text -> L_Tony_Award = StringVal('Tony Award')
+   0 sort axiom(s), 3 literal(s), 0 order(s) needing a definition; 755 lines, 29012 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1367.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_n, WGOLD_y, WGOLD_a, WGOLD_c, WGOLD_r
+      claim: And(And(musical(WGOLD_m, WGOLD_n, WGOLD_y, WGOLD_a, WGOLD_c, FV_Nominee_0, WGOLD_r), Or(WGOLD_a == "Tony Award", WGOLD_a == "Cleavant Derricks")), Not(Exists([predicted_m_1, predicted_n_2, predicted_y_3, predicted_c_4, predicted_r_5], Or(musical(predicted_m_1, predicted_n_2, predicted_y_3, "Bob Fosse", predicted_c_4, FV_Nominee_0, predicted_r_5), musical(predicted_m_1, predicted_n_2, predicted_y_3, "Cleavant Derricks", predicted_c_4, FV_Nominee_0, predicted_r_5)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.009 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 14 relation tuple(s) listed, 23 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          m : Musical_ID = 2
+          n : Name = 'Tony Award'
+          y : Year = 3
+          a : Award = 'Tony Award'
+          c : Category = 'Tony Award'
+          r : Result = 'Tony Award'
+        free (answer) variables:
+          FV_Nominee_0 : Nominee = 'Tony Award'
+        literals / constants:
+          Bob Fosse : text = 'Bob Fosse'
+          Cleavant Derricks : Award = 'Cleavant Derricks'
+          Tony Award : Award = 'Tony Award'
+        relations (each value tagged with the local sort of its position):
+          musical(Musical_ID, Name, Year, Award, Category, Nominee, Result):
+            musical(Musical_ID=0, Name='', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='!0!')
+            musical(Musical_ID=0, Name='', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='!1!')
+            musical(Musical_ID=0, Name='', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='Bob Fosse')
+            musical(Musical_ID=0, Name='', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='Cleavant Derricks')
+            musical(Musical_ID=0, Name='', Year=0, Award='Tony Award', Category='!0!', Nominee='Tony Award', Result='')
+            musical(Musical_ID=0, Name='', Year=0, Award='Tony Award', Category='Bob Fosse', Nominee='Tony Award', Result='')
+            musical(Musical_ID=0, Name='', Year=0, Award='Tony Award', Category='Cleavant Derricks', Nominee='Tony Award', Result='')
+            musical(Musical_ID=0, Name='', Year=2, Award='Tony Award', Category='', Nominee='Tony Award', Result='')
+            musical(Musical_ID=0, Name='!1!', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='')
+            musical(Musical_ID=0, Name='Bob Fosse', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='')
+            musical(Musical_ID=0, Name='Cleavant Derricks', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='')
+            musical(Musical_ID=2, Name='Tony Award', Year=3, Award='Tony Award', Category='Tony Award', Nominee='Tony Award', Result='Tony Award')
+            musical(Musical_ID=3, Name='!0!', Year=4, Award='Tony Award', Category='!1!', Nominee='Tony Award', Result='')
+            musical(Musical_ID=4, Name='', Year=0, Award='Tony Award', Category='', Nominee='Tony Award', Result='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Award      : {'Tony Award'}
+          Category   : {'', '!0!', '!1!', 'Bob Fosse', 'Cleavant Derricks', 'Tony Award'}
+          Musical_ID : {0, 2, 3, 4}
+          Name       : {'', '!0!', '!1!', 'Bob Fosse', 'Cleavant Derricks', 'Tony Award'}
+          Nominee    : {'Tony Award'}
+          Result     : {'', '!0!', '!1!', 'Bob Fosse', 'Cleavant Derricks', 'Tony Award'}
+          Year       : {0, 2, 3, 4}
+        values shared across local sorts (joins):
+          0 : Musical_ID, Year
+          2 : Musical_ID, Year
+          3 : Musical_ID, Year
+          4 : Musical_ID, Year
+          '!0!' : Category, Name, Result
+          '!1!' : Category, Name, Result
+          '' : Category, Name, Result
+          'Bob Fosse' : Category, Name, Result
+          'Cleavant Derricks' : Category, Name, Result
+          'Tony Award' : Award, Category, Name, Nominee, Result
+   [R2] took 0.112 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_n, WPREDICTED_y, WPREDICTED_c, WPREDICTED_r
+      claim: And(Or(musical(WPREDICTED_m, WPREDICTED_n, WPREDICTED_y, "Bob Fosse", WPREDICTED_c, FV_Nominee_0, WPREDICTED_r), musical(WPREDICTED_m, WPREDICTED_n, WPREDICTED_y, "Cleavant Derricks", WPREDICTED_c, FV_Nominee_0, WPREDICTED_r)), Not(Exists([gold_m_1, gold_n_2, gold_y_3, gold_a_4, gold_c_5, gold_r_6], And(musical(gold_m_1, gold_n_2, gold_y_3, gold_a_4, gold_c_5, FV_Nominee_0, gold_r_6), Or(gold_a_4 == "Tony Award", gold_a_4 == "Cleavant Derricks")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 19 relation tuple(s) listed, 37 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          m : Musical_ID = 2
+          n : Name = 'Bob Fosse'
+          y : Year = 3
+          c : Category = 'B'
+          r : Result = 'B'
+        free (answer) variables:
+          FV_Nominee_0 : Nominee = 'B'
+        literals / constants:
+          Bob Fosse : text = 'Bob Fosse'
+          Cleavant Derricks : Award = 'Cleavant Derricks'
+          Tony Award : Award = 'Tony Award'
+        relations (each value tagged with the local sort of its position):
+          musical(Musical_ID, Name, Year, Award, Category, Nominee, Result):
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='B', Nominee='B', Result='A')
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='B', Nominee='B', Result='Bob Fosse')
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='B', Nominee='B', Result='Cleavant Derricks')
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='B', Nominee='B', Result='D')
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='B', Nominee='B', Result='Tony Award')
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='Bob Fosse', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='Cleavant Derricks', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='A', Year=1, Award='Bob Fosse', Category='Tony Award', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='A', Year=2, Award='Bob Fosse', Category='C', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='A', Year=4, Award='Bob Fosse', Category='C', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='B', Year=1, Award='Bob Fosse', Category='A', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='C', Year=1, Award='Bob Fosse', Category='A', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='Cleavant Derricks', Year=1, Award='Bob Fosse', Category='A', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='D', Year=1, Award='Bob Fosse', Category='A', Nominee='B', Result='B')
+            musical(Musical_ID=1, Name='Tony Award', Year=1, Award='Bob Fosse', Category='A', Nominee='B', Result='B')
+            musical(Musical_ID=2, Name='Bob Fosse', Year=3, Award='Bob Fosse', Category='B', Nominee='B', Result='B')
+            musical(Musical_ID=3, Name='A', Year=1, Award='Bob Fosse', Category='C', Nominee='B', Result='B')
+            musical(Musical_ID=4, Name='A', Year=5, Award='Bob Fosse', Category='D', Nominee='B', Result='C')
+            musical(Musical_ID=5, Name='A', Year=1, Award='Bob Fosse', Category='C', Nominee='B', Result='B')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Award      : {'Bob Fosse'}
+          Category   : {'A', 'B', 'Bob Fosse', 'C', 'Cleavant Derricks', 'D', 'Tony Award'}
+          Musical_ID : {1, 2, 3, 4, 5}
+          Name       : {'A', 'B', 'Bob Fosse', 'C', 'Cleavant Derricks', 'D', 'Tony Award'}
+          Nominee    : {'B'}
+          Result     : {'A', 'B', 'Bob Fosse', 'C', 'Cleavant Derricks', 'D', 'Tony Award'}
+          Year       : {1, 2, 3, 4, 5}
+        values shared across local sorts (joins):
+          1 : Musical_ID, Year
+          2 : Musical_ID, Year
+          3 : Musical_ID, Year
+          4 : Musical_ID, Year
+          5 : Musical_ID, Year
+          'A' : Category, Name, Result
+          'B' : Category, Name, Nominee, Result
+          'Bob Fosse' : Award, Category, Name, Result
+          'C' : Category, Name, Result
+          'Cleavant Derricks' : Category, Name, Result
+          'D' : Category, Name, Result
+          'Tony Award' : Category, Name, Result
+   [R3] took 0.218 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

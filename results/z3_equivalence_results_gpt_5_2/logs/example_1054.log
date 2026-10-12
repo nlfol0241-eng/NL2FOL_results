@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1054.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1054.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2787 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List ids for all student who are on scholarship.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(32) -> StringSort()   [domain Length(x) <= 32; length <= 32]
+        integer -> IntSort()
+      local sorts:
+        GamesPlayed = integer -> IntSort()
+        HoursPerWeek = integer -> IntSort()
+        OnScholarship = varchar(1) -> StringSort()
+        SportName = varchar(32) -> StringSort()
+        StuID = integer -> IntSort()
+      symbols:
+        SportsInfo(StuID, SportName, HoursPerWeek, GamesPlayed, OnScholarship)
+        constant Y : OnScholarship
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s1 : SportName ∃h : HoursPerWeek ∃g : GamesPlayed ∃o : OnScholarship ( (SportsInfo(s,s1,h,g,o)) ∧ (o = 'Y') )
+        tokens: EXISTS:∃ IDENT:s1 COLON:: IDENT:SportName EXISTS:∃ IDENT:h COLON:: IDENT:HoursPerWeek EXISTS:∃ IDENT:g COLON:: IDENT:GamesPlayed EXISTS:∃ IDENT:o COLON:: IDENT:OnScholarship LPAR:( LPAR:( IDENT:SportsInfo LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:h COMMA:, IDENT:g COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= LIT:Y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s1:SportName
+            EXISTS h:HoursPerWeek
+              EXISTS g:GamesPlayed
+                EXISTS o:OnScholarship
+                  AND
+                    PRED SportsInfo(s, s1, h, g, o)
+                    EQ  o = 'Y'
+      Predicted FOL: ∃s:StuID ∃sp:SportName ∃h:HoursPerWeek ∃g:GamesPlayed (SportsInfo(s, sp, h, g, Y) ∧ s = x)
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:sp COLON:: IDENT:SportName EXISTS:∃ IDENT:h COLON:: IDENT:HoursPerWeek EXISTS:∃ IDENT:g COLON:: IDENT:GamesPlayed LPAR:( IDENT:SportsInfo LPAR:( IDENT:s COMMA:, IDENT:sp COMMA:, IDENT:h COMMA:, IDENT:g COMMA:, IDENT:Y RPAR:) AND:∧ IDENT:s EQ:= IDENT:x RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS sp:SportName
+              EXISTS h:HoursPerWeek
+                EXISTS g:GamesPlayed
+                  AND
+                    PRED SportsInfo(s, sp, h, g, Y<const>)
+                    EQ  s = x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_StuID_0 : StuID   Gold s <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local GamesPlayed, global integer -> IntSort()
+        h : local HoursPerWeek, global integer -> IntSort()
+        o : local OnScholarship, global varchar(1) -> StringSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local SportName, global varchar(32) -> StringSort()
+      Predicted FOL:
+        g : local GamesPlayed, global integer -> IntSort()
+        h : local HoursPerWeek, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        sp : local SportName, global varchar(32) -> StringSort()
+        x : local StuID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s1_1, gold_h_2, gold_g_3, gold_o_4], And(D_varchar_32_(gold_s1_1), D_varchar_1_(gold_o_4), And(P_SportsInfo(FV_StuID_0, gold_s1_1, gold_h_2, gold_g_3, gold_o_4), (gold_o_4 == L_Y))))
+      gold_skolem (witnesses WGOLD_s1, WGOLD_h, WGOLD_g, WGOLD_o):  And(D_varchar_32_(WGOLD_s1), D_varchar_1_(WGOLD_o), And(P_SportsInfo(FV_StuID_0, WGOLD_s1, WGOLD_h, WGOLD_g, WGOLD_o), (WGOLD_o == L_Y)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_sp_2, predicted_h_3, predicted_g_4], And(D_varchar_32_(predicted_sp_2), And(And(P_SportsInfo(predicted_s_1, predicted_sp_2, predicted_h_3, predicted_g_4, L_Y), D_varchar_1_(L_Y)), (predicted_s_1 == FV_StuID_0))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_sp, WPREDICTED_h, WPREDICTED_g):  And(D_varchar_32_(WPREDICTED_sp), And(And(P_SportsInfo(WPREDICTED_s, WPREDICTED_sp, WPREDICTED_h, WPREDICTED_g, L_Y), D_varchar_1_(L_Y)), (WPREDICTED_s == FV_StuID_0)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Y' at varchar(1) -> L_Y = StringVal('Y')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 744 lines, 28265 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1054.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s1, WGOLD_h, WGOLD_g, WGOLD_o
+      claim: And(And(Length(WGOLD_s1) <= 32, Length(WGOLD_o) <= 1, And(SportsInfo(FV_StuID_0, WGOLD_s1, WGOLD_h, WGOLD_g, WGOLD_o), WGOLD_o == "Y")), Not(Exists([predicted_s_1, predicted_sp_2, predicted_h_3, predicted_g_4], And(Length(predicted_sp_2) <= 32, And(And(SportsInfo(predicted_s_1, predicted_sp_2, predicted_h_3, predicted_g_4, "Y"), Length("Y") <= 1), predicted_s_1 == FV_StuID_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_sp, WPREDICTED_h, WPREDICTED_g
+      claim: And(And(Length(WPREDICTED_sp) <= 32, And(And(SportsInfo(WPREDICTED_s, WPREDICTED_sp, WPREDICTED_h, WPREDICTED_g, "Y"), Length("Y") <= 1), WPREDICTED_s == FV_StuID_0)), Not(Exists([gold_s1_1, gold_h_2, gold_g_3, gold_o_4], And(Length(gold_s1_1) <= 32, Length(gold_o_4) <= 1, And(SportsInfo(FV_StuID_0, gold_s1_1, gold_h_2, gold_g_3, gold_o_4), gold_o_4 == "Y")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

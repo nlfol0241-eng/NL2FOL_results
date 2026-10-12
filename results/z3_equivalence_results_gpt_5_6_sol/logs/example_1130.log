@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1130.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1130.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2190 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the name, time, and service for all trains.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Name = text -> StringSort()
+        Service = text -> StringSort()
+        Time = text -> StringSort()
+        Train_ID = int -> IntSort()
+      symbols:
+        train(Train_ID, Name, Time, Service)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : Train_ID ( train(t,n,t1,s) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Train_ID LPAR:( IDENT:train LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Train_ID
+            PRED train(t, n, t1, s)
+      Predicted FOL: ∃id : Train_ID train(id, name, time, service)
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Train_ID IDENT:train LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:time COMMA:, IDENT:service RPAR:) EOF
+        AST:
+          EXISTS id:Train_ID
+            PRED train(id, name, time, service)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+      FV_Service_0 : Service   Gold s <-> Predicted service
+      FV_Time_0 : Time   Gold t1 <-> Predicted time
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Name, global text -> StringSort()
+        s : local Service, global text -> StringSort()
+        t : local Train_ID, global int -> IntSort()
+        t1 : local Time, global text -> StringSort()
+      Predicted FOL:
+        id : local Train_ID, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+        service : local Service, global text -> StringSort()
+        time : local Time, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1], P_train(gold_t_1, FV_Name_0, FV_Time_0, FV_Service_0))
+      gold_skolem (witnesses WGOLD_t):  P_train(WGOLD_t, FV_Name_0, FV_Time_0, FV_Service_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1], P_train(predicted_id_1, FV_Name_0, FV_Time_0, FV_Service_0))
+      predicted_skolem (witnesses WPREDICTED_id):  P_train(WPREDICTED_id, FV_Name_0, FV_Time_0, FV_Service_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 720 lines, 26168 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1130.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_t
+      claim: And(train(WGOLD_t, FV_Name_0, FV_Time_0, FV_Service_0), Not(Exists(predicted_id_1, train(predicted_id_1, FV_Name_0, FV_Time_0, FV_Service_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id
+      claim: And(train(WPREDICTED_id, FV_Name_0, FV_Time_0, FV_Service_0), Not(Exists(gold_t_1, train(gold_t_1, FV_Name_0, FV_Time_0, FV_Service_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

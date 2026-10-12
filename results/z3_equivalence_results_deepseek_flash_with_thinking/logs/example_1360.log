@@ -1,0 +1,130 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1360.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1360.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3456 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show writers who have published a book with price more than 4000000.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Book_ID = int -> IntSort()
+        Issues = real -> Float32()
+        Price = real -> Float32()
+        Publication_Date = text -> StringSort()
+        Publication_ID = int -> IntSort()
+        Publisher = text -> StringSort()
+        Title = text -> StringSort()
+        Writer = text -> StringSort()
+      symbols:
+        book(Book_ID, Title, Issues, Writer)
+        publication(Publication_ID, Book_ID, Publisher, Publication_Date, Price)
+        constant 4000000 : Price
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : Book_ID ∃t : Title ∃i : Issues ∃p : Publication_ID ∃b1 : Book_ID ∃p1 : Publisher ∃p2 : Publication_Date ∃p3 : Price ( (((book(b,t,i,w)) ∧ (publication(p,b1,p1,p2,p3))) ∧ (b = b1)) ∧ (p3 > 4000000) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Book_ID EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:i COLON:: IDENT:Issues EXISTS:∃ IDENT:p COLON:: IDENT:Publication_ID EXISTS:∃ IDENT:b1 COLON:: IDENT:Book_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Publisher EXISTS:∃ IDENT:p2 COLON:: IDENT:Publication_Date EXISTS:∃ IDENT:p3 COLON:: IDENT:Price LPAR:( LPAR:( LPAR:( LPAR:( IDENT:book LPAR:( IDENT:b COMMA:, IDENT:t COMMA:, IDENT:i COMMA:, IDENT:w RPAR:) RPAR:) AND:∧ LPAR:( IDENT:publication LPAR:( IDENT:p COMMA:, IDENT:b1 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p3 GT:> NUM:4000000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Book_ID
+            EXISTS t:Title
+              EXISTS i:Issues
+                EXISTS p:Publication_ID
+                  EXISTS b1:Book_ID
+                    EXISTS p1:Publisher
+                      EXISTS p2:Publication_Date
+                        EXISTS p3:Price
+                          AND
+                            AND
+                              AND
+                                PRED book(b, t, i, w)
+                                PRED publication(p, b1, p1, p2, p3)
+                              EQ  b = b1
+                            CMP  p3 > 4000000
+      Predicted FOL: ∃b_id : Book_ID ∃b_title : Title ∃b_issues : Issues ∃p_id : Publication_ID ∃p_book_id : Book_ID ∃p_publisher : Publisher ∃p_date : Publication_Date ∃p_price : Price ( book(b_id, b_title, b_issues, w) ∧ publication(p_id, p_book_id, p_publisher, p_date, p_price) ∧ p_book_id = b_id ∧ p_price > 4000000 )
+        tokens: EXISTS:∃ IDENT:b_id COLON:: IDENT:Book_ID EXISTS:∃ IDENT:b_title COLON:: IDENT:Title EXISTS:∃ IDENT:b_issues COLON:: IDENT:Issues EXISTS:∃ IDENT:p_id COLON:: IDENT:Publication_ID EXISTS:∃ IDENT:p_book_id COLON:: IDENT:Book_ID EXISTS:∃ IDENT:p_publisher COLON:: IDENT:Publisher EXISTS:∃ IDENT:p_date COLON:: IDENT:Publication_Date EXISTS:∃ IDENT:p_price COLON:: IDENT:Price LPAR:( IDENT:book LPAR:( IDENT:b_id COMMA:, IDENT:b_title COMMA:, IDENT:b_issues COMMA:, IDENT:w RPAR:) AND:∧ IDENT:publication LPAR:( IDENT:p_id COMMA:, IDENT:p_book_id COMMA:, IDENT:p_publisher COMMA:, IDENT:p_date COMMA:, IDENT:p_price RPAR:) AND:∧ IDENT:p_book_id EQ:= IDENT:b_id AND:∧ IDENT:p_price GT:> NUM:4000000 RPAR:) EOF
+        AST:
+          EXISTS b_id:Book_ID
+            EXISTS b_title:Title
+              EXISTS b_issues:Issues
+                EXISTS p_id:Publication_ID
+                  EXISTS p_book_id:Book_ID
+                    EXISTS p_publisher:Publisher
+                      EXISTS p_date:Publication_Date
+                        EXISTS p_price:Price
+                          AND
+                            PRED book(b_id, b_title, b_issues, w)
+                            PRED publication(p_id, p_book_id, p_publisher, p_date, p_price)
+                            EQ  p_book_id = b_id
+                            CMP  p_price > 4000000
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Writer_0 : Writer   Gold w <-> Predicted w
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Book_ID, global int -> IntSort()
+        b1 : local Book_ID, global int -> IntSort()
+        i : local Issues, global real -> Float32()
+        p : local Publication_ID, global int -> IntSort()
+        p1 : local Publisher, global text -> StringSort()
+        p2 : local Publication_Date, global text -> StringSort()
+        p3 : local Price, global real -> Float32()
+        t : local Title, global text -> StringSort()
+        w : local Writer, global text -> StringSort()
+      Predicted FOL:
+        b_id : local Book_ID, global int -> IntSort()
+        b_issues : local Issues, global real -> Float32()
+        b_title : local Title, global text -> StringSort()
+        p_book_id : local Book_ID, global int -> IntSort()
+        p_date : local Publication_Date, global text -> StringSort()
+        p_id : local Publication_ID, global int -> IntSort()
+        p_price : local Price, global real -> Float32()
+        p_publisher : local Publisher, global text -> StringSort()
+        w : local Writer, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_t_2, gold_i_3, gold_p_4, gold_b1_5, gold_p1_6, gold_p2_7, gold_p3_8], And(D_real(gold_i_3), D_real(gold_p3_8), And(And(And(P_book(gold_b_1, gold_t_2, gold_i_3, FV_Writer_0), P_publication(gold_p_4, gold_b1_5, gold_p1_6, gold_p2_7, gold_p3_8)), (gold_b_1 == gold_b1_5)), (gold_p3_8 > L_v_4000000_real))))
+      gold_skolem (witnesses WGOLD_b, WGOLD_t, WGOLD_i, WGOLD_p, WGOLD_b1, WGOLD_p1, WGOLD_p2, WGOLD_p3):  And(D_real(WGOLD_i), D_real(WGOLD_p3), And(And(And(P_book(WGOLD_b, WGOLD_t, WGOLD_i, FV_Writer_0), P_publication(WGOLD_p, WGOLD_b1, WGOLD_p1, WGOLD_p2, WGOLD_p3)), (WGOLD_b == WGOLD_b1)), (WGOLD_p3 > L_v_4000000_real)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_b_id_1, predicted_b_title_2, predicted_b_issues_3, predicted_p_id_4, predicted_p_book_id_5, predicted_p_publisher_6, predicted_p_date_7, predicted_p_price_8], And(D_real(predicted_b_issues_3), D_real(predicted_p_price_8), And(P_book(predicted_b_id_1, predicted_b_title_2, predicted_b_issues_3, FV_Writer_0), P_publication(predicted_p_id_4, predicted_p_book_id_5, predicted_p_publisher_6, predicted_p_date_7, predicted_p_price_8), (predicted_p_book_id_5 == predicted_b_id_1), (predicted_p_price_8 > L_v_4000000_real))))
+      predicted_skolem (witnesses WPREDICTED_b_id, WPREDICTED_b_title, WPREDICTED_b_issues, WPREDICTED_p_id, WPREDICTED_p_book_id, WPREDICTED_p_publisher, WPREDICTED_p_date, WPREDICTED_p_price):  And(D_real(WPREDICTED_b_issues), D_real(WPREDICTED_p_price), And(P_book(WPREDICTED_b_id, WPREDICTED_b_title, WPREDICTED_b_issues, FV_Writer_0), P_publication(WPREDICTED_p_id, WPREDICTED_p_book_id, WPREDICTED_p_publisher, WPREDICTED_p_date, WPREDICTED_p_price), (WPREDICTED_p_book_id == WPREDICTED_b_id), (WPREDICTED_p_price > L_v_4000000_real)))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '4000000' at real -> L_v_4000000_real = FPVal(4000000.0, Float32())
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 774 lines, 31304 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1360.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_t, WGOLD_i, WGOLD_p, WGOLD_b1, WGOLD_p1, WGOLD_p2, WGOLD_p3
+      claim: And(And(And(Not(fpIsNaN(WGOLD_i)), Not(And(fpIsZero(WGOLD_i), fpIsNegative(WGOLD_i)))), And(Not(fpIsNaN(WGOLD_p3)), Not(And(fpIsZero(WGOLD_p3), fpIsNegative(WGOLD_p3)))), And(And(And(book(WGOLD_b, WGOLD_t, WGOLD_i, FV_Writer_0), publication(WGOLD_p, WGOLD_b1, WGOLD_p1, WGOLD_p2, WGOLD_p3)), WGOLD_b == WGOLD_b1), 1.9073486328125*(2**21) < WGOLD_p3)), Not(Exists([predicted_b_id_1, predicted_b_title_2, predicted_b_issues_3, predicted_p_id_4, predicted_p_book_id_5, predicted_p_publisher_6, predicted_p_date_7, predicted_p_price_8], And(And(Not(fpIsNaN(predicted_b_issues_3)), Not(And(fpIsZero(predicted_b_issues_3), fpIsNegative(predicted_b_issues_3)))), And(Not(fpIsNaN(predicted_p_price_8)), Not(And(fpIsZero(predicted_p_price_8), fpIsNegative(predicted_p_price_8)))), And(book(predicted_b_id_1, predicted_b_title_2, predicted_b_issues_3, FV_Writer_0), publication(predicted_p_id_4, predicted_p_book_id_5, predicted_p_publisher_6, predicted_p_date_7, predicted_p_price_8), predicted_p_book_id_5 == predicted_b_id_1, 1.9073486328125*(2**21) < predicted_p_price_8)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_b_id, WPREDICTED_b_title, WPREDICTED_b_issues, WPREDICTED_p_id, WPREDICTED_p_book_id, WPREDICTED_p_publisher, WPREDICTED_p_date, WPREDICTED_p_price
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_b_issues)), Not(And(fpIsZero(WPREDICTED_b_issues), fpIsNegative(WPREDICTED_b_issues)))), And(Not(fpIsNaN(WPREDICTED_p_price)), Not(And(fpIsZero(WPREDICTED_p_price), fpIsNegative(WPREDICTED_p_price)))), And(book(WPREDICTED_b_id, WPREDICTED_b_title, WPREDICTED_b_issues, FV_Writer_0), publication(WPREDICTED_p_id, WPREDICTED_p_book_id, WPREDICTED_p_publisher, WPREDICTED_p_date, WPREDICTED_p_price), WPREDICTED_p_book_id == WPREDICTED_b_id, 1.9073486328125*(2**21) < WPREDICTED_p_price)), Not(Exists([gold_b_1, gold_t_2, gold_i_3, gold_p_4, gold_b1_5, gold_p1_6, gold_p2_7, gold_p3_8], And(And(Not(fpIsNaN(gold_i_3)), Not(And(fpIsZero(gold_i_3), fpIsNegative(gold_i_3)))), And(Not(fpIsNaN(gold_p3_8)), Not(And(fpIsZero(gold_p3_8), fpIsNegative(gold_p3_8)))), And(And(And(book(gold_b_1, gold_t_2, gold_i_3, FV_Writer_0), publication(gold_p_4, gold_b1_5, gold_p1_6, gold_p2_7, gold_p3_8)), gold_b_1 == gold_b1_5), 1.9073486328125*(2**21) < gold_p3_8)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

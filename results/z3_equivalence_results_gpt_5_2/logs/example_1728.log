@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1728.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1728.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8179 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the name of physicians who took some appointment.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 11 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        AppointmentID = integer -> IntSort()
+        EmployeeID = integer -> IntSort()
+        End = datetime -> IntSort()
+        ExaminationRoom = text -> StringSort()
+        Name = varchar(30) -> StringSort()
+        Patient = integer -> IntSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        PrepNurse = integer -> IntSort()
+        SSN = integer -> IntSort()
+        Start = datetime -> IntSort()
+      symbols:
+        Appointment(AppointmentID, Patient, PrepNurse, Physician, Start, End, ExaminationRoom)
+        Physician(EmployeeID, Name, Position, SSN)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : AppointmentID ∃p : Patient ∃p1 : PrepNurse ∃p2 : Physician ∃s : Start ∃e : End ∃e1 : ExaminationRoom ∃e2 : EmployeeID ∃p3 : Position ∃s1 : SSN ( ((Appointment(a,p,p1,p2,s,e,e1)) ∧ (Physician(e2,n,p3,s1))) ∧ (p2 = e2) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:AppointmentID EXISTS:∃ IDENT:p COLON:: IDENT:Patient EXISTS:∃ IDENT:p1 COLON:: IDENT:PrepNurse EXISTS:∃ IDENT:p2 COLON:: IDENT:Physician EXISTS:∃ IDENT:s COLON:: IDENT:Start EXISTS:∃ IDENT:e COLON:: IDENT:End EXISTS:∃ IDENT:e1 COLON:: IDENT:ExaminationRoom EXISTS:∃ IDENT:e2 COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p3 COLON:: IDENT:Position EXISTS:∃ IDENT:s1 COLON:: IDENT:SSN LPAR:( LPAR:( LPAR:( IDENT:Appointment LPAR:( IDENT:a COMMA:, IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:s COMMA:, IDENT:e COMMA:, IDENT:e1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Physician LPAR:( IDENT:e2 COMMA:, IDENT:n COMMA:, IDENT:p3 COMMA:, IDENT:s1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p2 EQ:= IDENT:e2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:AppointmentID
+            EXISTS p:Patient
+              EXISTS p1:PrepNurse
+                EXISTS p2:Physician
+                  EXISTS s:Start
+                    EXISTS e:End
+                      EXISTS e1:ExaminationRoom
+                        EXISTS e2:EmployeeID
+                          EXISTS p3:Position
+                            EXISTS s1:SSN
+                              AND
+                                AND
+                                  PRED Appointment(a, p, p1, p2, s, e, e1)
+                                  PRED Physician(e2, n, p3, s1)
+                                EQ  p2 = e2
+      Predicted FOL: ∃n:Name ∃e:EmployeeID ∃p:Position ∃s:SSN ( Physician(e, n, p, s) ∧ ∃aid:AppointmentID ∃pat:Patient ∃prep:PrepNurse ∃st:Start ∃en:End ∃room:ExaminationRoom ( Appointment(aid, pat, prep, e, st, en, room) ) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:s COLON:: IDENT:SSN LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) AND:∧ EXISTS:∃ IDENT:aid COLON:: IDENT:AppointmentID EXISTS:∃ IDENT:pat COLON:: IDENT:Patient EXISTS:∃ IDENT:prep COLON:: IDENT:PrepNurse EXISTS:∃ IDENT:st COLON:: IDENT:Start EXISTS:∃ IDENT:en COLON:: IDENT:End EXISTS:∃ IDENT:room COLON:: IDENT:ExaminationRoom LPAR:( IDENT:Appointment LPAR:( IDENT:aid COMMA:, IDENT:pat COMMA:, IDENT:prep COMMA:, IDENT:e COMMA:, IDENT:st COMMA:, IDENT:en COMMA:, IDENT:room RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Name
+            EXISTS e:EmployeeID
+              EXISTS p:Position
+                EXISTS s:SSN
+                  AND
+                    PRED Physician(e, n, p, s)
+                    EXISTS aid:AppointmentID
+                      EXISTS pat:Patient
+                        EXISTS prep:PrepNurse
+                          EXISTS st:Start
+                            EXISTS en:End
+                              EXISTS room:ExaminationRoom
+                                PRED Appointment(aid, pat, prep, e, st, en, room)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 21 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local AppointmentID, global integer -> IntSort()
+        e : local End, global datetime -> IntSort()
+        e1 : local ExaminationRoom, global text -> StringSort()
+        e2 : local EmployeeID, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Patient, global integer -> IntSort()
+        p1 : local PrepNurse, global integer -> IntSort()
+        p2 : local Physician, global integer -> IntSort()
+        p3 : local Position, global varchar(30) -> StringSort()
+        s : local Start, global datetime -> IntSort()
+        s1 : local SSN, global integer -> IntSort()
+      Predicted FOL:
+        aid : local AppointmentID, global integer -> IntSort()
+        e : local EmployeeID, global integer -> IntSort()
+        en : local End, global datetime -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        pat : local Patient, global integer -> IntSort()
+        prep : local PrepNurse, global integer -> IntSort()
+        room : local ExaminationRoom, global text -> StringSort()
+        s : local SSN, global integer -> IntSort()
+        st : local Start, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5557 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1728.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

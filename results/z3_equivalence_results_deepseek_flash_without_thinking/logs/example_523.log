@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_523.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_523.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4204 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the start date and end date of each apartment booking?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        apt_booking_id = integer -> IntSort()
+        apt_id = integer -> IntSort()
+        booking_end_date = datetime -> IntSort()
+        booking_start_date = datetime -> IntSort()
+        booking_status_code = char(15) -> StringSort()
+        guest_id = integer -> IntSort()
+      symbols:
+        Apartment_Bookings(apt_booking_id, apt_id, guest_id, booking_status_code, booking_start_date, booking_end_date)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apt_booking_id ∃a1 : apt_id ∃g : guest_id ∃b : booking_status_code ( Apartment_Bookings(a,a1,g,b,b1,b2) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apt_booking_id EXISTS:∃ IDENT:a1 COLON:: IDENT:apt_id EXISTS:∃ IDENT:g COLON:: IDENT:guest_id EXISTS:∃ IDENT:b COLON:: IDENT:booking_status_code LPAR:( IDENT:Apartment_Bookings LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:g COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:b2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apt_booking_id
+            EXISTS a1:apt_id
+              EXISTS g:guest_id
+                EXISTS b:booking_status_code
+                  PRED Apartment_Bookings(a, a1, g, b, b1, b2)
+      Predicted FOL: ∀x0 : apt_booking_id ∀x1 : apt_id ∀x2 : guest_id ∀x3 : booking_status_code ∀x4 : booking_start_date ∀x5 : booking_end_date (Apartment_Bookings(x0, x1, x2, x3, x4, x5) → (True ∧ True))
+        tokens: FORALL:∀ IDENT:x0 COLON:: IDENT:apt_booking_id FORALL:∀ IDENT:x1 COLON:: IDENT:apt_id FORALL:∀ IDENT:x2 COLON:: IDENT:guest_id FORALL:∀ IDENT:x3 COLON:: IDENT:booking_status_code FORALL:∀ IDENT:x4 COLON:: IDENT:booking_start_date FORALL:∀ IDENT:x5 COLON:: IDENT:booking_end_date LPAR:( IDENT:Apartment_Bookings LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 RPAR:) IMPL:→ LPAR:( TRUE:True AND:∧ TRUE:True RPAR:) RPAR:) EOF
+        AST:
+          FORALL x0:apt_booking_id
+            FORALL x1:apt_id
+              FORALL x2:guest_id
+                FORALL x3:booking_status_code
+                  FORALL x4:booking_start_date
+                    FORALL x5:booking_end_date
+                      IMPLIES
+                        PRED Apartment_Bookings(x0, x1, x2, x3, x4, x5)
+                        AND
+                          TRUE
+                          TRUE
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (b1 : booking_start_date, b2 : booking_end_date) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apt_booking_id, global integer -> IntSort()
+        a1 : local apt_id, global integer -> IntSort()
+        b : local booking_status_code, global char(15) -> StringSort()
+        b1 : local booking_start_date, global datetime -> IntSort()
+        b2 : local booking_end_date, global datetime -> IntSort()
+        g : local guest_id, global integer -> IntSort()
+      Predicted FOL:
+        x0 : local apt_booking_id, global integer -> IntSort()
+        x1 : local apt_id, global integer -> IntSort()
+        x2 : local guest_id, global integer -> IntSort()
+        x3 : local booking_status_code, global char(15) -> StringSort()
+        x4 : local booking_start_date, global datetime -> IntSort()
+        x5 : local booking_end_date, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5485 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_523.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (b1 : booking_start_date, b2 : booking_end_date) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

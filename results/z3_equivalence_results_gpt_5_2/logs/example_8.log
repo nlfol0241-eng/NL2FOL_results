@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_8.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_8.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2622 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the abbreviation of Airline "JetBlue Airways"?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Abbreviation = text -> StringSort()
+        Airline = text -> StringSort()
+        Country = text -> StringSort()
+        uid = integer -> IntSort()
+      symbols:
+        airlines(uid, Airline, Abbreviation, Country)
+        constant JetBlue Airways : Airline
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃a : Airline ∃c : Country ( (airlines(u,a,a1,c)) ∧ (a = 'JetBlue Airways') )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:a COLON:: IDENT:Airline EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( LPAR:( IDENT:airlines LPAR:( IDENT:u COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= LIT:JetBlue Airways RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS a:Airline
+              EXISTS c:Country
+                AND
+                  PRED airlines(u, a, a1, c)
+                  EQ  a = 'JetBlue Airways'
+      Predicted FOL: ∃u:uid ∃c:Country (airlines(u, 'JetBlue Airways', a, c))
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( IDENT:airlines LPAR:( IDENT:u COMMA:, LIT:JetBlue Airways COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS c:Country
+              PRED airlines(u, 'JetBlue Airways', a, c)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Abbreviation_0 : Abbreviation   Gold a1 <-> Predicted a
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Airline, global text -> StringSort()
+        a1 : local Abbreviation, global text -> StringSort()
+        c : local Country, global text -> StringSort()
+        u : local uid, global integer -> IntSort()
+      Predicted FOL:
+        a : local Abbreviation, global text -> StringSort()
+        c : local Country, global text -> StringSort()
+        u : local uid, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_u_1, gold_a_2, gold_c_3], And(P_airlines(gold_u_1, gold_a_2, FV_Abbreviation_0, gold_c_3), (gold_a_2 == L_JetBlue_Airways)))
+      gold_skolem (witnesses WGOLD_u, WGOLD_a, WGOLD_c):  And(P_airlines(WGOLD_u, WGOLD_a, FV_Abbreviation_0, WGOLD_c), (WGOLD_a == L_JetBlue_Airways))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_u_1, predicted_c_2], P_airlines(predicted_u_1, L_JetBlue_Airways, FV_Abbreviation_0, predicted_c_2))
+      predicted_skolem (witnesses WPREDICTED_u, WPREDICTED_c):  P_airlines(WPREDICTED_u, L_JetBlue_Airways, FV_Abbreviation_0, WPREDICTED_c)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'JetBlue Airways' at text -> L_JetBlue_Airways = StringVal('JetBlue Airways')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 727 lines, 26856 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_8.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_u, WGOLD_a, WGOLD_c
+      claim: And(And(airlines(WGOLD_u, WGOLD_a, FV_Abbreviation_0, WGOLD_c), WGOLD_a == "JetBlue Airways"), Not(Exists([predicted_u_1, predicted_c_2], airlines(predicted_u_1, "JetBlue Airways", FV_Abbreviation_0, predicted_c_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_u, WPREDICTED_c
+      claim: And(airlines(WPREDICTED_u, "JetBlue Airways", FV_Abbreviation_0, WPREDICTED_c), Not(Exists([gold_u_1, gold_a_2, gold_c_3], And(airlines(gold_u_1, gold_a_2, FV_Abbreviation_0, gold_c_3), gold_a_2 == "JetBlue Airways"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

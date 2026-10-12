@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_665.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_665.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2543 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the name and population of each county?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        County_Id = int -> IntSort()
+        County_name = text -> StringSort()
+        Population = real -> Float32()
+        Zip_code = text -> StringSort()
+      symbols:
+        county(County_Id, County_name, Population, Zip_code)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : County_Id ∃z : Zip_code ( county(c,c1,p,z) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:County_Id EXISTS:∃ IDENT:z COLON:: IDENT:Zip_code LPAR:( IDENT:county LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:p COMMA:, IDENT:z RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:County_Id
+            EXISTS z:Zip_code
+              PRED county(c, c1, p, z)
+      Predicted FOL: ∃i : County_Id ∃z : Zip_code county(i, n, p, z)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:County_Id EXISTS:∃ IDENT:z COLON:: IDENT:Zip_code IDENT:county LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:z RPAR:) EOF
+        AST:
+          EXISTS i:County_Id
+            EXISTS z:Zip_code
+              PRED county(i, n, p, z)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_County_name_0 : County_name   Gold c1 <-> Predicted n
+      FV_Population_0 : Population   Gold p <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local County_Id, global int -> IntSort()
+        c1 : local County_name, global text -> StringSort()
+        p : local Population, global real -> Float32()
+        z : local Zip_code, global text -> StringSort()
+      Predicted FOL:
+        i : local County_Id, global int -> IntSort()
+        n : local County_name, global text -> StringSort()
+        p : local Population, global real -> Float32()
+        z : local Zip_code, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_z_2], P_county(gold_c_1, FV_County_name_0, FV_Population_0, gold_z_2))
+      gold_skolem (witnesses WGOLD_c, WGOLD_z):  P_county(WGOLD_c, FV_County_name_0, FV_Population_0, WGOLD_z)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_z_2], P_county(predicted_i_1, FV_County_name_0, FV_Population_0, predicted_z_2))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_z):  P_county(WPREDICTED_i, FV_County_name_0, FV_Population_0, WPREDICTED_z)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 26807 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_665.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Population_0)), Not(And(fpIsZero(FV_Population_0), fpIsNegative(FV_Population_0))))
+   [R1] took 0.003 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_z
+      claim: And(county(WGOLD_c, FV_County_name_0, FV_Population_0, WGOLD_z), Not(Exists([predicted_i_1, predicted_z_2], county(predicted_i_1, FV_County_name_0, FV_Population_0, predicted_z_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_z
+      claim: And(county(WPREDICTED_i, FV_County_name_0, FV_Population_0, WPREDICTED_z), Not(Exists([gold_c_1, gold_z_2], county(gold_c_1, FV_County_name_0, FV_Population_0, gold_z_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

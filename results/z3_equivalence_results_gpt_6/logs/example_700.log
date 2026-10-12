@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_700.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_700.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2968 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of banks in the state of New York?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        text -> StringSort()
+      local sorts:
+        bname = varchar(20) -> StringSort()
+        branch_ID = text -> StringSort()
+        city = varchar(10) -> StringSort()
+        no_of_customers = int -> IntSort()
+        state = varchar(20) -> StringSort()
+      symbols:
+        bank(branch_ID, bname, no_of_customers, city, state)
+        constant New York : state
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : branch_ID ∃n : no_of_customers ∃c : city ∃s : state ( (bank(b,b1,n,c,s)) ∧ (s = 'New York') )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:branch_ID EXISTS:∃ IDENT:n COLON:: IDENT:no_of_customers EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:s COLON:: IDENT:state LPAR:( LPAR:( IDENT:bank LPAR:( IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:New York RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:branch_ID
+            EXISTS n:no_of_customers
+              EXISTS c:city
+                EXISTS s:state
+                  AND
+                    PRED bank(b, b1, n, c, s)
+                    EQ  s = 'New York'
+      Predicted FOL: ∃i : branch_ID ∃c : no_of_customers ∃t : city (bank(i, n, c, t, 'New York'))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:branch_ID EXISTS:∃ IDENT:c COLON:: IDENT:no_of_customers EXISTS:∃ IDENT:t COLON:: IDENT:city LPAR:( IDENT:bank LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, LIT:New York RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:branch_ID
+            EXISTS c:no_of_customers
+              EXISTS t:city
+                PRED bank(i, n, c, t, 'New York')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_bname_0 : bname   Gold b1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local branch_ID, global text -> StringSort()
+        b1 : local bname, global varchar(20) -> StringSort()
+        c : local city, global varchar(10) -> StringSort()
+        n : local no_of_customers, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+      Predicted FOL:
+        c : local no_of_customers, global int -> IntSort()
+        i : local branch_ID, global text -> StringSort()
+        n : local bname, global varchar(20) -> StringSort()
+        t : local city, global varchar(10) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_n_2, gold_c_3, gold_s_4], And(D_varchar_10_(gold_c_3), D_varchar_20_(gold_s_4), And(P_bank(gold_b_1, FV_bname_0, gold_n_2, gold_c_3, gold_s_4), (gold_s_4 == L_New_York))))
+      gold_skolem (witnesses WGOLD_b, WGOLD_n, WGOLD_c, WGOLD_s):  And(D_varchar_10_(WGOLD_c), D_varchar_20_(WGOLD_s), And(P_bank(WGOLD_b, FV_bname_0, WGOLD_n, WGOLD_c, WGOLD_s), (WGOLD_s == L_New_York)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_c_2, predicted_t_3], And(D_varchar_10_(predicted_t_3), And(P_bank(predicted_i_1, FV_bname_0, predicted_c_2, predicted_t_3, L_New_York), D_varchar_20_(L_New_York))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_c, WPREDICTED_t):  And(D_varchar_10_(WPREDICTED_t), And(P_bank(WPREDICTED_i, FV_bname_0, WPREDICTED_c, WPREDICTED_t, L_New_York), D_varchar_20_(L_New_York)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'New York' at varchar(20) -> L_New_York = StringVal('New York')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 744 lines, 27946 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_700.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_bname_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_n, WGOLD_c, WGOLD_s
+      claim: And(And(Length(WGOLD_c) <= 10, Length(WGOLD_s) <= 20, And(bank(WGOLD_b, FV_bname_0, WGOLD_n, WGOLD_c, WGOLD_s), WGOLD_s == "New York")), Not(Exists([predicted_i_1, predicted_c_2, predicted_t_3], And(Length(predicted_t_3) <= 10, And(bank(predicted_i_1, FV_bname_0, predicted_c_2, predicted_t_3, "New York"), Length("New York") <= 20)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_c, WPREDICTED_t
+      claim: And(And(Length(WPREDICTED_t) <= 10, And(bank(WPREDICTED_i, FV_bname_0, WPREDICTED_c, WPREDICTED_t, "New York"), Length("New York") <= 20)), Not(Exists([gold_b_1, gold_n_2, gold_c_3, gold_s_4], And(Length(gold_c_3) <= 10, Length(gold_s_4) <= 20, And(bank(gold_b_1, FV_bname_0, gold_n_2, gold_c_3, gold_s_4), gold_s_4 == "New York")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

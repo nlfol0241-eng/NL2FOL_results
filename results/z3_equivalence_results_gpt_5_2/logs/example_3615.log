@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3615.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3615.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4351 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the details of the customers who do not have any policies.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Customer_Details = varchar(255) -> StringSort()
+        Customer_ID = integer -> IntSort()
+        End_Date = date -> IntSort()
+        Policy_ID = integer -> IntSort()
+        Policy_Type_Code = char(15) -> StringSort()
+        Start_Date = date -> IntSort()
+      symbols:
+        Customer_Policies(Policy_ID, Customer_ID, Policy_Type_Code, Start_Date, End_Date)
+        Customers(Customer_ID, Customer_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c : Customer_ID( Customers(c,c1) )) ∧ (¬(∃p : Policy_ID ∃s : Start_Date ∃p1 : Policy_Type_Code ∃c2 : Customer_ID ∃c : Customer_ID ∃e : End_Date( ((Customers(c,c1)) ∧ (Customer_Policies(p,c2,p1,s,e))) ∧ (c = c2) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:s COLON:: IDENT:Start_Date EXISTS:∃ IDENT:p1 COLON:: IDENT:Policy_Type_Code EXISTS:∃ IDENT:c2 COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:e COLON:: IDENT:End_Date LPAR:( LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Customer_Policies LPAR:( IDENT:p COMMA:, IDENT:c2 COMMA:, IDENT:p1 COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c:Customer_ID
+              PRED Customers(c, c1)
+            NOT
+              EXISTS p:Policy_ID
+                EXISTS s:Start_Date
+                  EXISTS p1:Policy_Type_Code
+                    EXISTS c2:Customer_ID
+                      EXISTS c:Customer_ID
+                        EXISTS e:End_Date
+                          AND
+                            AND
+                              PRED Customers(c, c1)
+                              PRED Customer_Policies(p, c2, p1, s, e)
+                            EQ  c = c2
+      Predicted FOL: ∃a0:Customer_ID ∃a1:Customer_Details ( Customers(a0, a1) ∧ ¬∃b0:Policy_ID ∃b2:Policy_Type_Code ∃b3:Start_Date ∃b4:End_Date Customer_Policies(b0, a0, b2, b3, b4) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:a1 COLON:: IDENT:Customer_Details LPAR:( IDENT:Customers LPAR:( IDENT:a0 COMMA:, IDENT:a1 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:b0 COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:b2 COLON:: IDENT:Policy_Type_Code EXISTS:∃ IDENT:b3 COLON:: IDENT:Start_Date EXISTS:∃ IDENT:b4 COLON:: IDENT:End_Date IDENT:Customer_Policies LPAR:( IDENT:b0 COMMA:, IDENT:a0 COMMA:, IDENT:b2 COMMA:, IDENT:b3 COMMA:, IDENT:b4 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:Customer_ID
+            EXISTS a1:Customer_Details
+              AND
+                PRED Customers(a0, a1)
+                NOT
+                  EXISTS b0:Policy_ID
+                    EXISTS b2:Policy_Type_Code
+                      EXISTS b3:Start_Date
+                        EXISTS b4:End_Date
+                          PRED Customer_Policies(b0, a0, b2, b3, b4)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c1 : Customer_Details) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        c1 : local Customer_Details, global varchar(255) -> StringSort()
+        c2 : local Customer_ID, global integer -> IntSort()
+        e : local End_Date, global date -> IntSort()
+        p : local Policy_ID, global integer -> IntSort()
+        p1 : local Policy_Type_Code, global char(15) -> StringSort()
+        s : local Start_Date, global date -> IntSort()
+      Predicted FOL:
+        a0 : local Customer_ID, global integer -> IntSort()
+        a1 : local Customer_Details, global varchar(255) -> StringSort()
+        b0 : local Policy_ID, global integer -> IntSort()
+        b2 : local Policy_Type_Code, global char(15) -> StringSort()
+        b3 : local Start_Date, global date -> IntSort()
+        b4 : local End_Date, global date -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5532 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3615.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c1 : Customer_Details) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

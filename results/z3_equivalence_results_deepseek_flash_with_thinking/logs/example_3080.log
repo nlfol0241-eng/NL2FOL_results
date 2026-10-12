@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3080.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3080.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4435 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: give me some restaurants in the bay area ?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 10 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        CITY_NAME = text -> StringSort()
+        COUNTY = text -> StringSort()
+        FOOD_TYPE = text -> StringSort()
+        HOUSE_NUMBER = int -> IntSort()
+        ID = int -> IntSort()
+        NAME = text -> StringSort()
+        RATING = real -> Float32()
+        REGION = text -> StringSort()
+        RESTAURANT_ID = int -> IntSort()
+        STREET_NAME = text -> StringSort()
+      symbols:
+        GEOGRAPHIC(CITY_NAME, COUNTY, REGION)
+        LOCATION(RESTAURANT_ID, HOUSE_NUMBER, STREET_NAME, CITY_NAME)
+        RESTAURANT(ID, NAME, FOOD_TYPE, CITY_NAME, RATING)
+        constant bay area : REGION
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃c1 : CITY_NAME ∃s : STREET_NAME ∃f : FOOD_TYPE ∃c : CITY_NAME ∃r : RESTAURANT_ID ∃r1 : RATING( ∃c2 : CITY_NAME( ((((LOCATION(r,h,s,c)) ∧ (RESTAURANT(i,n,f,c1,r1))) ∧ (i = r)) ∧ (∃r2 : REGION ∃c3 : COUNTY( (GEOGRAPHIC(c2,c3,r2)) ∧ (r2 = 'bay area') ))) ∧ (c1 = c2) ) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:c1 COLON:: IDENT:CITY_NAME EXISTS:∃ IDENT:s COLON:: IDENT:STREET_NAME EXISTS:∃ IDENT:f COLON:: IDENT:FOOD_TYPE EXISTS:∃ IDENT:c COLON:: IDENT:CITY_NAME EXISTS:∃ IDENT:r COLON:: IDENT:RESTAURANT_ID EXISTS:∃ IDENT:r1 COLON:: IDENT:RATING LPAR:( EXISTS:∃ IDENT:c2 COLON:: IDENT:CITY_NAME LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:LOCATION LPAR:( IDENT:r COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:RESTAURANT LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:c1 COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:r2 COLON:: IDENT:REGION EXISTS:∃ IDENT:c3 COLON:: IDENT:COUNTY LPAR:( LPAR:( IDENT:GEOGRAPHIC LPAR:( IDENT:c2 COMMA:, IDENT:c3 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r2 EQ:= LIT:bay area RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= IDENT:c2 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS c1:CITY_NAME
+              EXISTS s:STREET_NAME
+                EXISTS f:FOOD_TYPE
+                  EXISTS c:CITY_NAME
+                    EXISTS r:RESTAURANT_ID
+                      EXISTS r1:RATING
+                        EXISTS c2:CITY_NAME
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED LOCATION(r, h, s, c)
+                                  PRED RESTAURANT(i, n, f, c1, r1)
+                                EQ  i = r
+                              EXISTS r2:REGION
+                                EXISTS c3:COUNTY
+                                  AND
+                                    PRED GEOGRAPHIC(c2, c3, r2)
+                                    EQ  r2 = 'bay area'
+                            EQ  c1 = c2
+      Predicted FOL: RESTAURANT(id, name, food, city, rating) ∧ ∃county:COUNTY GEOGRAPHIC(city, county, 'bay area')
+        tokens: IDENT:RESTAURANT LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:food COMMA:, IDENT:city COMMA:, IDENT:rating RPAR:) AND:∧ EXISTS:∃ IDENT:county COLON:: IDENT:COUNTY IDENT:GEOGRAPHIC LPAR:( IDENT:city COMMA:, IDENT:county COMMA:, LIT:bay area RPAR:) EOF
+        AST:
+          AND
+            PRED RESTAURANT(id, name, food, city, rating)
+            EXISTS county:COUNTY
+              PRED GEOGRAPHIC(city, county, 'bay area')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (h : HOUSE_NUMBER, n : NAME) but Predicted has 5 (id : ID, name : NAME, food : FOOD_TYPE, city : CITY_NAME, rating : RATING): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CITY_NAME, global text -> StringSort()
+        c1 : local CITY_NAME, global text -> StringSort()
+        c2 : local CITY_NAME, global text -> StringSort()
+        c3 : local COUNTY, global text -> StringSort()
+        f : local FOOD_TYPE, global text -> StringSort()
+        h : local HOUSE_NUMBER, global int -> IntSort()
+        i : local ID, global int -> IntSort()
+        n : local NAME, global text -> StringSort()
+        r : local RESTAURANT_ID, global int -> IntSort()
+        r1 : local RATING, global real -> Float32()
+        r2 : local REGION, global text -> StringSort()
+        s : local STREET_NAME, global text -> StringSort()
+      Predicted FOL:
+        city : local CITY_NAME, global text -> StringSort()
+        county : local COUNTY, global text -> StringSort()
+        food : local FOOD_TYPE, global text -> StringSort()
+        id : local ID, global int -> IntSort()
+        name : local NAME, global text -> StringSort()
+        rating : local RATING, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5649 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3080.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (h : HOUSE_NUMBER, n : NAME) but Predicted has 5 (id : ID, name : NAME, food : FOOD_TYPE, city : CITY_NAME, rating : RATING): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

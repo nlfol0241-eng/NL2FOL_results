@@ -1,0 +1,75 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_542.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_542.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4762 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the buildings which have rooms with capacity more than 50.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        numeric(4,0) -> RealSort()   [domain And(IsInt(x), x > -10000, x < 10000); 4 digits, 0 after the point]
+        varchar(7) -> StringSort()   [domain Length(x) <= 7; length <= 7]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        building = varchar(15) -> StringSort()
+        capacity = numeric(4,0) -> RealSort()
+        room_number = varchar(7) -> StringSort()
+      symbols:
+        classroom(building, room_number, capacity)
+        constant 50 : capacity
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : room_number ∃c : capacity ( (classroom(b,r,c)) ∧ (c > 50) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:room_number EXISTS:∃ IDENT:c COLON:: IDENT:capacity LPAR:( LPAR:( IDENT:classroom LPAR:( IDENT:b COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c GT:> NUM:50 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:room_number
+            EXISTS c:capacity
+              AND
+                PRED classroom(b, r, c)
+                CMP  c > 50
+      Predicted FOL: ∃b : building ∃r : room_number ∃c : capacity (classroom(b, r, c) ∧ c > 50)
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:building EXISTS:∃ IDENT:r COLON:: IDENT:room_number EXISTS:∃ IDENT:c COLON:: IDENT:capacity LPAR:( IDENT:classroom LPAR:( IDENT:b COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) AND:∧ IDENT:c GT:> NUM:50 RPAR:) EOF
+        AST:
+          EXISTS b:building
+            EXISTS r:room_number
+              EXISTS c:capacity
+                AND
+                  PRED classroom(b, r, c)
+                  CMP  c > 50
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (b : building) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local building, global varchar(15) -> StringSort()
+        c : local capacity, global numeric(4,0) -> RealSort()
+        r : local room_number, global varchar(7) -> StringSort()
+      Predicted FOL:
+        b : local building, global varchar(15) -> StringSort()
+        c : local capacity, global numeric(4,0) -> RealSort()
+        r : local room_number, global varchar(7) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5252 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_542.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (b : building) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3546.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6208 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of artists that do not have any albums.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(160) -> StringSort()   [domain Length(x) <= 160; length <= 160]
+        varchar(120) -> StringSort()   [domain Length(x) <= 120; length <= 120]
+        integer -> IntSort()
+      local sorts:
+        AlbumId = integer -> IntSort()
+        ArtistId = integer -> IntSort()
+        Name = varchar(120) -> StringSort()
+        Title = varchar(160) -> StringSort()
+      symbols:
+        Album(AlbumId, Title, ArtistId)
+        Artist(ArtistId, Name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃a : ArtistId( Artist(a,n) )) ∧ (¬(∃a1 : AlbumId ∃a2 : ArtistId ∃t : Title ∃a : ArtistId( ((Album(a1,t,a2)) ∧ (Artist(a,n))) ∧ (a2 = a) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:ArtistId LPAR:( IDENT:Artist LPAR:( IDENT:a COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a1 COLON:: IDENT:AlbumId EXISTS:∃ IDENT:a2 COLON:: IDENT:ArtistId EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:a COLON:: IDENT:ArtistId LPAR:( LPAR:( LPAR:( IDENT:Album LPAR:( IDENT:a1 COMMA:, IDENT:t COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Artist LPAR:( IDENT:a COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= IDENT:a RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS a:ArtistId
+              PRED Artist(a, n)
+            NOT
+              EXISTS a1:AlbumId
+                EXISTS a2:ArtistId
+                  EXISTS t:Title
+                    EXISTS a:ArtistId
+                      AND
+                        AND
+                          PRED Album(a1, t, a2)
+                          PRED Artist(a, n)
+                        EQ  a2 = a
+      Predicted FOL: ∃a : ArtistId (Artist(a, n) ∧ ¬∃b : AlbumId ∃t : Title (Album(b, t, a)))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:ArtistId LPAR:( IDENT:Artist LPAR:( IDENT:a COMMA:, IDENT:n RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:b COLON:: IDENT:AlbumId EXISTS:∃ IDENT:t COLON:: IDENT:Title LPAR:( IDENT:Album LPAR:( IDENT:b COMMA:, IDENT:t COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:ArtistId
+            AND
+              PRED Artist(a, n)
+              NOT
+                EXISTS b:AlbumId
+                  EXISTS t:Title
+                    PRED Album(b, t, a)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local ArtistId, global integer -> IntSort()
+        a1 : local AlbumId, global integer -> IntSort()
+        a2 : local ArtistId, global integer -> IntSort()
+        n : local Name, global varchar(120) -> StringSort()
+        t : local Title, global varchar(160) -> StringSort()
+      Predicted FOL:
+        a : local ArtistId, global integer -> IntSort()
+        b : local AlbumId, global integer -> IntSort()
+        n : local Name, global varchar(120) -> StringSort()
+        t : local Title, global varchar(160) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_a_1], P_Artist(gold_a_1, FV_Name_0)), Not(Exists([gold_a1_2, gold_a2_3, gold_t_4, gold_a_5], And(D_varchar_160_(gold_t_4), And(And(P_Album(gold_a1_2, gold_t_4, gold_a2_3), P_Artist(gold_a_5, FV_Name_0)), (gold_a2_3 == gold_a_5))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1], And(P_Artist(predicted_a_1, FV_Name_0), Not(Exists([predicted_b_2, predicted_t_3], And(D_varchar_160_(predicted_t_3), P_Album(predicted_b_2, predicted_t_3, predicted_a_1))))))
+      predicted_skolem (witnesses WPREDICTED_a):  And(P_Artist(WPREDICTED_a, FV_Name_0), Not(Exists([predictedsk_b_1, predictedsk_t_2], And(D_varchar_160_(predictedsk_t_2), P_Album(predictedsk_b_1, predictedsk_t_2, WPREDICTED_a)))))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 731 lines, 27297 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 120
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists(gold_a_1, Artist(gold_a_1, FV_Name_0)), Not(Exists([gold_a1_2, gold_a2_3, gold_t_4, gold_a_5], And(Length(gold_t_4) <= 160, And(And(Album(gold_a1_2, gold_t_4, gold_a2_3), Artist(gold_a_5, FV_Name_0)), gold_a2_3 == gold_a_5))))), Not(Exists(predicted_a_1, And(Artist(predicted_a_1, FV_Name_0), Not(Exists([predicted_b_2, predicted_t_3], And(Length(predicted_t_3) <= 160, Album(predicted_b_2, predicted_t_3, predicted_a_1))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a
+      claim: And(And(Artist(WPREDICTED_a, FV_Name_0), Not(Exists([predictedsk_b_1, predictedsk_t_2], And(Length(predictedsk_t_2) <= 160, Album(predictedsk_b_1, predictedsk_t_2, WPREDICTED_a))))), Not(And(Exists(gold_a_1, Artist(gold_a_1, FV_Name_0)), Not(Exists([gold_a1_2, gold_a2_3, gold_t_4, gold_a_5], And(Length(gold_t_4) <= 160, And(And(Album(gold_a1_2, gold_t_4, gold_a2_3), Artist(gold_a_5, FV_Name_0)), gold_a2_3 == gold_a_5)))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.007 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py", line 679, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py", line 710, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py", line 661, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py", line 559, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py", line 483, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py", line 363, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3546.py", line 363, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

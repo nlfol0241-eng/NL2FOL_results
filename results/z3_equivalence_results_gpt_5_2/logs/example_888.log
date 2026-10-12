@@ -1,0 +1,77 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_888.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_888.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2535 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the name of artworks whose type is not "Program Talent Show".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Artwork_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Type = text -> StringSort()
+      symbols:
+        artwork(Artwork_ID, Type, Name)
+        constant Program Talent Show : Type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Artwork_ID ∃t : Type ( (artwork(a,t,n)) ∧ (t <> 'Program Talent Show') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Artwork_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type LPAR:( LPAR:( IDENT:artwork LPAR:( IDENT:a COMMA:, IDENT:t COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t NEQ:<> LIT:Program Talent Show RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Artwork_ID
+            EXISTS t:Type
+              AND
+                PRED artwork(a, t, n)
+                NEQ  t != 'Program Talent Show'
+      Predicted FOL: ∀n:Name( n = n ↔ ∃id:Artwork_ID ∃t:Type( artwork(id, t, n) ∧ ¬(t = 'Program Talent Show') ) )
+        tokens: FORALL:∀ IDENT:n COLON:: IDENT:Name LPAR:( IDENT:n EQ:= IDENT:n IFF:↔ EXISTS:∃ IDENT:id COLON:: IDENT:Artwork_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type LPAR:( IDENT:artwork LPAR:( IDENT:id COMMA:, IDENT:t COMMA:, IDENT:n RPAR:) AND:∧ NOT:¬ LPAR:( IDENT:t EQ:= LIT:Program Talent Show RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          FORALL n:Name
+            IFF
+              EQ  n = n
+              EXISTS id:Artwork_ID
+                EXISTS t:Type
+                  AND
+                    PRED artwork(id, t, n)
+                    NOT
+                      EQ  t = 'Program Talent Show'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artwork_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        t : local Type, global text -> StringSort()
+      Predicted FOL:
+        id : local Artwork_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        t : local Type, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5282 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_888.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

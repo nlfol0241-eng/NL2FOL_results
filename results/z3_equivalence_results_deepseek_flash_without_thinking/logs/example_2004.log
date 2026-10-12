@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2004.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2004.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4678 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give the ids for documents that have the budget description 'Government'.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Budget_Type_Code = char(15) -> StringSort()
+        Budget_Type_Description = varchar(255) -> StringSort()
+        Document_Details = varchar(255) -> StringSort()
+        Document_ID = integer -> IntSort()
+      symbols:
+        Documents_with_Expenses(Document_ID, Budget_Type_Code, Document_Details)
+        Ref_Budget_Codes(Budget_Type_Code, Budget_Type_Description)
+        constant Government : Budget_Type_Description
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : Budget_Type_Code ∃d1 : Document_Details ∃b1 : Budget_Type_Code ∃b2 : Budget_Type_Description ( (((Documents_with_Expenses(d,b,d1)) ∧ (Ref_Budget_Codes(b1,b2))) ∧ (b = b1)) ∧ (b2 = 'Government') )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Budget_Type_Code EXISTS:∃ IDENT:d1 COLON:: IDENT:Document_Details EXISTS:∃ IDENT:b1 COLON:: IDENT:Budget_Type_Code EXISTS:∃ IDENT:b2 COLON:: IDENT:Budget_Type_Description LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Documents_with_Expenses LPAR:( IDENT:d COMMA:, IDENT:b COMMA:, IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Ref_Budget_Codes LPAR:( IDENT:b1 COMMA:, IDENT:b2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b2 EQ:= LIT:Government RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Budget_Type_Code
+            EXISTS d1:Document_Details
+              EXISTS b1:Budget_Type_Code
+                EXISTS b2:Budget_Type_Description
+                  AND
+                    AND
+                      AND
+                        PRED Documents_with_Expenses(d, b, d1)
+                        PRED Ref_Budget_Codes(b1, b2)
+                      EQ  b = b1
+                    EQ  b2 = 'Government'
+      Predicted FOL: ∃b : Budget_Type_Code (Ref_Budget_Codes(b, 'Government') ∧ ∃d : Document_ID ∃dt : Budget_Type_Code ∃dd : Document_Details (Documents_with_Expenses(d, dt, dd) ∧ dt = b))
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Budget_Type_Code LPAR:( IDENT:Ref_Budget_Codes LPAR:( IDENT:b COMMA:, LIT:Government RPAR:) AND:∧ EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:dt COLON:: IDENT:Budget_Type_Code EXISTS:∃ IDENT:dd COLON:: IDENT:Document_Details LPAR:( IDENT:Documents_with_Expenses LPAR:( IDENT:d COMMA:, IDENT:dt COMMA:, IDENT:dd RPAR:) AND:∧ IDENT:dt EQ:= IDENT:b RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Budget_Type_Code
+            AND
+              PRED Ref_Budget_Codes(b, 'Government')
+              EXISTS d:Document_ID
+                EXISTS dt:Budget_Type_Code
+                  EXISTS dd:Document_Details
+                    AND
+                      PRED Documents_with_Expenses(d, dt, dd)
+                      EQ  dt = b
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d : Document_ID) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Budget_Type_Code, global char(15) -> StringSort()
+        b1 : local Budget_Type_Code, global char(15) -> StringSort()
+        b2 : local Budget_Type_Description, global varchar(255) -> StringSort()
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Document_Details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        b : local Budget_Type_Code, global char(15) -> StringSort()
+        d : local Document_ID, global integer -> IntSort()
+        dd : local Document_Details, global varchar(255) -> StringSort()
+        dt : local Budget_Type_Code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5510 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2004.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d : Document_ID) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

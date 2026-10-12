@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_218.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_218.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3388 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is the population in boulder
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        city_name = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        city(city_name, population, country_name, state_name)
+        constant boulder : city_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : city_name ∃c1 : country_name ∃s : state_name ( (city(c,p,c1,s)) ∧ (c = 'boulder') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:city_name EXISTS:∃ IDENT:c1 COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:boulder RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:city_name
+            EXISTS c1:country_name
+              EXISTS s:state_name
+                AND
+                  PRED city(c, p, c1, s)
+                  EQ  c = 'boulder'
+      Predicted FOL: ∃c : country_name ∃s : state_name (city('boulder', p, c, s))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( IDENT:city LPAR:( LIT:boulder COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:country_name
+            EXISTS s:state_name
+              PRED city('boulder', p, c, s)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_population_0 : population   Gold p <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local city_name, global text -> StringSort()
+        c1 : local country_name, global varchar(3) -> StringSort()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        c : local country_name, global varchar(3) -> StringSort()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_s_3], And(D_varchar_3_(gold_c1_2), And(P_city(gold_c_1, FV_population_0, gold_c1_2, gold_s_3), (gold_c_1 == L_boulder))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_s):  And(D_varchar_3_(WGOLD_c1), And(P_city(WGOLD_c, FV_population_0, WGOLD_c1, WGOLD_s), (WGOLD_c == L_boulder)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_s_2], And(D_varchar_3_(predicted_c_1), P_city(L_boulder, FV_population_0, predicted_c_1, predicted_s_2)))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_s):  And(D_varchar_3_(WPREDICTED_c), P_city(L_boulder, FV_population_0, WPREDICTED_c, WPREDICTED_s))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'boulder' at text -> L_boulder = StringVal('boulder')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 730 lines, 27148 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_218.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_s
+      claim: And(And(Length(WGOLD_c1) <= 3, And(city(WGOLD_c, FV_population_0, WGOLD_c1, WGOLD_s), WGOLD_c == "boulder")), Not(Exists([predicted_c_1, predicted_s_2], And(Length(predicted_c_1) <= 3, city("boulder", FV_population_0, predicted_c_1, predicted_s_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_s
+      claim: And(And(Length(WPREDICTED_c) <= 3, city("boulder", FV_population_0, WPREDICTED_c, WPREDICTED_s)), Not(Exists([gold_c_1, gold_c1_2, gold_s_3], And(Length(gold_c1_2) <= 3, And(city(gold_c_1, FV_population_0, gold_c1_2, gold_s_3), gold_c_1 == "boulder")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

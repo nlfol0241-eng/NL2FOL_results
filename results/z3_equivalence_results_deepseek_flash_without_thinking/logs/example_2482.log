@@ -1,0 +1,88 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2482.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2482.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3088 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all students taught by OTHA MOYER. Output the first and last names of the students.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Classroom = integer -> IntSort()
+        FirstName = text -> StringSort()
+        Grade = integer -> IntSort()
+        LastName = text -> StringSort()
+      symbols:
+        list(LastName, FirstName, Grade, Classroom)
+        teachers(LastName, FirstName, Classroom)
+        constant MOYER : LastName
+        constant OTHA : FirstName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : Grade ∃c : Classroom ∃l1 : LastName ∃f1 : FirstName ∃c1 : Classroom ( (((list(l,f,g,c)) ∧ (teachers(l1,f1,c1))) ∧ (c = c1)) ∧ ((f1 = 'OTHA') ∧ (l1 = 'MOYER')) )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:c COLON:: IDENT:Classroom EXISTS:∃ IDENT:l1 COLON:: IDENT:LastName EXISTS:∃ IDENT:f1 COLON:: IDENT:FirstName EXISTS:∃ IDENT:c1 COLON:: IDENT:Classroom LPAR:( LPAR:( LPAR:( LPAR:( IDENT:list LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:teachers LPAR:( IDENT:l1 COMMA:, IDENT:f1 COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f1 EQ:= LIT:OTHA RPAR:) AND:∧ LPAR:( IDENT:l1 EQ:= LIT:MOYER RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:Grade
+            EXISTS c:Classroom
+              EXISTS l1:LastName
+                EXISTS f1:FirstName
+                  EXISTS c1:Classroom
+                    AND
+                      AND
+                        AND
+                          PRED list(l, f, g, c)
+                          PRED teachers(l1, f1, c1)
+                        EQ  c = c1
+                      AND
+                        EQ  f1 = 'OTHA'
+                        EQ  l1 = 'MOYER'
+      Predicted FOL: ∃c : Classroom (teachers('MOYER', 'OTHA', c) ∧ ∃g : Grade list('MOYER', 'OTHA', g, c))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Classroom LPAR:( IDENT:teachers LPAR:( LIT:MOYER COMMA:, LIT:OTHA COMMA:, IDENT:c RPAR:) AND:∧ EXISTS:∃ IDENT:g COLON:: IDENT:Grade IDENT:list LPAR:( LIT:MOYER COMMA:, LIT:OTHA COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Classroom
+            AND
+              PRED teachers('MOYER', 'OTHA', c)
+              EXISTS g:Grade
+                PRED list('MOYER', 'OTHA', g, c)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (l : LastName, f : FirstName) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Classroom, global integer -> IntSort()
+        c1 : local Classroom, global integer -> IntSort()
+        f : local FirstName, global text -> StringSort()
+        f1 : local FirstName, global text -> StringSort()
+        g : local Grade, global integer -> IntSort()
+        l : local LastName, global text -> StringSort()
+        l1 : local LastName, global text -> StringSort()
+      Predicted FOL:
+        c : local Classroom, global integer -> IntSort()
+        g : local Grade, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5430 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2482.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (l : LastName, f : FirstName) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_420.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_420.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2935 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the full names and ages for all female students whose sex is F?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = varchar(12) -> StringSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+        constant F : Sex
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : StuID ∃s1 : Sex ∃m : Major ∃a1 : Advisor ∃c : city_code ( (Student(s,l,f,a,s1,m,a1,c)) ∧ (s1 = 'F') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor EXISTS:∃ IDENT:c COLON:: IDENT:city_code LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:F RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS s1:Sex
+              EXISTS m:Major
+                EXISTS a1:Advisor
+                  EXISTS c:city_code
+                    AND
+                      PRED Student(s, l, f, a, s1, m, a1, c)
+                      EQ  s1 = 'F'
+      Predicted FOL: ∃stuID : StuID ∃major : Major ∃advisor : Advisor ∃cityCode : city_code Student(stuID, lName, fName, age, 'F', major, advisor, cityCode)
+        tokens: EXISTS:∃ IDENT:stuID COLON:: IDENT:StuID EXISTS:∃ IDENT:major COLON:: IDENT:Major EXISTS:∃ IDENT:advisor COLON:: IDENT:Advisor EXISTS:∃ IDENT:cityCode COLON:: IDENT:city_code IDENT:Student LPAR:( IDENT:stuID COMMA:, IDENT:lName COMMA:, IDENT:fName COMMA:, IDENT:age COMMA:, LIT:F COMMA:, IDENT:major COMMA:, IDENT:advisor COMMA:, IDENT:cityCode RPAR:) EOF
+        AST:
+          EXISTS stuID:StuID
+            EXISTS major:Major
+              EXISTS advisor:Advisor
+                EXISTS cityCode:city_code
+                  PRED Student(stuID, lName, fName, age, 'F', major, advisor, cityCode)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Age_0 : Age   Gold a <-> Predicted age
+      FV_Fname_0 : Fname   Gold f <-> Predicted fName
+      FV_LName_0 : LName   Gold l <-> Predicted lName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        advisor : local Advisor, global integer -> IntSort()
+        age : local Age, global integer -> IntSort()
+        cityCode : local city_code, global varchar(3) -> StringSort()
+        fName : local Fname, global varchar(12) -> StringSort()
+        lName : local LName, global varchar(12) -> StringSort()
+        major : local Major, global integer -> IntSort()
+        stuID : local StuID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_s1_2, gold_m_3, gold_a1_4, gold_c_5], And(D_varchar_1_(gold_s1_2), D_varchar_3_(gold_c_5), And(P_Student(gold_s_1, FV_LName_0, FV_Fname_0, FV_Age_0, gold_s1_2, gold_m_3, gold_a1_4, gold_c_5), (gold_s1_2 == L_F))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c):  And(D_varchar_1_(WGOLD_s1), D_varchar_3_(WGOLD_c), And(P_Student(WGOLD_s, FV_LName_0, FV_Fname_0, FV_Age_0, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c), (WGOLD_s1 == L_F)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_stuID_1, predicted_major_2, predicted_advisor_3, predicted_cityCode_4], And(D_varchar_3_(predicted_cityCode_4), And(P_Student(predicted_stuID_1, FV_LName_0, FV_Fname_0, FV_Age_0, L_F, predicted_major_2, predicted_advisor_3, predicted_cityCode_4), D_varchar_1_(L_F))))
+      predicted_skolem (witnesses WPREDICTED_stuID, WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_cityCode):  And(D_varchar_3_(WPREDICTED_cityCode), And(P_Student(WPREDICTED_stuID, FV_LName_0, FV_Fname_0, FV_Age_0, L_F, WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_cityCode), D_varchar_1_(L_F)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'F' at varchar(1) -> L_F = StringVal('F')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 764 lines, 29296 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_420.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Fname_0) <= 12
+      [1] Length(FV_LName_0) <= 12
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c
+      claim: And(And(Length(WGOLD_s1) <= 1, Length(WGOLD_c) <= 3, And(Student(WGOLD_s, FV_LName_0, FV_Fname_0, FV_Age_0, WGOLD_s1, WGOLD_m, WGOLD_a1, WGOLD_c), WGOLD_s1 == "F")), Not(Exists([predicted_stuID_1, predicted_major_2, predicted_advisor_3, predicted_cityCode_4], And(Length(predicted_cityCode_4) <= 3, And(Student(predicted_stuID_1, FV_LName_0, FV_Fname_0, FV_Age_0, "F", predicted_major_2, predicted_advisor_3, predicted_cityCode_4), Length("F") <= 1)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_stuID, WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_cityCode
+      claim: And(And(Length(WPREDICTED_cityCode) <= 3, And(Student(WPREDICTED_stuID, FV_LName_0, FV_Fname_0, FV_Age_0, "F", WPREDICTED_major, WPREDICTED_advisor, WPREDICTED_cityCode), Length("F") <= 1)), Not(Exists([gold_s_1, gold_s1_2, gold_m_3, gold_a1_4, gold_c_5], And(Length(gold_s1_2) <= 1, Length(gold_c_5) <= 3, And(Student(gold_s_1, FV_LName_0, FV_Fname_0, FV_Age_0, gold_s1_2, gold_m_3, gold_a1_4, gold_c_5), gold_s1_2 == "F")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

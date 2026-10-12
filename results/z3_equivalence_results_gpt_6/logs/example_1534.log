@@ -1,0 +1,138 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1534.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1534.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6550 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Are the customers holding coupons with amount 500 bad or good?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 10 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        varchar(4) -> StringSort()   [domain Length(x) <= 4; length <= 4]
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        coupon_amount = decimal(19,4) -> RealSort()
+        coupon_id = integer -> IntSort()
+        customer_id = integer -> IntSort()
+        date_became_customer = datetime -> IntSort()
+        date_issued = datetime -> IntSort()
+        date_last_hire = datetime -> IntSort()
+        first_name = varchar(80) -> StringSort()
+        gender_mf = varchar(1) -> StringSort()
+        good_or_bad_customer = varchar(4) -> StringSort()
+        last_name = varchar(80) -> StringSort()
+      symbols:
+        Customers(customer_id, coupon_id, good_or_bad_customer, first_name, last_name, gender_mf, date_became_customer, date_last_hire)
+        Discount_Coupons(coupon_id, date_issued, coupon_amount)
+        constant 500 : coupon_amount
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : customer_id ∃c1 : coupon_id ∃f : first_name ∃l : last_name ∃g1 : gender_mf ∃d : date_became_customer ∃d1 : date_last_hire ∃c2 : coupon_id ∃d2 : date_issued ∃c3 : coupon_amount ( (((Customers(c,c1,g,f,l,g1,d,d1)) ∧ (Discount_Coupons(c2,d2,c3))) ∧ (c1 = c2)) ∧ (c3 = 500) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:c1 COLON:: IDENT:coupon_id EXISTS:∃ IDENT:f COLON:: IDENT:first_name EXISTS:∃ IDENT:l COLON:: IDENT:last_name EXISTS:∃ IDENT:g1 COLON:: IDENT:gender_mf EXISTS:∃ IDENT:d COLON:: IDENT:date_became_customer EXISTS:∃ IDENT:d1 COLON:: IDENT:date_last_hire EXISTS:∃ IDENT:c2 COLON:: IDENT:coupon_id EXISTS:∃ IDENT:d2 COLON:: IDENT:date_issued EXISTS:∃ IDENT:c3 COLON:: IDENT:coupon_amount LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:g COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:g1 COMMA:, IDENT:d COMMA:, IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Discount_Coupons LPAR:( IDENT:c2 COMMA:, IDENT:d2 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c3 EQ:= NUM:500 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:customer_id
+            EXISTS c1:coupon_id
+              EXISTS f:first_name
+                EXISTS l:last_name
+                  EXISTS g1:gender_mf
+                    EXISTS d:date_became_customer
+                      EXISTS d1:date_last_hire
+                        EXISTS c2:coupon_id
+                          EXISTS d2:date_issued
+                            EXISTS c3:coupon_amount
+                              AND
+                                AND
+                                  AND
+                                    PRED Customers(c, c1, g, f, l, g1, d, d1)
+                                    PRED Discount_Coupons(c2, d2, c3)
+                                  EQ  c1 = c2
+                                EQ  c3 = 500
+      Predicted FOL: ∃c : customer_id ∃p : coupon_id ∃f : first_name ∃l : last_name ∃g : gender_mf ∃b : date_became_customer ∃h : date_last_hire ∃d : date_issued (Customers(c, p, s, f, l, g, b, h) ∧ Discount_Coupons(p, d, 500))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:p COLON:: IDENT:coupon_id EXISTS:∃ IDENT:f COLON:: IDENT:first_name EXISTS:∃ IDENT:l COLON:: IDENT:last_name EXISTS:∃ IDENT:g COLON:: IDENT:gender_mf EXISTS:∃ IDENT:b COLON:: IDENT:date_became_customer EXISTS:∃ IDENT:h COLON:: IDENT:date_last_hire EXISTS:∃ IDENT:d COLON:: IDENT:date_issued LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, IDENT:s COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:g COMMA:, IDENT:b COMMA:, IDENT:h RPAR:) AND:∧ IDENT:Discount_Coupons LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, NUM:500 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:customer_id
+            EXISTS p:coupon_id
+              EXISTS f:first_name
+                EXISTS l:last_name
+                  EXISTS g:gender_mf
+                    EXISTS b:date_became_customer
+                      EXISTS h:date_last_hire
+                        EXISTS d:date_issued
+                          AND
+                            PRED Customers(c, p, s, f, l, g, b, h)
+                            PRED Discount_Coupons(p, d, 500)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_good_or_bad_customer_0 : good_or_bad_customer   Gold g <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 20 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local customer_id, global integer -> IntSort()
+        c1 : local coupon_id, global integer -> IntSort()
+        c2 : local coupon_id, global integer -> IntSort()
+        c3 : local coupon_amount, global decimal(19,4) -> RealSort()
+        d : local date_became_customer, global datetime -> IntSort()
+        d1 : local date_last_hire, global datetime -> IntSort()
+        d2 : local date_issued, global datetime -> IntSort()
+        f : local first_name, global varchar(80) -> StringSort()
+        g : local good_or_bad_customer, global varchar(4) -> StringSort()
+        g1 : local gender_mf, global varchar(1) -> StringSort()
+        l : local last_name, global varchar(80) -> StringSort()
+      Predicted FOL:
+        b : local date_became_customer, global datetime -> IntSort()
+        c : local customer_id, global integer -> IntSort()
+        d : local date_issued, global datetime -> IntSort()
+        f : local first_name, global varchar(80) -> StringSort()
+        g : local gender_mf, global varchar(1) -> StringSort()
+        h : local date_last_hire, global datetime -> IntSort()
+        l : local last_name, global varchar(80) -> StringSort()
+        p : local coupon_id, global integer -> IntSort()
+        s : local good_or_bad_customer, global varchar(4) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_f_3, gold_l_4, gold_g1_5, gold_d_6, gold_d1_7, gold_c2_8, gold_d2_9, gold_c3_10], And(D_varchar_80_(gold_f_3), D_varchar_80_(gold_l_4), D_varchar_1_(gold_g1_5), D_decimal_19_4_(gold_c3_10), And(And(And(P_Customers(gold_c_1, gold_c1_2, FV_good_or_bad_customer_0, gold_f_3, gold_l_4, gold_g1_5, gold_d_6, gold_d1_7), P_Discount_Coupons(gold_c2_8, gold_d2_9, gold_c3_10)), (gold_c1_2 == gold_c2_8)), (gold_c3_10 == L_v_500_decimal_19_4_))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_f, WGOLD_l, WGOLD_g1, WGOLD_d, WGOLD_d1, WGOLD_c2, WGOLD_d2, WGOLD_c3):  And(D_varchar_80_(WGOLD_f), D_varchar_80_(WGOLD_l), D_varchar_1_(WGOLD_g1), D_decimal_19_4_(WGOLD_c3), And(And(And(P_Customers(WGOLD_c, WGOLD_c1, FV_good_or_bad_customer_0, WGOLD_f, WGOLD_l, WGOLD_g1, WGOLD_d, WGOLD_d1), P_Discount_Coupons(WGOLD_c2, WGOLD_d2, WGOLD_c3)), (WGOLD_c1 == WGOLD_c2)), (WGOLD_c3 == L_v_500_decimal_19_4_)))
+   Gold: 10 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_p_2, predicted_f_3, predicted_l_4, predicted_g_5, predicted_b_6, predicted_h_7, predicted_d_8], And(D_varchar_80_(predicted_f_3), D_varchar_80_(predicted_l_4), D_varchar_1_(predicted_g_5), And(P_Customers(predicted_c_1, predicted_p_2, FV_good_or_bad_customer_0, predicted_f_3, predicted_l_4, predicted_g_5, predicted_b_6, predicted_h_7), And(P_Discount_Coupons(predicted_p_2, predicted_d_8, L_v_500_decimal_19_4_), D_decimal_19_4_(L_v_500_decimal_19_4_)))))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_p, WPREDICTED_f, WPREDICTED_l, WPREDICTED_g, WPREDICTED_b, WPREDICTED_h, WPREDICTED_d):  And(D_varchar_80_(WPREDICTED_f), D_varchar_80_(WPREDICTED_l), D_varchar_1_(WPREDICTED_g), And(P_Customers(WPREDICTED_c, WPREDICTED_p, FV_good_or_bad_customer_0, WPREDICTED_f, WPREDICTED_l, WPREDICTED_g, WPREDICTED_b, WPREDICTED_h), And(P_Discount_Coupons(WPREDICTED_p, WPREDICTED_d, L_v_500_decimal_19_4_), D_decimal_19_4_(L_v_500_decimal_19_4_))))
+   Predicted: 8 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '500' at decimal(19,4) -> L_v_500_decimal_19_4_ = RealVal('500')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 804 lines, 33121 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1534.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_good_or_bad_customer_0) <= 4
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_f, WGOLD_l, WGOLD_g1, WGOLD_d, WGOLD_d1, WGOLD_c2, WGOLD_d2, WGOLD_c3
+      claim: And(And(Length(WGOLD_f) <= 80, Length(WGOLD_l) <= 80, Length(WGOLD_g1) <= 1, And(IsInt(WGOLD_c3*10000), WGOLD_c3 > -1000000000000000, WGOLD_c3 < 1000000000000000), And(And(And(Customers(WGOLD_c, WGOLD_c1, FV_good_or_bad_customer_0, WGOLD_f, WGOLD_l, WGOLD_g1, WGOLD_d, WGOLD_d1), Discount_Coupons(WGOLD_c2, WGOLD_d2, WGOLD_c3)), WGOLD_c1 == WGOLD_c2), 500 == WGOLD_c3)), Not(Exists([predicted_c_1, predicted_p_2, predicted_f_3, predicted_l_4, predicted_g_5, predicted_b_6, predicted_h_7, predicted_d_8], And(Length(predicted_f_3) <= 80, Length(predicted_l_4) <= 80, Length(predicted_g_5) <= 1, And(Customers(predicted_c_1, predicted_p_2, FV_good_or_bad_customer_0, predicted_f_3, predicted_l_4, predicted_g_5, predicted_b_6, predicted_h_7), And(Discount_Coupons(predicted_p_2, predicted_d_8, 500), And(IsInt(500*10000), 500 > -1000000000000000, 500 < 1000000000000000)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_p, WPREDICTED_f, WPREDICTED_l, WPREDICTED_g, WPREDICTED_b, WPREDICTED_h, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_f) <= 80, Length(WPREDICTED_l) <= 80, Length(WPREDICTED_g) <= 1, And(Customers(WPREDICTED_c, WPREDICTED_p, FV_good_or_bad_customer_0, WPREDICTED_f, WPREDICTED_l, WPREDICTED_g, WPREDICTED_b, WPREDICTED_h), And(Discount_Coupons(WPREDICTED_p, WPREDICTED_d, 500), And(IsInt(500*10000), 500 > -1000000000000000, 500 < 1000000000000000)))), Not(Exists([gold_c_1, gold_c1_2, gold_f_3, gold_l_4, gold_g1_5, gold_d_6, gold_d1_7, gold_c2_8, gold_d2_9, gold_c3_10], And(Length(gold_f_3) <= 80, Length(gold_l_4) <= 80, Length(gold_g1_5) <= 1, And(IsInt(gold_c3_10*10000), gold_c3_10 > -1000000000000000, gold_c3_10 < 1000000000000000), And(And(And(Customers(gold_c_1, gold_c1_2, FV_good_or_bad_customer_0, gold_f_3, gold_l_4, gold_g1_5, gold_d_6, gold_d1_7), Discount_Coupons(gold_c2_8, gold_d2_9, gold_c3_10)), gold_c1_2 == gold_c2_8), 500 == gold_c3_10)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.009 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

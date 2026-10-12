@@ -1,0 +1,112 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1650.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1650.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4066 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the city and name of bank branches that provide business loans.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        int -> IntSort()
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+      local sorts:
+        amount = int -> IntSort()
+        bname = varchar(20) -> StringSort()
+        branch_ID = text -> StringSort()
+        city = varchar(10) -> StringSort()
+        cust_ID = varchar(3) -> StringSort()
+        loan_ID = varchar(3) -> StringSort()
+        loan_type = varchar(15) -> StringSort()
+        no_of_customers = int -> IntSort()
+        state = varchar(20) -> StringSort()
+      symbols:
+        bank(branch_ID, bname, no_of_customers, city, state)
+        loan(loan_ID, loan_type, cust_ID, branch_ID, amount)
+        constant Business : loan_type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : branch_ID ∃n : no_of_customers ∃s : state ∃l : loan_ID ∃l1 : loan_type ∃c1 : cust_ID ∃b2 : branch_ID ∃a : amount ( (((bank(b,b1,n,c,s)) ∧ (loan(l,l1,c1,b2,a))) ∧ (b = b2)) ∧ (l1 = 'Business') )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:branch_ID EXISTS:∃ IDENT:n COLON:: IDENT:no_of_customers EXISTS:∃ IDENT:s COLON:: IDENT:state EXISTS:∃ IDENT:l COLON:: IDENT:loan_ID EXISTS:∃ IDENT:l1 COLON:: IDENT:loan_type EXISTS:∃ IDENT:c1 COLON:: IDENT:cust_ID EXISTS:∃ IDENT:b2 COLON:: IDENT:branch_ID EXISTS:∃ IDENT:a COLON:: IDENT:amount LPAR:( LPAR:( LPAR:( LPAR:( IDENT:bank LPAR:( IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:loan LPAR:( IDENT:l COMMA:, IDENT:l1 COMMA:, IDENT:c1 COMMA:, IDENT:b2 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:b2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l1 EQ:= LIT:Business RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:branch_ID
+            EXISTS n:no_of_customers
+              EXISTS s:state
+                EXISTS l:loan_ID
+                  EXISTS l1:loan_type
+                    EXISTS c1:cust_ID
+                      EXISTS b2:branch_ID
+                        EXISTS a:amount
+                          AND
+                            AND
+                              AND
+                                PRED bank(b, b1, n, c, s)
+                                PRED loan(l, l1, c1, b2, a)
+                              EQ  b = b2
+                            EQ  l1 = 'Business'
+      Predicted FOL: ∃br:branch_ID ∃bn:bname ∃n:no_of_customers ∃c:city ∃s:state ( bank(br,bn,n,c,s) ∧ ∃lid:loan_ID ∃cid:cust_ID ∃amt:amount ( loan(lid,Business,cid,br,amt) ) )
+        tokens: EXISTS:∃ IDENT:br COLON:: IDENT:branch_ID EXISTS:∃ IDENT:bn COLON:: IDENT:bname EXISTS:∃ IDENT:n COLON:: IDENT:no_of_customers EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:s COLON:: IDENT:state LPAR:( IDENT:bank LPAR:( IDENT:br COMMA:, IDENT:bn COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) AND:∧ EXISTS:∃ IDENT:lid COLON:: IDENT:loan_ID EXISTS:∃ IDENT:cid COLON:: IDENT:cust_ID EXISTS:∃ IDENT:amt COLON:: IDENT:amount LPAR:( IDENT:loan LPAR:( IDENT:lid COMMA:, IDENT:Business COMMA:, IDENT:cid COMMA:, IDENT:br COMMA:, IDENT:amt RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS br:branch_ID
+            EXISTS bn:bname
+              EXISTS n:no_of_customers
+                EXISTS c:city
+                  EXISTS s:state
+                    AND
+                      PRED bank(br, bn, n, c, s)
+                      EXISTS lid:loan_ID
+                        EXISTS cid:cust_ID
+                          EXISTS amt:amount
+                            PRED loan(lid, Business<const>, cid, br, amt)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (b1 : bname, c : city) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount, global int -> IntSort()
+        b : local branch_ID, global text -> StringSort()
+        b1 : local bname, global varchar(20) -> StringSort()
+        b2 : local branch_ID, global text -> StringSort()
+        c : local city, global varchar(10) -> StringSort()
+        c1 : local cust_ID, global varchar(3) -> StringSort()
+        l : local loan_ID, global varchar(3) -> StringSort()
+        l1 : local loan_type, global varchar(15) -> StringSort()
+        n : local no_of_customers, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+      Predicted FOL:
+        amt : local amount, global int -> IntSort()
+        bn : local bname, global varchar(20) -> StringSort()
+        br : local branch_ID, global text -> StringSort()
+        c : local city, global varchar(10) -> StringSort()
+        cid : local cust_ID, global varchar(3) -> StringSort()
+        lid : local loan_ID, global varchar(3) -> StringSort()
+        n : local no_of_customers, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5514 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1650.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (b1 : bname, c : city) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

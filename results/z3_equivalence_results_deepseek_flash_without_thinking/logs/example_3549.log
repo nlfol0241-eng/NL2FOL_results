@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3549.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3549.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4473 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which customers do not have a first notification of loss record? Give me the customer names.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+      local sorts:
+        Customer_ID = integer -> IntSort()
+        Customer_name = varchar(40) -> StringSort()
+        FNOL_ID = integer -> IntSort()
+        Policy_ID = integer -> IntSort()
+        Service_ID = integer -> IntSort()
+      symbols:
+        Customers(Customer_ID, Customer_name)
+        First_Notification_of_Loss(FNOL_ID, Customer_ID, Policy_ID, Service_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c : Customer_ID( Customers(c,c1) )) ∧ (¬(∃f : FNOL_ID ∃s : Service_ID ∃p : Policy_ID ∃c2 : Customer_ID ∃c : Customer_ID( ((Customers(c,c1)) ∧ (First_Notification_of_Loss(f,c2,p,s))) ∧ (c = c2) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:FNOL_ID EXISTS:∃ IDENT:s COLON:: IDENT:Service_ID EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:c2 COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID LPAR:( LPAR:( LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:First_Notification_of_Loss LPAR:( IDENT:f COMMA:, IDENT:c2 COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c:Customer_ID
+              PRED Customers(c, c1)
+            NOT
+              EXISTS f:FNOL_ID
+                EXISTS s:Service_ID
+                  EXISTS p:Policy_ID
+                    EXISTS c2:Customer_ID
+                      EXISTS c:Customer_ID
+                        AND
+                          AND
+                            PRED Customers(c, c1)
+                            PRED First_Notification_of_Loss(f, c2, p, s)
+                          EQ  c = c2
+      Predicted FOL: ∃x : Customer_ID ∃y : Customer_name (Customers(x, y) ∧ ¬∃z : FNOL_ID ∃w : Policy_ID ∃v : Service_ID First_Notification_of_Loss(z, x, w, v))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:y COLON:: IDENT:Customer_name LPAR:( IDENT:Customers LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:z COLON:: IDENT:FNOL_ID EXISTS:∃ IDENT:w COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:v COLON:: IDENT:Service_ID IDENT:First_Notification_of_Loss LPAR:( IDENT:z COMMA:, IDENT:x COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Customer_ID
+            EXISTS y:Customer_name
+              AND
+                PRED Customers(x, y)
+                NOT
+                  EXISTS z:FNOL_ID
+                    EXISTS w:Policy_ID
+                      EXISTS v:Service_ID
+                        PRED First_Notification_of_Loss(z, x, w, v)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c1 : Customer_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        c1 : local Customer_name, global varchar(40) -> StringSort()
+        c2 : local Customer_ID, global integer -> IntSort()
+        f : local FNOL_ID, global integer -> IntSort()
+        p : local Policy_ID, global integer -> IntSort()
+        s : local Service_ID, global integer -> IntSort()
+      Predicted FOL:
+        v : local Service_ID, global integer -> IntSort()
+        w : local Policy_ID, global integer -> IntSort()
+        x : local Customer_ID, global integer -> IntSort()
+        y : local Customer_name, global varchar(40) -> StringSort()
+        z : local FNOL_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5510 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3549.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c1 : Customer_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

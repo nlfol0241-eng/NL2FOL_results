@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3277.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3277.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3358 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of shops that do not have any devices in stock?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Device_ID = int -> IntSort()
+        Location = text -> StringSort()
+        Open_Date = text -> StringSort()
+        Open_Year = int -> IntSort()
+        Quantity = int -> IntSort()
+        Shop_ID = int -> IntSort()
+        Shop_Name = text -> StringSort()
+      symbols:
+        shop(Shop_ID, Shop_Name, Location, Open_Date, Open_Year)
+        stock(Shop_ID, Device_ID, Quantity)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : Location ∃o1 : Open_Year ∃o : Open_Date ∃s : Shop_ID( (shop(s,s1,l,o,o1)) ∧ (¬(∃s2 : Shop_ID( ((shop(s,s1,l,o,o1)) ∧ (∃q : Quantity ∃d : Device_ID( stock(s2,d,q) ))) ∧ (s = s2) ))) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:o1 COLON:: IDENT:Open_Year EXISTS:∃ IDENT:o COLON:: IDENT:Open_Date EXISTS:∃ IDENT:s COLON:: IDENT:Shop_ID LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:o COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:Shop_ID LPAR:( LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:o COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:q COLON:: IDENT:Quantity EXISTS:∃ IDENT:d COLON:: IDENT:Device_ID LPAR:( IDENT:stock LPAR:( IDENT:s2 COMMA:, IDENT:d COMMA:, IDENT:q RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:Location
+            EXISTS o1:Open_Year
+              EXISTS o:Open_Date
+                EXISTS s:Shop_ID
+                  AND
+                    PRED shop(s, s1, l, o, o1)
+                    NOT
+                      EXISTS s2:Shop_ID
+                        AND
+                          AND
+                            PRED shop(s, s1, l, o, o1)
+                            EXISTS q:Quantity
+                              EXISTS d:Device_ID
+                                PRED stock(s2, d, q)
+                          EQ  s = s2
+      Predicted FOL: ∃sID:Shop_ID ∃loc:Location ∃od:Open_Date ∃oy:Open_Year ( shop(sID, xName, loc, od, oy) ∧ ¬∃dID:Device_ID ∃q:Quantity stock(sID, dID, q) )
+        tokens: EXISTS:∃ IDENT:sID COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:loc COLON:: IDENT:Location EXISTS:∃ IDENT:od COLON:: IDENT:Open_Date EXISTS:∃ IDENT:oy COLON:: IDENT:Open_Year LPAR:( IDENT:shop LPAR:( IDENT:sID COMMA:, IDENT:xName COMMA:, IDENT:loc COMMA:, IDENT:od COMMA:, IDENT:oy RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:dID COLON:: IDENT:Device_ID EXISTS:∃ IDENT:q COLON:: IDENT:Quantity IDENT:stock LPAR:( IDENT:sID COMMA:, IDENT:dID COMMA:, IDENT:q RPAR:) RPAR:) EOF
+        AST:
+          EXISTS sID:Shop_ID
+            EXISTS loc:Location
+              EXISTS od:Open_Date
+                EXISTS oy:Open_Year
+                  AND
+                    PRED shop(sID, xName, loc, od, oy)
+                    NOT
+                      EXISTS dID:Device_ID
+                        EXISTS q:Quantity
+                          PRED stock(sID, dID, q)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Shop_Name_0 : Shop_Name   Gold s1 <-> Predicted xName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Device_ID, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        o : local Open_Date, global text -> StringSort()
+        o1 : local Open_Year, global int -> IntSort()
+        q : local Quantity, global int -> IntSort()
+        s : local Shop_ID, global int -> IntSort()
+        s1 : local Shop_Name, global text -> StringSort()
+        s2 : local Shop_ID, global int -> IntSort()
+      Predicted FOL:
+        dID : local Device_ID, global int -> IntSort()
+        loc : local Location, global text -> StringSort()
+        od : local Open_Date, global text -> StringSort()
+        oy : local Open_Year, global int -> IntSort()
+        q : local Quantity, global int -> IntSort()
+        sID : local Shop_ID, global int -> IntSort()
+        xName : local Shop_Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_l_1, gold_o1_2, gold_o_3, gold_s_4], And(P_shop(gold_s_4, FV_Shop_Name_0, gold_l_1, gold_o_3, gold_o1_2), Not(Exists([gold_s2_5], And(And(P_shop(gold_s_4, FV_Shop_Name_0, gold_l_1, gold_o_3, gold_o1_2), Exists([gold_q_6, gold_d_7], P_stock(gold_s2_5, gold_d_7, gold_q_6))), (gold_s_4 == gold_s2_5))))))
+      gold_skolem (witnesses WGOLD_l, WGOLD_o1, WGOLD_o, WGOLD_s):  And(P_shop(WGOLD_s, FV_Shop_Name_0, WGOLD_l, WGOLD_o, WGOLD_o1), Not(Exists([goldsk_s2_1], And(And(P_shop(WGOLD_s, FV_Shop_Name_0, WGOLD_l, WGOLD_o, WGOLD_o1), Exists([goldsk_q_2, goldsk_d_3], P_stock(goldsk_s2_1, goldsk_d_3, goldsk_q_2))), (WGOLD_s == goldsk_s2_1)))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_sID_1, predicted_loc_2, predicted_od_3, predicted_oy_4], And(P_shop(predicted_sID_1, FV_Shop_Name_0, predicted_loc_2, predicted_od_3, predicted_oy_4), Not(Exists([predicted_dID_5, predicted_q_6], P_stock(predicted_sID_1, predicted_dID_5, predicted_q_6)))))
+      predicted_skolem (witnesses WPREDICTED_sID, WPREDICTED_loc, WPREDICTED_od, WPREDICTED_oy):  And(P_shop(WPREDICTED_sID, FV_Shop_Name_0, WPREDICTED_loc, WPREDICTED_od, WPREDICTED_oy), Not(Exists([predictedsk_dID_1, predictedsk_q_2], P_stock(WPREDICTED_sID, predictedsk_dID_1, predictedsk_q_2))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 753 lines, 29256 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3277.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_l, WGOLD_o1, WGOLD_o, WGOLD_s
+      claim: And(And(shop(WGOLD_s, FV_Shop_Name_0, WGOLD_l, WGOLD_o, WGOLD_o1), Not(Exists(goldsk_s2_1, And(And(shop(WGOLD_s, FV_Shop_Name_0, WGOLD_l, WGOLD_o, WGOLD_o1), Exists([goldsk_q_2, goldsk_d_3], stock(goldsk_s2_1, goldsk_d_3, goldsk_q_2))), WGOLD_s == goldsk_s2_1)))), Not(Exists([predicted_sID_1, predicted_loc_2, predicted_od_3, predicted_oy_4], And(shop(predicted_sID_1, FV_Shop_Name_0, predicted_loc_2, predicted_od_3, predicted_oy_4), Not(Exists([predicted_dID_5, predicted_q_6], stock(predicted_sID_1, predicted_dID_5, predicted_q_6)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_sID, WPREDICTED_loc, WPREDICTED_od, WPREDICTED_oy
+      claim: And(And(shop(WPREDICTED_sID, FV_Shop_Name_0, WPREDICTED_loc, WPREDICTED_od, WPREDICTED_oy), Not(Exists([predictedsk_dID_1, predictedsk_q_2], stock(WPREDICTED_sID, predictedsk_dID_1, predictedsk_q_2)))), Not(Exists([gold_l_1, gold_o1_2, gold_o_3, gold_s_4], And(shop(gold_s_4, FV_Shop_Name_0, gold_l_1, gold_o_3, gold_o1_2), Not(Exists(gold_s2_5, And(And(shop(gold_s_4, FV_Shop_Name_0, gold_l_1, gold_o_3, gold_o1_2), Exists([gold_q_6, gold_d_7], stock(gold_s2_5, gold_d_7, gold_q_6))), gold_s_4 == gold_s2_5)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

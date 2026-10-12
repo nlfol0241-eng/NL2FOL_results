@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1577.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1577.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3528 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which university is in Los Angeles county and opened after 1950?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        County = text -> StringSort()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        constant 1950 : Year
+        constant Los Angeles : County
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Id ∃l : Location ∃c1 : County ∃y : Year ( (Campuses(i,c,l,c1,y)) ∧ ((c1 = 'Los Angeles') ∧ (y > 1950)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c1 COLON:: IDENT:County EXISTS:∃ IDENT:y COLON:: IDENT:Year LPAR:( LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:c1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c1 EQ:= LIT:Los Angeles RPAR:) AND:∧ LPAR:( IDENT:y GT:> NUM:1950 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS l:Location
+              EXISTS c1:County
+                EXISTS y:Year
+                  AND
+                    PRED Campuses(i, c, l, c1, y)
+                    AND
+                      EQ  c1 = 'Los Angeles'
+                      CMP  y > 1950
+      Predicted FOL: ∃x : Id ∃y : campus ∃z : Location ( Campuses(x, y, z, 'Los Angeles', 1950) ∧ 1950 > 1950 )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Id EXISTS:∃ IDENT:y COLON:: IDENT:campus EXISTS:∃ IDENT:z COLON:: IDENT:Location LPAR:( IDENT:Campuses LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, LIT:Los Angeles COMMA:, NUM:1950 RPAR:) AND:∧ NUM:1950 GT:> NUM:1950 RPAR:) EOF
+        AST:
+          EXISTS x:Id
+            EXISTS y:campus
+              EXISTS z:Location
+                AND
+                  PRED Campuses(x, y, z, 'Los Angeles', 1950)
+                  CMP  1950 > 1950
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : campus) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local campus, global text -> StringSort()
+        c1 : local County, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+      Predicted FOL:
+        x : local Id, global integer -> IntSort()
+        y : local campus, global text -> StringSort()
+        z : local Location, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5316 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1577.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : campus) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

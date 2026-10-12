@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1804.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1804.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6625 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the address for the customer with id 10?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+      local sorts:
+        address_details = varchar(255) -> StringSort()
+        address_id = integer -> IntSort()
+        customer_id = integer -> IntSort()
+        date_from = datetime -> IntSort()
+        date_to = datetime -> IntSort()
+      symbols:
+        Addresses(address_id, address_details)
+        Customer_Addresses(customer_id, address_id, date_from, date_to)
+        constant 10 : customer_id
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : address_id ∃c : customer_id ∃a2 : address_id ∃d : date_from ∃d1 : date_to ( (((Addresses(a,a1)) ∧ (Customer_Addresses(c,a2,d,d1))) ∧ (a = a2)) ∧ (c = 10) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:address_id EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:a2 COLON:: IDENT:address_id EXISTS:∃ IDENT:d COLON:: IDENT:date_from EXISTS:∃ IDENT:d1 COLON:: IDENT:date_to LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Addresses LPAR:( IDENT:a COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Customer_Addresses LPAR:( IDENT:c COMMA:, IDENT:a2 COMMA:, IDENT:d COMMA:, IDENT:d1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= NUM:10 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:address_id
+            EXISTS c:customer_id
+              EXISTS a2:address_id
+                EXISTS d:date_from
+                  EXISTS d1:date_to
+                    AND
+                      AND
+                        AND
+                          PRED Addresses(a, a1)
+                          PRED Customer_Addresses(c, a2, d, d1)
+                        EQ  a = a2
+                      EQ  c = 10
+      Predicted FOL: ∃aid : address_id ∃from : date_from ∃to : date_to (Customer_Addresses(10, aid, from, to) ∧ Addresses(aid, address))
+        tokens: EXISTS:∃ IDENT:aid COLON:: IDENT:address_id EXISTS:∃ IDENT:from COLON:: IDENT:date_from EXISTS:∃ IDENT:to COLON:: IDENT:date_to LPAR:( IDENT:Customer_Addresses LPAR:( NUM:10 COMMA:, IDENT:aid COMMA:, IDENT:from COMMA:, IDENT:to RPAR:) AND:∧ IDENT:Addresses LPAR:( IDENT:aid COMMA:, IDENT:address RPAR:) RPAR:) EOF
+        AST:
+          EXISTS aid:address_id
+            EXISTS from:date_from
+              EXISTS to:date_to
+                AND
+                  PRED Customer_Addresses(10, aid, from, to)
+                  PRED Addresses(aid, address)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_address_details_0 : address_details   Gold a1 <-> Predicted address
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local address_id, global integer -> IntSort()
+        a1 : local address_details, global varchar(255) -> StringSort()
+        a2 : local address_id, global integer -> IntSort()
+        c : local customer_id, global integer -> IntSort()
+        d : local date_from, global datetime -> IntSort()
+        d1 : local date_to, global datetime -> IntSort()
+      Predicted FOL:
+        address : local address_details, global varchar(255) -> StringSort()
+        aid : local address_id, global integer -> IntSort()
+        from : local date_from, global datetime -> IntSort()
+        to : local date_to, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_a2_3, gold_d_4, gold_d1_5], And(And(And(P_Addresses(gold_a_1, FV_address_details_0), P_Customer_Addresses(gold_c_2, gold_a2_3, gold_d_4, gold_d1_5)), (gold_a_1 == gold_a2_3)), (gold_c_2 == L_v_10_integer)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_a2, WGOLD_d, WGOLD_d1):  And(And(And(P_Addresses(WGOLD_a, FV_address_details_0), P_Customer_Addresses(WGOLD_c, WGOLD_a2, WGOLD_d, WGOLD_d1)), (WGOLD_a == WGOLD_a2)), (WGOLD_c == L_v_10_integer))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_aid_1, predicted_from_2, predicted_to_3], And(P_Customer_Addresses(L_v_10_integer, predicted_aid_1, predicted_from_2, predicted_to_3), P_Addresses(predicted_aid_1, FV_address_details_0)))
+      predicted_skolem (witnesses WPREDICTED_aid, WPREDICTED_from, WPREDICTED_to):  And(P_Customer_Addresses(L_v_10_integer, WPREDICTED_aid, WPREDICTED_from, WPREDICTED_to), P_Addresses(WPREDICTED_aid, FV_address_details_0))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '10' at integer -> L_v_10_integer = IntVal(10)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 748 lines, 28666 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1804.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_address_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_a2, WGOLD_d, WGOLD_d1
+      claim: And(And(And(And(Addresses(WGOLD_a, FV_address_details_0), Customer_Addresses(WGOLD_c, WGOLD_a2, WGOLD_d, WGOLD_d1)), WGOLD_a == WGOLD_a2), 10 == WGOLD_c), Not(Exists([predicted_aid_1, predicted_from_2, predicted_to_3], And(Customer_Addresses(10, predicted_aid_1, predicted_from_2, predicted_to_3), Addresses(predicted_aid_1, FV_address_details_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_aid, WPREDICTED_from, WPREDICTED_to
+      claim: And(And(Customer_Addresses(10, WPREDICTED_aid, WPREDICTED_from, WPREDICTED_to), Addresses(WPREDICTED_aid, FV_address_details_0)), Not(Exists([gold_a_1, gold_c_2, gold_a2_3, gold_d_4, gold_d1_5], And(And(And(Addresses(gold_a_1, FV_address_details_0), Customer_Addresses(gold_c_2, gold_a2_3, gold_d_4, gold_d1_5)), gold_a_1 == gold_a2_3), 10 == gold_c_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

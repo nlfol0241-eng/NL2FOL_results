@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_274.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_274.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3621 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: salem is the capital of which state
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        state(state_name, population, area, country_name, capital, density)
+        constant salem : capital
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : population ∃a : area ∃c : country_name ∃c1 : capital ∃d : density ( (state(s,p,a,c,c1,d)) ∧ (c1 = 'salem') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:c1 COLON:: IDENT:capital EXISTS:∃ IDENT:d COLON:: IDENT:density LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:salem RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:population
+            EXISTS a:area
+              EXISTS c:country_name
+                EXISTS c1:capital
+                  EXISTS d:density
+                    AND
+                      PRED state(s, p, a, c, c1, d)
+                      EQ  c1 = 'salem'
+      Predicted FOL: ∃p : population ∃a : area ∃c : country_name ∃d : density state(x, p, a, c, 'salem', d)
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:d COLON:: IDENT:density IDENT:state LPAR:( IDENT:x COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, LIT:salem COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS p:population
+            EXISTS a:area
+              EXISTS c:country_name
+                EXISTS d:density
+                  PRED state(x, p, a, c, 'salem', d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_state_name_0 : state_name   Gold s <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        a : local area, global double -> Float64()
+        c : local country_name, global varchar(3) -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        x : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_a_2, gold_c_3, gold_c1_4, gold_d_5], And(D_double(gold_a_2), D_varchar_3_(gold_c_3), D_double(gold_d_5), And(P_state(FV_state_name_0, gold_p_1, gold_a_2, gold_c_3, gold_c1_4, gold_d_5), (gold_c1_4 == L_salem))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d):  And(D_double(WGOLD_a), D_varchar_3_(WGOLD_c), D_double(WGOLD_d), And(P_state(FV_state_name_0, WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d), (WGOLD_c1 == L_salem)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_a_2, predicted_c_3, predicted_d_4], And(D_double(predicted_a_2), D_varchar_3_(predicted_c_3), D_double(predicted_d_4), P_state(FV_state_name_0, predicted_p_1, predicted_a_2, predicted_c_3, L_salem, predicted_d_4)))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_a, WPREDICTED_c, WPREDICTED_d):  And(D_double(WPREDICTED_a), D_varchar_3_(WPREDICTED_c), D_double(WPREDICTED_d), P_state(FV_state_name_0, WPREDICTED_p, WPREDICTED_a, WPREDICTED_c, L_salem, WPREDICTED_d))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'salem' at text -> L_salem = StringVal('salem')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 751 lines, 28557 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_274.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), Length(WGOLD_c) <= 3, And(Not(fpIsNaN(WGOLD_d)), Not(And(fpIsZero(WGOLD_d), fpIsNegative(WGOLD_d)))), And(state(FV_state_name_0, WGOLD_p, WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_d), WGOLD_c1 == "salem")), Not(Exists([predicted_p_1, predicted_a_2, predicted_c_3, predicted_d_4], And(And(Not(fpIsNaN(predicted_a_2)), Not(And(fpIsZero(predicted_a_2), fpIsNegative(predicted_a_2)))), Length(predicted_c_3) <= 3, And(Not(fpIsNaN(predicted_d_4)), Not(And(fpIsZero(predicted_d_4), fpIsNegative(predicted_d_4)))), state(FV_state_name_0, predicted_p_1, predicted_a_2, predicted_c_3, "salem", predicted_d_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.023 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_a, WPREDICTED_c, WPREDICTED_d
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), Length(WPREDICTED_c) <= 3, And(Not(fpIsNaN(WPREDICTED_d)), Not(And(fpIsZero(WPREDICTED_d), fpIsNegative(WPREDICTED_d)))), state(FV_state_name_0, WPREDICTED_p, WPREDICTED_a, WPREDICTED_c, "salem", WPREDICTED_d)), Not(Exists([gold_p_1, gold_a_2, gold_c_3, gold_c1_4, gold_d_5], And(And(Not(fpIsNaN(gold_a_2)), Not(And(fpIsZero(gold_a_2), fpIsNegative(gold_a_2)))), Length(gold_c_3) <= 3, And(Not(fpIsNaN(gold_d_5)), Not(And(fpIsZero(gold_d_5), fpIsNegative(gold_d_5)))), And(state(FV_state_name_0, gold_p_1, gold_a_2, gold_c_3, gold_c1_4, gold_d_5), gold_c1_4 == "salem")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.012 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

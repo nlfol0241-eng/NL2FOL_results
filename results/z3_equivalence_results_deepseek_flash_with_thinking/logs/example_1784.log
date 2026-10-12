@@ -1,0 +1,115 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1784.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1784.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3278 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of members and the decoration themes they have.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        College_ID = int -> IntSort()
+        Country = text -> StringSort()
+        Decoration_Theme = text -> StringSort()
+        Member_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Rank_in_Round = int -> IntSort()
+        Round_ID = int -> IntSort()
+      symbols:
+        member(Member_ID, Name, Country, College_ID)
+        round(Round_ID, Member_ID, Decoration_Theme, Rank_in_Round)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Member_ID ∃c : Country ∃c1 : College_ID ∃r : Round_ID ∃m1 : Member_ID ∃r1 : Rank_in_Round ( ((member(m,n,c,c1)) ∧ (round(r,m1,d,r1))) ∧ (m = m1) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:c1 COLON:: IDENT:College_ID EXISTS:∃ IDENT:r COLON:: IDENT:Round_ID EXISTS:∃ IDENT:m1 COLON:: IDENT:Member_ID EXISTS:∃ IDENT:r1 COLON:: IDENT:Rank_in_Round LPAR:( LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:round LPAR:( IDENT:r COMMA:, IDENT:m1 COMMA:, IDENT:d COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS c:Country
+              EXISTS c1:College_ID
+                EXISTS r:Round_ID
+                  EXISTS m1:Member_ID
+                    EXISTS r1:Rank_in_Round
+                      AND
+                        AND
+                          PRED member(m, n, c, c1)
+                          PRED round(r, m1, d, r1)
+                        EQ  m = m1
+      Predicted FOL: ∃m_id : Member_ID ∃c_id : College_ID ∃country : Country ( member(m_id, Name, country, c_id) ∧ ∃r_id : Round_ID ∃rank : Rank_in_Round round(r_id, m_id, Decoration_Theme, rank) )
+        tokens: EXISTS:∃ IDENT:m_id COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c_id COLON:: IDENT:College_ID EXISTS:∃ IDENT:country COLON:: IDENT:Country LPAR:( IDENT:member LPAR:( IDENT:m_id COMMA:, IDENT:Name COMMA:, IDENT:country COMMA:, IDENT:c_id RPAR:) AND:∧ EXISTS:∃ IDENT:r_id COLON:: IDENT:Round_ID EXISTS:∃ IDENT:rank COLON:: IDENT:Rank_in_Round IDENT:round LPAR:( IDENT:r_id COMMA:, IDENT:m_id COMMA:, IDENT:Decoration_Theme COMMA:, IDENT:rank RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m_id:Member_ID
+            EXISTS c_id:College_ID
+              EXISTS country:Country
+                AND
+                  PRED member(m_id, Name, country, c_id)
+                  EXISTS r_id:Round_ID
+                    EXISTS rank:Rank_in_Round
+                      PRED round(r_id, m_id, Decoration_Theme, rank)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Decoration_Theme_0 : Decoration_Theme   Gold d <-> Predicted Decoration_Theme
+      FV_Name_0 : Name   Gold n <-> Predicted Name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        c1 : local College_ID, global int -> IntSort()
+        d : local Decoration_Theme, global text -> StringSort()
+        m : local Member_ID, global int -> IntSort()
+        m1 : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        r : local Round_ID, global int -> IntSort()
+        r1 : local Rank_in_Round, global int -> IntSort()
+      Predicted FOL:
+        Decoration_Theme : local Decoration_Theme, global text -> StringSort()
+        Name : local Name, global text -> StringSort()
+        c_id : local College_ID, global int -> IntSort()
+        country : local Country, global text -> StringSort()
+        m_id : local Member_ID, global int -> IntSort()
+        r_id : local Round_ID, global int -> IntSort()
+        rank : local Rank_in_Round, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_c_2, gold_c1_3, gold_r_4, gold_m1_5, gold_r1_6], And(And(P_member(gold_m_1, FV_Name_0, gold_c_2, gold_c1_3), P_round(gold_r_4, gold_m1_5, FV_Decoration_Theme_0, gold_r1_6)), (gold_m_1 == gold_m1_5)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_c, WGOLD_c1, WGOLD_r, WGOLD_m1, WGOLD_r1):  And(And(P_member(WGOLD_m, FV_Name_0, WGOLD_c, WGOLD_c1), P_round(WGOLD_r, WGOLD_m1, FV_Decoration_Theme_0, WGOLD_r1)), (WGOLD_m == WGOLD_m1))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_id_1, predicted_c_id_2, predicted_country_3], And(P_member(predicted_m_id_1, FV_Name_0, predicted_country_3, predicted_c_id_2), Exists([predicted_r_id_4, predicted_rank_5], P_round(predicted_r_id_4, predicted_m_id_1, FV_Decoration_Theme_0, predicted_rank_5))))
+      predicted_skolem (witnesses WPREDICTED_m_id, WPREDICTED_c_id, WPREDICTED_country):  And(P_member(WPREDICTED_m_id, FV_Name_0, WPREDICTED_country, WPREDICTED_c_id), Exists([predictedsk_r_id_1, predictedsk_rank_2], P_round(predictedsk_r_id_1, WPREDICTED_m_id, FV_Decoration_Theme_0, predictedsk_rank_2)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 752 lines, 29121 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1784.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_c, WGOLD_c1, WGOLD_r, WGOLD_m1, WGOLD_r1
+      claim: And(And(And(member(WGOLD_m, FV_Name_0, WGOLD_c, WGOLD_c1), round(WGOLD_r, WGOLD_m1, FV_Decoration_Theme_0, WGOLD_r1)), WGOLD_m == WGOLD_m1), Not(Exists([predicted_m_id_1, predicted_c_id_2, predicted_country_3], And(member(predicted_m_id_1, FV_Name_0, predicted_country_3, predicted_c_id_2), Exists([predicted_r_id_4, predicted_rank_5], round(predicted_r_id_4, predicted_m_id_1, FV_Decoration_Theme_0, predicted_rank_5))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m_id, WPREDICTED_c_id, WPREDICTED_country
+      claim: And(And(member(WPREDICTED_m_id, FV_Name_0, WPREDICTED_country, WPREDICTED_c_id), Exists([predictedsk_r_id_1, predictedsk_rank_2], round(predictedsk_r_id_1, WPREDICTED_m_id, FV_Decoration_Theme_0, predictedsk_rank_2))), Not(Exists([gold_m_1, gold_c_2, gold_c1_3, gold_r_4, gold_m1_5, gold_r1_6], And(And(member(gold_m_1, FV_Name_0, gold_c_2, gold_c1_3), round(gold_r_4, gold_m1_5, FV_Decoration_Theme_0, gold_r1_6)), gold_m_1 == gold_m1_5))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

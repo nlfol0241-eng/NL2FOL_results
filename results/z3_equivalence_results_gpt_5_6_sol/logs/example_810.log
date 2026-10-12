@@ -1,0 +1,89 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_810.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_810.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 1901 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the last names of teachers teaching in classroom 109.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Classroom = integer -> IntSort()
+        FirstName = text -> StringSort()
+        LastName = text -> StringSort()
+      symbols:
+        teachers(LastName, FirstName, Classroom)
+        constant 109 : Classroom
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : FirstName ∃c : Classroom ( (teachers(l,f,c)) ∧ (c = 109) )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:FirstName EXISTS:∃ IDENT:c COLON:: IDENT:Classroom LPAR:( LPAR:( IDENT:teachers LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= NUM:109 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:FirstName
+            EXISTS c:Classroom
+              AND
+                PRED teachers(l, f, c)
+                EQ  c = 109
+      Predicted FOL: ∃f : FirstName teachers(l, f, 109)
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:FirstName IDENT:teachers LPAR:( IDENT:l COMMA:, IDENT:f COMMA:, NUM:109 RPAR:) EOF
+        AST:
+          EXISTS f:FirstName
+            PRED teachers(l, f, 109)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_LastName_0 : LastName   Gold l <-> Predicted l
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Classroom, global integer -> IntSort()
+        f : local FirstName, global text -> StringSort()
+        l : local LastName, global text -> StringSort()
+      Predicted FOL:
+        f : local FirstName, global text -> StringSort()
+        l : local LastName, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_f_1, gold_c_2], And(P_teachers(FV_LastName_0, gold_f_1, gold_c_2), (gold_c_2 == L_v_109_integer)))
+      gold_skolem (witnesses WGOLD_f, WGOLD_c):  And(P_teachers(FV_LastName_0, WGOLD_f, WGOLD_c), (WGOLD_c == L_v_109_integer))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_f_1], P_teachers(FV_LastName_0, predicted_f_1, L_v_109_integer))
+      predicted_skolem (witnesses WPREDICTED_f):  P_teachers(FV_LastName_0, WPREDICTED_f, L_v_109_integer)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '109' at integer -> L_v_109_integer = IntVal(109)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 719 lines, 26267 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_810.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_f, WGOLD_c
+      claim: And(And(teachers(FV_LastName_0, WGOLD_f, WGOLD_c), 109 == WGOLD_c), Not(Exists(predicted_f_1, teachers(FV_LastName_0, predicted_f_1, 109))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_f
+      claim: And(teachers(FV_LastName_0, WPREDICTED_f, 109), Not(Exists([gold_f_1, gold_c_2], And(teachers(FV_LastName_0, gold_f_1, gold_c_2), 109 == gold_c_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

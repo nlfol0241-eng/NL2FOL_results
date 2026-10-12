@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3479.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3479.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2927 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all home cities except for those having a driver older than 40.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Driver_ID = int -> IntSort()
+        Home_city = text -> StringSort()
+        Name = text -> StringSort()
+        Party = text -> StringSort()
+      symbols:
+        driver(Driver_ID, Name, Party, Home_city, Age)
+        constant 40 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃p : Party ∃n : Name ∃a : Age ∃d : Driver_ID( driver(d,n,p,h,a) )) ∧ (¬(∃p : Party ∃n : Name ∃a : Age ∃d : Driver_ID( (driver(d,n,p,h,a)) ∧ (a > 40) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Party EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:d COLON:: IDENT:Driver_ID LPAR:( IDENT:driver LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:h COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Party EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:d COLON:: IDENT:Driver_ID LPAR:( LPAR:( IDENT:driver LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:h COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:40 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p:Party
+              EXISTS n:Name
+                EXISTS a:Age
+                  EXISTS d:Driver_ID
+                    PRED driver(d, n, p, h, a)
+            NOT
+              EXISTS p:Party
+                EXISTS n:Name
+                  EXISTS a:Age
+                    EXISTS d:Driver_ID
+                      AND
+                        PRED driver(d, n, p, h, a)
+                        CMP  a > 40
+      Predicted FOL: ∃d0:Driver_ID ∃d1:Name ∃d2:Party ( driver(d0,d1,d2,h,age) ∧ ¬∃e0:Driver_ID ∃e1:Name ∃e2:Party ∃e4:Age ( driver(e0,e1,e2,h,e4) ∧ 40 < e4 ) )
+        tokens: EXISTS:∃ IDENT:d0 COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:d1 COLON:: IDENT:Name EXISTS:∃ IDENT:d2 COLON:: IDENT:Party LPAR:( IDENT:driver LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:h COMMA:, IDENT:age RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:e0 COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:e1 COLON:: IDENT:Name EXISTS:∃ IDENT:e2 COLON:: IDENT:Party EXISTS:∃ IDENT:e4 COLON:: IDENT:Age LPAR:( IDENT:driver LPAR:( IDENT:e0 COMMA:, IDENT:e1 COMMA:, IDENT:e2 COMMA:, IDENT:h COMMA:, IDENT:e4 RPAR:) AND:∧ NUM:40 LT:< IDENT:e4 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d0:Driver_ID
+            EXISTS d1:Name
+              EXISTS d2:Party
+                AND
+                  PRED driver(d0, d1, d2, h, age)
+                  NOT
+                    EXISTS e0:Driver_ID
+                      EXISTS e1:Name
+                        EXISTS e2:Party
+                          EXISTS e4:Age
+                            AND
+                              PRED driver(e0, e1, e2, h, e4)
+                              CMP  40 < e4
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (h : Home_city) but Predicted has 2 (h : Home_city, age : Age): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        d : local Driver_ID, global int -> IntSort()
+        h : local Home_city, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local Party, global text -> StringSort()
+      Predicted FOL:
+        age : local Age, global int -> IntSort()
+        d0 : local Driver_ID, global int -> IntSort()
+        d1 : local Name, global text -> StringSort()
+        d2 : local Party, global text -> StringSort()
+        e0 : local Driver_ID, global int -> IntSort()
+        e1 : local Name, global text -> StringSort()
+        e2 : local Party, global text -> StringSort()
+        e4 : local Age, global int -> IntSort()
+        h : local Home_city, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5479 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3479.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (h : Home_city) but Predicted has 2 (h : Home_city, age : Age): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

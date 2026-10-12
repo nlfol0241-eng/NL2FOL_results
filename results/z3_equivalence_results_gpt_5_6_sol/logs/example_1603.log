@@ -1,0 +1,117 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1603.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1603.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3208 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all the rooms that have a price higher than 160 and can accommodate more than 2 people. Report room names and ids.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        RoomId = text -> StringSort()
+        basePrice = integer -> IntSort()
+        bedType = text -> StringSort()
+        beds = integer -> IntSort()
+        decor = text -> StringSort()
+        maxOccupancy = integer -> IntSort()
+        roomName = text -> StringSort()
+      symbols:
+        Rooms(RoomId, roomName, beds, bedType, maxOccupancy, basePrice, decor)
+        constant 160 : basePrice
+        constant 2 : maxOccupancy
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : beds ∃b1 : bedType ∃m : maxOccupancy ∃b2 : basePrice ∃d : decor ( (Rooms(r,r1,b,b1,m,b2,d)) ∧ ((b2 > 160) ∧ (m > 2)) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:beds EXISTS:∃ IDENT:b1 COLON:: IDENT:bedType EXISTS:∃ IDENT:m COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:b2 COLON:: IDENT:basePrice EXISTS:∃ IDENT:d COLON:: IDENT:decor LPAR:( LPAR:( IDENT:Rooms LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:m COMMA:, IDENT:b2 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:b2 GT:> NUM:160 RPAR:) AND:∧ LPAR:( IDENT:m GT:> NUM:2 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:beds
+            EXISTS b1:bedType
+              EXISTS m:maxOccupancy
+                EXISTS b2:basePrice
+                  EXISTS d:decor
+                    AND
+                      PRED Rooms(r, r1, b, b1, m, b2, d)
+                      AND
+                        CMP  b2 > 160
+                        CMP  m > 2
+      Predicted FOL: ∃beds : beds ∃bedType : bedType ∃maxOccupancy : maxOccupancy ∃basePrice : basePrice ∃decor : decor (Rooms(roomId, roomName, beds, bedType, maxOccupancy, basePrice, decor) ∧ basePrice > 160 ∧ maxOccupancy > 2)
+        tokens: EXISTS:∃ IDENT:beds COLON:: IDENT:beds EXISTS:∃ IDENT:bedType COLON:: IDENT:bedType EXISTS:∃ IDENT:maxOccupancy COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:basePrice COLON:: IDENT:basePrice EXISTS:∃ IDENT:decor COLON:: IDENT:decor LPAR:( IDENT:Rooms LPAR:( IDENT:roomId COMMA:, IDENT:roomName COMMA:, IDENT:beds COMMA:, IDENT:bedType COMMA:, IDENT:maxOccupancy COMMA:, IDENT:basePrice COMMA:, IDENT:decor RPAR:) AND:∧ IDENT:basePrice GT:> NUM:160 AND:∧ IDENT:maxOccupancy GT:> NUM:2 RPAR:) EOF
+        AST:
+          EXISTS beds:beds
+            EXISTS bedType:bedType
+              EXISTS maxOccupancy:maxOccupancy
+                EXISTS basePrice:basePrice
+                  EXISTS decor:decor
+                    AND
+                      PRED Rooms(roomId, roomName, beds, bedType, maxOccupancy, basePrice, decor)
+                      CMP  basePrice > 160
+                      CMP  maxOccupancy > 2
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_RoomId_0 : RoomId   Gold r <-> Predicted roomId
+      FV_roomName_0 : roomName   Gold r1 <-> Predicted roomName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local beds, global integer -> IntSort()
+        b1 : local bedType, global text -> StringSort()
+        b2 : local basePrice, global integer -> IntSort()
+        d : local decor, global text -> StringSort()
+        m : local maxOccupancy, global integer -> IntSort()
+        r : local RoomId, global text -> StringSort()
+        r1 : local roomName, global text -> StringSort()
+      Predicted FOL:
+        basePrice : local basePrice, global integer -> IntSort()
+        bedType : local bedType, global text -> StringSort()
+        beds : local beds, global integer -> IntSort()
+        decor : local decor, global text -> StringSort()
+        maxOccupancy : local maxOccupancy, global integer -> IntSort()
+        roomId : local RoomId, global text -> StringSort()
+        roomName : local roomName, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_b1_2, gold_m_3, gold_b2_4, gold_d_5], And(P_Rooms(FV_RoomId_0, FV_roomName_0, gold_b_1, gold_b1_2, gold_m_3, gold_b2_4, gold_d_5), And((gold_b2_4 > L_v_160_integer), (gold_m_3 > L_v_2_integer))))
+      gold_skolem (witnesses WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d):  And(P_Rooms(FV_RoomId_0, FV_roomName_0, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d), And((WGOLD_b2 > L_v_160_integer), (WGOLD_m > L_v_2_integer)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_beds_1, predicted_bedType_2, predicted_maxOccupancy_3, predicted_basePrice_4, predicted_decor_5], And(P_Rooms(FV_RoomId_0, FV_roomName_0, predicted_beds_1, predicted_bedType_2, predicted_maxOccupancy_3, predicted_basePrice_4, predicted_decor_5), (predicted_basePrice_4 > L_v_160_integer), (predicted_maxOccupancy_3 > L_v_2_integer)))
+      predicted_skolem (witnesses WPREDICTED_beds, WPREDICTED_bedType, WPREDICTED_maxOccupancy, WPREDICTED_basePrice, WPREDICTED_decor):  And(P_Rooms(FV_RoomId_0, FV_roomName_0, WPREDICTED_beds, WPREDICTED_bedType, WPREDICTED_maxOccupancy, WPREDICTED_basePrice, WPREDICTED_decor), (WPREDICTED_basePrice > L_v_160_integer), (WPREDICTED_maxOccupancy > L_v_2_integer))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '160' at integer -> L_v_160_integer = IntVal(160)
+      literal '2' at integer -> L_v_2_integer = IntVal(2)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 752 lines, 29268 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1603.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d
+      claim: And(And(Rooms(FV_RoomId_0, FV_roomName_0, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d), And(160 < WGOLD_b2, 2 < WGOLD_m)), Not(Exists([predicted_beds_1, predicted_bedType_2, predicted_maxOccupancy_3, predicted_basePrice_4, predicted_decor_5], And(Rooms(FV_RoomId_0, FV_roomName_0, predicted_beds_1, predicted_bedType_2, predicted_maxOccupancy_3, predicted_basePrice_4, predicted_decor_5), 160 < predicted_basePrice_4, 2 < predicted_maxOccupancy_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_beds, WPREDICTED_bedType, WPREDICTED_maxOccupancy, WPREDICTED_basePrice, WPREDICTED_decor
+      claim: And(And(Rooms(FV_RoomId_0, FV_roomName_0, WPREDICTED_beds, WPREDICTED_bedType, WPREDICTED_maxOccupancy, WPREDICTED_basePrice, WPREDICTED_decor), 160 < WPREDICTED_basePrice, 2 < WPREDICTED_maxOccupancy), Not(Exists([gold_b_1, gold_b1_2, gold_m_3, gold_b2_4, gold_d_5], And(Rooms(FV_RoomId_0, FV_roomName_0, gold_b_1, gold_b1_2, gold_m_3, gold_b2_4, gold_d_5), And(160 < gold_b2_4, 2 < gold_m_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

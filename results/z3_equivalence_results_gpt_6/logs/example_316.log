@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_316.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_316.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4981 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me the homepage of " University of Michigan " .
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        continent = text -> StringSort()
+        homepage = text -> StringSort()
+        name = text -> StringSort()
+        oid = int -> IntSort()
+      symbols:
+        organization(continent, homepage, name, oid)
+        constant University of Michigan : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : continent ∃n : name ∃o : oid ( (organization(c,h,n,o)) ∧ (n = 'University of Michigan') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:continent EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:o COLON:: IDENT:oid LPAR:( LPAR:( IDENT:organization LPAR:( IDENT:c COMMA:, IDENT:h COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:University of Michigan RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:continent
+            EXISTS n:name
+              EXISTS o:oid
+                AND
+                  PRED organization(c, h, n, o)
+                  EQ  n = 'University of Michigan'
+      Predicted FOL: ∃c : continent ∃o : oid (organization(c, h, 'University of Michigan', o))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:continent EXISTS:∃ IDENT:o COLON:: IDENT:oid LPAR:( IDENT:organization LPAR:( IDENT:c COMMA:, IDENT:h COMMA:, LIT:University of Michigan COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:continent
+            EXISTS o:oid
+              PRED organization(c, h, 'University of Michigan', o)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_homepage_0 : homepage   Gold h <-> Predicted h
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local continent, global text -> StringSort()
+        h : local homepage, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        o : local oid, global int -> IntSort()
+      Predicted FOL:
+        c : local continent, global text -> StringSort()
+        h : local homepage, global text -> StringSort()
+        o : local oid, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_n_2, gold_o_3], And(P_organization(gold_c_1, FV_homepage_0, gold_n_2, gold_o_3), (gold_n_2 == L_University_of_Michigan)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_n, WGOLD_o):  And(P_organization(WGOLD_c, FV_homepage_0, WGOLD_n, WGOLD_o), (WGOLD_n == L_University_of_Michigan))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1, predicted_o_2], P_organization(predicted_c_1, FV_homepage_0, L_University_of_Michigan, predicted_o_2))
+      predicted_skolem (witnesses WPREDICTED_c, WPREDICTED_o):  P_organization(WPREDICTED_c, FV_homepage_0, L_University_of_Michigan, WPREDICTED_o)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'University of Michigan' at text -> L_University_of_Michigan = StringVal('University of Michigan')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 727 lines, 26885 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_316.py
+   [G8] took 0.006 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_n, WGOLD_o
+      claim: And(And(organization(WGOLD_c, FV_homepage_0, WGOLD_n, WGOLD_o), WGOLD_n == "University of Michigan"), Not(Exists([predicted_c_1, predicted_o_2], organization(predicted_c_1, FV_homepage_0, "University of Michigan", predicted_o_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_c, WPREDICTED_o
+      claim: And(organization(WPREDICTED_c, FV_homepage_0, "University of Michigan", WPREDICTED_o), Not(Exists([gold_c_1, gold_n_2, gold_o_3], And(organization(gold_c_1, FV_homepage_0, gold_n_2, gold_o_3), gold_n_2 == "University of Michigan"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

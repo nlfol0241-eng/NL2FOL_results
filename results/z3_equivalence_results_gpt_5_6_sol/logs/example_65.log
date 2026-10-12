@@ -1,0 +1,87 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_65.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_65.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3462 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List all cartoon directed by "Ben Jones".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Channel = text -> StringSort()
+        Directed_by = text -> StringSort()
+        Original_air_date = text -> StringSort()
+        Production_code = real -> Float32()
+        Title = text -> StringSort()
+        Written_by = text -> StringSort()
+        id = text -> StringSort()
+      symbols:
+        Cartoon(id, Title, Directed_by, Written_by, Original_air_date, Production_code, Channel)
+        constant Ben Jones : Directed_by
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃d : Directed_by ∃w : Written_by ∃o : Original_air_date ∃p : Production_code ∃c : Channel ( (Cartoon(i,t,d,w,o,p,c)) ∧ (d = 'Ben Jones') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:d COLON:: IDENT:Directed_by EXISTS:∃ IDENT:w COLON:: IDENT:Written_by EXISTS:∃ IDENT:o COLON:: IDENT:Original_air_date EXISTS:∃ IDENT:p COLON:: IDENT:Production_code EXISTS:∃ IDENT:c COLON:: IDENT:Channel LPAR:( LPAR:( IDENT:Cartoon LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:w COMMA:, IDENT:o COMMA:, IDENT:p COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Ben Jones RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS d:Directed_by
+              EXISTS w:Written_by
+                EXISTS o:Original_air_date
+                  EXISTS p:Production_code
+                    EXISTS c:Channel
+                      AND
+                        PRED Cartoon(i, t, d, w, o, p, c)
+                        EQ  d = 'Ben Jones'
+      Predicted FOL: Cartoon(i, t, d, w, a, p, c) ∧ d = 'Ben Jones'
+        tokens: IDENT:Cartoon LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:p COMMA:, IDENT:c RPAR:) AND:∧ IDENT:d EQ:= LIT:Ben Jones EOF
+        AST:
+          AND
+            PRED Cartoon(i, t, d, w, a, p, c)
+            EQ  d = 'Ben Jones'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : Title) but Predicted has 7 (i : id, t : Title, d : Directed_by, w : Written_by, a : Original_air_date, p : Production_code, c : Channel): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Channel, global text -> StringSort()
+        d : local Directed_by, global text -> StringSort()
+        i : local id, global text -> StringSort()
+        o : local Original_air_date, global text -> StringSort()
+        p : local Production_code, global real -> Float32()
+        t : local Title, global text -> StringSort()
+        w : local Written_by, global text -> StringSort()
+      Predicted FOL:
+        a : local Original_air_date, global text -> StringSort()
+        c : local Channel, global text -> StringSort()
+        d : local Directed_by, global text -> StringSort()
+        i : local id, global text -> StringSort()
+        p : local Production_code, global real -> Float32()
+        t : local Title, global text -> StringSort()
+        w : local Written_by, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5486 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_65.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (t : Title) but Predicted has 7 (i : id, t : Title, d : Directed_by, w : Written_by, a : Original_air_date, p : Production_code, c : Channel): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

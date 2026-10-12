@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2340.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2340.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3247 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the checking and savings balances in accounts belonging to Brown?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(64) -> StringSort()   [domain Length(x) <= 64; length <= 64]
+        float -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+        bigint -> IntSort()   [domain And(x >= -9223372036854775808, x <= 9223372036854775807); range [-9223372036854775808, 9223372036854775807]]
+      local sorts:
+        balance = float -> Float64()
+        custid = bigint -> IntSort()
+        name = varchar(64) -> StringSort()
+      symbols:
+        ACCOUNTS(custid, name)
+        CHECKING(custid, balance)
+        SAVINGS(custid, balance)
+        constant Brown : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : custid ∃n : name ∃c1 : custid ∃c2 : custid ( (((((ACCOUNTS(c,n)) ∧ (CHECKING(c1,b))) ∧ (c = c1)) ∧ (SAVINGS(c2,b1))) ∧ (c = c2)) ∧ (n = 'Brown') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:custid EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c1 COLON:: IDENT:custid EXISTS:∃ IDENT:c2 COLON:: IDENT:custid LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:ACCOUNTS LPAR:( IDENT:c COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:CHECKING LPAR:( IDENT:c1 COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:SAVINGS LPAR:( IDENT:c2 COMMA:, IDENT:b1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Brown RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:custid
+            EXISTS n:name
+              EXISTS c1:custid
+                EXISTS c2:custid
+                  AND
+                    AND
+                      AND
+                        AND
+                          AND
+                            PRED ACCOUNTS(c, n)
+                            PRED CHECKING(c1, b)
+                          EQ  c = c1
+                        PRED SAVINGS(c2, b1)
+                      EQ  c = c2
+                    EQ  n = 'Brown'
+      Predicted FOL: ∃c : custid ( ACCOUNTS(c, 'Brown') ∧ ∃cb : balance CHECKING(c, cb) ∧ ∃sb : balance SAVINGS(c, sb) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:custid LPAR:( IDENT:ACCOUNTS LPAR:( IDENT:c COMMA:, LIT:Brown RPAR:) AND:∧ EXISTS:∃ IDENT:cb COLON:: IDENT:balance IDENT:CHECKING LPAR:( IDENT:c COMMA:, IDENT:cb RPAR:) AND:∧ EXISTS:∃ IDENT:sb COLON:: IDENT:balance IDENT:SAVINGS LPAR:( IDENT:c COMMA:, IDENT:sb RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:custid
+            AND
+              PRED ACCOUNTS(c, 'Brown')
+              EXISTS cb:balance
+                AND
+                  PRED CHECKING(c, cb)
+                  EXISTS sb:balance
+                    PRED SAVINGS(c, sb)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (b : balance, b1 : balance) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local balance, global float -> Float64()
+        b1 : local balance, global float -> Float64()
+        c : local custid, global bigint -> IntSort()
+        c1 : local custid, global bigint -> IntSort()
+        c2 : local custid, global bigint -> IntSort()
+        n : local name, global varchar(64) -> StringSort()
+      Predicted FOL:
+        c : local custid, global bigint -> IntSort()
+        cb : local balance, global float -> Float64()
+        sb : local balance, global float -> Float64()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5415 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2340.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (b : balance, b1 : balance) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

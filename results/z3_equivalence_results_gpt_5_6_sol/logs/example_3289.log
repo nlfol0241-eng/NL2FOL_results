@@ -1,0 +1,124 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3289.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3289.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4338 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and cities of the branches that do not have any registered members?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Address_road = text -> StringSort()
+        Branch_ID = text -> StringSort()
+        City = text -> StringSort()
+        Member_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Open_year = text -> StringSort()
+        Register_Year = text -> StringSort()
+        membership_amount = text -> StringSort()
+      symbols:
+        branch(Branch_ID, Name, Open_year, Address_road, City, membership_amount)
+        membership_register_branch(Member_ID, Branch_ID, Register_Year)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : Open_year ∃m : membership_amount ∃a : Address_road ∃b : Branch_ID( (branch(b,n,o,a,c,m)) ∧ (¬(∃b1 : Branch_ID( ((branch(b,n,o,a,c,m)) ∧ (∃m1 : Member_ID ∃r : Register_Year( membership_register_branch(m1,b1,r) ))) ∧ (b = b1) ))) )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:Open_year EXISTS:∃ IDENT:m COLON:: IDENT:membership_amount EXISTS:∃ IDENT:a COLON:: IDENT:Address_road EXISTS:∃ IDENT:b COLON:: IDENT:Branch_ID LPAR:( LPAR:( IDENT:branch LPAR:( IDENT:b COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:b1 COLON:: IDENT:Branch_ID LPAR:( LPAR:( LPAR:( IDENT:branch LPAR:( IDENT:b COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:Member_ID EXISTS:∃ IDENT:r COLON:: IDENT:Register_Year LPAR:( IDENT:membership_register_branch LPAR:( IDENT:m1 COMMA:, IDENT:b1 COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b EQ:= IDENT:b1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:Open_year
+            EXISTS m:membership_amount
+              EXISTS a:Address_road
+                EXISTS b:Branch_ID
+                  AND
+                    PRED branch(b, n, o, a, c, m)
+                    NOT
+                      EXISTS b1:Branch_ID
+                        AND
+                          AND
+                            PRED branch(b, n, o, a, c, m)
+                            EXISTS m1:Member_ID
+                              EXISTS r:Register_Year
+                                PRED membership_register_branch(m1, b1, r)
+                          EQ  b = b1
+      Predicted FOL: ∃bid : Branch_ID ∃oy : Open_year ∃road : Address_road ∃amount : membership_amount (branch(bid, name, oy, road, city, amount) ∧ ¬∃mid : Member_ID ∃ry : Register_Year membership_register_branch(mid, bid, ry))
+        tokens: EXISTS:∃ IDENT:bid COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:oy COLON:: IDENT:Open_year EXISTS:∃ IDENT:road COLON:: IDENT:Address_road EXISTS:∃ IDENT:amount COLON:: IDENT:membership_amount LPAR:( IDENT:branch LPAR:( IDENT:bid COMMA:, IDENT:name COMMA:, IDENT:oy COMMA:, IDENT:road COMMA:, IDENT:city COMMA:, IDENT:amount RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:mid COLON:: IDENT:Member_ID EXISTS:∃ IDENT:ry COLON:: IDENT:Register_Year IDENT:membership_register_branch LPAR:( IDENT:mid COMMA:, IDENT:bid COMMA:, IDENT:ry RPAR:) RPAR:) EOF
+        AST:
+          EXISTS bid:Branch_ID
+            EXISTS oy:Open_year
+              EXISTS road:Address_road
+                EXISTS amount:membership_amount
+                  AND
+                    PRED branch(bid, name, oy, road, city, amount)
+                    NOT
+                      EXISTS mid:Member_ID
+                        EXISTS ry:Register_Year
+                          PRED membership_register_branch(mid, bid, ry)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_City_0 : City   Gold c <-> Predicted city
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address_road, global text -> StringSort()
+        b : local Branch_ID, global text -> StringSort()
+        b1 : local Branch_ID, global text -> StringSort()
+        c : local City, global text -> StringSort()
+        m : local membership_amount, global text -> StringSort()
+        m1 : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        o : local Open_year, global text -> StringSort()
+        r : local Register_Year, global text -> StringSort()
+      Predicted FOL:
+        amount : local membership_amount, global text -> StringSort()
+        bid : local Branch_ID, global text -> StringSort()
+        city : local City, global text -> StringSort()
+        mid : local Member_ID, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+        oy : local Open_year, global text -> StringSort()
+        road : local Address_road, global text -> StringSort()
+        ry : local Register_Year, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_o_1, gold_m_2, gold_a_3, gold_b_4], And(P_branch(gold_b_4, FV_Name_0, gold_o_1, gold_a_3, FV_City_0, gold_m_2), Not(Exists([gold_b1_5], And(And(P_branch(gold_b_4, FV_Name_0, gold_o_1, gold_a_3, FV_City_0, gold_m_2), Exists([gold_m1_6, gold_r_7], P_membership_register_branch(gold_m1_6, gold_b1_5, gold_r_7))), (gold_b_4 == gold_b1_5))))))
+      gold_skolem (witnesses WGOLD_o, WGOLD_m, WGOLD_a, WGOLD_b):  And(P_branch(WGOLD_b, FV_Name_0, WGOLD_o, WGOLD_a, FV_City_0, WGOLD_m), Not(Exists([goldsk_b1_1], And(And(P_branch(WGOLD_b, FV_Name_0, WGOLD_o, WGOLD_a, FV_City_0, WGOLD_m), Exists([goldsk_m1_2, goldsk_r_3], P_membership_register_branch(goldsk_m1_2, goldsk_b1_1, goldsk_r_3))), (WGOLD_b == goldsk_b1_1)))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_bid_1, predicted_oy_2, predicted_road_3, predicted_amount_4], And(P_branch(predicted_bid_1, FV_Name_0, predicted_oy_2, predicted_road_3, FV_City_0, predicted_amount_4), Not(Exists([predicted_mid_5, predicted_ry_6], P_membership_register_branch(predicted_mid_5, predicted_bid_1, predicted_ry_6)))))
+      predicted_skolem (witnesses WPREDICTED_bid, WPREDICTED_oy, WPREDICTED_road, WPREDICTED_amount):  And(P_branch(WPREDICTED_bid, FV_Name_0, WPREDICTED_oy, WPREDICTED_road, FV_City_0, WPREDICTED_amount), Not(Exists([predictedsk_mid_1, predictedsk_ry_2], P_membership_register_branch(predictedsk_mid_1, WPREDICTED_bid, predictedsk_ry_2))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 757 lines, 30110 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3289.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_o, WGOLD_m, WGOLD_a, WGOLD_b
+      claim: And(And(branch(WGOLD_b, FV_Name_0, WGOLD_o, WGOLD_a, FV_City_0, WGOLD_m), Not(Exists(goldsk_b1_1, And(And(branch(WGOLD_b, FV_Name_0, WGOLD_o, WGOLD_a, FV_City_0, WGOLD_m), Exists([goldsk_m1_2, goldsk_r_3], membership_register_branch(goldsk_m1_2, goldsk_b1_1, goldsk_r_3))), WGOLD_b == goldsk_b1_1)))), Not(Exists([predicted_bid_1, predicted_oy_2, predicted_road_3, predicted_amount_4], And(branch(predicted_bid_1, FV_Name_0, predicted_oy_2, predicted_road_3, FV_City_0, predicted_amount_4), Not(Exists([predicted_mid_5, predicted_ry_6], membership_register_branch(predicted_mid_5, predicted_bid_1, predicted_ry_6)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_bid, WPREDICTED_oy, WPREDICTED_road, WPREDICTED_amount
+      claim: And(And(branch(WPREDICTED_bid, FV_Name_0, WPREDICTED_oy, WPREDICTED_road, FV_City_0, WPREDICTED_amount), Not(Exists([predictedsk_mid_1, predictedsk_ry_2], membership_register_branch(predictedsk_mid_1, WPREDICTED_bid, predictedsk_ry_2)))), Not(Exists([gold_o_1, gold_m_2, gold_a_3, gold_b_4], And(branch(gold_b_4, FV_Name_0, gold_o_1, gold_a_3, FV_City_0, gold_m_2), Not(Exists(gold_b1_5, And(And(branch(gold_b_4, FV_Name_0, gold_o_1, gold_a_3, FV_City_0, gold_m_2), Exists([gold_m1_6, gold_r_7], membership_register_branch(gold_m1_6, gold_b1_5, gold_r_7))), gold_b_4 == gold_b1_5)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

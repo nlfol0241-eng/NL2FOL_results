@@ -1,0 +1,139 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3609.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4156 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of programs that are never broadcasted in the morning.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Channel_ID = int -> IntSort()
+        Launch = real -> Float32()
+        Name = text -> StringSort()
+        Origin = text -> StringSort()
+        Owner = text -> StringSort()
+        Program_ID = int -> IntSort()
+        Time_of_day = text -> StringSort()
+      symbols:
+        broadcast(Channel_ID, Program_ID, Time_of_day)
+        program(Program_ID, Name, Origin, Launch, Owner)
+        constant Morning : Time_of_day
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃o : Origin ∃o1 : Owner ∃l : Launch ∃p : Program_ID( program(p,n,o,l,o1) )) ∧ (¬(∃c : Channel_ID ∃o : Origin ∃t : Time_of_day ∃o1 : Owner ∃l : Launch ∃p1 : Program_ID ∃p : Program_ID( (((program(p,n,o,l,o1)) ∧ (broadcast(c,p1,t))) ∧ (p = p1)) ∧ (t = 'Morning') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:o COLON:: IDENT:Origin EXISTS:∃ IDENT:o1 COLON:: IDENT:Owner EXISTS:∃ IDENT:l COLON:: IDENT:Launch EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:o COLON:: IDENT:Origin EXISTS:∃ IDENT:t COLON:: IDENT:Time_of_day EXISTS:∃ IDENT:o1 COLON:: IDENT:Owner EXISTS:∃ IDENT:l COLON:: IDENT:Launch EXISTS:∃ IDENT:p1 COLON:: IDENT:Program_ID EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID LPAR:( LPAR:( LPAR:( LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:broadcast LPAR:( IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Morning RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS o:Origin
+              EXISTS o1:Owner
+                EXISTS l:Launch
+                  EXISTS p:Program_ID
+                    PRED program(p, n, o, l, o1)
+            NOT
+              EXISTS c:Channel_ID
+                EXISTS o:Origin
+                  EXISTS t:Time_of_day
+                    EXISTS o1:Owner
+                      EXISTS l:Launch
+                        EXISTS p1:Program_ID
+                          EXISTS p:Program_ID
+                            AND
+                              AND
+                                AND
+                                  PRED program(p, n, o, l, o1)
+                                  PRED broadcast(c, p1, t)
+                                EQ  p = p1
+                              EQ  t = 'Morning'
+      Predicted FOL: ∃p : Program_ID ∃o : Origin ∃l : Launch ∃w : Owner (program(p, n, o, l, w) ∧ ¬∃c : Channel_ID broadcast(c, p, 'Morning'))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID EXISTS:∃ IDENT:o COLON:: IDENT:Origin EXISTS:∃ IDENT:l COLON:: IDENT:Launch EXISTS:∃ IDENT:w COLON:: IDENT:Owner LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:w RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:c COLON:: IDENT:Channel_ID IDENT:broadcast LPAR:( IDENT:c COMMA:, IDENT:p COMMA:, LIT:Morning RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Program_ID
+            EXISTS o:Origin
+              EXISTS l:Launch
+                EXISTS w:Owner
+                  AND
+                    PRED program(p, n, o, l, w)
+                    NOT
+                      EXISTS c:Channel_ID
+                        PRED broadcast(c, p, 'Morning')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Channel_ID, global int -> IntSort()
+        l : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Origin, global text -> StringSort()
+        o1 : local Owner, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+        p1 : local Program_ID, global int -> IntSort()
+        t : local Time_of_day, global text -> StringSort()
+      Predicted FOL:
+        c : local Channel_ID, global int -> IntSort()
+        l : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Origin, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+        w : local Owner, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_o_1, gold_o1_2, gold_l_3, gold_p_4], And(D_real(gold_l_3), P_program(gold_p_4, FV_Name_0, gold_o_1, gold_l_3, gold_o1_2))), Not(Exists([gold_c_5, gold_o_6, gold_t_7, gold_o1_8, gold_l_9, gold_p1_10, gold_p_11], And(D_real(gold_l_9), And(And(And(P_program(gold_p_11, FV_Name_0, gold_o_6, gold_l_9, gold_o1_8), P_broadcast(gold_c_5, gold_p1_10, gold_t_7)), (gold_p_11 == gold_p1_10)), (gold_t_7 == L_Morning))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_o_2, predicted_l_3, predicted_w_4], And(D_real(predicted_l_3), And(P_program(predicted_p_1, FV_Name_0, predicted_o_2, predicted_l_3, predicted_w_4), Not(Exists([predicted_c_5], P_broadcast(predicted_c_5, predicted_p_1, L_Morning))))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_o, WPREDICTED_l, WPREDICTED_w):  And(D_real(WPREDICTED_l), And(P_program(WPREDICTED_p, FV_Name_0, WPREDICTED_o, WPREDICTED_l, WPREDICTED_w), Not(Exists([predictedsk_c_1], P_broadcast(predictedsk_c_1, WPREDICTED_p, L_Morning)))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Morning' at text -> L_Morning = StringVal('Morning')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 748 lines, 28747 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_o_1, gold_o1_2, gold_l_3, gold_p_4], And(And(Not(fpIsNaN(gold_l_3)), Not(And(fpIsZero(gold_l_3), fpIsNegative(gold_l_3)))), program(gold_p_4, FV_Name_0, gold_o_1, gold_l_3, gold_o1_2))), Not(Exists([gold_c_5, gold_o_6, gold_t_7, gold_o1_8, gold_l_9, gold_p1_10, gold_p_11], And(And(Not(fpIsNaN(gold_l_9)), Not(And(fpIsZero(gold_l_9), fpIsNegative(gold_l_9)))), And(And(And(program(gold_p_11, FV_Name_0, gold_o_6, gold_l_9, gold_o1_8), broadcast(gold_c_5, gold_p1_10, gold_t_7)), gold_p_11 == gold_p1_10), gold_t_7 == "Morning"))))), Not(Exists([predicted_p_1, predicted_o_2, predicted_l_3, predicted_w_4], And(And(Not(fpIsNaN(predicted_l_3)), Not(And(fpIsZero(predicted_l_3), fpIsNegative(predicted_l_3)))), And(program(predicted_p_1, FV_Name_0, predicted_o_2, predicted_l_3, predicted_w_4), Not(Exists(predicted_c_5, broadcast(predicted_c_5, predicted_p_1, "Morning"))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_o, WPREDICTED_l, WPREDICTED_w
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_l)), Not(And(fpIsZero(WPREDICTED_l), fpIsNegative(WPREDICTED_l)))), And(program(WPREDICTED_p, FV_Name_0, WPREDICTED_o, WPREDICTED_l, WPREDICTED_w), Not(Exists(predictedsk_c_1, broadcast(predictedsk_c_1, WPREDICTED_p, "Morning"))))), Not(And(Exists([gold_o_1, gold_o1_2, gold_l_3, gold_p_4], And(And(Not(fpIsNaN(gold_l_3)), Not(And(fpIsZero(gold_l_3), fpIsNegative(gold_l_3)))), program(gold_p_4, FV_Name_0, gold_o_1, gold_l_3, gold_o1_2))), Not(Exists([gold_c_5, gold_o_6, gold_t_7, gold_o1_8, gold_l_9, gold_p1_10, gold_p_11], And(And(Not(fpIsNaN(gold_l_9)), Not(And(fpIsZero(gold_l_9), fpIsNegative(gold_l_9)))), And(And(And(program(gold_p_11, FV_Name_0, gold_o_6, gold_l_9, gold_o1_8), broadcast(gold_c_5, gold_p1_10, gold_t_7)), gold_p_11 == gold_p1_10), gold_t_7 == "Morning")))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py", line 696, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py", line 727, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py", line 678, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py", line 576, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py", line 500, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py", line 380, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3609.py", line 380, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

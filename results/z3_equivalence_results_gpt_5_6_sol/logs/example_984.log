@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_984.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_984.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2956 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the descriptions for each color?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+      local sorts:
+        color_code = varchar(15) -> StringSort()
+        color_description = varchar(80) -> StringSort()
+      symbols:
+        Ref_Colors(color_code, color_description)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : color_code ( Ref_Colors(c,c1) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:color_code LPAR:( IDENT:Ref_Colors LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:color_code
+            PRED Ref_Colors(c, c1)
+      Predicted FOL: ∃c : color_code Ref_Colors(c, d)
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:color_code IDENT:Ref_Colors LPAR:( IDENT:c COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS c:color_code
+            PRED Ref_Colors(c, d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_color_description_0 : color_description   Gold c1 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local color_code, global varchar(15) -> StringSort()
+        c1 : local color_description, global varchar(80) -> StringSort()
+      Predicted FOL:
+        c : local color_code, global varchar(15) -> StringSort()
+        d : local color_description, global varchar(80) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1], And(D_varchar_15_(gold_c_1), P_Ref_Colors(gold_c_1, FV_color_description_0)))
+      gold_skolem (witnesses WGOLD_c):  And(D_varchar_15_(WGOLD_c), P_Ref_Colors(WGOLD_c, FV_color_description_0))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1], And(D_varchar_15_(predicted_c_1), P_Ref_Colors(predicted_c_1, FV_color_description_0)))
+      predicted_skolem (witnesses WPREDICTED_c):  And(D_varchar_15_(WPREDICTED_c), P_Ref_Colors(WPREDICTED_c, FV_color_description_0))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 717 lines, 26301 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_984.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_color_description_0) <= 80
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c
+      claim: And(And(Length(WGOLD_c) <= 15, Ref_Colors(WGOLD_c, FV_color_description_0)), Not(Exists(predicted_c_1, And(Length(predicted_c_1) <= 15, Ref_Colors(predicted_c_1, FV_color_description_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c
+      claim: And(And(Length(WPREDICTED_c) <= 15, Ref_Colors(WPREDICTED_c, FV_color_description_0)), Not(Exists(gold_c_1, And(Length(gold_c_1) <= 15, Ref_Colors(gold_c_1, FV_color_description_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

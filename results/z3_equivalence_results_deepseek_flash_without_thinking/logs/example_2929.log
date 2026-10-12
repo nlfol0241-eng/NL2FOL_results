@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2929.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2929.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3569 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the employees who never received any evaluation?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Bonus = real -> Float32()
+        City = text -> StringSort()
+        Employee_ID = text -> StringSort()
+        Name = text -> StringSort()
+        Year_awarded = text -> StringSort()
+      symbols:
+        employee(Employee_ID, Name, Age, City)
+        evaluation(Employee_ID, Year_awarded, Bonus)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Age ∃c : City ∃e : Employee_ID( (employee(e,n,a,c)) ∧ (¬(∃e1 : Employee_ID( ((employee(e,n,a,c)) ∧ (∃b : Bonus ∃y : Year_awarded( evaluation(e1,y,b) ))) ∧ (e = e1) ))) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:e COLON:: IDENT:Employee_ID LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e1 COLON:: IDENT:Employee_ID LPAR:( LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:Bonus EXISTS:∃ IDENT:y COLON:: IDENT:Year_awarded LPAR:( IDENT:evaluation LPAR:( IDENT:e1 COMMA:, IDENT:y COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Age
+            EXISTS c:City
+              EXISTS e:Employee_ID
+                AND
+                  PRED employee(e, n, a, c)
+                  NOT
+                    EXISTS e1:Employee_ID
+                      AND
+                        AND
+                          PRED employee(e, n, a, c)
+                          EXISTS b:Bonus
+                            EXISTS y:Year_awarded
+                              PRED evaluation(e1, y, b)
+                        EQ  e = e1
+      Predicted FOL: ∃x0 : Employee_ID ∃x1 : Name ∃x2 : Age ∃x3 : City (employee(x0, x1, x2, x3) ∧ ¬∃y0 : Employee_ID ∃y1 : Year_awarded ∃y2 : Bonus (evaluation(y0, y1, y2) ∧ y0 = x0))
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:Employee_ID EXISTS:∃ IDENT:x1 COLON:: IDENT:Name EXISTS:∃ IDENT:x2 COLON:: IDENT:Age EXISTS:∃ IDENT:x3 COLON:: IDENT:City LPAR:( IDENT:employee LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:y0 COLON:: IDENT:Employee_ID EXISTS:∃ IDENT:y1 COLON:: IDENT:Year_awarded EXISTS:∃ IDENT:y2 COLON:: IDENT:Bonus LPAR:( IDENT:evaluation LPAR:( IDENT:y0 COMMA:, IDENT:y1 COMMA:, IDENT:y2 RPAR:) AND:∧ IDENT:y0 EQ:= IDENT:x0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:Employee_ID
+            EXISTS x1:Name
+              EXISTS x2:Age
+                EXISTS x3:City
+                  AND
+                    PRED employee(x0, x1, x2, x3)
+                    NOT
+                      EXISTS y0:Employee_ID
+                        EXISTS y1:Year_awarded
+                          EXISTS y2:Bonus
+                            AND
+                              PRED evaluation(y0, y1, y2)
+                              EQ  y0 = x0
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        b : local Bonus, global real -> Float32()
+        c : local City, global text -> StringSort()
+        e : local Employee_ID, global text -> StringSort()
+        e1 : local Employee_ID, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        y : local Year_awarded, global text -> StringSort()
+      Predicted FOL:
+        x0 : local Employee_ID, global text -> StringSort()
+        x1 : local Name, global text -> StringSort()
+        x2 : local Age, global int -> IntSort()
+        x3 : local City, global text -> StringSort()
+        y0 : local Employee_ID, global text -> StringSort()
+        y1 : local Year_awarded, global text -> StringSort()
+        y2 : local Bonus, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5474 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2929.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

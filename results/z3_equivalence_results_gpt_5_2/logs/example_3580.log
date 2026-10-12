@@ -1,0 +1,135 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3580.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4116 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of members who are not in charge of any events?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Event_ID = int -> IntSort()
+        Event_Name = text -> StringSort()
+        In_office = text -> StringSort()
+        Member_ID = int -> IntSort()
+        Member_Name = text -> StringSort()
+        Member_in_charge_ID = int -> IntSort()
+        Party_ID = text -> StringSort()
+      symbols:
+        member(Member_ID, Member_Name, Party_ID, In_office)
+        party_events(Event_ID, Event_Name, Party_ID, Member_in_charge_ID)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃p : Party_ID ∃i : In_office ∃m : Member_ID( member(m,m1,p,i) )) ∧ (¬(∃e : Event_ID ∃m2 : Member_in_charge_ID ∃p : Party_ID ∃p1 : Party_ID ∃i : In_office ∃e1 : Event_Name ∃m : Member_ID( ((member(m,m1,p,i)) ∧ (party_events(e,e1,p1,m2))) ∧ (m = m2) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:i COLON:: IDENT:In_office EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:p COMMA:, IDENT:i RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:Event_ID EXISTS:∃ IDENT:m2 COLON:: IDENT:Member_in_charge_ID EXISTS:∃ IDENT:p COLON:: IDENT:Party_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Party_ID EXISTS:∃ IDENT:i COLON:: IDENT:In_office EXISTS:∃ IDENT:e1 COLON:: IDENT:Event_Name EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:p COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:party_events LPAR:( IDENT:e COMMA:, IDENT:e1 COMMA:, IDENT:p1 COMMA:, IDENT:m2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m2 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p:Party_ID
+              EXISTS i:In_office
+                EXISTS m:Member_ID
+                  PRED member(m, m1, p, i)
+            NOT
+              EXISTS e:Event_ID
+                EXISTS m2:Member_in_charge_ID
+                  EXISTS p:Party_ID
+                    EXISTS p1:Party_ID
+                      EXISTS i:In_office
+                        EXISTS e1:Event_Name
+                          EXISTS m:Member_ID
+                            AND
+                              AND
+                                PRED member(m, m1, p, i)
+                                PRED party_events(e, e1, p1, m2)
+                              EQ  m = m2
+      Predicted FOL: ∃mid:Member_ID ∃pid:Party_ID ∃io:In_office ( member(mid, n, pid, io) ∧ ¬∃eid:Event_ID ∃ename:Event_Name ∃ppid:Party_ID ( party_events(eid, ename, ppid, mid) ) )
+        tokens: EXISTS:∃ IDENT:mid COLON:: IDENT:Member_ID EXISTS:∃ IDENT:pid COLON:: IDENT:Party_ID EXISTS:∃ IDENT:io COLON:: IDENT:In_office LPAR:( IDENT:member LPAR:( IDENT:mid COMMA:, IDENT:n COMMA:, IDENT:pid COMMA:, IDENT:io RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:eid COLON:: IDENT:Event_ID EXISTS:∃ IDENT:ename COLON:: IDENT:Event_Name EXISTS:∃ IDENT:ppid COLON:: IDENT:Party_ID LPAR:( IDENT:party_events LPAR:( IDENT:eid COMMA:, IDENT:ename COMMA:, IDENT:ppid COMMA:, IDENT:mid RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS mid:Member_ID
+            EXISTS pid:Party_ID
+              EXISTS io:In_office
+                AND
+                  PRED member(mid, n, pid, io)
+                  NOT
+                    EXISTS eid:Event_ID
+                      EXISTS ename:Event_Name
+                        EXISTS ppid:Party_ID
+                          PRED party_events(eid, ename, ppid, mid)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Member_Name_0 : Member_Name   Gold m1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local Event_ID, global int -> IntSort()
+        e1 : local Event_Name, global text -> StringSort()
+        i : local In_office, global text -> StringSort()
+        m : local Member_ID, global int -> IntSort()
+        m1 : local Member_Name, global text -> StringSort()
+        m2 : local Member_in_charge_ID, global int -> IntSort()
+        p : local Party_ID, global text -> StringSort()
+        p1 : local Party_ID, global text -> StringSort()
+      Predicted FOL:
+        eid : local Event_ID, global int -> IntSort()
+        ename : local Event_Name, global text -> StringSort()
+        io : local In_office, global text -> StringSort()
+        mid : local Member_ID, global int -> IntSort()
+        n : local Member_Name, global text -> StringSort()
+        pid : local Party_ID, global text -> StringSort()
+        ppid : local Party_ID, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_p_1, gold_i_2, gold_m_3], P_member(gold_m_3, FV_Member_Name_0, gold_p_1, gold_i_2)), Not(Exists([gold_e_4, gold_m2_5, gold_p_6, gold_p1_7, gold_i_8, gold_e1_9, gold_m_10], And(And(P_member(gold_m_10, FV_Member_Name_0, gold_p_6, gold_i_8), P_party_events(gold_e_4, gold_e1_9, gold_p1_7, gold_m2_5)), (gold_m_10 == gold_m2_5)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_mid_1, predicted_pid_2, predicted_io_3], And(P_member(predicted_mid_1, FV_Member_Name_0, predicted_pid_2, predicted_io_3), Not(Exists([predicted_eid_4, predicted_ename_5, predicted_ppid_6], P_party_events(predicted_eid_4, predicted_ename_5, predicted_ppid_6, predicted_mid_1)))))
+      predicted_skolem (witnesses WPREDICTED_mid, WPREDICTED_pid, WPREDICTED_io):  And(P_member(WPREDICTED_mid, FV_Member_Name_0, WPREDICTED_pid, WPREDICTED_io), Not(Exists([predictedsk_eid_1, predictedsk_ename_2, predictedsk_ppid_3], P_party_events(predictedsk_eid_1, predictedsk_ename_2, predictedsk_ppid_3, WPREDICTED_mid))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 743 lines, 28812 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_p_1, gold_i_2, gold_m_3], member(gold_m_3, FV_Member_Name_0, gold_p_1, gold_i_2)), Not(Exists([gold_e_4, gold_m2_5, gold_p_6, gold_p1_7, gold_i_8, gold_e1_9, gold_m_10], And(And(member(gold_m_10, FV_Member_Name_0, gold_p_6, gold_i_8), party_events(gold_e_4, gold_e1_9, gold_p1_7, gold_m2_5)), gold_m_10 == gold_m2_5)))), Not(Exists([predicted_mid_1, predicted_pid_2, predicted_io_3], And(member(predicted_mid_1, FV_Member_Name_0, predicted_pid_2, predicted_io_3), Not(Exists([predicted_eid_4, predicted_ename_5, predicted_ppid_6], party_events(predicted_eid_4, predicted_ename_5, predicted_ppid_6, predicted_mid_1)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_mid, WPREDICTED_pid, WPREDICTED_io
+      claim: And(And(member(WPREDICTED_mid, FV_Member_Name_0, WPREDICTED_pid, WPREDICTED_io), Not(Exists([predictedsk_eid_1, predictedsk_ename_2, predictedsk_ppid_3], party_events(predictedsk_eid_1, predictedsk_ename_2, predictedsk_ppid_3, WPREDICTED_mid)))), Not(And(Exists([gold_p_1, gold_i_2, gold_m_3], member(gold_m_3, FV_Member_Name_0, gold_p_1, gold_i_2)), Not(Exists([gold_e_4, gold_m2_5, gold_p_6, gold_p1_7, gold_i_8, gold_e1_9, gold_m_10], And(And(member(gold_m_10, FV_Member_Name_0, gold_p_6, gold_i_8), party_events(gold_e_4, gold_e1_9, gold_p1_7, gold_m2_5)), gold_m_10 == gold_m2_5))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.003 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py", line 691, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py", line 722, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py", line 673, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py", line 571, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py", line 495, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py", line 375, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3580.py", line 375, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

@@ -1,0 +1,129 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2464.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9718 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List all the salary values players received in 2010 and 2001.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        league_id = text -> StringSort()
+        player_id = text -> StringSort()
+        salary = integer -> IntSort()
+        team_id = text -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        salary(year, team_id, league_id, player_id, salary)
+        constant 2001 : year
+        constant 2010 : year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃l : league_id ∃t : team_id ∃p : player_id ∃y : year( (salary(y,t,l,p,s)) ∧ (y = 2010) )) ∨ (∃l : league_id ∃t : team_id ∃p : player_id ∃y : year( (salary(y,t,l,p,s)) ∧ (y = 2001) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:l COLON:: IDENT:league_id EXISTS:∃ IDENT:t COLON:: IDENT:team_id EXISTS:∃ IDENT:p COLON:: IDENT:player_id EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( IDENT:salary LPAR:( IDENT:y COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2010 RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:l COLON:: IDENT:league_id EXISTS:∃ IDENT:t COLON:: IDENT:team_id EXISTS:∃ IDENT:p COLON:: IDENT:player_id EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( IDENT:salary LPAR:( IDENT:y COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y EQ:= NUM:2001 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS l:league_id
+              EXISTS t:team_id
+                EXISTS p:player_id
+                  EXISTS y:year
+                    AND
+                      PRED salary(y, t, l, p, s)
+                      EQ  y = 2010
+            EXISTS l:league_id
+              EXISTS t:team_id
+                EXISTS p:player_id
+                  EXISTS y:year
+                    AND
+                      PRED salary(y, t, l, p, s)
+                      EQ  y = 2001
+      Predicted FOL: ∃y : year ( (y = 2010 ∨ y = 2001) ∧ ∃t : team_id ∃l : league_id ∃p : player_id ∃s : salary salary(y, t, l, p, s) )
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( IDENT:y EQ:= NUM:2010 OR:∨ IDENT:y EQ:= NUM:2001 RPAR:) AND:∧ EXISTS:∃ IDENT:t COLON:: IDENT:team_id EXISTS:∃ IDENT:l COLON:: IDENT:league_id EXISTS:∃ IDENT:p COLON:: IDENT:player_id EXISTS:∃ IDENT:s COLON:: IDENT:salary IDENT:salary LPAR:( IDENT:y COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:year
+            AND
+              OR
+                EQ  y = 2010
+                EQ  y = 2001
+              EXISTS t:team_id
+                EXISTS l:league_id
+                  EXISTS p:player_id
+                    EXISTS s:salary
+                      PRED salary(y, t, l, p, s)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) s do not occur free in the formula
+   1 shared answer variable(s)
+      FV_salary_0 : salary   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local league_id, global text -> StringSort()
+        p : local player_id, global text -> StringSort()
+        s : local salary, global integer -> IntSort()
+        t : local team_id, global text -> StringSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        l : local league_id, global text -> StringSort()
+        p : local player_id, global text -> StringSort()
+        s : local salary, global integer -> IntSort()
+        t : local team_id, global text -> StringSort()
+        y : local year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_l_1, gold_t_2, gold_p_3, gold_y_4], And(P_salary(gold_y_4, gold_t_2, gold_l_1, gold_p_3, FV_salary_0), (gold_y_4 == L_v_2010_integer))), Exists([gold_l_5, gold_t_6, gold_p_7, gold_y_8], And(P_salary(gold_y_8, gold_t_6, gold_l_5, gold_p_7, FV_salary_0), (gold_y_8 == L_v_2001_integer))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_y_1], And(Or((predicted_y_1 == L_v_2010_integer), (predicted_y_1 == L_v_2001_integer)), Exists([predicted_t_2, predicted_l_3, predicted_p_4, predicted_s_5], P_salary(predicted_y_1, predicted_t_2, predicted_l_3, predicted_p_4, predicted_s_5))))
+      predicted_skolem (witnesses WPREDICTED_y):  And(Or((WPREDICTED_y == L_v_2010_integer), (WPREDICTED_y == L_v_2001_integer)), Exists([predictedsk_t_1, predictedsk_l_2, predictedsk_p_3, predictedsk_s_4], P_salary(WPREDICTED_y, predictedsk_t_1, predictedsk_l_2, predictedsk_p_3, predictedsk_s_4)))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2001' at integer -> L_v_2001_integer = IntVal(2001)
+      literal '2010' at integer -> L_v_2010_integer = IntVal(2010)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 734 lines, 27856 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([gold_l_1, gold_t_2, gold_p_3, gold_y_4], And(salary(gold_y_4, gold_t_2, gold_l_1, gold_p_3, FV_salary_0), 2010 == gold_y_4)), Exists([gold_l_5, gold_t_6, gold_p_7, gold_y_8], And(salary(gold_y_8, gold_t_6, gold_l_5, gold_p_7, FV_salary_0), 2001 == gold_y_8))), Not(Exists(predicted_y_1, And(Or(2010 == predicted_y_1, 2001 == predicted_y_1), Exists([predicted_t_2, predicted_l_3, predicted_p_4, predicted_s_5], salary(predicted_y_1, predicted_t_2, predicted_l_3, predicted_p_4, predicted_s_5))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_y
+      claim: And(And(Or(2010 == WPREDICTED_y, 2001 == WPREDICTED_y), Exists([predictedsk_t_1, predictedsk_l_2, predictedsk_p_3, predictedsk_s_4], salary(WPREDICTED_y, predictedsk_t_1, predictedsk_l_2, predictedsk_p_3, predictedsk_s_4))), Not(Or(Exists([gold_l_1, gold_t_2, gold_p_3, gold_y_4], And(salary(gold_y_4, gold_t_2, gold_l_1, gold_p_3, FV_salary_0), 2010 == gold_y_4)), Exists([gold_l_5, gold_t_6, gold_p_7, gold_y_8], And(salary(gold_y_8, gold_t_6, gold_l_5, gold_p_7, FV_salary_0), 2001 == gold_y_8)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.035 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py", line 682, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py", line 713, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py", line 664, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py", line 562, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py", line 486, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py", line 366, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2464.py", line 366, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

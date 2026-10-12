@@ -1,0 +1,235 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2379.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2379.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4618 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What campus had more than 400 total enrollment but more than 200 full time enrollment in year 1956?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 2 predicates, 0 functions, 6 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Campus = integer -> IntSort()
+        County = text -> StringSort()
+        FTE_AY = integer -> IntSort()
+        Id = integer -> IntSort()
+        Location = text -> StringSort()
+        TotalEnrollment_AY = integer -> IntSort()
+        Year = integer -> IntSort()
+        campus = text -> StringSort()
+      symbols:
+        Campuses(Id, campus, Location, County, Year)
+        enrollments(Campus, Year, TotalEnrollment_AY, FTE_AY)
+        constant 1956 : Year
+        constant 200 : FTE_AY
+        constant 400 : TotalEnrollment_AY
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Id ∃l : Location ∃c1 : County ∃y : Year ∃c2 : Campus ∃y1 : Year ∃t : TotalEnrollment_AY ∃f : FTE_AY ( (((Campuses(i,c,l,c1,y)) ∧ (enrollments(c2,y1,t,f))) ∧ (i = c2)) ∧ (((y1 = 1956) ∧ (t > 400)) ∧ (f > 200)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:c1 COLON:: IDENT:County EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:c2 COLON:: IDENT:Campus EXISTS:∃ IDENT:y1 COLON:: IDENT:Year EXISTS:∃ IDENT:t COLON:: IDENT:TotalEnrollment_AY EXISTS:∃ IDENT:f COLON:: IDENT:FTE_AY LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Campuses LPAR:( IDENT:i COMMA:, IDENT:c COMMA:, IDENT:l COMMA:, IDENT:c1 COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:enrollments LPAR:( IDENT:c2 COMMA:, IDENT:y1 COMMA:, IDENT:t COMMA:, IDENT:f RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:y1 EQ:= NUM:1956 RPAR:) AND:∧ LPAR:( IDENT:t GT:> NUM:400 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f GT:> NUM:200 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS l:Location
+              EXISTS c1:County
+                EXISTS y:Year
+                  EXISTS c2:Campus
+                    EXISTS y1:Year
+                      EXISTS t:TotalEnrollment_AY
+                        EXISTS f:FTE_AY
+                          AND
+                            AND
+                              AND
+                                PRED Campuses(i, c, l, c1, y)
+                                PRED enrollments(c2, y1, t, f)
+                              EQ  i = c2
+                            AND
+                              AND
+                                EQ  y1 = 1956
+                                CMP  t > 400
+                              CMP  f > 200
+      Predicted FOL: ∃id:Id ∃loc:Location ∃cnty:County (Campuses(id, campus, loc, cnty, 1956) ∧ ∃tot:TotalEnrollment_AY ∃fte:FTE_AY (enrollments(id, 1956, tot, fte) ∧ tot > 400 ∧ fte > 200))
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:Id EXISTS:∃ IDENT:loc COLON:: IDENT:Location EXISTS:∃ IDENT:cnty COLON:: IDENT:County LPAR:( IDENT:Campuses LPAR:( IDENT:id COMMA:, IDENT:campus COMMA:, IDENT:loc COMMA:, IDENT:cnty COMMA:, NUM:1956 RPAR:) AND:∧ EXISTS:∃ IDENT:tot COLON:: IDENT:TotalEnrollment_AY EXISTS:∃ IDENT:fte COLON:: IDENT:FTE_AY LPAR:( IDENT:enrollments LPAR:( IDENT:id COMMA:, NUM:1956 COMMA:, IDENT:tot COMMA:, IDENT:fte RPAR:) AND:∧ IDENT:tot GT:> NUM:400 AND:∧ IDENT:fte GT:> NUM:200 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:Id
+            EXISTS loc:Location
+              EXISTS cnty:County
+                AND
+                  PRED Campuses(id, campus, loc, cnty, 1956)
+                  EXISTS tot:TotalEnrollment_AY
+                    EXISTS fte:FTE_AY
+                      AND
+                        PRED enrollments(id, 1956, tot, fte)
+                        CMP  tot > 400
+                        CMP  fte > 200
+   [G3] took 0.004 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_campus_0 : campus   Gold c <-> Predicted campus
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local campus, global text -> StringSort()
+        c1 : local County, global text -> StringSort()
+        c2 : local Campus, global integer -> IntSort()
+        f : local FTE_AY, global integer -> IntSort()
+        i : local Id, global integer -> IntSort()
+        l : local Location, global text -> StringSort()
+        t : local TotalEnrollment_AY, global integer -> IntSort()
+        y : local Year, global integer -> IntSort()
+        y1 : local Year, global integer -> IntSort()
+      Predicted FOL:
+        campus : local campus, global text -> StringSort()
+        cnty : local County, global text -> StringSort()
+        fte : local FTE_AY, global integer -> IntSort()
+        id : local Id, global integer -> IntSort()
+        loc : local Location, global text -> StringSort()
+        tot : local TotalEnrollment_AY, global integer -> IntSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_l_2, gold_c1_3, gold_y_4, gold_c2_5, gold_y1_6, gold_t_7, gold_f_8], And(And(And(P_Campuses(gold_i_1, FV_campus_0, gold_l_2, gold_c1_3, gold_y_4), P_enrollments(gold_c2_5, gold_y1_6, gold_t_7, gold_f_8)), (gold_i_1 == gold_c2_5)), And(And((gold_y1_6 == L_v_1956_integer), (gold_t_7 > L_v_400_integer)), (gold_f_8 > L_v_200_integer))))
+      gold_skolem (witnesses WGOLD_i, WGOLD_l, WGOLD_c1, WGOLD_y, WGOLD_c2, WGOLD_y1, WGOLD_t, WGOLD_f):  And(And(And(P_Campuses(WGOLD_i, FV_campus_0, WGOLD_l, WGOLD_c1, WGOLD_y), P_enrollments(WGOLD_c2, WGOLD_y1, WGOLD_t, WGOLD_f)), (WGOLD_i == WGOLD_c2)), And(And((WGOLD_y1 == L_v_1956_integer), (WGOLD_t > L_v_400_integer)), (WGOLD_f > L_v_200_integer)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_loc_2, predicted_cnty_3], And(P_Campuses(predicted_id_1, FV_campus_0, predicted_loc_2, predicted_cnty_3, L_v_1956_integer), Exists([predicted_tot_4, predicted_fte_5], And(P_enrollments(predicted_id_1, L_v_1956_integer, predicted_tot_4, predicted_fte_5), (predicted_tot_4 > L_v_400_integer), (predicted_fte_5 > L_v_200_integer)))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_loc, WPREDICTED_cnty):  And(P_Campuses(WPREDICTED_id, FV_campus_0, WPREDICTED_loc, WPREDICTED_cnty, L_v_1956_integer), Exists([predictedsk_tot_1, predictedsk_fte_2], And(P_enrollments(WPREDICTED_id, L_v_1956_integer, predictedsk_tot_1, predictedsk_fte_2), (predictedsk_tot_1 > L_v_400_integer), (predictedsk_fte_2 > L_v_200_integer))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 3 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1956' at integer -> L_v_1956_integer = IntVal(1956)
+      literal '200' at integer -> L_v_200_integer = IntVal(200)
+      literal '400' at integer -> L_v_400_integer = IntVal(400)
+   0 sort axiom(s), 3 literal(s), 0 order(s) needing a definition; 764 lines, 30071 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2379.py
+   [G8] took 0.009 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_l, WGOLD_c1, WGOLD_y, WGOLD_c2, WGOLD_y1, WGOLD_t, WGOLD_f
+      claim: And(And(And(And(Campuses(WGOLD_i, FV_campus_0, WGOLD_l, WGOLD_c1, WGOLD_y), enrollments(WGOLD_c2, WGOLD_y1, WGOLD_t, WGOLD_f)), WGOLD_i == WGOLD_c2), And(And(1956 == WGOLD_y1, 400 < WGOLD_t), 200 < WGOLD_f)), Not(Exists([predicted_id_1, predicted_loc_2, predicted_cnty_3], And(Campuses(predicted_id_1, FV_campus_0, predicted_loc_2, predicted_cnty_3, 1956), Exists([predicted_tot_4, predicted_fte_5], And(enrollments(predicted_id_1, 1956, predicted_tot_4, predicted_fte_5), 400 < predicted_tot_4, 200 < predicted_fte_5))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.029 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 56 relation tuple(s) listed, 61 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          i : Id = 2
+          l : Location = ''
+          c1 : County = ''
+          y : Year = 3
+          c2 : Campus = 2
+          y1 : Year = 1956
+          t : TotalEnrollment_AY = 401
+          f : FTE_AY = 201
+        free (answer) variables:
+          FV_campus_0 : campus = ''
+        literals / constants:
+          1956 : Year = 1956
+          200 : FTE_AY = 200
+          400 : TotalEnrollment_AY = 400
+        relations (each value tagged with the local sort of its position):
+          Campuses(Id, campus, Location, County, Year):
+            Campuses(Id=1, campus='', Location='', County='A', Year=3)
+            Campuses(Id=1, campus='', Location='!0!', County='', Year=3)
+            Campuses(Id=2, campus='', Location='', County='', Year=3)
+            Campuses(Id=3, campus='', Location='A', County='!0!', Year=3)
+            Campuses(Id=4, campus='', Location='', County='', Year=3)
+            Campuses(Id=200, campus='', Location='', County='', Year=3)
+            Campuses(Id=201, campus='', Location='', County='', Year=3)
+            Campuses(Id=202, campus='', Location='', County='', Year=3)
+            Campuses(Id=400, campus='', Location='', County='', Year=3)
+            Campuses(Id=401, campus='', Location='', County='', Year=3)
+            Campuses(Id=402, campus='', Location='', County='', Year=3)
+            Campuses(Id=1956, campus='', Location='', County='', Year=3)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          enrollments(Campus, Year, TotalEnrollment_AY, FTE_AY):
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=1)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=2)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=3)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=4)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=400)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=401)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=402)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=0, FTE_AY=1956)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=1, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=2, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=3, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=4, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=200, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=201, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=202, FTE_AY=0)
+            enrollments(Campus=0, Year=0, TotalEnrollment_AY=1956, FTE_AY=0)
+            enrollments(Campus=0, Year=1, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=2, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=200, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=201, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=202, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=400, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=401, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=0, Year=402, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=1, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=2, Year=3, TotalEnrollment_AY=400, FTE_AY=200)
+            enrollments(Campus=2, Year=3, TotalEnrollment_AY=400, FTE_AY=201)
+            enrollments(Campus=2, Year=3, TotalEnrollment_AY=401, FTE_AY=200)
+            enrollments(Campus=2, Year=3, TotalEnrollment_AY=401, FTE_AY=201)
+            enrollments(Campus=2, Year=4, TotalEnrollment_AY=402, FTE_AY=202)
+            enrollments(Campus=2, Year=1956, TotalEnrollment_AY=400, FTE_AY=200)
+            enrollments(Campus=2, Year=1956, TotalEnrollment_AY=400, FTE_AY=201)
+            enrollments(Campus=2, Year=1956, TotalEnrollment_AY=401, FTE_AY=200)
+            enrollments(Campus=2, Year=1956, TotalEnrollment_AY=401, FTE_AY=201)
+            enrollments(Campus=3, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=4, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=200, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=201, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=202, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=400, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=401, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=402, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            enrollments(Campus=1956, Year=0, TotalEnrollment_AY=0, FTE_AY=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Campus             : {0, 1, 2, 3, 4, 200, 201, 202, 400, 401, 402, 1956}
+          County             : {'', '!0!', 'A'}
+          FTE_AY             : {0, 1, 2, 3, 4, 200, 201, 202, 400, 401, 402, 1956}
+          Id                 : {1, 2, 3, 4, 200, 201, 202, 400, 401, 402, 1956}
+          Location           : {'', '!0!', 'A'}
+          TotalEnrollment_AY : {0, 1, 2, 3, 4, 200, 201, 202, 400, 401, 402, 1956}
+          Year               : {0, 1, 2, 3, 4, 200, 201, 202, 400, 401, 402, 1956}
+          campus             : {''}
+        values shared across local sorts (joins):
+          0 : Campus, FTE_AY, TotalEnrollment_AY, Year
+          1 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          1956 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          2 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          200 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          201 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          202 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          3 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          4 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          400 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          401 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          402 : Campus, FTE_AY, Id, TotalEnrollment_AY, Year
+          '!0!' : County, Location
+          '' : County, Location, campus
+          'A' : County, Location
+   [R2] took 1.222 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_loc, WPREDICTED_cnty
+      claim: And(And(Campuses(WPREDICTED_id, FV_campus_0, WPREDICTED_loc, WPREDICTED_cnty, 1956), Exists([predictedsk_tot_1, predictedsk_fte_2], And(enrollments(WPREDICTED_id, 1956, predictedsk_tot_1, predictedsk_fte_2), 400 < predictedsk_tot_1, 200 < predictedsk_fte_2))), Not(Exists([gold_i_1, gold_l_2, gold_c1_3, gold_y_4, gold_c2_5, gold_y1_6, gold_t_7, gold_f_8], And(And(And(Campuses(gold_i_1, FV_campus_0, gold_l_2, gold_c1_3, gold_y_4), enrollments(gold_c2_5, gold_y1_6, gold_t_7, gold_f_8)), gold_i_1 == gold_c2_5), And(And(1956 == gold_y1_6, 400 < gold_t_7), 200 < gold_f_8)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.019 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

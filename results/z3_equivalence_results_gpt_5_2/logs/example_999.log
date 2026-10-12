@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_999.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_999.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4027 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all 200 meter and 300 meter results of swimmers with nationality "Australia".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 11 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        ID = int -> IntSort()
+        Nationality = text -> StringSort()
+        Time = text -> StringSort()
+        meter_100 = real -> Float32()
+        meter_200 = text -> StringSort()
+        meter_300 = text -> StringSort()
+        meter_400 = text -> StringSort()
+        meter_500 = text -> StringSort()
+        meter_600 = text -> StringSort()
+        meter_700 = text -> StringSort()
+        name = text -> StringSort()
+      symbols:
+        swimmer(ID, name, Nationality, meter_100, meter_200, meter_300, meter_400, meter_500, meter_600, meter_700, Time)
+        constant Australia : Nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃n : name ∃t : Time ∃n1 : Nationality ∃m : meter_100 ∃m3 : meter_400 ∃m4 : meter_500 ∃m5 : meter_600 ∃m6 : meter_700 ( (swimmer(i,n,n1,m,m1,m2,m3,m4,m5,m6,t)) ∧ (n1 = 'Australia') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:t COLON:: IDENT:Time EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:m COLON:: IDENT:meter_100 EXISTS:∃ IDENT:m3 COLON:: IDENT:meter_400 EXISTS:∃ IDENT:m4 COLON:: IDENT:meter_500 EXISTS:∃ IDENT:m5 COLON:: IDENT:meter_600 EXISTS:∃ IDENT:m6 COLON:: IDENT:meter_700 LPAR:( LPAR:( IDENT:swimmer LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:m2 COMMA:, IDENT:m3 COMMA:, IDENT:m4 COMMA:, IDENT:m5 COMMA:, IDENT:m6 COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:Australia RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS n:name
+              EXISTS t:Time
+                EXISTS n1:Nationality
+                  EXISTS m:meter_100
+                    EXISTS m3:meter_400
+                      EXISTS m4:meter_500
+                        EXISTS m5:meter_600
+                          EXISTS m6:meter_700
+                            AND
+                              PRED swimmer(i, n, n1, m, m1, m2, m3, m4, m5, m6, t)
+                              EQ  n1 = 'Australia'
+      Predicted FOL: ∃id:ID ∃nm:name ( swimmer(id, nm, 'Australia', meter200, meter300, m400, m500, m600, m700, t) )
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:ID EXISTS:∃ IDENT:nm COLON:: IDENT:name LPAR:( IDENT:swimmer LPAR:( IDENT:id COMMA:, IDENT:nm COMMA:, LIT:Australia COMMA:, IDENT:meter200 COMMA:, IDENT:meter300 COMMA:, IDENT:m400 COMMA:, IDENT:m500 COMMA:, IDENT:m600 COMMA:, IDENT:m700 COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:ID
+            EXISTS nm:name
+              PRED swimmer(id, nm, 'Australia', meter200, meter300, m400, m500, m600, m700, t)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) m400, m500, m600, m700, t occur free in the formula but are not declared in 'free vars'
+   2 shared answer variable(s)
+      FV_meter_200_0 : meter_200   Gold m1 <-> Predicted meter200
+      FV_meter_300_0 : meter_300   Gold m2 <-> Predicted meter300
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'swimmer' applied to 10 arguments but declared with arity 11
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 146, in infer
+    raise ValueError(
+ValueError: predicate 'swimmer' applied to 10 arguments but declared with arity 11

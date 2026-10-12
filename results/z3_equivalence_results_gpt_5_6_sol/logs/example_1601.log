@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1601.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1601.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3234 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of all modern rooms with a base price below $160 and two beds.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 5 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        RoomId = text -> StringSort()
+        basePrice = integer -> IntSort()
+        bedType = text -> StringSort()
+        beds = integer -> IntSort()
+        decor = text -> StringSort()
+        maxOccupancy = integer -> IntSort()
+        roomName = text -> StringSort()
+      symbols:
+        Rooms(RoomId, roomName, beds, bedType, maxOccupancy, basePrice, decor)
+        constant 160 : basePrice
+        constant 2 : beds
+        constant modern : decor
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : RoomId ∃b : beds ∃b1 : bedType ∃m : maxOccupancy ∃b2 : basePrice ∃d : decor ( (Rooms(r,r1,b,b1,m,b2,d)) ∧ (((b2 < 160) ∧ (b = 2)) ∧ (d = 'modern')) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:RoomId EXISTS:∃ IDENT:b COLON:: IDENT:beds EXISTS:∃ IDENT:b1 COLON:: IDENT:bedType EXISTS:∃ IDENT:m COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:b2 COLON:: IDENT:basePrice EXISTS:∃ IDENT:d COLON:: IDENT:decor LPAR:( LPAR:( IDENT:Rooms LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:m COMMA:, IDENT:b2 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:b2 LT:< NUM:160 RPAR:) AND:∧ LPAR:( IDENT:b EQ:= NUM:2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:modern RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:RoomId
+            EXISTS b:beds
+              EXISTS b1:bedType
+                EXISTS m:maxOccupancy
+                  EXISTS b2:basePrice
+                    EXISTS d:decor
+                      AND
+                        PRED Rooms(r, r1, b, b1, m, b2, d)
+                        AND
+                          AND
+                            CMP  b2 < 160
+                            EQ  b = 2
+                          EQ  d = 'modern'
+      Predicted FOL: ∃r : RoomId ∃b : beds ∃t : bedType ∃m : maxOccupancy ∃p : basePrice ∃d : decor (Rooms(r, n, b, t, m, p, d) ∧ d = 'modern' ∧ p < 160 ∧ b = 2)
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:RoomId EXISTS:∃ IDENT:b COLON:: IDENT:beds EXISTS:∃ IDENT:t COLON:: IDENT:bedType EXISTS:∃ IDENT:m COLON:: IDENT:maxOccupancy EXISTS:∃ IDENT:p COLON:: IDENT:basePrice EXISTS:∃ IDENT:d COLON:: IDENT:decor LPAR:( IDENT:Rooms LPAR:( IDENT:r COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:t COMMA:, IDENT:m COMMA:, IDENT:p COMMA:, IDENT:d RPAR:) AND:∧ IDENT:d EQ:= LIT:modern AND:∧ IDENT:p LT:< NUM:160 AND:∧ IDENT:b EQ:= NUM:2 RPAR:) EOF
+        AST:
+          EXISTS r:RoomId
+            EXISTS b:beds
+              EXISTS t:bedType
+                EXISTS m:maxOccupancy
+                  EXISTS p:basePrice
+                    EXISTS d:decor
+                      AND
+                        PRED Rooms(r, n, b, t, m, p, d)
+                        EQ  d = 'modern'
+                        CMP  p < 160
+                        EQ  b = 2
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_roomName_0 : roomName   Gold r1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local beds, global integer -> IntSort()
+        b1 : local bedType, global text -> StringSort()
+        b2 : local basePrice, global integer -> IntSort()
+        d : local decor, global text -> StringSort()
+        m : local maxOccupancy, global integer -> IntSort()
+        r : local RoomId, global text -> StringSort()
+        r1 : local roomName, global text -> StringSort()
+      Predicted FOL:
+        b : local beds, global integer -> IntSort()
+        d : local decor, global text -> StringSort()
+        m : local maxOccupancy, global integer -> IntSort()
+        n : local roomName, global text -> StringSort()
+        p : local basePrice, global integer -> IntSort()
+        r : local RoomId, global text -> StringSort()
+        t : local bedType, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_b_2, gold_b1_3, gold_m_4, gold_b2_5, gold_d_6], And(P_Rooms(gold_r_1, FV_roomName_0, gold_b_2, gold_b1_3, gold_m_4, gold_b2_5, gold_d_6), And(And((gold_b2_5 < L_v_160_integer), (gold_b_2 == L_v_2_integer)), (gold_d_6 == L_modern))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d):  And(P_Rooms(WGOLD_r, FV_roomName_0, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d), And(And((WGOLD_b2 < L_v_160_integer), (WGOLD_b == L_v_2_integer)), (WGOLD_d == L_modern)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5, predicted_d_6], And(P_Rooms(predicted_r_1, FV_roomName_0, predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5, predicted_d_6), (predicted_d_6 == L_modern), (predicted_p_5 < L_v_160_integer), (predicted_b_2 == L_v_2_integer)))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p, WPREDICTED_d):  And(P_Rooms(WPREDICTED_r, FV_roomName_0, WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p, WPREDICTED_d), (WPREDICTED_d == L_modern), (WPREDICTED_p < L_v_160_integer), (WPREDICTED_b == L_v_2_integer))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 3 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'modern' at text -> L_modern = StringVal('modern')
+      literal '160' at integer -> L_v_160_integer = IntVal(160)
+      literal '2' at integer -> L_v_2_integer = IntVal(2)
+   0 sort axiom(s), 3 literal(s), 0 order(s) needing a definition; 758 lines, 29259 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1601.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d
+      claim: And(And(Rooms(WGOLD_r, FV_roomName_0, WGOLD_b, WGOLD_b1, WGOLD_m, WGOLD_b2, WGOLD_d), And(And(160 > WGOLD_b2, 2 == WGOLD_b), WGOLD_d == "modern")), Not(Exists([predicted_r_1, predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5, predicted_d_6], And(Rooms(predicted_r_1, FV_roomName_0, predicted_b_2, predicted_t_3, predicted_m_4, predicted_p_5, predicted_d_6), predicted_d_6 == "modern", 160 > predicted_p_5, 2 == predicted_b_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p, WPREDICTED_d
+      claim: And(And(Rooms(WPREDICTED_r, FV_roomName_0, WPREDICTED_b, WPREDICTED_t, WPREDICTED_m, WPREDICTED_p, WPREDICTED_d), WPREDICTED_d == "modern", 160 > WPREDICTED_p, 2 == WPREDICTED_b), Not(Exists([gold_r_1, gold_b_2, gold_b1_3, gold_m_4, gold_b2_5, gold_d_6], And(Rooms(gold_r_1, FV_roomName_0, gold_b_2, gold_b1_3, gold_m_4, gold_b2_5, gold_d_6), And(And(160 > gold_b2_5, 2 == gold_b_2), gold_d_6 == "modern")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.011 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

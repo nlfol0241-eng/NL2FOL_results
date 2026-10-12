@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_2536.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2536.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6926 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct id and type of the thing that has the status 'Close' or has a status record before the date '2017-06-19 02:59:21'
+   [G1] took 0.005 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        Date_and_Date = datetime -> IntSort()
+        Status_of_Thing_Code = char(15) -> StringSort()
+        Type_of_Thing_Code = char(15) -> StringSort()
+        organization_id = integer -> IntSort()
+        service_details = varchar(255) -> StringSort()
+        service_type_code = text -> StringSort()
+        thing_id = integer -> IntSort()
+      symbols:
+        Things(thing_id, organization_id, Type_of_Thing_Code, service_type_code, service_details)
+        Timed_Status_of_Things(thing_id, Date_and_Date, Status_of_Thing_Code)
+        constant 2017-06-19 02:59:21 : Date_and_Date
+        constant Close : Status_of_Thing_Code
+   [G2] took 0.003 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : thing_id ∃d : Date_and_Date ∃s : Status_of_Thing_Code ∃o : organization_id ∃s1 : service_type_code ∃s2 : service_details ( (((Timed_Status_of_Things(t,d,s)) ∧ (Things(t1,o,t2,s1,s2))) ∧ (t = t1)) ∧ ((s = 'Close') ∨ (d < '2017-06-19 02:59:21')) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:thing_id EXISTS:∃ IDENT:d COLON:: IDENT:Date_and_Date EXISTS:∃ IDENT:s COLON:: IDENT:Status_of_Thing_Code EXISTS:∃ IDENT:o COLON:: IDENT:organization_id EXISTS:∃ IDENT:s1 COLON:: IDENT:service_type_code EXISTS:∃ IDENT:s2 COLON:: IDENT:service_details LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Timed_Status_of_Things LPAR:( IDENT:t COMMA:, IDENT:d COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Things LPAR:( IDENT:t1 COMMA:, IDENT:o COMMA:, IDENT:t2 COMMA:, IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:s EQ:= LIT:Close RPAR:) OR:∨ LPAR:( IDENT:d LT:< LIT:2017-06-19 02:59:21 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:thing_id
+            EXISTS d:Date_and_Date
+              EXISTS s:Status_of_Thing_Code
+                EXISTS o:organization_id
+                  EXISTS s1:service_type_code
+                    EXISTS s2:service_details
+                      AND
+                        AND
+                          AND
+                            PRED Timed_Status_of_Things(t, d, s)
+                            PRED Things(t1, o, t2, s1, s2)
+                          EQ  t = t1
+                        OR
+                          EQ  s = 'Close'
+                          CMP  d < '2017-06-19 02:59:21'
+      Predicted FOL: ∃t:thing_id ∃org:organization_id ∃st:service_type_code ∃sd:service_details ( Things(t, org, id, st, sd) ∧ ( (∃d:Date_and_Date Timed_Status_of_Things(t, d, 'Close')) ∨ (∃d:Date_and_Date ∃s:Status_of_Thing_Code (Timed_Status_of_Things(t, d, s) ∧ d < '2017-06-19 02:59:21')) ) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:thing_id EXISTS:∃ IDENT:org COLON:: IDENT:organization_id EXISTS:∃ IDENT:st COLON:: IDENT:service_type_code EXISTS:∃ IDENT:sd COLON:: IDENT:service_details LPAR:( IDENT:Things LPAR:( IDENT:t COMMA:, IDENT:org COMMA:, IDENT:id COMMA:, IDENT:st COMMA:, IDENT:sd RPAR:) AND:∧ LPAR:( LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:Date_and_Date IDENT:Timed_Status_of_Things LPAR:( IDENT:t COMMA:, IDENT:d COMMA:, LIT:Close RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:Date_and_Date EXISTS:∃ IDENT:s COLON:: IDENT:Status_of_Thing_Code LPAR:( IDENT:Timed_Status_of_Things LPAR:( IDENT:t COMMA:, IDENT:d COMMA:, IDENT:s RPAR:) AND:∧ IDENT:d LT:< LIT:2017-06-19 02:59:21 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:thing_id
+            EXISTS org:organization_id
+              EXISTS st:service_type_code
+                EXISTS sd:service_details
+                  AND
+                    PRED Things(t, org, id, st, sd)
+                    OR
+                      EXISTS d:Date_and_Date
+                        PRED Timed_Status_of_Things(t, d, 'Close')
+                      EXISTS d:Date_and_Date
+                        EXISTS s:Status_of_Thing_Code
+                          AND
+                            PRED Timed_Status_of_Things(t, d, s)
+                            CMP  d < '2017-06-19 02:59:21'
+   [G3] took 0.020 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (t1 : thing_id, t2 : Type_of_Thing_Code) but Predicted has 1 (id : Type_of_Thing_Code): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.002 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Date_and_Date, global datetime -> IntSort()
+        o : local organization_id, global integer -> IntSort()
+        s : local Status_of_Thing_Code, global char(15) -> StringSort()
+        s1 : local service_type_code, global text -> StringSort()
+        s2 : local service_details, global varchar(255) -> StringSort()
+        t : local thing_id, global integer -> IntSort()
+        t1 : local thing_id, global integer -> IntSort()
+        t2 : local Type_of_Thing_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        d : local Date_and_Date, global datetime -> IntSort()
+        id : local Type_of_Thing_Code, global char(15) -> StringSort()
+        org : local organization_id, global integer -> IntSort()
+        s : local Status_of_Thing_Code, global char(15) -> StringSort()
+        sd : local service_details, global varchar(255) -> StringSort()
+        st : local service_type_code, global text -> StringSort()
+        t : local thing_id, global integer -> IntSort()
+   [G5] took 0.003 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5827 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_2536.py
+   [G8] took 0.022 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (t1 : thing_id, t2 : Type_of_Thing_Code) but Predicted has 1 (id : Type_of_Thing_Code): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.001 s

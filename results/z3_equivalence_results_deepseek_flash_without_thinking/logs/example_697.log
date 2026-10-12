@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_697.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_697.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3141 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the city and state of the bank branch named morningside.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        text -> StringSort()
+      local sorts:
+        bname = varchar(20) -> StringSort()
+        branch_ID = text -> StringSort()
+        city = varchar(10) -> StringSort()
+        no_of_customers = int -> IntSort()
+        state = varchar(20) -> StringSort()
+      symbols:
+        bank(branch_ID, bname, no_of_customers, city, state)
+        constant morningside : bname
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : branch_ID ∃b1 : bname ∃n : no_of_customers ( (bank(b,b1,n,c,s)) ∧ (b1 = 'morningside') )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:branch_ID EXISTS:∃ IDENT:b1 COLON:: IDENT:bname EXISTS:∃ IDENT:n COLON:: IDENT:no_of_customers LPAR:( LPAR:( IDENT:bank LPAR:( IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b1 EQ:= LIT:morningside RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:branch_ID
+            EXISTS b1:bname
+              EXISTS n:no_of_customers
+                AND
+                  PRED bank(b, b1, n, c, s)
+                  EQ  b1 = 'morningside'
+      Predicted FOL: ∃x_branch_ID : branch_ID ∃x_bname : bname ∃x_no_of_customers : no_of_customers ∃x_city : city ∃x_state : state (bank(x_branch_ID, x_bname, x_no_of_customers, x_city, x_state) ∧ x_bname = 'morningside')
+        tokens: EXISTS:∃ IDENT:x_branch_ID COLON:: IDENT:branch_ID EXISTS:∃ IDENT:x_bname COLON:: IDENT:bname EXISTS:∃ IDENT:x_no_of_customers COLON:: IDENT:no_of_customers EXISTS:∃ IDENT:x_city COLON:: IDENT:city EXISTS:∃ IDENT:x_state COLON:: IDENT:state LPAR:( IDENT:bank LPAR:( IDENT:x_branch_ID COMMA:, IDENT:x_bname COMMA:, IDENT:x_no_of_customers COMMA:, IDENT:x_city COMMA:, IDENT:x_state RPAR:) AND:∧ IDENT:x_bname EQ:= LIT:morningside RPAR:) EOF
+        AST:
+          EXISTS x_branch_ID:branch_ID
+            EXISTS x_bname:bname
+              EXISTS x_no_of_customers:no_of_customers
+                EXISTS x_city:city
+                  EXISTS x_state:state
+                    AND
+                      PRED bank(x_branch_ID, x_bname, x_no_of_customers, x_city, x_state)
+                      EQ  x_bname = 'morningside'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (c : city, s : state) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local branch_ID, global text -> StringSort()
+        b1 : local bname, global varchar(20) -> StringSort()
+        c : local city, global varchar(10) -> StringSort()
+        n : local no_of_customers, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+      Predicted FOL:
+        x_bname : local bname, global varchar(20) -> StringSort()
+        x_branch_ID : local branch_ID, global text -> StringSort()
+        x_city : local city, global varchar(10) -> StringSort()
+        x_no_of_customers : local no_of_customers, global int -> IntSort()
+        x_state : local state, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5426 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_697.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (c : city, s : state) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

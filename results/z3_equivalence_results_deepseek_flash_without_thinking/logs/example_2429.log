@@ -1,0 +1,79 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2429.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2429.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3897 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all the papers published by the institution "Google".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        authID = integer -> IntSort()
+        authOrder = integer -> IntSort()
+        country = text -> StringSort()
+        instID = integer -> IntSort()
+        name = text -> StringSort()
+        paperID = integer -> IntSort()
+        title = text -> StringSort()
+      symbols:
+        Authorship(authID, instID, paperID, authOrder)
+        Inst(instID, name, country)
+        Papers(paperID, title)
+        constant Google : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : paperID ∃a : authID ∃i : instID ∃p1 : paperID ∃a1 : authOrder ∃i1 : instID ∃n : name ∃c : country ( (((((Papers(p,t)) ∧ (Authorship(a,i,p1,a1))) ∧ (p = p1)) ∧ (Inst(i1,n,c))) ∧ (i = i1)) ∧ (n = 'Google') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:paperID EXISTS:∃ IDENT:a COLON:: IDENT:authID EXISTS:∃ IDENT:i COLON:: IDENT:instID EXISTS:∃ IDENT:p1 COLON:: IDENT:paperID EXISTS:∃ IDENT:a1 COLON:: IDENT:authOrder EXISTS:∃ IDENT:i1 COLON:: IDENT:instID EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:c COLON:: IDENT:country LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Papers LPAR:( IDENT:p COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Authorship LPAR:( IDENT:a COMMA:, IDENT:i COMMA:, IDENT:p1 COMMA:, IDENT:a1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Inst LPAR:( IDENT:i1 COMMA:, IDENT:n COMMA:, IDENT:c RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Google RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:paperID
+            EXISTS a:authID
+              EXISTS i:instID
+                EXISTS p1:paperID
+                  EXISTS a1:authOrder
+                    EXISTS i1:instID
+                      EXISTS n:name
+                        EXISTS c:country
+                          AND
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    PRED Papers(p, t)
+                                    PRED Authorship(a, i, p1, a1)
+                                  EQ  p = p1
+                                PRED Inst(i1, n, c)
+                              EQ  i = i1
+                            EQ  n = 'Google'
+      Predicted FOL: ∃i : instID (Inst(i, 'Google', c) ∧ ∀p : paperID ∀t : title (Papers(p, t) → ∃a : authID ∃o : authOrder Authorship(a, i, p, o)))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:instID LPAR:( IDENT:Inst LPAR:( IDENT:i COMMA:, LIT:Google COMMA:, IDENT:c RPAR:) AND:∧ FORALL:∀ IDENT:p COLON:: IDENT:paperID FORALL:∀ IDENT:t COLON:: IDENT:title LPAR:( IDENT:Papers LPAR:( IDENT:p COMMA:, IDENT:t RPAR:) IMPL:→ EXISTS:∃ IDENT:a COLON:: IDENT:authID EXISTS:∃ IDENT:o COLON:: IDENT:authOrder IDENT:Authorship LPAR:( IDENT:a COMMA:, IDENT:i COMMA:, IDENT:p COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:instID
+            AND
+              PRED Inst(i, 'Google', c)
+              FORALL p:paperID
+                FORALL t:title
+                  IMPLIES
+                    PRED Papers(p, t)
+                    EXISTS a:authID
+                      EXISTS o:authOrder
+                        PRED Authorship(a, i, p, o)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['title'] vs Predicted ['country']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['title'] vs Predicted ['country']

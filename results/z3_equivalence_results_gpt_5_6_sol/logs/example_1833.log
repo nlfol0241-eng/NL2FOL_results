@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1833.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1833.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3343 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all the players who received a yes during tryouts, and also what are the names of their colleges?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+      local sorts:
+        HS = numeric(5,0) -> RealSort()
+        cName = varchar(20) -> StringSort()
+        decision = varchar(3) -> StringSort()
+        pID = numeric(5,0) -> RealSort()
+        pName = varchar(20) -> StringSort()
+        pPos = varchar(8) -> StringSort()
+        yCard = varchar(3) -> StringSort()
+      symbols:
+        Player(pID, pName, yCard, HS)
+        Tryout(pID, cName, pPos, decision)
+        constant yes : decision
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : pID ∃y : yCard ∃h : HS ∃p2 : pID ∃p3 : pPos ∃d : decision ( (((Player(p,p1,y,h)) ∧ (Tryout(p2,c,p3,d))) ∧ (p = p2)) ∧ (d = 'yes') )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:y COLON:: IDENT:yCard EXISTS:∃ IDENT:h COLON:: IDENT:HS EXISTS:∃ IDENT:p2 COLON:: IDENT:pID EXISTS:∃ IDENT:p3 COLON:: IDENT:pPos EXISTS:∃ IDENT:d COLON:: IDENT:decision LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Player LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:y COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Tryout LPAR:( IDENT:p2 COMMA:, IDENT:c COMMA:, IDENT:p3 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:pID
+            EXISTS y:yCard
+              EXISTS h:HS
+                EXISTS p2:pID
+                  EXISTS p3:pPos
+                    EXISTS d:decision
+                      AND
+                        AND
+                          AND
+                            PRED Player(p, p1, y, h)
+                            PRED Tryout(p2, c, p3, d)
+                          EQ  p = p2
+                        EQ  d = 'yes'
+      Predicted FOL: ∃pID : pID ∃yCard : yCard ∃HS : HS ∃pPos : pPos (Player(pID, pName, yCard, HS) ∧ Tryout(pID, cName, pPos, 'yes'))
+        tokens: EXISTS:∃ IDENT:pID COLON:: IDENT:pID EXISTS:∃ IDENT:yCard COLON:: IDENT:yCard EXISTS:∃ IDENT:HS COLON:: IDENT:HS EXISTS:∃ IDENT:pPos COLON:: IDENT:pPos LPAR:( IDENT:Player LPAR:( IDENT:pID COMMA:, IDENT:pName COMMA:, IDENT:yCard COMMA:, IDENT:HS RPAR:) AND:∧ IDENT:Tryout LPAR:( IDENT:pID COMMA:, IDENT:cName COMMA:, IDENT:pPos COMMA:, LIT:yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS pID:pID
+            EXISTS yCard:yCard
+              EXISTS HS:HS
+                EXISTS pPos:pPos
+                  AND
+                    PRED Player(pID, pName, yCard, HS)
+                    PRED Tryout(pID, cName, pPos, 'yes')
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_cName_0 : cName   Gold c <-> Predicted cName
+      FV_pName_0 : pName   Gold p1 <-> Predicted pName
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        d : local decision, global varchar(3) -> StringSort()
+        h : local HS, global numeric(5,0) -> RealSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pName, global varchar(20) -> StringSort()
+        p2 : local pID, global numeric(5,0) -> RealSort()
+        p3 : local pPos, global varchar(8) -> StringSort()
+        y : local yCard, global varchar(3) -> StringSort()
+      Predicted FOL:
+        HS : local HS, global numeric(5,0) -> RealSort()
+        cName : local cName, global varchar(20) -> StringSort()
+        pID : local pID, global numeric(5,0) -> RealSort()
+        pName : local pName, global varchar(20) -> StringSort()
+        pPos : local pPos, global varchar(8) -> StringSort()
+        yCard : local yCard, global varchar(3) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_y_2, gold_h_3, gold_p2_4, gold_p3_5, gold_d_6], And(D_numeric_5_0_(gold_p_1), D_varchar_3_(gold_y_2), D_numeric_5_0_(gold_h_3), D_numeric_5_0_(gold_p2_4), D_varchar_8_(gold_p3_5), D_varchar_3_(gold_d_6), And(And(And(P_Player(gold_p_1, FV_pName_0, gold_y_2, gold_h_3), P_Tryout(gold_p2_4, FV_cName_0, gold_p3_5, gold_d_6)), (gold_p_1 == gold_p2_4)), (gold_d_6 == L_yes))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_y, WGOLD_h, WGOLD_p2, WGOLD_p3, WGOLD_d):  And(D_numeric_5_0_(WGOLD_p), D_varchar_3_(WGOLD_y), D_numeric_5_0_(WGOLD_h), D_numeric_5_0_(WGOLD_p2), D_varchar_8_(WGOLD_p3), D_varchar_3_(WGOLD_d), And(And(And(P_Player(WGOLD_p, FV_pName_0, WGOLD_y, WGOLD_h), P_Tryout(WGOLD_p2, FV_cName_0, WGOLD_p3, WGOLD_d)), (WGOLD_p == WGOLD_p2)), (WGOLD_d == L_yes)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_pID_1, predicted_yCard_2, predicted_HS_3, predicted_pPos_4], And(D_numeric_5_0_(predicted_pID_1), D_varchar_3_(predicted_yCard_2), D_numeric_5_0_(predicted_HS_3), D_varchar_8_(predicted_pPos_4), And(P_Player(predicted_pID_1, FV_pName_0, predicted_yCard_2, predicted_HS_3), And(P_Tryout(predicted_pID_1, FV_cName_0, predicted_pPos_4, L_yes), D_varchar_3_(L_yes)))))
+      predicted_skolem (witnesses WPREDICTED_pID, WPREDICTED_yCard, WPREDICTED_HS, WPREDICTED_pPos):  And(D_numeric_5_0_(WPREDICTED_pID), D_varchar_3_(WPREDICTED_yCard), D_numeric_5_0_(WPREDICTED_HS), D_varchar_8_(WPREDICTED_pPos), And(P_Player(WPREDICTED_pID, FV_pName_0, WPREDICTED_yCard, WPREDICTED_HS), And(P_Tryout(WPREDICTED_pID, FV_cName_0, WPREDICTED_pPos, L_yes), D_varchar_3_(L_yes))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'yes' at varchar(3) -> L_yes = StringVal('yes')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 769 lines, 30052 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1833.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_cName_0) <= 20
+      [1] Length(FV_pName_0) <= 20
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_y, WGOLD_h, WGOLD_p2, WGOLD_p3, WGOLD_d
+      claim: And(And(And(IsInt(WGOLD_p), WGOLD_p > -100000, WGOLD_p < 100000), Length(WGOLD_y) <= 3, And(IsInt(WGOLD_h), WGOLD_h > -100000, WGOLD_h < 100000), And(IsInt(WGOLD_p2), WGOLD_p2 > -100000, WGOLD_p2 < 100000), Length(WGOLD_p3) <= 8, Length(WGOLD_d) <= 3, And(And(And(Player(WGOLD_p, FV_pName_0, WGOLD_y, WGOLD_h), Tryout(WGOLD_p2, FV_cName_0, WGOLD_p3, WGOLD_d)), WGOLD_p == WGOLD_p2), WGOLD_d == "yes")), Not(Exists([predicted_pID_1, predicted_yCard_2, predicted_HS_3, predicted_pPos_4], And(And(IsInt(predicted_pID_1), predicted_pID_1 > -100000, predicted_pID_1 < 100000), Length(predicted_yCard_2) <= 3, And(IsInt(predicted_HS_3), predicted_HS_3 > -100000, predicted_HS_3 < 100000), Length(predicted_pPos_4) <= 8, And(Player(predicted_pID_1, FV_pName_0, predicted_yCard_2, predicted_HS_3), And(Tryout(predicted_pID_1, FV_cName_0, predicted_pPos_4, "yes"), Length("yes") <= 3))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.032 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_pID, WPREDICTED_yCard, WPREDICTED_HS, WPREDICTED_pPos
+      claim: And(And(And(IsInt(WPREDICTED_pID), WPREDICTED_pID > -100000, WPREDICTED_pID < 100000), Length(WPREDICTED_yCard) <= 3, And(IsInt(WPREDICTED_HS), WPREDICTED_HS > -100000, WPREDICTED_HS < 100000), Length(WPREDICTED_pPos) <= 8, And(Player(WPREDICTED_pID, FV_pName_0, WPREDICTED_yCard, WPREDICTED_HS), And(Tryout(WPREDICTED_pID, FV_cName_0, WPREDICTED_pPos, "yes"), Length("yes") <= 3))), Not(Exists([gold_p_1, gold_y_2, gold_h_3, gold_p2_4, gold_p3_5, gold_d_6], And(And(IsInt(gold_p_1), gold_p_1 > -100000, gold_p_1 < 100000), Length(gold_y_2) <= 3, And(IsInt(gold_h_3), gold_h_3 > -100000, gold_h_3 < 100000), And(IsInt(gold_p2_4), gold_p2_4 > -100000, gold_p2_4 < 100000), Length(gold_p3_5) <= 8, Length(gold_d_6) <= 3, And(And(And(Player(gold_p_1, FV_pName_0, gold_y_2, gold_h_3), Tryout(gold_p2_4, FV_cName_0, gold_p3_5, gold_d_6)), gold_p_1 == gold_p2_4), gold_d_6 == "yes")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.025 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

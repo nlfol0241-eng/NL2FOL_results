@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2358 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the id and weight of all pets whose age is older than 1.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        PetID = integer -> IntSort()
+        PetType = varchar(20) -> StringSort()
+        pet_age = integer -> IntSort()
+        weight = real -> Float32()
+      symbols:
+        Pets(PetID, PetType, pet_age, weight)
+        constant 1 : pet_age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p1 : PetType ∃p2 : pet_age ( (Pets(p,p1,p2,w)) ∧ (p2 > 1) )
+        tokens: EXISTS:∃ IDENT:p1 COLON:: IDENT:PetType EXISTS:∃ IDENT:p2 COLON:: IDENT:pet_age LPAR:( LPAR:( IDENT:Pets LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:w RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p2 GT:> NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p1:PetType
+            EXISTS p2:pet_age
+              AND
+                PRED Pets(p, p1, p2, w)
+                CMP  p2 > 1
+      Predicted FOL: ∃ y : PetType ∃ z : pet_age (Pets(x, y, z, w) ∧ z > 1)
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:PetType EXISTS:∃ IDENT:z COLON:: IDENT:pet_age LPAR:( IDENT:Pets LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w RPAR:) AND:∧ IDENT:z GT:> NUM:1 RPAR:) EOF
+        AST:
+          EXISTS y:PetType
+            EXISTS z:pet_age
+              AND
+                PRED Pets(x, y, z, w)
+                CMP  z > 1
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_PetID_0 : PetID   Gold p <-> Predicted x
+      FV_weight_0 : weight   Gold w <-> Predicted w
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local PetID, global integer -> IntSort()
+        p1 : local PetType, global varchar(20) -> StringSort()
+        p2 : local pet_age, global integer -> IntSort()
+        w : local weight, global real -> Float32()
+      Predicted FOL:
+        w : local weight, global real -> Float32()
+        x : local PetID, global integer -> IntSort()
+        y : local PetType, global varchar(20) -> StringSort()
+        z : local pet_age, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p1_1, gold_p2_2], And(D_varchar_20_(gold_p1_1), And(P_Pets(FV_PetID_0, gold_p1_1, gold_p2_2, FV_weight_0), (gold_p2_2 > L_v_1_integer))))
+      gold_skolem (witnesses WGOLD_p1, WGOLD_p2):  And(D_varchar_20_(WGOLD_p1), And(P_Pets(FV_PetID_0, WGOLD_p1, WGOLD_p2, FV_weight_0), (WGOLD_p2 > L_v_1_integer)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_y_1, predicted_z_2], And(D_varchar_20_(predicted_y_1), And(P_Pets(FV_PetID_0, predicted_y_1, predicted_z_2, FV_weight_0), (predicted_z_2 > L_v_1_integer))))
+      predicted_skolem (witnesses WPREDICTED_y, WPREDICTED_z):  And(D_varchar_20_(WPREDICTED_y), And(P_Pets(FV_PetID_0, WPREDICTED_y, WPREDICTED_z, FV_weight_0), (WPREDICTED_z > L_v_1_integer)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1' at integer -> L_v_1_integer = IntVal(1)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 733 lines, 27179 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_weight_0)), Not(And(fpIsZero(FV_weight_0), fpIsNegative(FV_weight_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p1, WGOLD_p2
+      claim: And(And(Length(WGOLD_p1) <= 20, And(Pets(FV_PetID_0, WGOLD_p1, WGOLD_p2, FV_weight_0), 1 < WGOLD_p2)), Not(Exists([predicted_y_1, predicted_z_2], And(Length(predicted_y_1) <= 20, And(Pets(FV_PetID_0, predicted_y_1, predicted_z_2, FV_weight_0), 1 < predicted_z_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_y, WPREDICTED_z
+      claim: And(And(Length(WPREDICTED_y) <= 20, And(Pets(FV_PetID_0, WPREDICTED_y, WPREDICTED_z, FV_weight_0), 1 < WPREDICTED_z)), Not(Exists([gold_p1_1, gold_p2_2], And(Length(gold_p1_1) <= 20, And(Pets(FV_PetID_0, gold_p1_1, gold_p2_2, FV_weight_0), 1 < gold_p2_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

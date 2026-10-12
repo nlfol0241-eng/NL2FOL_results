@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1028.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1028.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5749 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names and details of all the staff members.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Name = text -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Staff_ID = integer -> IntSort()
+        Tourist_Attraction_ID = integer -> IntSort()
+      symbols:
+        Staff(Staff_ID, Tourist_Attraction_ID, Name, Other_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Staff_ID ∃t : Tourist_Attraction_ID ( Staff(s,t,n,o) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Staff_ID EXISTS:∃ IDENT:t COLON:: IDENT:Tourist_Attraction_ID LPAR:( IDENT:Staff LPAR:( IDENT:s COMMA:, IDENT:t COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Staff_ID
+            EXISTS t:Tourist_Attraction_ID
+              PRED Staff(s, t, n, o)
+      Predicted FOL: ∃s : Staff_ID ∃t : Tourist_Attraction_ID Staff(s, t, n, d)
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Staff_ID EXISTS:∃ IDENT:t COLON:: IDENT:Tourist_Attraction_ID IDENT:Staff LPAR:( IDENT:s COMMA:, IDENT:t COMMA:, IDENT:n COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS s:Staff_ID
+            EXISTS t:Tourist_Attraction_ID
+              PRED Staff(s, t, n, d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+      FV_Other_Details_0 : Other_Details   Gold o <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Name, global text -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        s : local Staff_ID, global integer -> IntSort()
+        t : local Tourist_Attraction_ID, global integer -> IntSort()
+      Predicted FOL:
+        d : local Other_Details, global varchar(255) -> StringSort()
+        n : local Name, global text -> StringSort()
+        s : local Staff_ID, global integer -> IntSort()
+        t : local Tourist_Attraction_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_t_2], P_Staff(gold_s_1, gold_t_2, FV_Name_0, FV_Other_Details_0))
+      gold_skolem (witnesses WGOLD_s, WGOLD_t):  P_Staff(WGOLD_s, WGOLD_t, FV_Name_0, FV_Other_Details_0)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_t_2], P_Staff(predicted_s_1, predicted_t_2, FV_Name_0, FV_Other_Details_0))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_t):  P_Staff(WPREDICTED_s, WPREDICTED_t, FV_Name_0, FV_Other_Details_0)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 728 lines, 26932 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1028.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Other_Details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_t
+      claim: And(Staff(WGOLD_s, WGOLD_t, FV_Name_0, FV_Other_Details_0), Not(Exists([predicted_s_1, predicted_t_2], Staff(predicted_s_1, predicted_t_2, FV_Name_0, FV_Other_Details_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_t
+      claim: And(Staff(WPREDICTED_s, WPREDICTED_t, FV_Name_0, FV_Other_Details_0), Not(Exists([gold_s_1, gold_t_2], Staff(gold_s_1, gold_t_2, FV_Name_0, FV_Other_Details_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,131 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2956.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2956.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3497 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the sname of every sing that does not have any song?
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Birth_Year = real -> Float32()
+        Citizenship = text -> StringSort()
+        Highest_Position = real -> Float32()
+        Name = text -> StringSort()
+        Net_Worth_Millions = real -> Float32()
+        Sales = real -> Float32()
+        Singer_ID = int -> IntSort()
+        Song_ID = int -> IntSort()
+        Title = text -> StringSort()
+      symbols:
+        singer(Singer_ID, Name, Birth_Year, Net_Worth_Millions, Citizenship)
+        song(Song_ID, Title, Singer_ID, Sales, Highest_Position)
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃b : Birth_Year ∃c : Citizenship ∃n1 : Net_Worth_Millions ∃s : Singer_ID( (singer(s,n,b,n1,c)) ∧ (¬(∃s2 : Singer_ID( ((singer(s,n,b,n1,c)) ∧ (∃s1 : Song_ID ∃s3 : Sales ∃t : Title ∃h : Highest_Position( song(s1,t,s2,s3,h) ))) ∧ (s = s2) ))) )
+        tokens: EXISTS:∃ IDENT:b COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:c COLON:: IDENT:Citizenship EXISTS:∃ IDENT:n1 COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:s COLON:: IDENT:Singer_ID LPAR:( LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:n1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:Singer_ID LPAR:( LPAR:( LPAR:( IDENT:singer LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:n1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:Song_ID EXISTS:∃ IDENT:s3 COLON:: IDENT:Sales EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:h COLON:: IDENT:Highest_Position LPAR:( IDENT:song LPAR:( IDENT:s1 COMMA:, IDENT:t COMMA:, IDENT:s2 COMMA:, IDENT:s3 COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS b:Birth_Year
+            EXISTS c:Citizenship
+              EXISTS n1:Net_Worth_Millions
+                EXISTS s:Singer_ID
+                  AND
+                    PRED singer(s, n, b, n1, c)
+                    NOT
+                      EXISTS s2:Singer_ID
+                        AND
+                          AND
+                            PRED singer(s, n, b, n1, c)
+                            EXISTS s1:Song_ID
+                              EXISTS s3:Sales
+                                EXISTS t:Title
+                                  EXISTS h:Highest_Position
+                                    PRED song(s1, t, s2, s3, h)
+                          EQ  s = s2
+      Predicted FOL: ∃sid : Singer_ID ∃by : Birth_Year ∃nw : Net_Worth_Millions ∃c : Citizenship (singer(sid, sname, by, nw, c) ∧ ¬∃songid : Song_ID ∃title : Title ∃sales : Sales ∃position : Highest_Position song(songid, title, sid, sales, position))
+        tokens: EXISTS:∃ IDENT:sid COLON:: IDENT:Singer_ID EXISTS:∃ IDENT:by COLON:: IDENT:Birth_Year EXISTS:∃ IDENT:nw COLON:: IDENT:Net_Worth_Millions EXISTS:∃ IDENT:c COLON:: IDENT:Citizenship LPAR:( IDENT:singer LPAR:( IDENT:sid COMMA:, IDENT:sname COMMA:, IDENT:by COMMA:, IDENT:nw COMMA:, IDENT:c RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:songid COLON:: IDENT:Song_ID EXISTS:∃ IDENT:title COLON:: IDENT:Title EXISTS:∃ IDENT:sales COLON:: IDENT:Sales EXISTS:∃ IDENT:position COLON:: IDENT:Highest_Position IDENT:song LPAR:( IDENT:songid COMMA:, IDENT:title COMMA:, IDENT:sid COMMA:, IDENT:sales COMMA:, IDENT:position RPAR:) RPAR:) EOF
+        AST:
+          EXISTS sid:Singer_ID
+            EXISTS by:Birth_Year
+              EXISTS nw:Net_Worth_Millions
+                EXISTS c:Citizenship
+                  AND
+                    PRED singer(sid, sname, by, nw, c)
+                    NOT
+                      EXISTS songid:Song_ID
+                        EXISTS title:Title
+                          EXISTS sales:Sales
+                            EXISTS position:Highest_Position
+                              PRED song(songid, title, sid, sales, position)
+   [G3] took 0.010 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted sname
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Birth_Year, global real -> Float32()
+        c : local Citizenship, global text -> StringSort()
+        h : local Highest_Position, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        n1 : local Net_Worth_Millions, global real -> Float32()
+        s : local Singer_ID, global int -> IntSort()
+        s1 : local Song_ID, global int -> IntSort()
+        s2 : local Singer_ID, global int -> IntSort()
+        s3 : local Sales, global real -> Float32()
+        t : local Title, global text -> StringSort()
+      Predicted FOL:
+        by : local Birth_Year, global real -> Float32()
+        c : local Citizenship, global text -> StringSort()
+        nw : local Net_Worth_Millions, global real -> Float32()
+        position : local Highest_Position, global real -> Float32()
+        sales : local Sales, global real -> Float32()
+        sid : local Singer_ID, global int -> IntSort()
+        sname : local Name, global text -> StringSort()
+        songid : local Song_ID, global int -> IntSort()
+        title : local Title, global text -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_b_1, gold_c_2, gold_n1_3, gold_s_4], And(D_real(gold_b_1), D_real(gold_n1_3), And(P_singer(gold_s_4, FV_Name_0, gold_b_1, gold_n1_3, gold_c_2), Not(Exists([gold_s2_5], And(And(P_singer(gold_s_4, FV_Name_0, gold_b_1, gold_n1_3, gold_c_2), Exists([gold_s1_6, gold_s3_7, gold_t_8, gold_h_9], And(D_real(gold_s3_7), D_real(gold_h_9), P_song(gold_s1_6, gold_t_8, gold_s2_5, gold_s3_7, gold_h_9)))), (gold_s_4 == gold_s2_5)))))))
+      gold_skolem (witnesses WGOLD_b, WGOLD_c, WGOLD_n1, WGOLD_s):  And(D_real(WGOLD_b), D_real(WGOLD_n1), And(P_singer(WGOLD_s, FV_Name_0, WGOLD_b, WGOLD_n1, WGOLD_c), Not(Exists([goldsk_s2_1], And(And(P_singer(WGOLD_s, FV_Name_0, WGOLD_b, WGOLD_n1, WGOLD_c), Exists([goldsk_s1_2, goldsk_s3_3, goldsk_t_4, goldsk_h_5], And(D_real(goldsk_s3_3), D_real(goldsk_h_5), P_song(goldsk_s1_2, goldsk_t_4, goldsk_s2_1, goldsk_s3_3, goldsk_h_5)))), (WGOLD_s == goldsk_s2_1))))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_sid_1, predicted_by_2, predicted_nw_3, predicted_c_4], And(D_real(predicted_by_2), D_real(predicted_nw_3), And(P_singer(predicted_sid_1, FV_Name_0, predicted_by_2, predicted_nw_3, predicted_c_4), Not(Exists([predicted_songid_5, predicted_title_6, predicted_sales_7, predicted_position_8], And(D_real(predicted_sales_7), D_real(predicted_position_8), P_song(predicted_songid_5, predicted_title_6, predicted_sid_1, predicted_sales_7, predicted_position_8)))))))
+      predicted_skolem (witnesses WPREDICTED_sid, WPREDICTED_by, WPREDICTED_nw, WPREDICTED_c):  And(D_real(WPREDICTED_by), D_real(WPREDICTED_nw), And(P_singer(WPREDICTED_sid, FV_Name_0, WPREDICTED_by, WPREDICTED_nw, WPREDICTED_c), Not(Exists([predictedsk_songid_1, predictedsk_title_2, predictedsk_sales_3, predictedsk_position_4], And(D_real(predictedsk_sales_3), D_real(predictedsk_position_4), P_song(predictedsk_songid_1, predictedsk_title_2, WPREDICTED_sid, predictedsk_sales_3, predictedsk_position_4))))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.002 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 768 lines, 31148 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2956.py
+   [G8] took 0.014 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_b, WGOLD_c, WGOLD_n1, WGOLD_s
+      claim: And(And(And(Not(fpIsNaN(WGOLD_b)), Not(And(fpIsZero(WGOLD_b), fpIsNegative(WGOLD_b)))), And(Not(fpIsNaN(WGOLD_n1)), Not(And(fpIsZero(WGOLD_n1), fpIsNegative(WGOLD_n1)))), And(singer(WGOLD_s, FV_Name_0, WGOLD_b, WGOLD_n1, WGOLD_c), Not(Exists(goldsk_s2_1, And(And(singer(WGOLD_s, FV_Name_0, WGOLD_b, WGOLD_n1, WGOLD_c), Exists([goldsk_s1_2, goldsk_s3_3, goldsk_t_4, goldsk_h_5], And(And(Not(fpIsNaN(goldsk_s3_3)), Not(And(fpIsZero(goldsk_s3_3), fpIsNegative(goldsk_s3_3)))), And(Not(fpIsNaN(goldsk_h_5)), Not(And(fpIsZero(goldsk_h_5), fpIsNegative(goldsk_h_5)))), song(goldsk_s1_2, goldsk_t_4, goldsk_s2_1, goldsk_s3_3, goldsk_h_5)))), WGOLD_s == goldsk_s2_1))))), Not(Exists([predicted_sid_1, predicted_by_2, predicted_nw_3, predicted_c_4], And(And(Not(fpIsNaN(predicted_by_2)), Not(And(fpIsZero(predicted_by_2), fpIsNegative(predicted_by_2)))), And(Not(fpIsNaN(predicted_nw_3)), Not(And(fpIsZero(predicted_nw_3), fpIsNegative(predicted_nw_3)))), And(singer(predicted_sid_1, FV_Name_0, predicted_by_2, predicted_nw_3, predicted_c_4), Not(Exists([predicted_songid_5, predicted_title_6, predicted_sales_7, predicted_position_8], And(And(Not(fpIsNaN(predicted_sales_7)), Not(And(fpIsZero(predicted_sales_7), fpIsNegative(predicted_sales_7)))), And(Not(fpIsNaN(predicted_position_8)), Not(And(fpIsZero(predicted_position_8), fpIsNegative(predicted_position_8)))), song(predicted_songid_5, predicted_title_6, predicted_sid_1, predicted_sales_7, predicted_position_8)))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.032 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.139 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_sid, WPREDICTED_by, WPREDICTED_nw, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_by)), Not(And(fpIsZero(WPREDICTED_by), fpIsNegative(WPREDICTED_by)))), And(Not(fpIsNaN(WPREDICTED_nw)), Not(And(fpIsZero(WPREDICTED_nw), fpIsNegative(WPREDICTED_nw)))), And(singer(WPREDICTED_sid, FV_Name_0, WPREDICTED_by, WPREDICTED_nw, WPREDICTED_c), Not(Exists([predictedsk_songid_1, predictedsk_title_2, predictedsk_sales_3, predictedsk_position_4], And(And(Not(fpIsNaN(predictedsk_sales_3)), Not(And(fpIsZero(predictedsk_sales_3), fpIsNegative(predictedsk_sales_3)))), And(Not(fpIsNaN(predictedsk_position_4)), Not(And(fpIsZero(predictedsk_position_4), fpIsNegative(predictedsk_position_4)))), song(predictedsk_songid_1, predictedsk_title_2, WPREDICTED_sid, predictedsk_sales_3, predictedsk_position_4)))))), Not(Exists([gold_b_1, gold_c_2, gold_n1_3, gold_s_4], And(And(Not(fpIsNaN(gold_b_1)), Not(And(fpIsZero(gold_b_1), fpIsNegative(gold_b_1)))), And(Not(fpIsNaN(gold_n1_3)), Not(And(fpIsZero(gold_n1_3), fpIsNegative(gold_n1_3)))), And(singer(gold_s_4, FV_Name_0, gold_b_1, gold_n1_3, gold_c_2), Not(Exists(gold_s2_5, And(And(singer(gold_s_4, FV_Name_0, gold_b_1, gold_n1_3, gold_c_2), Exists([gold_s1_6, gold_s3_7, gold_t_8, gold_h_9], And(And(Not(fpIsNaN(gold_s3_7)), Not(And(fpIsZero(gold_s3_7), fpIsNegative(gold_s3_7)))), And(Not(fpIsNaN(gold_h_9)), Not(And(fpIsZero(gold_h_9), fpIsNegative(gold_h_9)))), song(gold_s1_6, gold_t_8, gold_s2_5, gold_s3_7, gold_h_9)))), gold_s_4 == gold_s2_5))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.016 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.104 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

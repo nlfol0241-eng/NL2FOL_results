@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3351.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3351.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2437 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show ids of all students who do not have any friends.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        ID = int -> IntSort()
+        friend_id = int -> IntSort()
+        grade = int -> IntSort()
+        name = text -> StringSort()
+        student_id = int -> IntSort()
+      symbols:
+        Friend(student_id, friend_id)
+        Highschooler(ID, name, grade)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃g : grade ∃n : name( Highschooler(i,n,g) )) ∧ (¬(∃f : friend_id( Friend(i,f) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:g COLON:: IDENT:grade EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( IDENT:Highschooler LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:g RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:f COLON:: IDENT:friend_id LPAR:( IDENT:Friend LPAR:( IDENT:i COMMA:, IDENT:f RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS g:grade
+              EXISTS n:name
+                PRED Highschooler(i, n, g)
+            NOT
+              EXISTS f:friend_id
+                PRED Friend(i, f)
+      Predicted FOL: ∃n:name ∃g:grade (Highschooler(id, n, g) ∧ ¬∃f:friend_id Friend(id, f))
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:g COLON:: IDENT:grade LPAR:( IDENT:Highschooler LPAR:( IDENT:id COMMA:, IDENT:n COMMA:, IDENT:g RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:f COLON:: IDENT:friend_id IDENT:Friend LPAR:( IDENT:id COMMA:, IDENT:f RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS g:grade
+              AND
+                PRED Highschooler(id, n, g)
+                NOT
+                  EXISTS f:friend_id
+                    PRED Friend(id, f)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_ID_0 : ID   Gold i <-> Predicted id
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        f : local friend_id, global int -> IntSort()
+        g : local grade, global int -> IntSort()
+        i : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        f : local friend_id, global int -> IntSort()
+        g : local grade, global int -> IntSort()
+        id : local ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_g_1, gold_n_2], P_Highschooler(FV_ID_0, gold_n_2, gold_g_1)), Not(Exists([gold_f_3], P_Friend(FV_ID_0, gold_f_3))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_n_1, predicted_g_2], And(P_Highschooler(FV_ID_0, predicted_n_1, predicted_g_2), Not(Exists([predicted_f_3], P_Friend(FV_ID_0, predicted_f_3)))))
+      predicted_skolem (witnesses WPREDICTED_n, WPREDICTED_g):  And(P_Highschooler(FV_ID_0, WPREDICTED_n, WPREDICTED_g), Not(Exists([predictedsk_f_1], P_Friend(FV_ID_0, predictedsk_f_1))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 725 lines, 26578 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3351.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_g_1, gold_n_2], Highschooler(FV_ID_0, gold_n_2, gold_g_1)), Not(Exists(gold_f_3, Friend(FV_ID_0, gold_f_3)))), Not(Exists([predicted_n_1, predicted_g_2], And(Highschooler(FV_ID_0, predicted_n_1, predicted_g_2), Not(Exists(predicted_f_3, Friend(FV_ID_0, predicted_f_3)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_n, WPREDICTED_g
+      claim: And(And(Highschooler(FV_ID_0, WPREDICTED_n, WPREDICTED_g), Not(Exists(predictedsk_f_1, Friend(FV_ID_0, predictedsk_f_1)))), Not(And(Exists([gold_g_1, gold_n_2], Highschooler(FV_ID_0, gold_n_2, gold_g_1)), Not(Exists(gold_f_3, Friend(FV_ID_0, gold_f_3))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

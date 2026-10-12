@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1080.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1080.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2933 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the songs in volumes with more than 1 week on top?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Artist_ID = int -> IntSort()
+        Issue_Date = text -> StringSort()
+        Song = text -> StringSort()
+        Volume_ID = int -> IntSort()
+        Volume_Issue = text -> StringSort()
+        Weeks_on_Top = real -> Float32()
+      symbols:
+        volume(Volume_ID, Volume_Issue, Issue_Date, Weeks_on_Top, Song, Artist_ID)
+        constant 1 : Weeks_on_Top
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃v : Volume_ID ∃v1 : Volume_Issue ∃i : Issue_Date ∃w : Weeks_on_Top ∃a : Artist_ID ( (volume(v,v1,i,w,s,a)) ∧ (w > 1) )
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:Volume_ID EXISTS:∃ IDENT:v1 COLON:: IDENT:Volume_Issue EXISTS:∃ IDENT:i COLON:: IDENT:Issue_Date EXISTS:∃ IDENT:w COLON:: IDENT:Weeks_on_Top EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID LPAR:( LPAR:( IDENT:volume LPAR:( IDENT:v COMMA:, IDENT:v1 COMMA:, IDENT:i COMMA:, IDENT:w COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:w GT:> NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v:Volume_ID
+            EXISTS v1:Volume_Issue
+              EXISTS i:Issue_Date
+                EXISTS w:Weeks_on_Top
+                  EXISTS a:Artist_ID
+                    AND
+                      PRED volume(v, v1, i, w, s, a)
+                      CMP  w > 1
+      Predicted FOL: ∃v : Volume_ID ∃i : Volume_Issue ∃d : Issue_Date ∃w : Weeks_on_Top ∃a : Artist_ID (volume(v, i, d, w, s, a) ∧ w > 1)
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:Volume_ID EXISTS:∃ IDENT:i COLON:: IDENT:Volume_Issue EXISTS:∃ IDENT:d COLON:: IDENT:Issue_Date EXISTS:∃ IDENT:w COLON:: IDENT:Weeks_on_Top EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID LPAR:( IDENT:volume LPAR:( IDENT:v COMMA:, IDENT:i COMMA:, IDENT:d COMMA:, IDENT:w COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) AND:∧ IDENT:w GT:> NUM:1 RPAR:) EOF
+        AST:
+          EXISTS v:Volume_ID
+            EXISTS i:Volume_Issue
+              EXISTS d:Issue_Date
+                EXISTS w:Weeks_on_Top
+                  EXISTS a:Artist_ID
+                    AND
+                      PRED volume(v, i, d, w, s, a)
+                      CMP  w > 1
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Song_0 : Song   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artist_ID, global int -> IntSort()
+        i : local Issue_Date, global text -> StringSort()
+        s : local Song, global text -> StringSort()
+        v : local Volume_ID, global int -> IntSort()
+        v1 : local Volume_Issue, global text -> StringSort()
+        w : local Weeks_on_Top, global real -> Float32()
+      Predicted FOL:
+        a : local Artist_ID, global int -> IntSort()
+        d : local Issue_Date, global text -> StringSort()
+        i : local Volume_Issue, global text -> StringSort()
+        s : local Song, global text -> StringSort()
+        v : local Volume_ID, global int -> IntSort()
+        w : local Weeks_on_Top, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_v_1, gold_v1_2, gold_i_3, gold_w_4, gold_a_5], And(D_real(gold_w_4), And(P_volume(gold_v_1, gold_v1_2, gold_i_3, gold_w_4, FV_Song_0, gold_a_5), (gold_w_4 > L_v_1_real))))
+      gold_skolem (witnesses WGOLD_v, WGOLD_v1, WGOLD_i, WGOLD_w, WGOLD_a):  And(D_real(WGOLD_w), And(P_volume(WGOLD_v, WGOLD_v1, WGOLD_i, WGOLD_w, FV_Song_0, WGOLD_a), (WGOLD_w > L_v_1_real)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_v_1, predicted_i_2, predicted_d_3, predicted_w_4, predicted_a_5], And(D_real(predicted_w_4), And(P_volume(predicted_v_1, predicted_i_2, predicted_d_3, predicted_w_4, FV_Song_0, predicted_a_5), (predicted_w_4 > L_v_1_real))))
+      predicted_skolem (witnesses WPREDICTED_v, WPREDICTED_i, WPREDICTED_d, WPREDICTED_w, WPREDICTED_a):  And(D_real(WPREDICTED_w), And(P_volume(WPREDICTED_v, WPREDICTED_i, WPREDICTED_d, WPREDICTED_w, FV_Song_0, WPREDICTED_a), (WPREDICTED_w > L_v_1_real)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1' at real -> L_v_1_real = FPVal(1.0, Float32())
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 749 lines, 28534 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1080.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_v, WGOLD_v1, WGOLD_i, WGOLD_w, WGOLD_a
+      claim: And(And(And(Not(fpIsNaN(WGOLD_w)), Not(And(fpIsZero(WGOLD_w), fpIsNegative(WGOLD_w)))), And(volume(WGOLD_v, WGOLD_v1, WGOLD_i, WGOLD_w, FV_Song_0, WGOLD_a), 1 < WGOLD_w)), Not(Exists([predicted_v_1, predicted_i_2, predicted_d_3, predicted_w_4, predicted_a_5], And(And(Not(fpIsNaN(predicted_w_4)), Not(And(fpIsZero(predicted_w_4), fpIsNegative(predicted_w_4)))), And(volume(predicted_v_1, predicted_i_2, predicted_d_3, predicted_w_4, FV_Song_0, predicted_a_5), 1 < predicted_w_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_v, WPREDICTED_i, WPREDICTED_d, WPREDICTED_w, WPREDICTED_a
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_w)), Not(And(fpIsZero(WPREDICTED_w), fpIsNegative(WPREDICTED_w)))), And(volume(WPREDICTED_v, WPREDICTED_i, WPREDICTED_d, WPREDICTED_w, FV_Song_0, WPREDICTED_a), 1 < WPREDICTED_w)), Not(Exists([gold_v_1, gold_v1_2, gold_i_3, gold_w_4, gold_a_5], And(And(Not(fpIsNaN(gold_w_4)), Not(And(fpIsZero(gold_w_4), fpIsNegative(gold_w_4)))), And(volume(gold_v_1, gold_v1_2, gold_i_3, gold_w_4, FV_Song_0, gold_a_5), 1 < gold_w_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

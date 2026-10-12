@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1585.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1585.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3070 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of directors who directed movies with 5 star rating? Also return the title of these movies.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        rID = int -> IntSort()
+        ratingDate = date -> IntSort()
+        stars = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        Rating(rID, mID, stars, ratingDate)
+        constant 5 : stars
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mID ∃y : year ∃r : rID ∃m1 : mID ∃s : stars ∃r1 : ratingDate ( (((Movie(m,t,y,d)) ∧ (Rating(r,m1,s,r1))) ∧ (m = m1)) ∧ (s = 5) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:r COLON:: IDENT:rID EXISTS:∃ IDENT:m1 COLON:: IDENT:mID EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m1 COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= NUM:5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mID
+            EXISTS y:year
+              EXISTS r:rID
+                EXISTS m1:mID
+                  EXISTS s:stars
+                    EXISTS r1:ratingDate
+                      AND
+                        AND
+                          AND
+                            PRED Movie(m, t, y, d)
+                            PRED Rating(r, m1, s, r1)
+                          EQ  m = m1
+                        EQ  s = 5
+      Predicted FOL: ∃mID : mID ∃title : title ∃year : year ∃director : director ∃rID : rID ∃stars : stars ∃ratingDate : ratingDate (Movie(mID, title, year, director) ∧ Rating(rID, mID, stars, ratingDate) ∧ stars = 5)
+        tokens: EXISTS:∃ IDENT:mID COLON:: IDENT:mID EXISTS:∃ IDENT:title COLON:: IDENT:title EXISTS:∃ IDENT:year COLON:: IDENT:year EXISTS:∃ IDENT:director COLON:: IDENT:director EXISTS:∃ IDENT:rID COLON:: IDENT:rID EXISTS:∃ IDENT:stars COLON:: IDENT:stars EXISTS:∃ IDENT:ratingDate COLON:: IDENT:ratingDate LPAR:( IDENT:Movie LPAR:( IDENT:mID COMMA:, IDENT:title COMMA:, IDENT:year COMMA:, IDENT:director RPAR:) AND:∧ IDENT:Rating LPAR:( IDENT:rID COMMA:, IDENT:mID COMMA:, IDENT:stars COMMA:, IDENT:ratingDate RPAR:) AND:∧ IDENT:stars EQ:= NUM:5 RPAR:) EOF
+        AST:
+          EXISTS mID:mID
+            EXISTS title:title
+              EXISTS year:year
+                EXISTS director:director
+                  EXISTS rID:rID
+                    EXISTS stars:stars
+                      EXISTS ratingDate:ratingDate
+                        AND
+                          PRED Movie(mID, title, year, director)
+                          PRED Rating(rID, mID, stars, ratingDate)
+                          EQ  stars = 5
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (t : title, d : director) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        m1 : local mID, global int -> IntSort()
+        r : local rID, global int -> IntSort()
+        r1 : local ratingDate, global date -> IntSort()
+        s : local stars, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        director : local director, global text -> StringSort()
+        mID : local mID, global int -> IntSort()
+        rID : local rID, global int -> IntSort()
+        ratingDate : local ratingDate, global date -> IntSort()
+        stars : local stars, global int -> IntSort()
+        title : local title, global text -> StringSort()
+        year : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5534 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1585.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (t : title, d : director) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

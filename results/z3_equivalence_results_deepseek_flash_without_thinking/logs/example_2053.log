@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2053.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2053.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3307 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the location of the bridge named 'Kolob Arch' or 'Rainbow Bridge'?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        architect_id = text -> StringSort()
+        id = text -> StringSort()
+        length_feet = real -> Float32()
+        length_meters = real -> Float32()
+        location = text -> StringSort()
+        name = text -> StringSort()
+      symbols:
+        bridge(architect_id, id, name, location, length_meters, length_feet)
+        constant Kolob Arch : name
+        constant Rainbow Bridge : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : architect_id ∃i : id ∃n : name ∃l1 : length_meters ∃l2 : length_feet ( (bridge(a,i,n,l,l1,l2)) ∧ ((n = 'Kolob Arch') ∨ (n = 'Rainbow Bridge')) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:architect_id EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:l1 COLON:: IDENT:length_meters EXISTS:∃ IDENT:l2 COLON:: IDENT:length_feet LPAR:( LPAR:( IDENT:bridge LPAR:( IDENT:a COMMA:, IDENT:i COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:l1 COMMA:, IDENT:l2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n EQ:= LIT:Kolob Arch RPAR:) OR:∨ LPAR:( IDENT:n EQ:= LIT:Rainbow Bridge RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:architect_id
+            EXISTS i:id
+              EXISTS n:name
+                EXISTS l1:length_meters
+                  EXISTS l2:length_feet
+                    AND
+                      PRED bridge(a, i, n, l, l1, l2)
+                      OR
+                        EQ  n = 'Kolob Arch'
+                        EQ  n = 'Rainbow Bridge'
+      Predicted FOL: ∃x : architect_id ∃y : id ∃z : location ∃w : length_meters ∃v : length_feet (bridge(x, y, 'Kolob Arch', z, w, v) ∨ bridge(x, y, 'Rainbow Bridge', z, w, v))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:architect_id EXISTS:∃ IDENT:y COLON:: IDENT:id EXISTS:∃ IDENT:z COLON:: IDENT:location EXISTS:∃ IDENT:w COLON:: IDENT:length_meters EXISTS:∃ IDENT:v COLON:: IDENT:length_feet LPAR:( IDENT:bridge LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, LIT:Kolob Arch COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) OR:∨ IDENT:bridge LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, LIT:Rainbow Bridge COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:architect_id
+            EXISTS y:id
+              EXISTS z:location
+                EXISTS w:length_meters
+                  EXISTS v:length_feet
+                    OR
+                      PRED bridge(x, y, 'Kolob Arch', z, w, v)
+                      PRED bridge(x, y, 'Rainbow Bridge', z, w, v)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (l : location) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local architect_id, global text -> StringSort()
+        i : local id, global text -> StringSort()
+        l : local location, global text -> StringSort()
+        l1 : local length_meters, global real -> Float32()
+        l2 : local length_feet, global real -> Float32()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        v : local length_feet, global real -> Float32()
+        w : local length_meters, global real -> Float32()
+        x : local architect_id, global text -> StringSort()
+        y : local id, global text -> StringSort()
+        z : local location, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5441 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2053.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (l : location) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

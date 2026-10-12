@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1537.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1537.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5963 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the payment date of the payment with amount paid higher than 300 or with payment type is 'Check'
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 8 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(15) -> StringSort()   [domain Length(x) <= 15; length <= 15]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        amount_due = decimal(19,4) -> RealSort()
+        amount_paid = decimal(19,4) -> RealSort()
+        amount_paid_in_full_yn = varchar(1) -> StringSort()
+        booking_id = integer -> IntSort()
+        customer_id = integer -> IntSort()
+        payment_date = datetime -> IntSort()
+        payment_id = integer -> IntSort()
+        payment_type_code = varchar(15) -> StringSort()
+      symbols:
+        Payments(payment_id, booking_id, customer_id, payment_type_code, amount_paid_in_full_yn, payment_date, amount_due, amount_paid)
+        constant 300 : amount_paid
+        constant Check : payment_type_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : payment_id ∃b : booking_id ∃c : customer_id ∃p1 : payment_type_code ∃a : amount_paid_in_full_yn ∃a1 : amount_due ∃a2 : amount_paid ( (Payments(p,b,c,p1,a,p2,a1,a2)) ∧ ((a2 > 300) ∨ (p1 = 'Check')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:payment_id EXISTS:∃ IDENT:b COLON:: IDENT:booking_id EXISTS:∃ IDENT:c COLON:: IDENT:customer_id EXISTS:∃ IDENT:p1 COLON:: IDENT:payment_type_code EXISTS:∃ IDENT:a COLON:: IDENT:amount_paid_in_full_yn EXISTS:∃ IDENT:a1 COLON:: IDENT:amount_due EXISTS:∃ IDENT:a2 COLON:: IDENT:amount_paid LPAR:( LPAR:( IDENT:Payments LPAR:( IDENT:p COMMA:, IDENT:b COMMA:, IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:a COMMA:, IDENT:p2 COMMA:, IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a2 GT:> NUM:300 RPAR:) OR:∨ LPAR:( IDENT:p1 EQ:= LIT:Check RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:payment_id
+            EXISTS b:booking_id
+              EXISTS c:customer_id
+                EXISTS p1:payment_type_code
+                  EXISTS a:amount_paid_in_full_yn
+                    EXISTS a1:amount_due
+                      EXISTS a2:amount_paid
+                        AND
+                          PRED Payments(p, b, c, p1, a, p2, a1, a2)
+                          OR
+                            CMP  a2 > 300
+                            EQ  p1 = 'Check'
+      Predicted FOL: ∃p0 : payment_id ∃p1 : booking_id ∃p2 : customer_id ∃p3 : payment_type_code ∃p4 : amount_paid_in_full_yn ∃p5 : payment_date ∃p6 : amount_due ∃p7 : amount_paid ( Payments(p0, p1, p2, p3, p4, p5, p6, p7) ∧ ( p7 > 300 ∨ p3 = 'Check' ) )
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:payment_id EXISTS:∃ IDENT:p1 COLON:: IDENT:booking_id EXISTS:∃ IDENT:p2 COLON:: IDENT:customer_id EXISTS:∃ IDENT:p3 COLON:: IDENT:payment_type_code EXISTS:∃ IDENT:p4 COLON:: IDENT:amount_paid_in_full_yn EXISTS:∃ IDENT:p5 COLON:: IDENT:payment_date EXISTS:∃ IDENT:p6 COLON:: IDENT:amount_due EXISTS:∃ IDENT:p7 COLON:: IDENT:amount_paid LPAR:( IDENT:Payments LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 COMMA:, IDENT:p6 COMMA:, IDENT:p7 RPAR:) AND:∧ LPAR:( IDENT:p7 GT:> NUM:300 OR:∨ IDENT:p3 EQ:= LIT:Check RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p0:payment_id
+            EXISTS p1:booking_id
+              EXISTS p2:customer_id
+                EXISTS p3:payment_type_code
+                  EXISTS p4:amount_paid_in_full_yn
+                    EXISTS p5:payment_date
+                      EXISTS p6:amount_due
+                        EXISTS p7:amount_paid
+                          AND
+                            PRED Payments(p0, p1, p2, p3, p4, p5, p6, p7)
+                            OR
+                              CMP  p7 > 300
+                              EQ  p3 = 'Check'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p2 : payment_date) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amount_paid_in_full_yn, global varchar(1) -> StringSort()
+        a1 : local amount_due, global decimal(19,4) -> RealSort()
+        a2 : local amount_paid, global decimal(19,4) -> RealSort()
+        b : local booking_id, global integer -> IntSort()
+        c : local customer_id, global integer -> IntSort()
+        p : local payment_id, global integer -> IntSort()
+        p1 : local payment_type_code, global varchar(15) -> StringSort()
+        p2 : local payment_date, global datetime -> IntSort()
+      Predicted FOL:
+        p0 : local payment_id, global integer -> IntSort()
+        p1 : local booking_id, global integer -> IntSort()
+        p2 : local customer_id, global integer -> IntSort()
+        p3 : local payment_type_code, global varchar(15) -> StringSort()
+        p4 : local amount_paid_in_full_yn, global varchar(1) -> StringSort()
+        p5 : local payment_date, global datetime -> IntSort()
+        p6 : local amount_due, global decimal(19,4) -> RealSort()
+        p7 : local amount_paid, global decimal(19,4) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5626 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1537.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p2 : payment_date) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

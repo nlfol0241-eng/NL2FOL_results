@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_373.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_373.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2833 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the different nominees of musicals that have an award that is not the Tony Award.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Award = text -> StringSort()
+        Category = text -> StringSort()
+        Musical_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Nominee = text -> StringSort()
+        Result = text -> StringSort()
+        Year = int -> IntSort()
+      symbols:
+        musical(Musical_ID, Name, Year, Award, Category, Nominee, Result)
+        constant Tony Award : Award
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Musical_ID ∃n : Name ∃y : Year ∃a : Award ∃c : Category ∃r : Result ( (musical(m,n,y,a,c,n1,r)) ∧ (a <> 'Tony Award') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Musical_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:a COLON:: IDENT:Award EXISTS:∃ IDENT:c COLON:: IDENT:Category EXISTS:∃ IDENT:r COLON:: IDENT:Result LPAR:( LPAR:( IDENT:musical LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:n1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a NEQ:<> LIT:Tony Award RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Musical_ID
+            EXISTS n:Name
+              EXISTS y:Year
+                EXISTS a:Award
+                  EXISTS c:Category
+                    EXISTS r:Result
+                      AND
+                        PRED musical(m, n, y, a, c, n1, r)
+                        NEQ  a != 'Tony Award'
+      Predicted FOL: ∃m : Musical_ID ∃n : Name ∃y : Year ∃a : Award ∃c : Category ∃nm : Nominee ∃r : Result (musical(m, n, y, a, c, nm, r) ∧ a ≠ 'Tony Award')
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Musical_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:a COLON:: IDENT:Award EXISTS:∃ IDENT:c COLON:: IDENT:Category EXISTS:∃ IDENT:nm COLON:: IDENT:Nominee EXISTS:∃ IDENT:r COLON:: IDENT:Result LPAR:( IDENT:musical LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:nm COMMA:, IDENT:r RPAR:) AND:∧ IDENT:a NEQ:≠ LIT:Tony Award RPAR:) EOF
+        AST:
+          EXISTS m:Musical_ID
+            EXISTS n:Name
+              EXISTS y:Year
+                EXISTS a:Award
+                  EXISTS c:Category
+                    EXISTS nm:Nominee
+                      EXISTS r:Result
+                        AND
+                          PRED musical(m, n, y, a, c, nm, r)
+                          NEQ  a != 'Tony Award'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : Nominee) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Award, global text -> StringSort()
+        c : local Category, global text -> StringSort()
+        m : local Musical_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nominee, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        a : local Award, global text -> StringSort()
+        c : local Category, global text -> StringSort()
+        m : local Musical_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        nm : local Nominee, global text -> StringSort()
+        r : local Result, global text -> StringSort()
+        y : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5418 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_373.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n1 : Nominee) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

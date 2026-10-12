@@ -1,0 +1,149 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3502.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3502.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4103 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the countries with no car makers?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Continent = integer -> IntSort()
+        Country = integer -> IntSort()
+        CountryId = integer -> IntSort()
+        CountryName = text -> StringSort()
+        FullName = text -> StringSort()
+        Id = integer -> IntSort()
+        Maker = text -> StringSort()
+      symbols:
+        car_makers(Id, Maker, FullName, Country)
+        countries(CountryId, CountryName, Continent)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c2 : Continent ∃c : CountryId( countries(c,c1,c2) )) ∧ (¬(∃i : Id ∃c3 : Country ∃c2 : Continent ∃f : FullName ∃m : Maker ∃c : CountryId( ((countries(c,c1,c2)) ∧ (car_makers(i,m,f,c3))) ∧ (c = c3) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c2 COLON:: IDENT:Continent EXISTS:∃ IDENT:c COLON:: IDENT:CountryId LPAR:( IDENT:countries LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:c3 COLON:: IDENT:Country EXISTS:∃ IDENT:c2 COLON:: IDENT:Continent EXISTS:∃ IDENT:f COLON:: IDENT:FullName EXISTS:∃ IDENT:m COLON:: IDENT:Maker EXISTS:∃ IDENT:c COLON:: IDENT:CountryId LPAR:( LPAR:( LPAR:( IDENT:countries LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:car_makers LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:f COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c3 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c2:Continent
+              EXISTS c:CountryId
+                PRED countries(c, c1, c2)
+            NOT
+              EXISTS i:Id
+                EXISTS c3:Country
+                  EXISTS c2:Continent
+                    EXISTS f:FullName
+                      EXISTS m:Maker
+                        EXISTS c:CountryId
+                          AND
+                            AND
+                              PRED countries(c, c1, c2)
+                              PRED car_makers(i, m, f, c3)
+                            EQ  c = c3
+      Predicted FOL: ∃x : CountryId ∃y : CountryName ∃z : Continent (countries(x, y, z) ∧ ¬∃u : Id ∃v : Maker ∃w : FullName ∃t : Country (car_makers(u, v, w, t) ∧ t = x))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:CountryId EXISTS:∃ IDENT:y COLON:: IDENT:CountryName EXISTS:∃ IDENT:z COLON:: IDENT:Continent LPAR:( IDENT:countries LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:u COLON:: IDENT:Id EXISTS:∃ IDENT:v COLON:: IDENT:Maker EXISTS:∃ IDENT:w COLON:: IDENT:FullName EXISTS:∃ IDENT:t COLON:: IDENT:Country LPAR:( IDENT:car_makers LPAR:( IDENT:u COMMA:, IDENT:v COMMA:, IDENT:w COMMA:, IDENT:t RPAR:) AND:∧ IDENT:t EQ:= IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:CountryId
+            EXISTS y:CountryName
+              EXISTS z:Continent
+                AND
+                  PRED countries(x, y, z)
+                  NOT
+                    EXISTS u:Id
+                      EXISTS v:Maker
+                        EXISTS w:FullName
+                          EXISTS t:Country
+                            AND
+                              PRED car_makers(u, v, w, t)
+                              EQ  t = x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) y do not occur free in the formula
+   1 shared answer variable(s)
+      FV_CountryName_0 : CountryName   Gold c1 <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CountryId, global integer -> IntSort()
+        c1 : local CountryName, global text -> StringSort()
+        c2 : local Continent, global integer -> IntSort()
+        c3 : local Country, global integer -> IntSort()
+        f : local FullName, global text -> StringSort()
+        i : local Id, global integer -> IntSort()
+        m : local Maker, global text -> StringSort()
+      Predicted FOL:
+        t : local Country, global integer -> IntSort()
+        u : local Id, global integer -> IntSort()
+        v : local Maker, global text -> StringSort()
+        w : local FullName, global text -> StringSort()
+        x : local CountryId, global integer -> IntSort()
+        y : local CountryName, global text -> StringSort()
+        z : local Continent, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_c2_1, gold_c_2], P_countries(gold_c_2, FV_CountryName_0, gold_c2_1)), Not(Exists([gold_i_3, gold_c3_4, gold_c2_5, gold_f_6, gold_m_7, gold_c_8], And(And(P_countries(gold_c_8, FV_CountryName_0, gold_c2_5), P_car_makers(gold_i_3, gold_m_7, gold_f_6, gold_c3_4)), (gold_c_8 == gold_c3_4)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2, predicted_z_3], And(P_countries(predicted_x_1, predicted_y_2, predicted_z_3), Not(Exists([predicted_u_4, predicted_v_5, predicted_w_6, predicted_t_7], And(P_car_makers(predicted_u_4, predicted_v_5, predicted_w_6, predicted_t_7), (predicted_t_7 == predicted_x_1))))))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z):  And(P_countries(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z), Not(Exists([predictedsk_u_1, predictedsk_v_2, predictedsk_w_3, predictedsk_t_4], And(P_car_makers(predictedsk_u_1, predictedsk_v_2, predictedsk_w_3, predictedsk_t_4), (predictedsk_t_4 == WPREDICTED_x)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 743 lines, 28570 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3502.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_c2_1, gold_c_2], countries(gold_c_2, FV_CountryName_0, gold_c2_1)), Not(Exists([gold_i_3, gold_c3_4, gold_c2_5, gold_f_6, gold_m_7, gold_c_8], And(And(countries(gold_c_8, FV_CountryName_0, gold_c2_5), car_makers(gold_i_3, gold_m_7, gold_f_6, gold_c3_4)), gold_c_8 == gold_c3_4)))), Not(Exists([predicted_x_1, predicted_y_2, predicted_z_3], And(countries(predicted_x_1, predicted_y_2, predicted_z_3), Not(Exists([predicted_u_4, predicted_v_5, predicted_w_6, predicted_t_7], And(car_makers(predicted_u_4, predicted_v_5, predicted_w_6, predicted_t_7), predicted_t_7 == predicted_x_1)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z
+      claim: And(And(countries(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z), Not(Exists([predictedsk_u_1, predictedsk_v_2, predictedsk_w_3, predictedsk_t_4], And(car_makers(predictedsk_u_1, predictedsk_v_2, predictedsk_w_3, predictedsk_t_4), predictedsk_t_4 == WPREDICTED_x)))), Not(And(Exists([gold_c2_1, gold_c_2], countries(gold_c_2, FV_CountryName_0, gold_c2_1)), Not(Exists([gold_i_3, gold_c3_4, gold_c2_5, gold_f_6, gold_m_7, gold_c_8], And(And(countries(gold_c_8, FV_CountryName_0, gold_c2_5), car_makers(gold_i_3, gold_m_7, gold_f_6, gold_c3_4)), gold_c_8 == gold_c3_4))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.004 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 4 relation tuple(s) listed, 4 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x : CountryId = 2
+          y : CountryName = '!0!'
+          z : Continent = 3
+        free (answer) variables:
+          FV_CountryName_0 : CountryName = '!1!'
+        relations (each value tagged with the local sort of its position):
+          car_makers(Id, Maker, FullName, Country):
+            <empty over the values of this model>
+          countries(CountryId, CountryName, Continent):
+            countries(CountryId=0, CountryName='', Continent=2)
+            countries(CountryId=2, CountryName='!0!', Continent=3)
+            countries(CountryId=3, CountryName='', Continent=4)
+            countries(CountryId=4, CountryName='', Continent=0)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Continent   : {0, 2, 3, 4}
+          CountryId   : {0, 2, 3, 4}
+          CountryName : {'', '!0!', '!1!'}
+        values shared across local sorts (joins):
+          0 : Continent, CountryId
+          2 : Continent, CountryId
+          3 : Continent, CountryId
+          4 : Continent, CountryId
+   [R3] took 0.023 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

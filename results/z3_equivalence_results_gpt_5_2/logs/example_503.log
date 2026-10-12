@@ -1,0 +1,91 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_503.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_503.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2814 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and capitals of each country?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Capital = text -> StringSort()
+        Country_id = int -> IntSort()
+        Country_name = text -> StringSort()
+        Official_native_language = text -> StringSort()
+      symbols:
+        country(Country_id, Country_name, Capital, Official_native_language)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Country_id ∃o : Official_native_language ( country(c,c1,c2,o) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Country_id EXISTS:∃ IDENT:o COLON:: IDENT:Official_native_language LPAR:( IDENT:country LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:c2 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Country_id
+            EXISTS o:Official_native_language
+              PRED country(c, c1, c2, o)
+      Predicted FOL: ∃a0:Country_id ∃a3:Official_native_language ( country(a0, x, y, a3) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:Country_id EXISTS:∃ IDENT:a3 COLON:: IDENT:Official_native_language LPAR:( IDENT:country LPAR:( IDENT:a0 COMMA:, IDENT:x COMMA:, IDENT:y COMMA:, IDENT:a3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:Country_id
+            EXISTS a3:Official_native_language
+              PRED country(a0, x, y, a3)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Capital_0 : Capital   Gold c2 <-> Predicted y
+      FV_Country_name_0 : Country_name   Gold c1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country_id, global int -> IntSort()
+        c1 : local Country_name, global text -> StringSort()
+        c2 : local Capital, global text -> StringSort()
+        o : local Official_native_language, global text -> StringSort()
+      Predicted FOL:
+        a0 : local Country_id, global int -> IntSort()
+        a3 : local Official_native_language, global text -> StringSort()
+        x : local Country_name, global text -> StringSort()
+        y : local Capital, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_o_2], P_country(gold_c_1, FV_Country_name_0, FV_Capital_0, gold_o_2))
+      gold_skolem (witnesses WGOLD_c, WGOLD_o):  P_country(WGOLD_c, FV_Country_name_0, FV_Capital_0, WGOLD_o)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a3_2], P_country(predicted_a0_1, FV_Country_name_0, FV_Capital_0, predicted_a3_2))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a3):  P_country(WPREDICTED_a0, FV_Country_name_0, FV_Capital_0, WPREDICTED_a3)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 724 lines, 26836 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_503.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_o
+      claim: And(country(WGOLD_c, FV_Country_name_0, FV_Capital_0, WGOLD_o), Not(Exists([predicted_a0_1, predicted_a3_2], country(predicted_a0_1, FV_Country_name_0, FV_Capital_0, predicted_a3_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a3
+      claim: And(country(WPREDICTED_a0, FV_Country_name_0, FV_Capital_0, WPREDICTED_a3), Not(Exists([gold_c_1, gold_o_2], country(gold_c_1, FV_Country_name_0, FV_Capital_0, gold_o_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

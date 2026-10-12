@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_549.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_549.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4233 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the description of the claim status "Open"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Claim_Stage_ID = integer -> IntSort()
+        Claim_Status_Description = varchar(255) -> StringSort()
+        Claim_Status_Name = varchar(255) -> StringSort()
+        Next_Claim_Stage_ID = integer -> IntSort()
+      symbols:
+        Claims_Processing_Stages(Claim_Stage_ID, Next_Claim_Stage_ID, Claim_Status_Name, Claim_Status_Description)
+        constant Open : Claim_Status_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Claim_Stage_ID ∃n : Next_Claim_Stage_ID ∃c1 : Claim_Status_Name ( (Claims_Processing_Stages(c,n,c1,c2)) ∧ (c1 = 'Open') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Claim_Stage_ID EXISTS:∃ IDENT:n COLON:: IDENT:Next_Claim_Stage_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Claim_Status_Name LPAR:( LPAR:( IDENT:Claims_Processing_Stages LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Open RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Claim_Stage_ID
+            EXISTS n:Next_Claim_Stage_ID
+              EXISTS c1:Claim_Status_Name
+                AND
+                  PRED Claims_Processing_Stages(c, n, c1, c2)
+                  EQ  c1 = 'Open'
+      Predicted FOL: ∃a : Claim_Stage_ID ∃b : Next_Claim_Stage_ID ( Claims_Processing_Stages(a, b, 'Open', x) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Claim_Stage_ID EXISTS:∃ IDENT:b COLON:: IDENT:Next_Claim_Stage_ID LPAR:( IDENT:Claims_Processing_Stages LPAR:( IDENT:a COMMA:, IDENT:b COMMA:, LIT:Open COMMA:, IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Claim_Stage_ID
+            EXISTS b:Next_Claim_Stage_ID
+              PRED Claims_Processing_Stages(a, b, 'Open', x)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Claim_Status_Description_0 : Claim_Status_Description   Gold c2 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Claim_Stage_ID, global integer -> IntSort()
+        c1 : local Claim_Status_Name, global varchar(255) -> StringSort()
+        c2 : local Claim_Status_Description, global varchar(255) -> StringSort()
+        n : local Next_Claim_Stage_ID, global integer -> IntSort()
+      Predicted FOL:
+        a : local Claim_Stage_ID, global integer -> IntSort()
+        b : local Next_Claim_Stage_ID, global integer -> IntSort()
+        x : local Claim_Status_Description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_n_2, gold_c1_3], And(D_varchar_255_(gold_c1_3), And(P_Claims_Processing_Stages(gold_c_1, gold_n_2, gold_c1_3, FV_Claim_Status_Description_0), (gold_c1_3 == L_Open))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_n, WGOLD_c1):  And(D_varchar_255_(WGOLD_c1), And(P_Claims_Processing_Stages(WGOLD_c, WGOLD_n, WGOLD_c1, FV_Claim_Status_Description_0), (WGOLD_c1 == L_Open)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_b_2], And(P_Claims_Processing_Stages(predicted_a_1, predicted_b_2, L_Open, FV_Claim_Status_Description_0), D_varchar_255_(L_Open)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_b):  And(P_Claims_Processing_Stages(WPREDICTED_a, WPREDICTED_b, L_Open, FV_Claim_Status_Description_0), D_varchar_255_(L_Open))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Open' at varchar(255) -> L_Open = StringVal('Open')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 729 lines, 27807 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_549.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Claim_Status_Description_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_n, WGOLD_c1
+      claim: And(And(Length(WGOLD_c1) <= 255, And(Claims_Processing_Stages(WGOLD_c, WGOLD_n, WGOLD_c1, FV_Claim_Status_Description_0), WGOLD_c1 == "Open")), Not(Exists([predicted_a_1, predicted_b_2], And(Claims_Processing_Stages(predicted_a_1, predicted_b_2, "Open", FV_Claim_Status_Description_0), Length("Open") <= 255))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_b
+      claim: And(And(Claims_Processing_Stages(WPREDICTED_a, WPREDICTED_b, "Open", FV_Claim_Status_Description_0), Length("Open") <= 255), Not(Exists([gold_c_1, gold_n_2, gold_c1_3], And(Length(gold_c1_3) <= 255, And(Claims_Processing_Stages(gold_c_1, gold_n_2, gold_c1_3, FV_Claim_Status_Description_0), gold_c1_3 == "Open")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

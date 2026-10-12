@@ -1,0 +1,79 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1290.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1290.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3852 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: papers by sharon goldwater
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        integer -> IntSort()
+      local sorts:
+        authorId = integer -> IntSort()
+        authorName = varchar(50) -> StringSort()
+        paperId = integer -> IntSort()
+      symbols:
+        author(authorId, authorName)
+        writes(paperId, authorId)
+        constant sharon goldwater : authorName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : authorId ∃a1 : authorId ∃a2 : authorName ( (((writes(p,a)) ∧ (author(a1,a2))) ∧ (a = a1)) ∧ (a2 = 'sharon goldwater') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:authorId EXISTS:∃ IDENT:a1 COLON:: IDENT:authorId EXISTS:∃ IDENT:a2 COLON:: IDENT:authorName LPAR:( LPAR:( LPAR:( LPAR:( IDENT:writes LPAR:( IDENT:p COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:author LPAR:( IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= LIT:sharon goldwater RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:authorId
+            EXISTS a1:authorId
+              EXISTS a2:authorName
+                AND
+                  AND
+                    AND
+                      PRED writes(p, a)
+                      PRED author(a1, a2)
+                    EQ  a = a1
+                  EQ  a2 = 'sharon goldwater'
+      Predicted FOL: ∃x : paperId ∃y : authorId (writes(x, y) ∧ author(y, 'sharon goldwater'))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:paperId EXISTS:∃ IDENT:y COLON:: IDENT:authorId LPAR:( IDENT:writes LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) AND:∧ IDENT:author LPAR:( IDENT:y COMMA:, LIT:sharon goldwater RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:paperId
+            EXISTS y:authorId
+              AND
+                PRED writes(x, y)
+                PRED author(y, 'sharon goldwater')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p : paperId) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local authorId, global integer -> IntSort()
+        a1 : local authorId, global integer -> IntSort()
+        a2 : local authorName, global varchar(50) -> StringSort()
+        p : local paperId, global integer -> IntSort()
+      Predicted FOL:
+        x : local paperId, global integer -> IntSort()
+        y : local authorId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5276 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1290.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p : paperId) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

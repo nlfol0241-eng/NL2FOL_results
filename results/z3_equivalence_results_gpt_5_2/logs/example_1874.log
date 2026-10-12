@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1874.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1874.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3147 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Select all the data from the products and each product's manufacturer.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        decimal -> RealSort()   [exact, unbounded]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Code = integer -> IntSort()
+        Founder = varchar(255) -> StringSort()
+        Headquarter = varchar(255) -> StringSort()
+        Manufacturer = integer -> IntSort()
+        Name = varchar(255) -> StringSort()
+        Price = decimal -> RealSort()
+        Revenue = real -> Float32()
+      symbols:
+        Manufacturers(Code, Name, Headquarter, Founder, Revenue)
+        Products(Code, Name, Price, Manufacturer)
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ((Products(c,n,p,m)) ∧ (Manufacturers(c1,n1,h,f,r))) ∧ (m = c1)
+        tokens: LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Manufacturers LPAR:( IDENT:c1 COMMA:, IDENT:n1 COMMA:, IDENT:h COMMA:, IDENT:f COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:c1 RPAR:) EOF
+        AST:
+          AND
+            AND
+              PRED Products(c, n, p, m)
+              PRED Manufacturers(c1, n1, h, f, r)
+            EQ  m = c1
+      Predicted FOL: ∀b0:Code ∀b1:Name ∀b2:Price ∀b3:Manufacturer ( Products(b0,b1,b2,b3) → ∃a0:Code ∃a1:Name ∃a2:Headquarter ∃a3:Founder ∃a4:Revenue ( Manufacturers(a0,a1,a2,a3,a4) ∧ a0 = b3 ) )
+        tokens: FORALL:∀ IDENT:b0 COLON:: IDENT:Code FORALL:∀ IDENT:b1 COLON:: IDENT:Name FORALL:∀ IDENT:b2 COLON:: IDENT:Price FORALL:∀ IDENT:b3 COLON:: IDENT:Manufacturer LPAR:( IDENT:Products LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 COMMA:, IDENT:b3 RPAR:) IMPL:→ EXISTS:∃ IDENT:a0 COLON:: IDENT:Code EXISTS:∃ IDENT:a1 COLON:: IDENT:Name EXISTS:∃ IDENT:a2 COLON:: IDENT:Headquarter EXISTS:∃ IDENT:a3 COLON:: IDENT:Founder EXISTS:∃ IDENT:a4 COLON:: IDENT:Revenue LPAR:( IDENT:Manufacturers LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) AND:∧ IDENT:a0 EQ:= IDENT:b3 RPAR:) RPAR:) EOF
+        AST:
+          FORALL b0:Code
+            FORALL b1:Name
+              FORALL b2:Price
+                FORALL b3:Manufacturer
+                  IMPLIES
+                    PRED Products(b0, b1, b2, b3)
+                    EXISTS a0:Code
+                      EXISTS a1:Name
+                        EXISTS a2:Headquarter
+                          EXISTS a3:Founder
+                            EXISTS a4:Revenue
+                              AND
+                                PRED Manufacturers(a0, a1, a2, a3, a4)
+                                EQ  a0 = b3
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 9 free variable(s) (c : Code, n : Name, p : Price, m : Manufacturer, c1 : Code, n1 : Name, h : Headquarter, f : Founder, r : Revenue) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        c1 : local Code, global integer -> IntSort()
+        f : local Founder, global varchar(255) -> StringSort()
+        h : local Headquarter, global varchar(255) -> StringSort()
+        m : local Manufacturer, global integer -> IntSort()
+        n : local Name, global varchar(255) -> StringSort()
+        n1 : local Name, global varchar(255) -> StringSort()
+        p : local Price, global decimal -> RealSort()
+        r : local Revenue, global real -> Float32()
+      Predicted FOL:
+        a0 : local Code, global integer -> IntSort()
+        a1 : local Name, global varchar(255) -> StringSort()
+        a2 : local Headquarter, global varchar(255) -> StringSort()
+        a3 : local Founder, global varchar(255) -> StringSort()
+        a4 : local Revenue, global real -> Float32()
+        b0 : local Code, global integer -> IntSort()
+        b1 : local Name, global varchar(255) -> StringSort()
+        b2 : local Price, global decimal -> RealSort()
+        b3 : local Manufacturer, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5570 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1874.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 9 free variable(s) (c : Code, n : Name, p : Price, m : Manufacturer, c1 : Code, n1 : Name, h : Headquarter, f : Founder, r : Revenue) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

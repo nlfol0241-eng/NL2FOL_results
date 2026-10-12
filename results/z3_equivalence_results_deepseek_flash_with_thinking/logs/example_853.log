@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_853.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_853.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4998 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the location code, the starting date and ending data in that location for all the documents.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Date_in_Location_From = datetime -> IntSort()
+        Date_in_Locaton_To = datetime -> IntSort()
+        Document_ID = integer -> IntSort()
+        Location_Code = char(15) -> StringSort()
+      symbols:
+        Document_Locations(Document_ID, Location_Code, Date_in_Location_From, Date_in_Locaton_To)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Document_ID ( Document_Locations(d,l,d1,d2) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID LPAR:( IDENT:Document_Locations LPAR:( IDENT:d COMMA:, IDENT:l COMMA:, IDENT:d1 COMMA:, IDENT:d2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            PRED Document_Locations(d, l, d1, d2)
+      Predicted FOL: ∃d : Document_ID Document_Locations(d, loc, start, end)
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID IDENT:Document_Locations LPAR:( IDENT:d COMMA:, IDENT:loc COMMA:, IDENT:start COMMA:, IDENT:end RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            PRED Document_Locations(d, loc, start, end)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Date_in_Location_From_0 : Date_in_Location_From   Gold d1 <-> Predicted start
+      FV_Date_in_Locaton_To_0 : Date_in_Locaton_To   Gold d2 <-> Predicted end
+      FV_Location_Code_0 : Location_Code   Gold l <-> Predicted loc
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Date_in_Location_From, global datetime -> IntSort()
+        d2 : local Date_in_Locaton_To, global datetime -> IntSort()
+        l : local Location_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        d : local Document_ID, global integer -> IntSort()
+        end : local Date_in_Locaton_To, global datetime -> IntSort()
+        loc : local Location_Code, global char(15) -> StringSort()
+        start : local Date_in_Location_From, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1], P_Document_Locations(gold_d_1, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0))
+      gold_skolem (witnesses WGOLD_d):  P_Document_Locations(WGOLD_d, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1], P_Document_Locations(predicted_d_1, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0))
+      predicted_skolem (witnesses WPREDICTED_d):  P_Document_Locations(WPREDICTED_d, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 727 lines, 27277 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_853.py
+   [G8] took 0.013 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Location_Code_0) <= 15
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d
+      claim: And(Document_Locations(WGOLD_d, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0), Not(Exists(predicted_d_1, Document_Locations(predicted_d_1, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d
+      claim: And(Document_Locations(WPREDICTED_d, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0), Not(Exists(gold_d_1, Document_Locations(gold_d_1, FV_Location_Code_0, FV_Date_in_Location_From_0, FV_Date_in_Locaton_To_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

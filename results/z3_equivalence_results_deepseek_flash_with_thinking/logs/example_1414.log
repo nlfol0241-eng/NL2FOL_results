@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1414.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1414.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3532 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the ids and names of members who are under age 30 or with black membership card.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Address = text -> StringSort()
+        Age = int -> IntSort()
+        Level_of_membership = int -> IntSort()
+        Member_ID = int -> IntSort()
+        Membership_card = text -> StringSort()
+        Name = text -> StringSort()
+        Time_of_purchase = int -> IntSort()
+      symbols:
+        member(Member_ID, Name, Membership_card, Age, Time_of_purchase, Level_of_membership, Address)
+        constant 30 : Age
+        constant Black : Membership_card
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m1 : Membership_card ∃a : Age ∃t : Time_of_purchase ∃l : Level_of_membership ∃a1 : Address ( (member(m,n,m1,a,t,l,a1)) ∧ ((m1 = 'Black') ∨ (a < 30)) )
+        tokens: EXISTS:∃ IDENT:m1 COLON:: IDENT:Membership_card EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:t COLON:: IDENT:Time_of_purchase EXISTS:∃ IDENT:l COLON:: IDENT:Level_of_membership EXISTS:∃ IDENT:a1 COLON:: IDENT:Address LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:m1 COMMA:, IDENT:a COMMA:, IDENT:t COMMA:, IDENT:l COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:m1 EQ:= LIT:Black RPAR:) OR:∨ LPAR:( IDENT:a LT:< NUM:30 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m1:Membership_card
+            EXISTS a:Age
+              EXISTS t:Time_of_purchase
+                EXISTS l:Level_of_membership
+                  EXISTS a1:Address
+                    AND
+                      PRED member(m, n, m1, a, t, l, a1)
+                      OR
+                        EQ  m1 = 'Black'
+                        CMP  a < 30
+      Predicted FOL: ∃ card : Membership_card ∃ age : Age ∃ time : Time_of_purchase ∃ level : Level_of_membership ∃ address : Address (member(id, name, card, age, time, level, address) ∧ (age < 30 ∨ card = Black))
+        tokens: EXISTS:∃ IDENT:card COLON:: IDENT:Membership_card EXISTS:∃ IDENT:age COLON:: IDENT:Age EXISTS:∃ IDENT:time COLON:: IDENT:Time_of_purchase EXISTS:∃ IDENT:level COLON:: IDENT:Level_of_membership EXISTS:∃ IDENT:address COLON:: IDENT:Address LPAR:( IDENT:member LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:card COMMA:, IDENT:age COMMA:, IDENT:time COMMA:, IDENT:level COMMA:, IDENT:address RPAR:) AND:∧ LPAR:( IDENT:age LT:< NUM:30 OR:∨ IDENT:card EQ:= IDENT:Black RPAR:) RPAR:) EOF
+        AST:
+          EXISTS card:Membership_card
+            EXISTS age:Age
+              EXISTS time:Time_of_purchase
+                EXISTS level:Level_of_membership
+                  EXISTS address:Address
+                    AND
+                      PRED member(id, name, card, age, time, level, address)
+                      OR
+                        CMP  age < 30
+                        EQ  card = Black<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Member_ID_0 : Member_ID   Gold m <-> Predicted id
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        a1 : local Address, global text -> StringSort()
+        l : local Level_of_membership, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        m1 : local Membership_card, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        t : local Time_of_purchase, global int -> IntSort()
+      Predicted FOL:
+        address : local Address, global text -> StringSort()
+        age : local Age, global int -> IntSort()
+        card : local Membership_card, global text -> StringSort()
+        id : local Member_ID, global int -> IntSort()
+        level : local Level_of_membership, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+        time : local Time_of_purchase, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m1_1, gold_a_2, gold_t_3, gold_l_4, gold_a1_5], And(P_member(FV_Member_ID_0, FV_Name_0, gold_m1_1, gold_a_2, gold_t_3, gold_l_4, gold_a1_5), Or((gold_m1_1 == L_Black), (gold_a_2 < L_v_30_int))))
+      gold_skolem (witnesses WGOLD_m1, WGOLD_a, WGOLD_t, WGOLD_l, WGOLD_a1):  And(P_member(FV_Member_ID_0, FV_Name_0, WGOLD_m1, WGOLD_a, WGOLD_t, WGOLD_l, WGOLD_a1), Or((WGOLD_m1 == L_Black), (WGOLD_a < L_v_30_int)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_card_1, predicted_age_2, predicted_time_3, predicted_level_4, predicted_address_5], And(P_member(FV_Member_ID_0, FV_Name_0, predicted_card_1, predicted_age_2, predicted_time_3, predicted_level_4, predicted_address_5), Or((predicted_age_2 < L_v_30_int), (predicted_card_1 == L_Black))))
+      predicted_skolem (witnesses WPREDICTED_card, WPREDICTED_age, WPREDICTED_time, WPREDICTED_level, WPREDICTED_address):  And(P_member(FV_Member_ID_0, FV_Name_0, WPREDICTED_card, WPREDICTED_age, WPREDICTED_time, WPREDICTED_level, WPREDICTED_address), Or((WPREDICTED_age < L_v_30_int), (WPREDICTED_card == L_Black)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Black' at text -> L_Black = StringVal('Black')
+      literal '30' at int -> L_v_30_int = IntVal(30)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 752 lines, 29168 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1414.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m1, WGOLD_a, WGOLD_t, WGOLD_l, WGOLD_a1
+      claim: And(And(member(FV_Member_ID_0, FV_Name_0, WGOLD_m1, WGOLD_a, WGOLD_t, WGOLD_l, WGOLD_a1), Or(WGOLD_m1 == "Black", 30 > WGOLD_a)), Not(Exists([predicted_card_1, predicted_age_2, predicted_time_3, predicted_level_4, predicted_address_5], And(member(FV_Member_ID_0, FV_Name_0, predicted_card_1, predicted_age_2, predicted_time_3, predicted_level_4, predicted_address_5), Or(30 > predicted_age_2, predicted_card_1 == "Black")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_card, WPREDICTED_age, WPREDICTED_time, WPREDICTED_level, WPREDICTED_address
+      claim: And(And(member(FV_Member_ID_0, FV_Name_0, WPREDICTED_card, WPREDICTED_age, WPREDICTED_time, WPREDICTED_level, WPREDICTED_address), Or(30 > WPREDICTED_age, WPREDICTED_card == "Black")), Not(Exists([gold_m1_1, gold_a_2, gold_t_3, gold_l_4, gold_a1_5], And(member(FV_Member_ID_0, FV_Name_0, gold_m1_1, gold_a_2, gold_t_3, gold_l_4, gold_a1_5), Or(gold_m1_1 == "Black", 30 > gold_a_2)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

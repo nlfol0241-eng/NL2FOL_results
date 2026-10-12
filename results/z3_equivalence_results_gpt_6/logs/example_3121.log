@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3121.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3121.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3381 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of members who did not attend any performance.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Member_ID = text -> StringSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Num_of_Pieces = int -> IntSort()
+        Performance_ID = real -> Float32()
+        Role = text -> StringSort()
+      symbols:
+        member(Member_ID, Name, Nationality, Role)
+        member_attendance(Member_ID, Performance_ID, Num_of_Pieces)
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n1 : Nationality ∃r : Role ∃m : Member_ID( (member(m,n,n1,r)) ∧ (¬(∃m1 : Member_ID( ((member(m,n,n1,r)) ∧ (∃n2 : Num_of_Pieces ∃p : Performance_ID( member_attendance(m1,p,n2) ))) ∧ (m = m1) ))) )
+        tokens: EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:r COLON:: IDENT:Role EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:Member_ID LPAR:( LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:n2 COLON:: IDENT:Num_of_Pieces EXISTS:∃ IDENT:p COLON:: IDENT:Performance_ID LPAR:( IDENT:member_attendance LPAR:( IDENT:m1 COMMA:, IDENT:p COMMA:, IDENT:n2 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n1:Nationality
+            EXISTS r:Role
+              EXISTS m:Member_ID
+                AND
+                  PRED member(m, n, n1, r)
+                  NOT
+                    EXISTS m1:Member_ID
+                      AND
+                        AND
+                          PRED member(m, n, n1, r)
+                          EXISTS n2:Num_of_Pieces
+                            EXISTS p:Performance_ID
+                              PRED member_attendance(m1, p, n2)
+                        EQ  m = m1
+      Predicted FOL: ∃m : Member_ID ∃n : Nationality ∃r : Role (member(m, name, n, r) ∧ ¬∃p : Performance_ID ∃k : Num_of_Pieces member_attendance(m, p, k))
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:n COLON:: IDENT:Nationality EXISTS:∃ IDENT:r COLON:: IDENT:Role LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:name COMMA:, IDENT:n COMMA:, IDENT:r RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:p COLON:: IDENT:Performance_ID EXISTS:∃ IDENT:k COLON:: IDENT:Num_of_Pieces IDENT:member_attendance LPAR:( IDENT:m COMMA:, IDENT:p COMMA:, IDENT:k RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS n:Nationality
+              EXISTS r:Role
+                AND
+                  PRED member(m, name, n, r)
+                  NOT
+                    EXISTS p:Performance_ID
+                      EXISTS k:Num_of_Pieces
+                        PRED member_attendance(m, p, k)
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local Member_ID, global text -> StringSort()
+        m1 : local Member_ID, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        n2 : local Num_of_Pieces, global int -> IntSort()
+        p : local Performance_ID, global real -> Float32()
+        r : local Role, global text -> StringSort()
+      Predicted FOL:
+        k : local Num_of_Pieces, global int -> IntSort()
+        m : local Member_ID, global text -> StringSort()
+        n : local Nationality, global text -> StringSort()
+        name : local Name, global text -> StringSort()
+        p : local Performance_ID, global real -> Float32()
+        r : local Role, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n1_1, gold_r_2, gold_m_3], And(P_member(gold_m_3, FV_Name_0, gold_n1_1, gold_r_2), Not(Exists([gold_m1_4], And(And(P_member(gold_m_3, FV_Name_0, gold_n1_1, gold_r_2), Exists([gold_n2_5, gold_p_6], And(D_real(gold_p_6), P_member_attendance(gold_m1_4, gold_p_6, gold_n2_5)))), (gold_m_3 == gold_m1_4))))))
+      gold_skolem (witnesses WGOLD_n1, WGOLD_r, WGOLD_m):  And(P_member(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_r), Not(Exists([goldsk_m1_1], And(And(P_member(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_r), Exists([goldsk_n2_2, goldsk_p_3], And(D_real(goldsk_p_3), P_member_attendance(goldsk_m1_1, goldsk_p_3, goldsk_n2_2)))), (WGOLD_m == goldsk_m1_1)))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_n_2, predicted_r_3], And(P_member(predicted_m_1, FV_Name_0, predicted_n_2, predicted_r_3), Not(Exists([predicted_p_4, predicted_k_5], And(D_real(predicted_p_4), P_member_attendance(predicted_m_1, predicted_p_4, predicted_k_5))))))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_n, WPREDICTED_r):  And(P_member(WPREDICTED_m, FV_Name_0, WPREDICTED_n, WPREDICTED_r), Not(Exists([predictedsk_p_1, predictedsk_k_2], And(D_real(predictedsk_p_1), P_member_attendance(WPREDICTED_m, predictedsk_p_1, predictedsk_k_2)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 748 lines, 29080 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3121.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_n1, WGOLD_r, WGOLD_m
+      claim: And(And(member(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_r), Not(Exists(goldsk_m1_1, And(And(member(WGOLD_m, FV_Name_0, WGOLD_n1, WGOLD_r), Exists([goldsk_n2_2, goldsk_p_3], And(And(Not(fpIsNaN(goldsk_p_3)), Not(And(fpIsZero(goldsk_p_3), fpIsNegative(goldsk_p_3)))), member_attendance(goldsk_m1_1, goldsk_p_3, goldsk_n2_2)))), WGOLD_m == goldsk_m1_1)))), Not(Exists([predicted_m_1, predicted_n_2, predicted_r_3], And(member(predicted_m_1, FV_Name_0, predicted_n_2, predicted_r_3), Not(Exists([predicted_p_4, predicted_k_5], And(And(Not(fpIsNaN(predicted_p_4)), Not(And(fpIsZero(predicted_p_4), fpIsNegative(predicted_p_4)))), member_attendance(predicted_m_1, predicted_p_4, predicted_k_5))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.010 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.026 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_n, WPREDICTED_r
+      claim: And(And(member(WPREDICTED_m, FV_Name_0, WPREDICTED_n, WPREDICTED_r), Not(Exists([predictedsk_p_1, predictedsk_k_2], And(And(Not(fpIsNaN(predictedsk_p_1)), Not(And(fpIsZero(predictedsk_p_1), fpIsNegative(predictedsk_p_1)))), member_attendance(WPREDICTED_m, predictedsk_p_1, predictedsk_k_2))))), Not(Exists([gold_n1_1, gold_r_2, gold_m_3], And(member(gold_m_3, FV_Name_0, gold_n1_1, gold_r_2), Not(Exists(gold_m1_4, And(And(member(gold_m_3, FV_Name_0, gold_n1_1, gold_r_2), Exists([gold_n2_5, gold_p_6], And(And(Not(fpIsNaN(gold_p_6)), Not(And(fpIsZero(gold_p_6), fpIsNegative(gold_p_6)))), member_attendance(gold_m1_4, gold_p_6, gold_n2_5)))), gold_m_3 == gold_m1_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.023 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,373 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2888.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2888.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7881 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the response received date for the document described as Regular that was granted more than 100 dollars?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 11 local sorts, 3 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+      local sorts:
+        document_description = varchar(255) -> StringSort()
+        document_id = integer -> IntSort()
+        document_type_code = varchar(10) -> StringSort()
+        grant_amount = decimal(19,4) -> RealSort()
+        grant_end_date = datetime -> IntSort()
+        grant_id = integer -> IntSort()
+        grant_start_date = datetime -> IntSort()
+        organisation_id = integer -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        response_received_date = datetime -> IntSort()
+        sent_date = datetime -> IntSort()
+      symbols:
+        Document_Types(document_type_code, document_description)
+        Documents(document_id, document_type_code, grant_id, sent_date, response_received_date, other_details)
+        Grants(grant_id, organisation_id, grant_amount, grant_start_date, grant_end_date, other_details)
+        constant 100 : grant_amount
+        constant Regular : document_description
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : document_id ∃d1 : document_type_code ∃g : grant_id ∃s : sent_date ∃o : other_details ∃d2 : document_type_code ∃d3 : document_description ∃g1 : grant_id ∃o1 : organisation_id ∃g2 : grant_amount ∃g3 : grant_start_date ∃g4 : grant_end_date ∃o2 : other_details ( (((((Documents(d,d1,g,s,r,o)) ∧ (Document_Types(d2,d3))) ∧ (d1 = d2)) ∧ (Grants(g1,o1,g2,g3,g4,o2))) ∧ (g = g1)) ∧ ((d3 = 'Regular') ∨ (g2 > 100)) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_id EXISTS:∃ IDENT:d1 COLON:: IDENT:document_type_code EXISTS:∃ IDENT:g COLON:: IDENT:grant_id EXISTS:∃ IDENT:s COLON:: IDENT:sent_date EXISTS:∃ IDENT:o COLON:: IDENT:other_details EXISTS:∃ IDENT:d2 COLON:: IDENT:document_type_code EXISTS:∃ IDENT:d3 COLON:: IDENT:document_description EXISTS:∃ IDENT:g1 COLON:: IDENT:grant_id EXISTS:∃ IDENT:o1 COLON:: IDENT:organisation_id EXISTS:∃ IDENT:g2 COLON:: IDENT:grant_amount EXISTS:∃ IDENT:g3 COLON:: IDENT:grant_start_date EXISTS:∃ IDENT:g4 COLON:: IDENT:grant_end_date EXISTS:∃ IDENT:o2 COLON:: IDENT:other_details LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:g COMMA:, IDENT:s COMMA:, IDENT:r COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Document_Types LPAR:( IDENT:d2 COMMA:, IDENT:d3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= IDENT:d2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Grants LPAR:( IDENT:g1 COMMA:, IDENT:o1 COMMA:, IDENT:g2 COMMA:, IDENT:g3 COMMA:, IDENT:g4 COMMA:, IDENT:o2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:g EQ:= IDENT:g1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:d3 EQ:= LIT:Regular RPAR:) OR:∨ LPAR:( IDENT:g2 GT:> NUM:100 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:document_id
+            EXISTS d1:document_type_code
+              EXISTS g:grant_id
+                EXISTS s:sent_date
+                  EXISTS o:other_details
+                    EXISTS d2:document_type_code
+                      EXISTS d3:document_description
+                        EXISTS g1:grant_id
+                          EXISTS o1:organisation_id
+                            EXISTS g2:grant_amount
+                              EXISTS g3:grant_start_date
+                                EXISTS g4:grant_end_date
+                                  EXISTS o2:other_details
+                                    AND
+                                      AND
+                                        AND
+                                          AND
+                                            AND
+                                              PRED Documents(d, d1, g, s, r, o)
+                                              PRED Document_Types(d2, d3)
+                                            EQ  d1 = d2
+                                          PRED Grants(g1, o1, g2, g3, g4, o2)
+                                        EQ  g = g1
+                                      OR
+                                        EQ  d3 = 'Regular'
+                                        CMP  g2 > 100
+      Predicted FOL: ∃x : document_id ∃y : document_type_code ∃z : grant_id ∃w : sent_date ∃v : response_received_date ∃u : other_details ∃a : document_type_code ∃b : document_description ∃c : grant_id ∃d : organisation_id ∃e : grant_amount ∃f : grant_start_date ∃g : grant_end_date ∃h : other_details ( Documents(x, y, z, w, v, u) ∧ Document_Types(a, b) ∧ Grants(c, d, e, f, g, h) ∧ y = a ∧ z = c ∧ b = 'Regular' ∧ e > 100 )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:document_id EXISTS:∃ IDENT:y COLON:: IDENT:document_type_code EXISTS:∃ IDENT:z COLON:: IDENT:grant_id EXISTS:∃ IDENT:w COLON:: IDENT:sent_date EXISTS:∃ IDENT:v COLON:: IDENT:response_received_date EXISTS:∃ IDENT:u COLON:: IDENT:other_details EXISTS:∃ IDENT:a COLON:: IDENT:document_type_code EXISTS:∃ IDENT:b COLON:: IDENT:document_description EXISTS:∃ IDENT:c COLON:: IDENT:grant_id EXISTS:∃ IDENT:d COLON:: IDENT:organisation_id EXISTS:∃ IDENT:e COLON:: IDENT:grant_amount EXISTS:∃ IDENT:f COLON:: IDENT:grant_start_date EXISTS:∃ IDENT:g COLON:: IDENT:grant_end_date EXISTS:∃ IDENT:h COLON:: IDENT:other_details LPAR:( IDENT:Documents LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, IDENT:u RPAR:) AND:∧ IDENT:Document_Types LPAR:( IDENT:a COMMA:, IDENT:b RPAR:) AND:∧ IDENT:Grants LPAR:( IDENT:c COMMA:, IDENT:d COMMA:, IDENT:e COMMA:, IDENT:f COMMA:, IDENT:g COMMA:, IDENT:h RPAR:) AND:∧ IDENT:y EQ:= IDENT:a AND:∧ IDENT:z EQ:= IDENT:c AND:∧ IDENT:b EQ:= LIT:Regular AND:∧ IDENT:e GT:> NUM:100 RPAR:) EOF
+        AST:
+          EXISTS x:document_id
+            EXISTS y:document_type_code
+              EXISTS z:grant_id
+                EXISTS w:sent_date
+                  EXISTS v:response_received_date
+                    EXISTS u:other_details
+                      EXISTS a:document_type_code
+                        EXISTS b:document_description
+                          EXISTS c:grant_id
+                            EXISTS d:organisation_id
+                              EXISTS e:grant_amount
+                                EXISTS f:grant_start_date
+                                  EXISTS g:grant_end_date
+                                    EXISTS h:other_details
+                                      AND
+                                        PRED Documents(x, y, z, w, v, u)
+                                        PRED Document_Types(a, b)
+                                        PRED Grants(c, d, e, f, g, h)
+                                        EQ  y = a
+                                        EQ  z = c
+                                        EQ  b = 'Regular'
+                                        CMP  e > 100
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) v do not occur free in the formula
+   1 shared answer variable(s)
+      FV_response_received_date_0 : response_received_date   Gold r <-> Predicted v
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 28 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local document_id, global integer -> IntSort()
+        d1 : local document_type_code, global varchar(10) -> StringSort()
+        d2 : local document_type_code, global varchar(10) -> StringSort()
+        d3 : local document_description, global varchar(255) -> StringSort()
+        g : local grant_id, global integer -> IntSort()
+        g1 : local grant_id, global integer -> IntSort()
+        g2 : local grant_amount, global decimal(19,4) -> RealSort()
+        g3 : local grant_start_date, global datetime -> IntSort()
+        g4 : local grant_end_date, global datetime -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        o1 : local organisation_id, global integer -> IntSort()
+        o2 : local other_details, global varchar(255) -> StringSort()
+        r : local response_received_date, global datetime -> IntSort()
+        s : local sent_date, global datetime -> IntSort()
+      Predicted FOL:
+        a : local document_type_code, global varchar(10) -> StringSort()
+        b : local document_description, global varchar(255) -> StringSort()
+        c : local grant_id, global integer -> IntSort()
+        d : local organisation_id, global integer -> IntSort()
+        e : local grant_amount, global decimal(19,4) -> RealSort()
+        f : local grant_start_date, global datetime -> IntSort()
+        g : local grant_end_date, global datetime -> IntSort()
+        h : local other_details, global varchar(255) -> StringSort()
+        u : local other_details, global varchar(255) -> StringSort()
+        v : local response_received_date, global datetime -> IntSort()
+        w : local sent_date, global datetime -> IntSort()
+        x : local document_id, global integer -> IntSort()
+        y : local document_type_code, global varchar(10) -> StringSort()
+        z : local grant_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2, gold_g_3, gold_s_4, gold_o_5, gold_d2_6, gold_d3_7, gold_g1_8, gold_o1_9, gold_g2_10, gold_g3_11, gold_g4_12, gold_o2_13], And(D_varchar_10_(gold_d1_2), D_varchar_255_(gold_o_5), D_varchar_10_(gold_d2_6), D_varchar_255_(gold_d3_7), D_decimal_19_4_(gold_g2_10), D_varchar_255_(gold_o2_13), And(And(And(And(And(P_Documents(gold_d_1, gold_d1_2, gold_g_3, gold_s_4, FV_response_received_date_0, gold_o_5), P_Document_Types(gold_d2_6, gold_d3_7)), (gold_d1_2 == gold_d2_6)), P_Grants(gold_g1_8, gold_o1_9, gold_g2_10, gold_g3_11, gold_g4_12, gold_o2_13)), (gold_g_3 == gold_g1_8)), Or((gold_d3_7 == L_Regular), (gold_g2_10 > L_v_100_decimal_19_4_)))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1, WGOLD_g, WGOLD_s, WGOLD_o, WGOLD_d2, WGOLD_d3, WGOLD_g1, WGOLD_o1, WGOLD_g2, WGOLD_g3, WGOLD_g4, WGOLD_o2):  And(D_varchar_10_(WGOLD_d1), D_varchar_255_(WGOLD_o), D_varchar_10_(WGOLD_d2), D_varchar_255_(WGOLD_d3), D_decimal_19_4_(WGOLD_g2), D_varchar_255_(WGOLD_o2), And(And(And(And(And(P_Documents(WGOLD_d, WGOLD_d1, WGOLD_g, WGOLD_s, FV_response_received_date_0, WGOLD_o), P_Document_Types(WGOLD_d2, WGOLD_d3)), (WGOLD_d1 == WGOLD_d2)), P_Grants(WGOLD_g1, WGOLD_o1, WGOLD_g2, WGOLD_g3, WGOLD_g4, WGOLD_o2)), (WGOLD_g == WGOLD_g1)), Or((WGOLD_d3 == L_Regular), (WGOLD_g2 > L_v_100_decimal_19_4_))))
+   Gold: 13 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5, predicted_u_6, predicted_a_7, predicted_b_8, predicted_c_9, predicted_d_10, predicted_e_11, predicted_f_12, predicted_g_13, predicted_h_14], And(D_varchar_10_(predicted_y_2), D_varchar_255_(predicted_u_6), D_varchar_10_(predicted_a_7), D_varchar_255_(predicted_b_8), D_decimal_19_4_(predicted_e_11), D_varchar_255_(predicted_h_14), And(P_Documents(predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5, predicted_u_6), P_Document_Types(predicted_a_7, predicted_b_8), P_Grants(predicted_c_9, predicted_d_10, predicted_e_11, predicted_f_12, predicted_g_13, predicted_h_14), (predicted_y_2 == predicted_a_7), (predicted_z_3 == predicted_c_9), (predicted_b_8 == L_Regular), (predicted_e_11 > L_v_100_decimal_19_4_))))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v, WPREDICTED_u, WPREDICTED_a, WPREDICTED_b, WPREDICTED_c, WPREDICTED_d, WPREDICTED_e, WPREDICTED_f, WPREDICTED_g, WPREDICTED_h):  And(D_varchar_10_(WPREDICTED_y), D_varchar_255_(WPREDICTED_u), D_varchar_10_(WPREDICTED_a), D_varchar_255_(WPREDICTED_b), D_decimal_19_4_(WPREDICTED_e), D_varchar_255_(WPREDICTED_h), And(P_Documents(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v, WPREDICTED_u), P_Document_Types(WPREDICTED_a, WPREDICTED_b), P_Grants(WPREDICTED_c, WPREDICTED_d, WPREDICTED_e, WPREDICTED_f, WPREDICTED_g, WPREDICTED_h), (WPREDICTED_y == WPREDICTED_a), (WPREDICTED_z == WPREDICTED_c), (WPREDICTED_b == L_Regular), (WPREDICTED_e > L_v_100_decimal_19_4_)))
+   Predicted: 14 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Regular' at varchar(255) -> L_Regular = StringVal('Regular')
+      literal '100' at decimal(19,4) -> L_v_100_decimal_19_4_ = RealVal('100')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 833 lines, 36844 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2888.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1, WGOLD_g, WGOLD_s, WGOLD_o, WGOLD_d2, WGOLD_d3, WGOLD_g1, WGOLD_o1, WGOLD_g2, WGOLD_g3, WGOLD_g4, WGOLD_o2
+      claim: And(And(Length(WGOLD_d1) <= 10, Length(WGOLD_o) <= 255, Length(WGOLD_d2) <= 10, Length(WGOLD_d3) <= 255, And(IsInt(WGOLD_g2*10000), WGOLD_g2 > -1000000000000000, WGOLD_g2 < 1000000000000000), Length(WGOLD_o2) <= 255, And(And(And(And(And(Documents(WGOLD_d, WGOLD_d1, WGOLD_g, WGOLD_s, FV_response_received_date_0, WGOLD_o), Document_Types(WGOLD_d2, WGOLD_d3)), WGOLD_d1 == WGOLD_d2), Grants(WGOLD_g1, WGOLD_o1, WGOLD_g2, WGOLD_g3, WGOLD_g4, WGOLD_o2)), WGOLD_g == WGOLD_g1), Or(WGOLD_d3 == "Regular", 100 < WGOLD_g2))), Not(Exists([predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5, predicted_u_6, predicted_a_7, predicted_b_8, predicted_c_9, predicted_d_10, predicted_e_11, predicted_f_12, predicted_g_13, predicted_h_14], And(Length(predicted_y_2) <= 10, Length(predicted_u_6) <= 255, Length(predicted_a_7) <= 10, Length(predicted_b_8) <= 255, And(IsInt(predicted_e_11*10000), predicted_e_11 > -1000000000000000, predicted_e_11 < 1000000000000000), Length(predicted_h_14) <= 255, And(Documents(predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5, predicted_u_6), Document_Types(predicted_a_7, predicted_b_8), Grants(predicted_c_9, predicted_d_10, predicted_e_11, predicted_f_12, predicted_g_13, predicted_h_14), predicted_y_2 == predicted_a_7, predicted_z_3 == predicted_c_9, predicted_b_8 == "Regular", 100 < predicted_e_11)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.008 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 41 relation tuple(s) listed, 38 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          d : document_id = 2
+          d1 : document_type_code = ''
+          g : grant_id = 3
+          s : sent_date = 1970-01-01 00:00:04
+          o : other_details = ''
+          d2 : document_type_code = ''
+          d3 : document_description = ''
+          g1 : grant_id = 3
+          o1 : organisation_id = 6
+          g2 : grant_amount = 100.0001 (= 1000001/10000)
+          g3 : grant_start_date = 1970-01-01 00:00:07
+          g4 : grant_end_date = 1970-01-01 00:00:08
+          o2 : other_details = ''
+        free (answer) variables:
+          FV_response_received_date_0 : response_received_date = 1970-01-01 00:00:05
+        literals / constants:
+          Regular : document_description = 'Regular'
+          100 : grant_amount = 100
+        relations (each value tagged with the local sort of its position):
+          Document_Types(document_type_code, document_description):
+            Document_Types(document_type_code='', document_description='')
+            Document_Types(document_type_code='', document_description='A')
+            Document_Types(document_type_code='A', document_description='B')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Documents(document_id, document_type_code, grant_id, sent_date, response_received_date, other_details):
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='A')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='Regular')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:04, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:07, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:08, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:09, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:06, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:07, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:08, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:09, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=2, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=6, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=7, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=2, document_type_code='', grant_id=3, sent_date=1970-01-01 00:00:04, response_received_date=1970-01-01 00:00:05, other_details='')
+            Documents(document_id=3, document_type_code='A', grant_id=4, sent_date=1970-01-01 00:00:05, response_received_date=1970-01-01 00:00:06, other_details='B')
+            Documents(document_id=4, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=6, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=7, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Grants(grant_id, organisation_id, grant_amount, grant_start_date, grant_end_date, other_details):
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='B')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='Regular')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:04, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:05, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:06, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:07, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:04, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:05, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:06, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:09, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=2, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=3, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=4, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=2, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=3, organisation_id=6, grant_amount=100, grant_start_date=1970-01-01 00:00:07, grant_end_date=1970-01-01 00:00:08, other_details='')
+            Grants(grant_id=3, organisation_id=6, grant_amount=100.0001 (= 1000001/10000), grant_start_date=1970-01-01 00:00:07, grant_end_date=1970-01-01 00:00:08, other_details='')
+            Grants(grant_id=4, organisation_id=7, grant_amount=0, grant_start_date=1970-01-01 00:00:08, grant_end_date=1970-01-01 00:00:09, other_details='A')
+            Grants(grant_id=6, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=7, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          document_description   : {'', 'A', 'B'}
+          document_id            : {0, 2, 3, 4, 6, 7}
+          document_type_code     : {'', 'A'}
+          grant_amount           : {0, 100, 100.0001 (= 1000001/10000)}
+          grant_end_date         : {1970-01-01 00:00:00, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:06, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09}
+          grant_id               : {0, 2, 3, 4, 6, 7}
+          grant_start_date       : {1970-01-01 00:00:00, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:06, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09}
+          organisation_id        : {0, 2, 3, 4, 6, 7}
+          other_details          : {'', 'A', 'B', 'Regular'}
+          response_received_date : {1970-01-01 00:00:00, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:06, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09}
+          sent_date              : {1970-01-01 00:00:00, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:06, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09}
+        values shared across local sorts (joins):
+          0 : grant_end_date, grant_start_date, response_received_date, sent_date
+          4 : grant_end_date, grant_start_date, response_received_date, sent_date
+          5 : grant_end_date, grant_start_date, response_received_date, sent_date
+          6 : grant_end_date, grant_start_date, response_received_date, sent_date
+          7 : grant_end_date, grant_start_date, response_received_date, sent_date
+          8 : grant_end_date, grant_start_date, response_received_date, sent_date
+          9 : grant_end_date, grant_start_date, response_received_date, sent_date
+          0 : document_id, grant_id, organisation_id
+          2 : document_id, grant_id, organisation_id
+          3 : document_id, grant_id, organisation_id
+          4 : document_id, grant_id, organisation_id
+          6 : document_id, grant_id, organisation_id
+          7 : document_id, grant_id, organisation_id
+          '' : document_description, other_details
+          'A' : document_description, other_details
+          'B' : document_description, other_details
+   [R2] took 0.300 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v, WPREDICTED_u, WPREDICTED_a, WPREDICTED_b, WPREDICTED_c, WPREDICTED_d, WPREDICTED_e, WPREDICTED_f, WPREDICTED_g, WPREDICTED_h
+      claim: And(And(Length(WPREDICTED_y) <= 10, Length(WPREDICTED_u) <= 255, Length(WPREDICTED_a) <= 10, Length(WPREDICTED_b) <= 255, And(IsInt(WPREDICTED_e*10000), WPREDICTED_e > -1000000000000000, WPREDICTED_e < 1000000000000000), Length(WPREDICTED_h) <= 255, And(Documents(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v, WPREDICTED_u), Document_Types(WPREDICTED_a, WPREDICTED_b), Grants(WPREDICTED_c, WPREDICTED_d, WPREDICTED_e, WPREDICTED_f, WPREDICTED_g, WPREDICTED_h), WPREDICTED_y == WPREDICTED_a, WPREDICTED_z == WPREDICTED_c, WPREDICTED_b == "Regular", 100 < WPREDICTED_e)), Not(Exists([gold_d_1, gold_d1_2, gold_g_3, gold_s_4, gold_o_5, gold_d2_6, gold_d3_7, gold_g1_8, gold_o1_9, gold_g2_10, gold_g3_11, gold_g4_12, gold_o2_13], And(Length(gold_d1_2) <= 10, Length(gold_o_5) <= 255, Length(gold_d2_6) <= 10, Length(gold_d3_7) <= 255, And(IsInt(gold_g2_10*10000), gold_g2_10 > -1000000000000000, gold_g2_10 < 1000000000000000), Length(gold_o2_13) <= 255, And(And(And(And(And(Documents(gold_d_1, gold_d1_2, gold_g_3, gold_s_4, FV_response_received_date_0, gold_o_5), Document_Types(gold_d2_6, gold_d3_7)), gold_d1_2 == gold_d2_6), Grants(gold_g1_8, gold_o1_9, gold_g2_10, gold_g3_11, gold_g4_12, gold_o2_13)), gold_g_3 == gold_g1_8), Or(gold_d3_7 == "Regular", 100 < gold_g2_10))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.011 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 46 relation tuple(s) listed, 40 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x : document_id = 2
+          y : document_type_code = ''
+          z : grant_id = 3
+          w : sent_date = 1970-01-01 00:00:04
+          v : response_received_date = 1970-01-01 00:00:05
+          u : other_details = 'R'
+          a : document_type_code = ''
+          b : document_description = 'Regular'
+          c : grant_id = 3
+          d : organisation_id = 6
+          e : grant_amount = 100.0001 (= 1000001/10000)
+          f : grant_start_date = 1970-01-01 00:00:07
+          g : grant_end_date = 1970-01-01 00:00:08
+          h : other_details = 'e'
+        free (answer) variables:
+          FV_response_received_date_0 : response_received_date = 1970-01-01 00:00:09
+        literals / constants:
+          Regular : document_description = 'Regular'
+          100 : grant_amount = 100
+        relations (each value tagged with the local sort of its position):
+          Document_Types(document_type_code, document_description):
+            Document_Types(document_type_code='', document_description='R')
+            Document_Types(document_type_code='', document_description='Regular')
+            Document_Types(document_type_code='', document_description='e')
+            Document_Types(document_type_code='A', document_description='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Documents(document_id, document_type_code, grant_id, sent_date, response_received_date, other_details):
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:00, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:04, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:07, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:08, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:10, other_details='Regular')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:02, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:07, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:08, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:09, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:10, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=2, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=6, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=0, document_type_code='', grant_id=7, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=2, document_type_code='', grant_id=3, sent_date=1970-01-01 00:00:04, response_received_date=1970-01-01 00:00:05, other_details='R')
+            Documents(document_id=2, document_type_code='', grant_id=3, sent_date=1970-01-01 00:00:04, response_received_date=1970-01-01 00:00:05, other_details='e')
+            Documents(document_id=3, document_type_code='A', grant_id=4, sent_date=1970-01-01 00:00:05, response_received_date=1970-01-01 00:00:02, other_details='')
+            Documents(document_id=4, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=6, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:10, other_details='')
+            Documents(document_id=7, document_type_code='', grant_id=0, sent_date=1970-01-01 00:00:00, response_received_date=1970-01-01 00:00:10, other_details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Grants(grant_id, organisation_id, grant_amount, grant_start_date, grant_end_date, other_details):
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='Regular')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:02, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:04, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:05, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:07, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:10, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:02, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:04, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:05, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:09, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:10, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=2, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=3, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=0, organisation_id=4, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=2, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=3, organisation_id=6, grant_amount=100, grant_start_date=1970-01-01 00:00:07, grant_end_date=1970-01-01 00:00:08, other_details='R')
+            Grants(grant_id=3, organisation_id=6, grant_amount=100, grant_start_date=1970-01-01 00:00:07, grant_end_date=1970-01-01 00:00:08, other_details='e')
+            Grants(grant_id=3, organisation_id=6, grant_amount=100.0001 (= 1000001/10000), grant_start_date=1970-01-01 00:00:07, grant_end_date=1970-01-01 00:00:08, other_details='R')
+            Grants(grant_id=3, organisation_id=6, grant_amount=100.0001 (= 1000001/10000), grant_start_date=1970-01-01 00:00:07, grant_end_date=1970-01-01 00:00:08, other_details='e')
+            Grants(grant_id=4, organisation_id=7, grant_amount=0, grant_start_date=1970-01-01 00:00:08, grant_end_date=1970-01-01 00:00:09, other_details='')
+            Grants(grant_id=6, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            Grants(grant_id=7, organisation_id=0, grant_amount=0, grant_start_date=1970-01-01 00:00:00, grant_end_date=1970-01-01 00:00:00, other_details='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          document_description   : {'', 'R', 'Regular', 'e'}
+          document_id            : {0, 2, 3, 4, 6, 7}
+          document_type_code     : {'', 'A'}
+          grant_amount           : {0, 100, 100.0001 (= 1000001/10000)}
+          grant_end_date         : {1970-01-01 00:00:00, 1970-01-01 00:00:02, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09, 1970-01-01 00:00:10}
+          grant_id               : {0, 2, 3, 4, 6, 7}
+          grant_start_date       : {1970-01-01 00:00:00, 1970-01-01 00:00:02, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09, 1970-01-01 00:00:10}
+          organisation_id        : {0, 2, 3, 4, 6, 7}
+          other_details          : {'', 'R', 'Regular', 'e'}
+          response_received_date : {1970-01-01 00:00:00, 1970-01-01 00:00:02, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09, 1970-01-01 00:00:10}
+          sent_date              : {1970-01-01 00:00:00, 1970-01-01 00:00:02, 1970-01-01 00:00:04, 1970-01-01 00:00:05, 1970-01-01 00:00:07, 1970-01-01 00:00:08, 1970-01-01 00:00:09, 1970-01-01 00:00:10}
+        values shared across local sorts (joins):
+          0 : grant_end_date, grant_start_date, response_received_date, sent_date
+          10 : grant_end_date, grant_start_date, response_received_date, sent_date
+          2 : grant_end_date, grant_start_date, response_received_date, sent_date
+          4 : grant_end_date, grant_start_date, response_received_date, sent_date
+          5 : grant_end_date, grant_start_date, response_received_date, sent_date
+          7 : grant_end_date, grant_start_date, response_received_date, sent_date
+          8 : grant_end_date, grant_start_date, response_received_date, sent_date
+          9 : grant_end_date, grant_start_date, response_received_date, sent_date
+          0 : document_id, grant_id, organisation_id
+          2 : document_id, grant_id, organisation_id
+          3 : document_id, grant_id, organisation_id
+          4 : document_id, grant_id, organisation_id
+          6 : document_id, grant_id, organisation_id
+          7 : document_id, grant_id, organisation_id
+          '' : document_description, other_details
+          'R' : document_description, other_details
+          'Regular' : document_description, other_details
+          'e' : document_description, other_details
+   [R3] took 0.309 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

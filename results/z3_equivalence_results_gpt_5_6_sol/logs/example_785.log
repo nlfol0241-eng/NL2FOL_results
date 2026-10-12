@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_785.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_785.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7131 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Tell me the distinct block codes where some rooms are available.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        boolean -> BoolSort()
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        BlockCode = integer -> IntSort()
+        BlockFloor = integer -> IntSort()
+        RoomNumber = integer -> IntSort()
+        RoomType = varchar(30) -> StringSort()
+        Unavailable = boolean -> BoolSort()
+      symbols:
+        Room(RoomNumber, RoomType, BlockFloor, BlockCode, Unavailable)
+        constant 0 : Unavailable
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : RoomNumber ∃r1 : RoomType ∃b : BlockFloor ∃u : Unavailable ( (Room(r,r1,b,b1,u)) ∧ (u = 0) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:RoomNumber EXISTS:∃ IDENT:r1 COLON:: IDENT:RoomType EXISTS:∃ IDENT:b COLON:: IDENT:BlockFloor EXISTS:∃ IDENT:u COLON:: IDENT:Unavailable LPAR:( LPAR:( IDENT:Room LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:b COMMA:, IDENT:b1 COMMA:, IDENT:u RPAR:) RPAR:) AND:∧ LPAR:( IDENT:u EQ:= NUM:0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:RoomNumber
+            EXISTS r1:RoomType
+              EXISTS b:BlockFloor
+                EXISTS u:Unavailable
+                  AND
+                    PRED Room(r, r1, b, b1, u)
+                    EQ  u = 0
+      Predicted FOL: ∃r : RoomNumber ∃t : RoomType ∃f : BlockFloor (Room(r, t, f, b, 0))
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:RoomNumber EXISTS:∃ IDENT:t COLON:: IDENT:RoomType EXISTS:∃ IDENT:f COLON:: IDENT:BlockFloor LPAR:( IDENT:Room LPAR:( IDENT:r COMMA:, IDENT:t COMMA:, IDENT:f COMMA:, IDENT:b COMMA:, NUM:0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:RoomNumber
+            EXISTS t:RoomType
+              EXISTS f:BlockFloor
+                PRED Room(r, t, f, b, 0)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_BlockCode_0 : BlockCode   Gold b1 <-> Predicted b
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local BlockFloor, global integer -> IntSort()
+        b1 : local BlockCode, global integer -> IntSort()
+        r : local RoomNumber, global integer -> IntSort()
+        r1 : local RoomType, global varchar(30) -> StringSort()
+        u : local Unavailable, global boolean -> BoolSort()
+      Predicted FOL:
+        b : local BlockCode, global integer -> IntSort()
+        f : local BlockFloor, global integer -> IntSort()
+        r : local RoomNumber, global integer -> IntSort()
+        t : local RoomType, global varchar(30) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_r1_2, gold_b_3, gold_u_4], And(D_varchar_30_(gold_r1_2), And(P_Room(gold_r_1, gold_r1_2, gold_b_3, FV_BlockCode_0, gold_u_4), (gold_u_4 == L_v_0_boolean))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_r1, WGOLD_b, WGOLD_u):  And(D_varchar_30_(WGOLD_r1), And(P_Room(WGOLD_r, WGOLD_r1, WGOLD_b, FV_BlockCode_0, WGOLD_u), (WGOLD_u == L_v_0_boolean)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_t_2, predicted_f_3], And(D_varchar_30_(predicted_t_2), P_Room(predicted_r_1, predicted_t_2, predicted_f_3, FV_BlockCode_0, L_v_0_boolean)))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_t, WPREDICTED_f):  And(D_varchar_30_(WPREDICTED_t), P_Room(WPREDICTED_r, WPREDICTED_t, WPREDICTED_f, FV_BlockCode_0, L_v_0_boolean))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '0' at boolean -> L_v_0_boolean = BoolVal(False)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 738 lines, 27748 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_785.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_r1, WGOLD_b, WGOLD_u
+      claim: And(And(Length(WGOLD_r1) <= 30, And(Room(WGOLD_r, WGOLD_r1, WGOLD_b, FV_BlockCode_0, WGOLD_u), WGOLD_u == False)), Not(Exists([predicted_r_1, predicted_t_2, predicted_f_3], And(Length(predicted_t_2) <= 30, Room(predicted_r_1, predicted_t_2, predicted_f_3, FV_BlockCode_0, False)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_t, WPREDICTED_f
+      claim: And(And(Length(WPREDICTED_t) <= 30, Room(WPREDICTED_r, WPREDICTED_t, WPREDICTED_f, FV_BlockCode_0, False)), Not(Exists([gold_r_1, gold_r1_2, gold_b_3, gold_u_4], And(Length(gold_r1_2) <= 30, And(Room(gold_r_1, gold_r1_2, gold_b_3, FV_BlockCode_0, gold_u_4), gold_u_4 == False)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

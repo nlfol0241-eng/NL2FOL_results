@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_294.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_294.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3758 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: papers that were not published in the last year
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        varchar(300) -> StringSort()   [domain Length(x) <= 300; length <= 300]
+      local sorts:
+        journalId = integer -> IntSort()
+        numCitedBy = integer -> IntSort()
+        numCiting = integer -> IntSort()
+        paperId = integer -> IntSort()
+        title = varchar(300) -> StringSort()
+        venueId = integer -> IntSort()
+        year = integer -> IntSort()
+      symbols:
+        paper(paperId, title, venueId, year, numCiting, numCitedBy, journalId)
+        constant 2015 : year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : title ∃v : venueId ∃y : year ∃n : numCiting ∃n1 : numCitedBy ∃j : journalId ( (paper(p,t,v,y,n,n1,j)) ∧ (y <> 2015) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:v COLON:: IDENT:venueId EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:n COLON:: IDENT:numCiting EXISTS:∃ IDENT:n1 COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:j COLON:: IDENT:journalId LPAR:( LPAR:( IDENT:paper LPAR:( IDENT:p COMMA:, IDENT:t COMMA:, IDENT:v COMMA:, IDENT:y COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y NEQ:<> NUM:2015 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:title
+            EXISTS v:venueId
+              EXISTS y:year
+                EXISTS n:numCiting
+                  EXISTS n1:numCitedBy
+                    EXISTS j:journalId
+                      AND
+                        PRED paper(p, t, v, y, n, n1, j)
+                        NEQ  y != 2015
+      Predicted FOL: ∃p0:paperId ∃p1:title ∃p2:venueId ∃p3:year ∃p4:numCiting ∃p5:numCitedBy ∃p6:journalId ( paper(p0, p1, p2, p3, p4, p5, p6) ∧ ¬(p3 = 2015) )
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:paperId EXISTS:∃ IDENT:p1 COLON:: IDENT:title EXISTS:∃ IDENT:p2 COLON:: IDENT:venueId EXISTS:∃ IDENT:p3 COLON:: IDENT:year EXISTS:∃ IDENT:p4 COLON:: IDENT:numCiting EXISTS:∃ IDENT:p5 COLON:: IDENT:numCitedBy EXISTS:∃ IDENT:p6 COLON:: IDENT:journalId LPAR:( IDENT:paper LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 COMMA:, IDENT:p5 COMMA:, IDENT:p6 RPAR:) AND:∧ NOT:¬ LPAR:( IDENT:p3 EQ:= NUM:2015 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p0:paperId
+            EXISTS p1:title
+              EXISTS p2:venueId
+                EXISTS p3:year
+                  EXISTS p4:numCiting
+                    EXISTS p5:numCitedBy
+                      EXISTS p6:journalId
+                        AND
+                          PRED paper(p0, p1, p2, p3, p4, p5, p6)
+                          NOT
+                            EQ  p3 = 2015
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p : paperId) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        j : local journalId, global integer -> IntSort()
+        n : local numCiting, global integer -> IntSort()
+        n1 : local numCitedBy, global integer -> IntSort()
+        p : local paperId, global integer -> IntSort()
+        t : local title, global varchar(300) -> StringSort()
+        v : local venueId, global integer -> IntSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        p0 : local paperId, global integer -> IntSort()
+        p1 : local title, global varchar(300) -> StringSort()
+        p2 : local venueId, global integer -> IntSort()
+        p3 : local year, global integer -> IntSort()
+        p4 : local numCiting, global integer -> IntSort()
+        p5 : local numCitedBy, global integer -> IntSort()
+        p6 : local journalId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5373 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_294.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p : paperId) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

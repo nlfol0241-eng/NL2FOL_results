@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_946.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_946.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2494 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the headquarter of the company whose founder is James?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Code = integer -> IntSort()
+        Founder = varchar(255) -> StringSort()
+        Headquarter = varchar(255) -> StringSort()
+        Name = varchar(255) -> StringSort()
+        Revenue = real -> Float32()
+      symbols:
+        Manufacturers(Code, Name, Headquarter, Founder, Revenue)
+        constant James : Founder
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Code ∃n : Name ∃f : Founder ∃r : Revenue ( (Manufacturers(c,n,h,f,r)) ∧ (f = 'James') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:f COLON:: IDENT:Founder EXISTS:∃ IDENT:r COLON:: IDENT:Revenue LPAR:( LPAR:( IDENT:Manufacturers LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:f COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f EQ:= LIT:James RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Code
+            EXISTS n:Name
+              EXISTS f:Founder
+                EXISTS r:Revenue
+                  AND
+                    PRED Manufacturers(c, n, h, f, r)
+                    EQ  f = 'James'
+      Predicted FOL: ∃x : Code ∃y : Name ∃z : Headquarter ∃w : Founder ∃v : Revenue (Manufacturers(x, y, z, w, v) ∧ w = 'James')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Code EXISTS:∃ IDENT:y COLON:: IDENT:Name EXISTS:∃ IDENT:z COLON:: IDENT:Headquarter EXISTS:∃ IDENT:w COLON:: IDENT:Founder EXISTS:∃ IDENT:v COLON:: IDENT:Revenue LPAR:( IDENT:Manufacturers LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) AND:∧ IDENT:w EQ:= LIT:James RPAR:) EOF
+        AST:
+          EXISTS x:Code
+            EXISTS y:Name
+              EXISTS z:Headquarter
+                EXISTS w:Founder
+                  EXISTS v:Revenue
+                    AND
+                      PRED Manufacturers(x, y, z, w, v)
+                      EQ  w = 'James'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (h : Headquarter) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        f : local Founder, global varchar(255) -> StringSort()
+        h : local Headquarter, global varchar(255) -> StringSort()
+        n : local Name, global varchar(255) -> StringSort()
+        r : local Revenue, global real -> Float32()
+      Predicted FOL:
+        v : local Revenue, global real -> Float32()
+        w : local Founder, global varchar(255) -> StringSort()
+        x : local Code, global integer -> IntSort()
+        y : local Name, global varchar(255) -> StringSort()
+        z : local Headquarter, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5326 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_946.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (h : Headquarter) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

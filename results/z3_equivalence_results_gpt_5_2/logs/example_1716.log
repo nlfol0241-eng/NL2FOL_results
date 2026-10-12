@@ -1,0 +1,178 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1716.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1716.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4864 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names and descriptions of courses that belong to the subject named "Computer Science".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(120) -> StringSort()   [domain Length(x) <= 120; length <= 120]
+        integer -> IntSort()
+      local sorts:
+        author_id = integer -> IntSort()
+        course_description = varchar(255) -> StringSort()
+        course_id = integer -> IntSort()
+        course_name = varchar(120) -> StringSort()
+        subject_id = integer -> IntSort()
+        subject_name = varchar(120) -> StringSort()
+      symbols:
+        Courses(course_id, author_id, subject_id, course_name, course_description)
+        Subjects(subject_id, subject_name)
+        constant Computer Science : subject_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : course_id ∃a : author_id ∃s : subject_id ∃s1 : subject_id ∃s2 : subject_name ( (((Courses(c,a,s,c1,c2)) ∧ (Subjects(s1,s2))) ∧ (s = s1)) ∧ (s2 = 'Computer Science') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:a COLON:: IDENT:author_id EXISTS:∃ IDENT:s COLON:: IDENT:subject_id EXISTS:∃ IDENT:s1 COLON:: IDENT:subject_id EXISTS:∃ IDENT:s2 COLON:: IDENT:subject_name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Courses LPAR:( IDENT:c COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Subjects LPAR:( IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s2 EQ:= LIT:Computer Science RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:course_id
+            EXISTS a:author_id
+              EXISTS s:subject_id
+                EXISTS s1:subject_id
+                  EXISTS s2:subject_name
+                    AND
+                      AND
+                        AND
+                          PRED Courses(c, a, s, c1, c2)
+                          PRED Subjects(s1, s2)
+                        EQ  s = s1
+                      EQ  s2 = 'Computer Science'
+      Predicted FOL: ∃d0:course_id ∃d1:author_id ∃d2:subject_id ∃d3:course_name ∃d4:course_description ∃c0:subject_id ∃c1:subject_name (Courses(d0,d1,d2,d3,d4) ∧ Subjects(c0,c1) ∧ d2 = c0 ∧ c1 = 'Computer Science')
+        tokens: EXISTS:∃ IDENT:d0 COLON:: IDENT:course_id EXISTS:∃ IDENT:d1 COLON:: IDENT:author_id EXISTS:∃ IDENT:d2 COLON:: IDENT:subject_id EXISTS:∃ IDENT:d3 COLON:: IDENT:course_name EXISTS:∃ IDENT:d4 COLON:: IDENT:course_description EXISTS:∃ IDENT:c0 COLON:: IDENT:subject_id EXISTS:∃ IDENT:c1 COLON:: IDENT:subject_name LPAR:( IDENT:Courses LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 RPAR:) AND:∧ IDENT:Subjects LPAR:( IDENT:c0 COMMA:, IDENT:c1 RPAR:) AND:∧ IDENT:d2 EQ:= IDENT:c0 AND:∧ IDENT:c1 EQ:= LIT:Computer Science RPAR:) EOF
+        AST:
+          EXISTS d0:course_id
+            EXISTS d1:author_id
+              EXISTS d2:subject_id
+                EXISTS d3:course_name
+                  EXISTS d4:course_description
+                    EXISTS c0:subject_id
+                      EXISTS c1:subject_name
+                        AND
+                          PRED Courses(d0, d1, d2, d3, d4)
+                          PRED Subjects(c0, c1)
+                          EQ  d2 = c0
+                          EQ  c1 = 'Computer Science'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) d3, d4 do not occur free in the formula
+   2 shared answer variable(s)
+      FV_course_description_0 : course_description   Gold c2 <-> Predicted d4
+      FV_course_name_0 : course_name   Gold c1 <-> Predicted d3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local author_id, global integer -> IntSort()
+        c : local course_id, global integer -> IntSort()
+        c1 : local course_name, global varchar(120) -> StringSort()
+        c2 : local course_description, global varchar(255) -> StringSort()
+        s : local subject_id, global integer -> IntSort()
+        s1 : local subject_id, global integer -> IntSort()
+        s2 : local subject_name, global varchar(120) -> StringSort()
+      Predicted FOL:
+        c0 : local subject_id, global integer -> IntSort()
+        c1 : local subject_name, global varchar(120) -> StringSort()
+        d0 : local course_id, global integer -> IntSort()
+        d1 : local author_id, global integer -> IntSort()
+        d2 : local subject_id, global integer -> IntSort()
+        d3 : local course_name, global varchar(120) -> StringSort()
+        d4 : local course_description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_a_2, gold_s_3, gold_s1_4, gold_s2_5], And(D_varchar_120_(gold_s2_5), And(And(And(P_Courses(gold_c_1, gold_a_2, gold_s_3, FV_course_name_0, FV_course_description_0), P_Subjects(gold_s1_4, gold_s2_5)), (gold_s_3 == gold_s1_4)), (gold_s2_5 == L_Computer_Science))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_s1, WGOLD_s2):  And(D_varchar_120_(WGOLD_s2), And(And(And(P_Courses(WGOLD_c, WGOLD_a, WGOLD_s, FV_course_name_0, FV_course_description_0), P_Subjects(WGOLD_s1, WGOLD_s2)), (WGOLD_s == WGOLD_s1)), (WGOLD_s2 == L_Computer_Science)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d0_1, predicted_d1_2, predicted_d2_3, predicted_d3_4, predicted_d4_5, predicted_c0_6, predicted_c1_7], And(D_varchar_120_(predicted_d3_4), D_varchar_255_(predicted_d4_5), D_varchar_120_(predicted_c1_7), And(P_Courses(predicted_d0_1, predicted_d1_2, predicted_d2_3, predicted_d3_4, predicted_d4_5), P_Subjects(predicted_c0_6, predicted_c1_7), (predicted_d2_3 == predicted_c0_6), (predicted_c1_7 == L_Computer_Science))))
+      predicted_skolem (witnesses WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4, WPREDICTED_c0, WPREDICTED_c1):  And(D_varchar_120_(WPREDICTED_d3), D_varchar_255_(WPREDICTED_d4), D_varchar_120_(WPREDICTED_c1), And(P_Courses(WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4), P_Subjects(WPREDICTED_c0, WPREDICTED_c1), (WPREDICTED_d2 == WPREDICTED_c0), (WPREDICTED_c1 == L_Computer_Science)))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Computer Science' at varchar(120) -> L_Computer_Science = StringVal('Computer Science')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 765 lines, 30558 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1716.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_course_description_0) <= 255
+      [1] Length(FV_course_name_0) <= 120
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_a, WGOLD_s, WGOLD_s1, WGOLD_s2
+      claim: And(And(Length(WGOLD_s2) <= 120, And(And(And(Courses(WGOLD_c, WGOLD_a, WGOLD_s, FV_course_name_0, FV_course_description_0), Subjects(WGOLD_s1, WGOLD_s2)), WGOLD_s == WGOLD_s1), WGOLD_s2 == "Computer Science")), Not(Exists([predicted_d0_1, predicted_d1_2, predicted_d2_3, predicted_d3_4, predicted_d4_5, predicted_c0_6, predicted_c1_7], And(Length(predicted_d3_4) <= 120, Length(predicted_d4_5) <= 255, Length(predicted_c1_7) <= 120, And(Courses(predicted_d0_1, predicted_d1_2, predicted_d2_3, predicted_d3_4, predicted_d4_5), Subjects(predicted_c0_6, predicted_c1_7), predicted_d2_3 == predicted_c0_6, predicted_c1_7 == "Computer Science")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4, WPREDICTED_c0, WPREDICTED_c1
+      claim: And(And(Length(WPREDICTED_d3) <= 120, Length(WPREDICTED_d4) <= 255, Length(WPREDICTED_c1) <= 120, And(Courses(WPREDICTED_d0, WPREDICTED_d1, WPREDICTED_d2, WPREDICTED_d3, WPREDICTED_d4), Subjects(WPREDICTED_c0, WPREDICTED_c1), WPREDICTED_d2 == WPREDICTED_c0, WPREDICTED_c1 == "Computer Science")), Not(Exists([gold_c_1, gold_a_2, gold_s_3, gold_s1_4, gold_s2_5], And(Length(gold_s2_5) <= 120, And(And(And(Courses(gold_c_1, gold_a_2, gold_s_3, FV_course_name_0, FV_course_description_0), Subjects(gold_s1_4, gold_s2_5)), gold_s_3 == gold_s1_4), gold_s2_5 == "Computer Science")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.012 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 17 relation tuple(s) listed, 15 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          d0 : course_id = 2
+          d1 : author_id = 3
+          d2 : subject_id = 4
+          d3 : course_name = 'o'
+          d4 : course_description = ''
+          c0 : subject_id = 4
+          c1 : subject_name = 'Computer Science'
+        free (answer) variables:
+          FV_course_description_0 : course_description = ''
+          FV_course_name_0 : course_name = 'C'
+        literals / constants:
+          Computer Science : subject_name = 'Computer Science'
+        relations (each value tagged with the local sort of its position):
+          Courses(course_id, author_id, subject_id, course_name, course_description):
+            Courses(course_id=0, author_id=0, subject_id=0, course_name='C', course_description='A')
+            Courses(course_id=0, author_id=0, subject_id=0, course_name='Computer Science', course_description='')
+            Courses(course_id=0, author_id=0, subject_id=2, course_name='', course_description='A')
+            Courses(course_id=0, author_id=0, subject_id=3, course_name='', course_description='A')
+            Courses(course_id=0, author_id=2, subject_id=0, course_name='', course_description='A')
+            Courses(course_id=0, author_id=5, subject_id=0, course_name='', course_description='A')
+            Courses(course_id=2, author_id=3, subject_id=4, course_name='o', course_description='')
+            Courses(course_id=3, author_id=4, subject_id=5, course_name='', course_description='A')
+            Courses(course_id=4, author_id=0, subject_id=0, course_name='', course_description='A')
+            Courses(course_id=5, author_id=0, subject_id=0, course_name='', course_description='A')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Subjects(subject_id, subject_name):
+            Subjects(subject_id=0, subject_name='')
+            Subjects(subject_id=0, subject_name='C')
+            Subjects(subject_id=0, subject_name='o')
+            Subjects(subject_id=2, subject_name='')
+            Subjects(subject_id=3, subject_name='')
+            Subjects(subject_id=4, subject_name='Computer Science')
+            Subjects(subject_id=5, subject_name='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          author_id          : {0, 2, 3, 4, 5}
+          course_description : {'', 'A'}
+          course_id          : {0, 2, 3, 4, 5}
+          course_name        : {'', 'C', 'Computer Science', 'o'}
+          subject_id         : {0, 2, 3, 4, 5}
+          subject_name       : {'', 'C', 'Computer Science', 'o'}
+        values shared across local sorts (joins):
+          0 : author_id, course_id, subject_id
+          2 : author_id, course_id, subject_id
+          3 : author_id, course_id, subject_id
+          4 : author_id, course_id, subject_id
+          5 : author_id, course_id, subject_id
+          '' : course_name, subject_name
+          'C' : course_name, subject_name
+          'Computer Science' : course_name, subject_name
+          'o' : course_name, subject_name
+   [R3] took 0.082 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

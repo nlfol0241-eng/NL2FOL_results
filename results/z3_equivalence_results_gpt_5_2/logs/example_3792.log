@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3792.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3792.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4088 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the first name and gender of the student who has allergy to milk but not cat.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 9 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        integer -> IntSort()
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Allergy = varchar(20) -> StringSort()
+        Fname = varchar(12) -> StringSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Has_Allergy(StuID, Allergy)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+        constant Cat : Allergy
+        constant Milk : Allergy
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Major ∃l : LName ∃c : city_code ∃a : Age ∃s : StuID ∃a1 : Advisor( ∃s2 : StuID( ((Student(s,l,f,a,s1,m,a1,c)) ∧ ((∃a2 : Allergy( (Has_Allergy(s2,a2)) ∧ (a2 = 'Milk') )) ∧ (¬(∃a2 : Allergy( (Has_Allergy(s2,a2)) ∧ (a2 = 'Cat') ))))) ∧ (s = s2) ) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:c COLON:: IDENT:city_code EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:StuID LPAR:( LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( EXISTS:∃ IDENT:a2 COLON:: IDENT:Allergy LPAR:( LPAR:( IDENT:Has_Allergy LPAR:( IDENT:s2 COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= LIT:Milk RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a2 COLON:: IDENT:Allergy LPAR:( LPAR:( IDENT:Has_Allergy LPAR:( IDENT:s2 COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= LIT:Cat RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Major
+            EXISTS l:LName
+              EXISTS c:city_code
+                EXISTS a:Age
+                  EXISTS s:StuID
+                    EXISTS a1:Advisor
+                      EXISTS s2:StuID
+                        AND
+                          AND
+                            PRED Student(s, l, f, a, s1, m, a1, c)
+                            AND
+                              EXISTS a2:Allergy
+                                AND
+                                  PRED Has_Allergy(s2, a2)
+                                  EQ  a2 = 'Milk'
+                              NOT
+                                EXISTS a2:Allergy
+                                  AND
+                                    PRED Has_Allergy(s2, a2)
+                                    EQ  a2 = 'Cat'
+                          EQ  s = s2
+      Predicted FOL: ∃s:StuID ∃ln:LName ∃fn:Fname ∃ag:Age ∃sx:Sex ∃mj:Major ∃adv:Advisor ∃cc:city_code ( Student(s, ln, fn, ag, sx, mj, adv, cc) ∧ Has_Allergy(s, Milk) ∧ ¬Has_Allergy(s, Cat) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:ln COLON:: IDENT:LName EXISTS:∃ IDENT:fn COLON:: IDENT:Fname EXISTS:∃ IDENT:ag COLON:: IDENT:Age EXISTS:∃ IDENT:sx COLON:: IDENT:Sex EXISTS:∃ IDENT:mj COLON:: IDENT:Major EXISTS:∃ IDENT:adv COLON:: IDENT:Advisor EXISTS:∃ IDENT:cc COLON:: IDENT:city_code LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:ln COMMA:, IDENT:fn COMMA:, IDENT:ag COMMA:, IDENT:sx COMMA:, IDENT:mj COMMA:, IDENT:adv COMMA:, IDENT:cc RPAR:) AND:∧ IDENT:Has_Allergy LPAR:( IDENT:s COMMA:, IDENT:Milk RPAR:) AND:∧ NOT:¬ IDENT:Has_Allergy LPAR:( IDENT:s COMMA:, IDENT:Cat RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS ln:LName
+              EXISTS fn:Fname
+                EXISTS ag:Age
+                  EXISTS sx:Sex
+                    EXISTS mj:Major
+                      EXISTS adv:Advisor
+                        EXISTS cc:city_code
+                          AND
+                            PRED Student(s, ln, fn, ag, sx, mj, adv, cc)
+                            PRED Has_Allergy(s, Milk<const>)
+                            NOT
+                              PRED Has_Allergy(s, Cat<const>)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : Fname, s1 : Sex) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        a2 : local Allergy, global varchar(20) -> StringSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+        s2 : local StuID, global integer -> IntSort()
+      Predicted FOL:
+        adv : local Advisor, global integer -> IntSort()
+        ag : local Age, global integer -> IntSort()
+        cc : local city_code, global varchar(3) -> StringSort()
+        fn : local Fname, global varchar(12) -> StringSort()
+        ln : local LName, global varchar(12) -> StringSort()
+        mj : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        sx : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5604 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3792.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : Fname, s1 : Sex) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

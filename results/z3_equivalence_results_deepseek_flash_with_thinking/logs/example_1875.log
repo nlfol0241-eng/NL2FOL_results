@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1875.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1875.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3276 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is all the product data, as well as  each product's manufacturer?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        decimal -> RealSort()   [exact, unbounded]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Code = integer -> IntSort()
+        Founder = varchar(255) -> StringSort()
+        Headquarter = varchar(255) -> StringSort()
+        Manufacturer = integer -> IntSort()
+        Name = varchar(255) -> StringSort()
+        Price = decimal -> RealSort()
+        Revenue = real -> Float32()
+      symbols:
+        Manufacturers(Code, Name, Headquarter, Founder, Revenue)
+        Products(Code, Name, Price, Manufacturer)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ((Products(c,n,p,m)) ∧ (Manufacturers(c1,n1,h,f,r))) ∧ (m = c1)
+        tokens: LPAR:( LPAR:( IDENT:Products LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Manufacturers LPAR:( IDENT:c1 COMMA:, IDENT:n1 COMMA:, IDENT:h COMMA:, IDENT:f COMMA:, IDENT:r RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:c1 RPAR:) EOF
+        AST:
+          AND
+            AND
+              PRED Products(c, n, p, m)
+              PRED Manufacturers(c1, n1, h, f, r)
+            EQ  m = c1
+      Predicted FOL: Products(p_code, p_name, p_price, p_manufacturer) ∧ Manufacturers(m_code, m_name, m_headquarter, m_founder, m_revenue) ∧ p_manufacturer = m_code
+        tokens: IDENT:Products LPAR:( IDENT:p_code COMMA:, IDENT:p_name COMMA:, IDENT:p_price COMMA:, IDENT:p_manufacturer RPAR:) AND:∧ IDENT:Manufacturers LPAR:( IDENT:m_code COMMA:, IDENT:m_name COMMA:, IDENT:m_headquarter COMMA:, IDENT:m_founder COMMA:, IDENT:m_revenue RPAR:) AND:∧ IDENT:p_manufacturer EQ:= IDENT:m_code EOF
+        AST:
+          AND
+            PRED Products(p_code, p_name, p_price, p_manufacturer)
+            PRED Manufacturers(m_code, m_name, m_headquarter, m_founder, m_revenue)
+            EQ  p_manufacturer = m_code
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   9 shared answer variable(s)
+      FV_Code_0 : Code   Gold c <-> Predicted p_code
+      FV_Code_1 : Code   Gold c1 <-> Predicted m_code
+      FV_Founder_0 : Founder   Gold f <-> Predicted m_founder
+      FV_Headquarter_0 : Headquarter   Gold h <-> Predicted m_headquarter
+      FV_Manufacturer_0 : Manufacturer   Gold m <-> Predicted p_manufacturer
+      FV_Name_0 : Name   Gold n <-> Predicted p_name
+      FV_Name_1 : Name   Gold n1 <-> Predicted m_name
+      FV_Price_0 : Price   Gold p <-> Predicted p_price
+      FV_Revenue_0 : Revenue   Gold r <-> Predicted m_revenue
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        c1 : local Code, global integer -> IntSort()
+        f : local Founder, global varchar(255) -> StringSort()
+        h : local Headquarter, global varchar(255) -> StringSort()
+        m : local Manufacturer, global integer -> IntSort()
+        n : local Name, global varchar(255) -> StringSort()
+        n1 : local Name, global varchar(255) -> StringSort()
+        p : local Price, global decimal -> RealSort()
+        r : local Revenue, global real -> Float32()
+      Predicted FOL:
+        m_code : local Code, global integer -> IntSort()
+        m_founder : local Founder, global varchar(255) -> StringSort()
+        m_headquarter : local Headquarter, global varchar(255) -> StringSort()
+        m_name : local Name, global varchar(255) -> StringSort()
+        m_revenue : local Revenue, global real -> Float32()
+        p_code : local Code, global integer -> IntSort()
+        p_manufacturer : local Manufacturer, global integer -> IntSort()
+        p_name : local Name, global varchar(255) -> StringSort()
+        p_price : local Price, global decimal -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(And(P_Products(FV_Code_0, FV_Name_0, FV_Price_0, FV_Manufacturer_0), P_Manufacturers(FV_Code_1, FV_Name_1, FV_Headquarter_0, FV_Founder_0, FV_Revenue_0)), (FV_Manufacturer_0 == FV_Code_1))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_Products(FV_Code_0, FV_Name_0, FV_Price_0, FV_Manufacturer_0), P_Manufacturers(FV_Code_1, FV_Name_1, FV_Headquarter_0, FV_Founder_0, FV_Revenue_0), (FV_Manufacturer_0 == FV_Code_1))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 746 lines, 27887 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1875.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   5 assertion(s): 0 sort axiom(s), 5 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Founder_0) <= 255
+      [1] Length(FV_Headquarter_0) <= 255
+      [2] Length(FV_Name_0) <= 255
+      [3] Length(FV_Name_1) <= 255
+      [4] And(Not(fpIsNaN(FV_Revenue_0)), Not(And(fpIsZero(FV_Revenue_0), fpIsNegative(FV_Revenue_0))))
+   [R1] took 0.004 s
+== [R2] check gold |= predicted
+   solver: 5 background assertion(s) + claim; witnesses -
+      claim: And(And(And(Products(FV_Code_0, FV_Name_0, FV_Price_0, FV_Manufacturer_0), Manufacturers(FV_Code_1, FV_Name_1, FV_Headquarter_0, FV_Founder_0, FV_Revenue_0)), FV_Manufacturer_0 == FV_Code_1), Not(And(Products(FV_Code_0, FV_Name_0, FV_Price_0, FV_Manufacturer_0), Manufacturers(FV_Code_1, FV_Name_1, FV_Headquarter_0, FV_Founder_0, FV_Revenue_0), FV_Manufacturer_0 == FV_Code_1)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 5 background assertion(s) + claim; witnesses -
+      claim: And(And(Products(FV_Code_0, FV_Name_0, FV_Price_0, FV_Manufacturer_0), Manufacturers(FV_Code_1, FV_Name_1, FV_Headquarter_0, FV_Founder_0, FV_Revenue_0), FV_Manufacturer_0 == FV_Code_1), Not(And(And(Products(FV_Code_0, FV_Name_0, FV_Price_0, FV_Manufacturer_0), Manufacturers(FV_Code_1, FV_Name_1, FV_Headquarter_0, FV_Founder_0, FV_Revenue_0)), FV_Manufacturer_0 == FV_Code_1)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

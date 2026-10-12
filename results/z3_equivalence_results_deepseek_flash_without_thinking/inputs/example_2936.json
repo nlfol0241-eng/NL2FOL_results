@@ -1,0 +1,91 @@
+{
+  "NL": "List the names of teachers who have not been arranged to teach courses.",
+  "Vocabulary": {
+    "Predicates": [
+      "teacher",
+      "course_arrange"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "teacher": [
+        "Teacher_ID",
+        "Name",
+        "Age",
+        "Hometown"
+      ],
+      "course_arrange": [
+        "Course_ID",
+        "Teacher_ID",
+        "Grade"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a0'∀a1'∀a2'( course(a0, a1, a2) ∧ course(a0', a1', a2') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b0'∀b1'∀b2'∀b3'( teacher(b0, b1, b2, b3) ∧ teacher(b0', b1', b2', b3') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' )",
+    "axiom3": "∀c0∀c1∀c2 ( course_arrange(c0, c1, c2) → ∃b0∃b1∃b2∃b3 ( teacher(b0, b1, b2, b3) ∧ b0 = c1 ) )",
+    "axiom4": "∀c0∀c1∀c2 ( course_arrange(c0, c1, c2) → ∃a0∃a1∃a2 ( course(a0, a1, a2) ∧ a0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "teacher": {
+        "A": "teacher",
+        "A0": "Teacher_ID",
+        "A1": "Name",
+        "A2": "Age",
+        "A3": "Hometown"
+      },
+      "course_arrange": {
+        "B": "course_arrange",
+        "B0": "Course_ID",
+        "B1": "Teacher_ID",
+        "B2": "Grade"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃a : Age ∃h : Hometown ∃t : Teacher_ID( (teacher(t,n,a,h)) ∧ (¬(∃t1 : Teacher_ID( ((teacher(t,n,a,h)) ∧ (∃c : Course_ID ∃g : Grade( course_arrange(c,t1,g) ))) ∧ (t = t1) ))) )",
+    "free vars": "n : Name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "Processed_RA": "<P>[A1]((<P>[A0,A1,A2,A3](A))<D>(<P>[A0,A1,A2,A3](<S>[A0 = B1]((A)<X>(<P>[B1](B))))))",
+    "RC": "[E]?A2,?A3,?A0( (A(?A0,?A1,?A2,?A3)) & (~([E]?B1( ((A(?A0,?A1,?A2,?A3)) & ([E]?B0,?B2( B(?B0,?B1,?B2) ))) & (?A0 = ?B1) ))) )",
+    "string": "∃A2 ∃A3 ∃A0( (A(A0,A1,A2,A3)) ∧ (¬(∃B1( ((A(A0,A1,A2,A3)) ∧ (∃B0 ∃B2( B(B0,B1,B2) ))) ∧ (A0 = B1) ))) )",
+    "free variables": "A1",
+    "db_id": "course_teach",
+    "processed_sql": "SELECT Name FROM teacher WHERE Teacher_id NOT IN (SELECT Teacher_id FROM course_arrange)"
+  },
+  "Global Sorts": [
+    "int",
+    "text"
+  ],
+  "Sort Axioms": {
+    "teacher": {
+      "sortaxiom0": "Teacher_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Age = text",
+      "sortaxiom3": "Hometown = text"
+    },
+    "course_arrange": {
+      "sortaxiom0": "Course_ID = int",
+      "sortaxiom1": "Teacher_ID = int",
+      "sortaxiom2": "Grade = int"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT Name FROM teacher WHERE Teacher_id NOT IN (SELECT Teacher_id FROM course_arrange)"
+  },
+  "id": 2936,
+  "Predicted FOL": {
+    "string": "∃x0 : Teacher_ID ∃x1 : Name ∃x2 : Age ∃x3 : Hometown ( teacher(x0, x1, x2, x3) ∧ ¬∃y0 : Course_ID ∃y1 : Teacher_ID ∃y2 : Grade ( course_arrange(y0, y1, y2) ∧ y1 = x0 ) )",
+    "free vars": ""
+  }
+}

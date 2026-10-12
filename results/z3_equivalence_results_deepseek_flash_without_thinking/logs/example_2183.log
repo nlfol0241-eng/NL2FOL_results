@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2183.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2183.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6094 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: return me the papers on VLDB conference after 2000 .
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 10 local sorts, 2 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        abstract = text -> StringSort()
+        cid = text -> StringSort()
+        citation_num = int -> IntSort()
+        homepage = text -> StringSort()
+        jid = int -> IntSort()
+        name = text -> StringSort()
+        pid = int -> IntSort()
+        reference_num = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        conference(cid, homepage, name)
+        publication(abstract, cid, citation_num, jid, pid, reference_num, title, year)
+        constant 2000 : year
+        constant VLDB : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : abstract ∃c : cid ∃c1 : citation_num ∃j : jid ∃p : pid ∃r : reference_num ∃y : year ∃c2 : cid ∃h : homepage ∃n : name ( (((publication(a,c,c1,j,p,r,t,y)) ∧ (conference(c2,h,n))) ∧ (c = c2)) ∧ ((n = 'VLDB') ∧ (y > 2000)) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:abstract EXISTS:∃ IDENT:c COLON:: IDENT:cid EXISTS:∃ IDENT:c1 COLON:: IDENT:citation_num EXISTS:∃ IDENT:j COLON:: IDENT:jid EXISTS:∃ IDENT:p COLON:: IDENT:pid EXISTS:∃ IDENT:r COLON:: IDENT:reference_num EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:c2 COLON:: IDENT:cid EXISTS:∃ IDENT:h COLON:: IDENT:homepage EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:publication LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:j COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:t COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:conference LPAR:( IDENT:c2 COMMA:, IDENT:h COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n EQ:= LIT:VLDB RPAR:) AND:∧ LPAR:( IDENT:y GT:> NUM:2000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:abstract
+            EXISTS c:cid
+              EXISTS c1:citation_num
+                EXISTS j:jid
+                  EXISTS p:pid
+                    EXISTS r:reference_num
+                      EXISTS y:year
+                        EXISTS c2:cid
+                          EXISTS h:homepage
+                            EXISTS n:name
+                              AND
+                                AND
+                                  AND
+                                    PRED publication(a, c, c1, j, p, r, t, y)
+                                    PRED conference(c2, h, n)
+                                  EQ  c = c2
+                                AND
+                                  EQ  n = 'VLDB'
+                                  CMP  y > 2000
+      Predicted FOL: ∃c : cid (conference(c, 'VLDB') ∧ ∃p : pid ∃y : year (publication(p, c, y) ∧ y > 2000))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:cid LPAR:( IDENT:conference LPAR:( IDENT:c COMMA:, LIT:VLDB RPAR:) AND:∧ EXISTS:∃ IDENT:p COLON:: IDENT:pid EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( IDENT:publication LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:y RPAR:) AND:∧ IDENT:y GT:> NUM:2000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:cid
+            AND
+              PRED conference(c, 'VLDB')
+              EXISTS p:pid
+                EXISTS y:year
+                  AND
+                    PRED publication(p, c, y)
+                    CMP  y > 2000
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'conference' applied to 2 arguments but declared with arity 3
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 146, in infer
+    raise ValueError(
+ValueError: predicate 'conference' applied to 2 arguments but declared with arity 3

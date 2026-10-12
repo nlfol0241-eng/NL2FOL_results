@@ -1,0 +1,135 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_323.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_323.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5623 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What year was the movie " The Imitation Game " produced
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        budget = text -> StringSort()
+        mid = int -> IntSort()
+        release_year = int -> IntSort()
+        title = text -> StringSort()
+        title_aka = text -> StringSort()
+      symbols:
+        movie(mid, title, release_year, title_aka, budget)
+        constant The Imitation Game : title
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mid ∃t : title ∃t1 : title_aka ∃b : budget ( (movie(m,t,r,t1,b)) ∧ (t = 'The Imitation Game') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:t1 COLON:: IDENT:title_aka EXISTS:∃ IDENT:b COLON:: IDENT:budget LPAR:( LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:t1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:The Imitation Game RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS t:title
+              EXISTS t1:title_aka
+                EXISTS b:budget
+                  AND
+                    PRED movie(m, t, r, t1, b)
+                    EQ  t = 'The Imitation Game'
+      Predicted FOL: ∃x : mid ∃y : title ∃z : release_year ∃w : title_aka ∃v : budget (movie(x, y, z, w, v) ∧ y = 'The Imitation Game')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:mid EXISTS:∃ IDENT:y COLON:: IDENT:title EXISTS:∃ IDENT:z COLON:: IDENT:release_year EXISTS:∃ IDENT:w COLON:: IDENT:title_aka EXISTS:∃ IDENT:v COLON:: IDENT:budget LPAR:( IDENT:movie LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) AND:∧ IDENT:y EQ:= LIT:The Imitation Game RPAR:) EOF
+        AST:
+          EXISTS x:mid
+            EXISTS y:title
+              EXISTS z:release_year
+                EXISTS w:title_aka
+                  EXISTS v:budget
+                    AND
+                      PRED movie(x, y, z, w, v)
+                      EQ  y = 'The Imitation Game'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) z do not occur free in the formula
+   1 shared answer variable(s)
+      FV_release_year_0 : release_year   Gold r <-> Predicted z
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local budget, global text -> StringSort()
+        m : local mid, global int -> IntSort()
+        r : local release_year, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        t1 : local title_aka, global text -> StringSort()
+      Predicted FOL:
+        v : local budget, global text -> StringSort()
+        w : local title_aka, global text -> StringSort()
+        x : local mid, global int -> IntSort()
+        y : local title, global text -> StringSort()
+        z : local release_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_t_2, gold_t1_3, gold_b_4], And(P_movie(gold_m_1, gold_t_2, FV_release_year_0, gold_t1_3, gold_b_4), (gold_t_2 == L_The_Imitation_Game)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_t, WGOLD_t1, WGOLD_b):  And(P_movie(WGOLD_m, WGOLD_t, FV_release_year_0, WGOLD_t1, WGOLD_b), (WGOLD_t == L_The_Imitation_Game))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5], And(P_movie(predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5), (predicted_y_2 == L_The_Imitation_Game)))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v):  And(P_movie(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v), (WPREDICTED_y == L_The_Imitation_Game))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'The Imitation Game' at text -> L_The_Imitation_Game = StringVal('The Imitation Game')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 741 lines, 27919 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_323.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_t, WGOLD_t1, WGOLD_b
+      claim: And(And(movie(WGOLD_m, WGOLD_t, FV_release_year_0, WGOLD_t1, WGOLD_b), WGOLD_t == "The Imitation Game"), Not(Exists([predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5], And(movie(predicted_x_1, predicted_y_2, predicted_z_3, predicted_w_4, predicted_v_5), predicted_y_2 == "The Imitation Game"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v
+      claim: And(And(movie(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z, WPREDICTED_w, WPREDICTED_v), WPREDICTED_y == "The Imitation Game"), Not(Exists([gold_m_1, gold_t_2, gold_t1_3, gold_b_4], And(movie(gold_m_1, gold_t_2, FV_release_year_0, gold_t1_3, gold_b_4), gold_t_2 == "The Imitation Game"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.015 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 4 relation tuple(s) listed, 15 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x : mid = 2
+          y : title = 'The Imitation Game'
+          z : release_year = 3
+          w : title_aka = 'T'
+          v : budget = 'T'
+        free (answer) variables:
+          FV_release_year_0 : release_year = 4
+        literals / constants:
+          The Imitation Game : title = 'The Imitation Game'
+        relations (each value tagged with the local sort of its position):
+          movie(mid, title, release_year, title_aka, budget):
+            movie(mid=1, title='The Imitation Game', release_year=3, title_aka='T', budget='The Imitation Game')
+            movie(mid=2, title='The Imitation Game', release_year=3, title_aka='T', budget='T')
+            movie(mid=3, title='The Imitation Game', release_year=3, title_aka='T', budget='A')
+            movie(mid=4, title='The Imitation Game', release_year=3, title_aka='T', budget='A')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          budget       : {'A', 'T', 'The Imitation Game'}
+          mid          : {1, 2, 3, 4}
+          release_year : {3, 4}
+          title        : {'The Imitation Game'}
+          title_aka    : {'T'}
+        values shared across local sorts (joins):
+          3 : mid, release_year
+          4 : mid, release_year
+          'T' : budget, title_aka
+          'The Imitation Game' : budget, title
+   [R3] took 0.087 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

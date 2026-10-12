@@ -1,0 +1,114 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1733.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1733.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7798 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of departments that have primarily affiliated physicians.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        boolean -> BoolSort()
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        Department = integer -> IntSort()
+        DepartmentID = integer -> IntSort()
+        Head = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        PrimaryAffiliation = boolean -> BoolSort()
+      symbols:
+        Affiliated_With(Physician, Department, PrimaryAffiliation)
+        Department(DepartmentID, Name, Head)
+        constant 1 : PrimaryAffiliation
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Physician ∃d : Department ∃p1 : PrimaryAffiliation ∃d1 : DepartmentID ∃h : Head ( (((Affiliated_With(p,d,p1)) ∧ (Department(d1,n,h))) ∧ (d = d1)) ∧ (p1 = 1) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Physician EXISTS:∃ IDENT:d COLON:: IDENT:Department EXISTS:∃ IDENT:p1 COLON:: IDENT:PrimaryAffiliation EXISTS:∃ IDENT:d1 COLON:: IDENT:DepartmentID EXISTS:∃ IDENT:h COLON:: IDENT:Head LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Affiliated_With LPAR:( IDENT:p COMMA:, IDENT:d COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Department LPAR:( IDENT:d1 COMMA:, IDENT:n COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= NUM:1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Physician
+            EXISTS d:Department
+              EXISTS p1:PrimaryAffiliation
+                EXISTS d1:DepartmentID
+                  EXISTS h:Head
+                    AND
+                      AND
+                        AND
+                          PRED Affiliated_With(p, d, p1)
+                          PRED Department(d1, n, h)
+                        EQ  d = d1
+                      EQ  p1 = 1
+      Predicted FOL: ∃d : DepartmentID ∃h : Head ∃p : Physician ∃a : Department (Department(d, n, h) ∧ Affiliated_With(p, a, 1) ∧ d = a)
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:DepartmentID EXISTS:∃ IDENT:h COLON:: IDENT:Head EXISTS:∃ IDENT:p COLON:: IDENT:Physician EXISTS:∃ IDENT:a COLON:: IDENT:Department LPAR:( IDENT:Department LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:h RPAR:) AND:∧ IDENT:Affiliated_With LPAR:( IDENT:p COMMA:, IDENT:a COMMA:, NUM:1 RPAR:) AND:∧ IDENT:d EQ:= IDENT:a RPAR:) EOF
+        AST:
+          EXISTS d:DepartmentID
+            EXISTS h:Head
+              EXISTS p:Physician
+                EXISTS a:Department
+                  AND
+                    PRED Department(d, n, h)
+                    PRED Affiliated_With(p, a, 1)
+                    EQ  d = a
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Department, global integer -> IntSort()
+        d1 : local DepartmentID, global integer -> IntSort()
+        h : local Head, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Physician, global integer -> IntSort()
+        p1 : local PrimaryAffiliation, global boolean -> BoolSort()
+      Predicted FOL:
+        a : local Department, global integer -> IntSort()
+        d : local DepartmentID, global integer -> IntSort()
+        h : local Head, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        p : local Physician, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_d_2, gold_p1_3, gold_d1_4, gold_h_5], And(And(And(P_Affiliated_With(gold_p_1, gold_d_2, gold_p1_3), P_Department(gold_d1_4, FV_Name_0, gold_h_5)), (gold_d_2 == gold_d1_4)), (gold_p1_3 == L_v_1_boolean)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_d, WGOLD_p1, WGOLD_d1, WGOLD_h):  And(And(And(P_Affiliated_With(WGOLD_p, WGOLD_d, WGOLD_p1), P_Department(WGOLD_d1, FV_Name_0, WGOLD_h)), (WGOLD_d == WGOLD_d1)), (WGOLD_p1 == L_v_1_boolean))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_h_2, predicted_p_3, predicted_a_4], And(P_Department(predicted_d_1, FV_Name_0, predicted_h_2), P_Affiliated_With(predicted_p_3, predicted_a_4, L_v_1_boolean), (predicted_d_1 == predicted_a_4)))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_h, WPREDICTED_p, WPREDICTED_a):  And(P_Department(WPREDICTED_d, FV_Name_0, WPREDICTED_h), P_Affiliated_With(WPREDICTED_p, WPREDICTED_a, L_v_1_boolean), (WPREDICTED_d == WPREDICTED_a))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1' at boolean -> L_v_1_boolean = BoolVal(True)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 750 lines, 28697 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1733.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Name_0) <= 30
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_d, WGOLD_p1, WGOLD_d1, WGOLD_h
+      claim: And(And(And(And(Affiliated_With(WGOLD_p, WGOLD_d, WGOLD_p1), Department(WGOLD_d1, FV_Name_0, WGOLD_h)), WGOLD_d == WGOLD_d1), WGOLD_p1 == True), Not(Exists([predicted_d_1, predicted_h_2, predicted_p_3, predicted_a_4], And(Department(predicted_d_1, FV_Name_0, predicted_h_2), Affiliated_With(predicted_p_3, predicted_a_4, True), predicted_d_1 == predicted_a_4))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.013 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_h, WPREDICTED_p, WPREDICTED_a
+      claim: And(And(Department(WPREDICTED_d, FV_Name_0, WPREDICTED_h), Affiliated_With(WPREDICTED_p, WPREDICTED_a, True), WPREDICTED_d == WPREDICTED_a), Not(Exists([gold_p_1, gold_d_2, gold_p1_3, gold_d1_4, gold_h_5], And(And(And(Affiliated_With(gold_p_1, gold_d_2, gold_p1_3), Department(gold_d1_4, FV_Name_0, gold_h_5)), gold_d_2 == gold_d1_4), gold_p1_3 == True))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

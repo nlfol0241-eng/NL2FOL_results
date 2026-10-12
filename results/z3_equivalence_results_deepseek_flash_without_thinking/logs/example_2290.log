@@ -1,0 +1,111 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2290.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2290.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3851 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct first names and cities of the students who have allergy either to milk or to cat?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 9 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        integer -> IntSort()
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Allergy = varchar(20) -> StringSort()
+        Fname = varchar(12) -> StringSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Has_Allergy(StuID, Allergy)
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+        constant Cat : Allergy
+        constant Milk : Allergy
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : StuID ∃l : LName ∃a : Age ∃s1 : Sex ∃m : Major ∃a1 : Advisor ∃s2 : StuID ∃a2 : Allergy ( (((Student(s,l,f,a,s1,m,a1,c)) ∧ (Has_Allergy(s2,a2))) ∧ (s = s2)) ∧ ((a2 = 'Milk') ∨ (a2 = 'Cat')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:l COLON:: IDENT:LName EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor EXISTS:∃ IDENT:s2 COLON:: IDENT:StuID EXISTS:∃ IDENT:a2 COLON:: IDENT:Allergy LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Has_Allergy LPAR:( IDENT:s2 COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a2 EQ:= LIT:Milk RPAR:) OR:∨ LPAR:( IDENT:a2 EQ:= LIT:Cat RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS l:LName
+              EXISTS a:Age
+                EXISTS s1:Sex
+                  EXISTS m:Major
+                    EXISTS a1:Advisor
+                      EXISTS s2:StuID
+                        EXISTS a2:Allergy
+                          AND
+                            AND
+                              AND
+                                PRED Student(s, l, f, a, s1, m, a1, c)
+                                PRED Has_Allergy(s2, a2)
+                              EQ  s = s2
+                            OR
+                              EQ  a2 = 'Milk'
+                              EQ  a2 = 'Cat'
+      Predicted FOL: ∃s : StuID ∃f : Fname ∃c : city_code ( Student(s, l, f, a, x, m, d, c) ∧ ( Has_Allergy(s, 'Milk') ∨ Has_Allergy(s, 'Cat') ) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:f COLON:: IDENT:Fname EXISTS:∃ IDENT:c COLON:: IDENT:city_code LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:x COMMA:, IDENT:m COMMA:, IDENT:d COMMA:, IDENT:c RPAR:) AND:∧ LPAR:( IDENT:Has_Allergy LPAR:( IDENT:s COMMA:, LIT:Milk RPAR:) OR:∨ IDENT:Has_Allergy LPAR:( IDENT:s COMMA:, LIT:Cat RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS f:Fname
+              EXISTS c:city_code
+                AND
+                  PRED Student(s, l, f, a, x, m, d, c)
+                  OR
+                    PRED Has_Allergy(s, 'Milk')
+                    PRED Has_Allergy(s, 'Cat')
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (f : Fname, c : city_code) but Predicted has 5 (l : LName, a : Age, x : Sex, m : Major, d : Advisor): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        a2 : local Allergy, global varchar(20) -> StringSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+        s2 : local StuID, global integer -> IntSort()
+      Predicted FOL:
+        a : local Age, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        d : local Advisor, global integer -> IntSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        x : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5612 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2290.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (f : Fname, c : city_code) but Predicted has 5 (l : LName, a : Age, x : Sex, m : Major, d : Advisor): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

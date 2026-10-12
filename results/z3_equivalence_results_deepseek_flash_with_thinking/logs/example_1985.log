@@ -1,0 +1,164 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1985.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1985.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2934 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the party with drivers from Hartford and drivers older than 40.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Driver_ID = int -> IntSort()
+        Home_city = text -> StringSort()
+        Name = text -> StringSort()
+        Party = text -> StringSort()
+      symbols:
+        driver(Driver_ID, Name, Party, Home_city, Age)
+        constant 40 : Age
+        constant Hartford : Home_city
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Driver_ID ∃n : Name ∃h : Home_city ∃a : Age ( (driver(d,n,p,h,a)) ∧ ((h = 'Hartford') ∧ (a > 40)) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:h COLON:: IDENT:Home_city EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( LPAR:( IDENT:driver LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:h COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:h EQ:= LIT:Hartford RPAR:) AND:∧ LPAR:( IDENT:a GT:> NUM:40 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Driver_ID
+            EXISTS n:Name
+              EXISTS h:Home_city
+                EXISTS a:Age
+                  AND
+                    PRED driver(d, n, p, h, a)
+                    AND
+                      EQ  h = 'Hartford'
+                      CMP  a > 40
+      Predicted FOL: ∃d1 : Driver_ID ∃n1 : Name ∃c1 : Home_city ∃a1 : Age ( driver(d1, n1, p, c1, a1) ∧ c1 = 'Hartford' ) ∧ ∃d2 : Driver_ID ∃n2 : Name ∃c2 : Home_city ∃a2 : Age ( driver(d2, n2, p, c2, a2) ∧ a2 > 40 )
+        tokens: EXISTS:∃ IDENT:d1 COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:c1 COLON:: IDENT:Home_city EXISTS:∃ IDENT:a1 COLON:: IDENT:Age LPAR:( IDENT:driver LPAR:( IDENT:d1 COMMA:, IDENT:n1 COMMA:, IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:a1 RPAR:) AND:∧ IDENT:c1 EQ:= LIT:Hartford RPAR:) AND:∧ EXISTS:∃ IDENT:d2 COLON:: IDENT:Driver_ID EXISTS:∃ IDENT:n2 COLON:: IDENT:Name EXISTS:∃ IDENT:c2 COLON:: IDENT:Home_city EXISTS:∃ IDENT:a2 COLON:: IDENT:Age LPAR:( IDENT:driver LPAR:( IDENT:d2 COMMA:, IDENT:n2 COMMA:, IDENT:p COMMA:, IDENT:c2 COMMA:, IDENT:a2 RPAR:) AND:∧ IDENT:a2 GT:> NUM:40 RPAR:) EOF
+        AST:
+          EXISTS d1:Driver_ID
+            EXISTS n1:Name
+              EXISTS c1:Home_city
+                EXISTS a1:Age
+                  AND
+                    AND
+                      PRED driver(d1, n1, p, c1, a1)
+                      EQ  c1 = 'Hartford'
+                    EXISTS d2:Driver_ID
+                      EXISTS n2:Name
+                        EXISTS c2:Home_city
+                          EXISTS a2:Age
+                            AND
+                              PRED driver(d2, n2, p, c2, a2)
+                              CMP  a2 > 40
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Party_0 : Party   Gold p <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        d : local Driver_ID, global int -> IntSort()
+        h : local Home_city, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        p : local Party, global text -> StringSort()
+      Predicted FOL:
+        a1 : local Age, global int -> IntSort()
+        a2 : local Age, global int -> IntSort()
+        c1 : local Home_city, global text -> StringSort()
+        c2 : local Home_city, global text -> StringSort()
+        d1 : local Driver_ID, global int -> IntSort()
+        d2 : local Driver_ID, global int -> IntSort()
+        n1 : local Name, global text -> StringSort()
+        n2 : local Name, global text -> StringSort()
+        p : local Party, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_n_2, gold_h_3, gold_a_4], And(P_driver(gold_d_1, gold_n_2, FV_Party_0, gold_h_3, gold_a_4), And((gold_h_3 == L_Hartford), (gold_a_4 > L_v_40_int))))
+      gold_skolem (witnesses WGOLD_d, WGOLD_n, WGOLD_h, WGOLD_a):  And(P_driver(WGOLD_d, WGOLD_n, FV_Party_0, WGOLD_h, WGOLD_a), And((WGOLD_h == L_Hartford), (WGOLD_a > L_v_40_int)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d1_1, predicted_n1_2, predicted_c1_3, predicted_a1_4], And(And(P_driver(predicted_d1_1, predicted_n1_2, FV_Party_0, predicted_c1_3, predicted_a1_4), (predicted_c1_3 == L_Hartford)), Exists([predicted_d2_5, predicted_n2_6, predicted_c2_7, predicted_a2_8], And(P_driver(predicted_d2_5, predicted_n2_6, FV_Party_0, predicted_c2_7, predicted_a2_8), (predicted_a2_8 > L_v_40_int)))))
+      predicted_skolem (witnesses WPREDICTED_d1, WPREDICTED_n1, WPREDICTED_c1, WPREDICTED_a1):  And(And(P_driver(WPREDICTED_d1, WPREDICTED_n1, FV_Party_0, WPREDICTED_c1, WPREDICTED_a1), (WPREDICTED_c1 == L_Hartford)), Exists([predictedsk_d2_1, predictedsk_n2_2, predictedsk_c2_3, predictedsk_a2_4], And(P_driver(predictedsk_d2_1, predictedsk_n2_2, FV_Party_0, predictedsk_c2_3, predictedsk_a2_4), (predictedsk_a2_4 > L_v_40_int))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Hartford' at text -> L_Hartford = StringVal('Hartford')
+      literal '40' at int -> L_v_40_int = IntVal(40)
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 748 lines, 28815 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1985.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_n, WGOLD_h, WGOLD_a
+      claim: And(And(driver(WGOLD_d, WGOLD_n, FV_Party_0, WGOLD_h, WGOLD_a), And(WGOLD_h == "Hartford", 40 < WGOLD_a)), Not(Exists([predicted_d1_1, predicted_n1_2, predicted_c1_3, predicted_a1_4], And(And(driver(predicted_d1_1, predicted_n1_2, FV_Party_0, predicted_c1_3, predicted_a1_4), predicted_c1_3 == "Hartford"), Exists([predicted_d2_5, predicted_n2_6, predicted_c2_7, predicted_a2_8], And(driver(predicted_d2_5, predicted_n2_6, FV_Party_0, predicted_c2_7, predicted_a2_8), 40 < predicted_a2_8))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d1, WPREDICTED_n1, WPREDICTED_c1, WPREDICTED_a1
+      claim: And(And(And(driver(WPREDICTED_d1, WPREDICTED_n1, FV_Party_0, WPREDICTED_c1, WPREDICTED_a1), WPREDICTED_c1 == "Hartford"), Exists([predictedsk_d2_1, predictedsk_n2_2, predictedsk_c2_3, predictedsk_a2_4], And(driver(predictedsk_d2_1, predictedsk_n2_2, FV_Party_0, predictedsk_c2_3, predictedsk_a2_4), 40 < predictedsk_a2_4))), Not(Exists([gold_d_1, gold_n_2, gold_h_3, gold_a_4], And(driver(gold_d_1, gold_n_2, FV_Party_0, gold_h_3, gold_a_4), And(gold_h_3 == "Hartford", 40 < gold_a_4)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.011 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 13 relation tuple(s) listed, 18 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          d1 : Driver_ID = 2
+          n1 : Name = ''
+          c1 : Home_city = 'Hartford'
+          a1 : Age = 0
+        free (answer) variables:
+          FV_Party_0 : Party = ''
+        literals / constants:
+          Hartford : Home_city = 'Hartford'
+          40 : Age = 40
+        relations (each value tagged with the local sort of its position):
+          driver(Driver_ID, Name, Party, Home_city, Age):
+            driver(Driver_ID=-1, Name='', Party='', Home_city='Hartford', Age=40)
+            driver(Driver_ID=0, Name='', Party='', Home_city='Hartford', Age=40)
+            driver(Driver_ID=2, Name='', Party='', Home_city='Hartford', Age=0)
+            driver(Driver_ID=2, Name='', Party='', Home_city='Hartford', Age=40)
+            driver(Driver_ID=3, Name='H', Party='', Home_city='a', Age=2478)
+            driver(Driver_ID=4, Name='', Party='', Home_city='Hartford', Age=2)
+            driver(Driver_ID=4, Name='', Party='', Home_city='Hartford', Age=3)
+            driver(Driver_ID=4, Name='', Party='', Home_city='Hartford', Age=4)
+            driver(Driver_ID=4, Name='A', Party='', Home_city='Hartford', Age=-1)
+            driver(Driver_ID=4, Name='Hartford', Party='', Home_city='Hartford', Age=40)
+            driver(Driver_ID=4, Name='a', Party='', Home_city='Hartford', Age=40)
+            driver(Driver_ID=40, Name='', Party='', Home_city='Hartford', Age=40)
+            driver(Driver_ID=2478, Name='', Party='', Home_city='Hartford', Age=40)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Age       : {-1, 0, 2, 3, 4, 40, 2478}
+          Driver_ID : {-1, 0, 2, 3, 4, 40, 2478}
+          Home_city : {'Hartford', 'a'}
+          Name      : {'', 'A', 'H', 'Hartford', 'a'}
+          Party     : {''}
+        values shared across local sorts (joins):
+          -1 : Age, Driver_ID
+          0 : Age, Driver_ID
+          2 : Age, Driver_ID
+          2478 : Age, Driver_ID
+          3 : Age, Driver_ID
+          4 : Age, Driver_ID
+          40 : Age, Driver_ID
+          '' : Name, Party
+          'Hartford' : Home_city, Name
+          'a' : Home_city, Name
+   [R3] took 0.099 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

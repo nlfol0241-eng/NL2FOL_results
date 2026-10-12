@@ -1,0 +1,166 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2598.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2598.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4092 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Please give me a list of cities whose regional population is over 8000000 or under 5000000.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        City = text -> StringSort()
+        City_ID = int -> IntSort()
+        GDP = real -> Float32()
+        Hanyu_Pinyin = text -> StringSort()
+        Hanzi = text -> StringSort()
+        Regional_Population = int -> IntSort()
+      symbols:
+        city(City_ID, City, Hanzi, Hanyu_Pinyin, Regional_Population, GDP)
+        constant 10000000 : Regional_Population
+        constant 5000000 : Regional_Population
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃h : Hanzi ∃g : GDP ∃r : Regional_Population ∃h1 : Hanyu_Pinyin ∃c : City_ID( (city(c,c1,h,h1,r,g)) ∧ (r > 10000000) )) ∨ (∃h : Hanzi ∃g : GDP ∃r : Regional_Population ∃h1 : Hanyu_Pinyin ∃c : City_ID( (city(c,c1,h,h1,r,g)) ∧ (r < 5000000) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:h COLON:: IDENT:Hanzi EXISTS:∃ IDENT:g COLON:: IDENT:GDP EXISTS:∃ IDENT:r COLON:: IDENT:Regional_Population EXISTS:∃ IDENT:h1 COLON:: IDENT:Hanyu_Pinyin EXISTS:∃ IDENT:c COLON:: IDENT:City_ID LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:h COMMA:, IDENT:h1 COMMA:, IDENT:r COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r GT:> NUM:10000000 RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:h COLON:: IDENT:Hanzi EXISTS:∃ IDENT:g COLON:: IDENT:GDP EXISTS:∃ IDENT:r COLON:: IDENT:Regional_Population EXISTS:∃ IDENT:h1 COLON:: IDENT:Hanyu_Pinyin EXISTS:∃ IDENT:c COLON:: IDENT:City_ID LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:h COMMA:, IDENT:h1 COMMA:, IDENT:r COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r LT:< NUM:5000000 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS h:Hanzi
+              EXISTS g:GDP
+                EXISTS r:Regional_Population
+                  EXISTS h1:Hanyu_Pinyin
+                    EXISTS c:City_ID
+                      AND
+                        PRED city(c, c1, h, h1, r, g)
+                        CMP  r > 10000000
+            EXISTS h:Hanzi
+              EXISTS g:GDP
+                EXISTS r:Regional_Population
+                  EXISTS h1:Hanyu_Pinyin
+                    EXISTS c:City_ID
+                      AND
+                        PRED city(c, c1, h, h1, r, g)
+                        CMP  r < 5000000
+      Predicted FOL: ∃a0 : City_ID ∃a2 : Hanzi ∃a3 : Hanyu_Pinyin ∃a4 : Regional_Population ∃a5 : GDP ( city(a0, x, a2, a3, a4, a5) ∧ (a4 > 8000000 ∨ a4 < 5000000) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:City_ID EXISTS:∃ IDENT:a2 COLON:: IDENT:Hanzi EXISTS:∃ IDENT:a3 COLON:: IDENT:Hanyu_Pinyin EXISTS:∃ IDENT:a4 COLON:: IDENT:Regional_Population EXISTS:∃ IDENT:a5 COLON:: IDENT:GDP LPAR:( IDENT:city LPAR:( IDENT:a0 COMMA:, IDENT:x COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 COMMA:, IDENT:a5 RPAR:) AND:∧ LPAR:( IDENT:a4 GT:> NUM:8000000 OR:∨ IDENT:a4 LT:< NUM:5000000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:City_ID
+            EXISTS a2:Hanzi
+              EXISTS a3:Hanyu_Pinyin
+                EXISTS a4:Regional_Population
+                  EXISTS a5:GDP
+                    AND
+                      PRED city(a0, x, a2, a3, a4, a5)
+                      OR
+                        CMP  a4 > 8000000
+                        CMP  a4 < 5000000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_City_0 : City   Gold c1 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local City_ID, global int -> IntSort()
+        c1 : local City, global text -> StringSort()
+        g : local GDP, global real -> Float32()
+        h : local Hanzi, global text -> StringSort()
+        h1 : local Hanyu_Pinyin, global text -> StringSort()
+        r : local Regional_Population, global int -> IntSort()
+      Predicted FOL:
+        a0 : local City_ID, global int -> IntSort()
+        a2 : local Hanzi, global text -> StringSort()
+        a3 : local Hanyu_Pinyin, global text -> StringSort()
+        a4 : local Regional_Population, global int -> IntSort()
+        a5 : local GDP, global real -> Float32()
+        x : local City, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_h_1, gold_g_2, gold_r_3, gold_h1_4, gold_c_5], And(D_real(gold_g_2), And(P_city(gold_c_5, FV_City_0, gold_h_1, gold_h1_4, gold_r_3, gold_g_2), (gold_r_3 > L_v_10000000_int)))), Exists([gold_h_6, gold_g_7, gold_r_8, gold_h1_9, gold_c_10], And(D_real(gold_g_7), And(P_city(gold_c_10, FV_City_0, gold_h_6, gold_h1_9, gold_r_8, gold_g_7), (gold_r_8 < L_v_5000000_int)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_a2_2, predicted_a3_3, predicted_a4_4, predicted_a5_5], And(D_real(predicted_a5_5), And(P_city(predicted_a0_1, FV_City_0, predicted_a2_2, predicted_a3_3, predicted_a4_4, predicted_a5_5), Or((predicted_a4_4 > L_v_8000000_int), (predicted_a4_4 < L_v_5000000_int)))))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5):  And(D_real(WPREDICTED_a5), And(P_city(WPREDICTED_a0, FV_City_0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5), Or((WPREDICTED_a4 > L_v_8000000_int), (WPREDICTED_a4 < L_v_5000000_int))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 3 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '10000000' at int -> L_v_10000000_int = IntVal(10000000)
+      literal '5000000' at int -> L_v_5000000_int = IntVal(5000000)
+      literal '8000000' at int -> L_v_8000000_int = IntVal(8000000)
+   0 sort axiom(s), 3 literal(s), 0 order(s) needing a definition; 747 lines, 28778 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2598.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([gold_h_1, gold_g_2, gold_r_3, gold_h1_4, gold_c_5], And(And(Not(fpIsNaN(gold_g_2)), Not(And(fpIsZero(gold_g_2), fpIsNegative(gold_g_2)))), And(city(gold_c_5, FV_City_0, gold_h_1, gold_h1_4, gold_r_3, gold_g_2), 10000000 < gold_r_3))), Exists([gold_h_6, gold_g_7, gold_r_8, gold_h1_9, gold_c_10], And(And(Not(fpIsNaN(gold_g_7)), Not(And(fpIsZero(gold_g_7), fpIsNegative(gold_g_7)))), And(city(gold_c_10, FV_City_0, gold_h_6, gold_h1_9, gold_r_8, gold_g_7), 5000000 > gold_r_8)))), Not(Exists([predicted_a0_1, predicted_a2_2, predicted_a3_3, predicted_a4_4, predicted_a5_5], And(And(Not(fpIsNaN(predicted_a5_5)), Not(And(fpIsZero(predicted_a5_5), fpIsNegative(predicted_a5_5)))), And(city(predicted_a0_1, FV_City_0, predicted_a2_2, predicted_a3_3, predicted_a4_4, predicted_a5_5), Or(8000000 < predicted_a4_4, 5000000 > predicted_a4_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a5)), Not(And(fpIsZero(WPREDICTED_a5), fpIsNegative(WPREDICTED_a5)))), And(city(WPREDICTED_a0, FV_City_0, WPREDICTED_a2, WPREDICTED_a3, WPREDICTED_a4, WPREDICTED_a5), Or(8000000 < WPREDICTED_a4, 5000000 > WPREDICTED_a4))), Not(Or(Exists([gold_h_1, gold_g_2, gold_r_3, gold_h1_4, gold_c_5], And(And(Not(fpIsNaN(gold_g_2)), Not(And(fpIsZero(gold_g_2), fpIsNegative(gold_g_2)))), And(city(gold_c_5, FV_City_0, gold_h_1, gold_h1_4, gold_r_3, gold_g_2), 10000000 < gold_r_3))), Exists([gold_h_6, gold_g_7, gold_r_8, gold_h1_9, gold_c_10], And(And(Not(fpIsNaN(gold_g_7)), Not(And(fpIsZero(gold_g_7), fpIsNegative(gold_g_7)))), And(city(gold_c_10, FV_City_0, gold_h_6, gold_h1_9, gold_r_8, gold_g_7), 5000000 > gold_r_8))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 12 relation tuple(s) listed, 18 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          a0 : City_ID = 2
+          a2 : Hanzi = '!1!'
+          a3 : Hanyu_Pinyin = '!2!'
+          a4 : Regional_Population = 8000001
+          a5 : GDP = 3.6734198463196485e-40
+        free (answer) variables:
+          FV_City_0 : City = '!0!'
+        literals / constants:
+          10000000 : Regional_Population = 10000000
+          5000000 : Regional_Population = 5000000
+          8000000 : int = 8000000
+        relations (each value tagged with the local sort of its position):
+          city(City_ID, City, Hanzi, Hanyu_Pinyin, Regional_Population, GDP):
+            city(City_ID=0, City='!0!', Hanzi='', Hanyu_Pinyin='!0!', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=0, City='!0!', Hanzi='', Hanyu_Pinyin='!1!', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=0, City='!0!', Hanzi='!0!', Hanyu_Pinyin='', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=0, City='!0!', Hanzi='!2!', Hanyu_Pinyin='', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=2, City='!0!', Hanzi='!1!', Hanyu_Pinyin='!2!', Regional_Population=8000001, GDP=3.6734198463196485e-40)
+            city(City_ID=2, City='!0!', Hanzi='!1!', Hanyu_Pinyin='!2!', Regional_Population=10000000, GDP=3.6734198463196485e-40)
+            city(City_ID=3, City='!0!', Hanzi='', Hanyu_Pinyin='', Regional_Population=8000002, GDP=1.175494490952134e-38)
+            city(City_ID=5000000, City='!0!', Hanzi='', Hanyu_Pinyin='', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=8000000, City='!0!', Hanzi='', Hanyu_Pinyin='', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=8000001, City='!0!', Hanzi='', Hanyu_Pinyin='', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=8000002, City='!0!', Hanzi='', Hanyu_Pinyin='', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            city(City_ID=10000000, City='!0!', Hanzi='', Hanyu_Pinyin='', Regional_Population=8000001, GDP=1.175494490952134e-38)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          City                : {'!0!'}
+          City_ID             : {0, 2, 3, 5000000, 8000000, 8000001, 8000002, 10000000}
+          GDP                 : {3.6734198463196485e-40, 1.175494490952134e-38}
+          Hanyu_Pinyin        : {'', '!0!', '!1!', '!2!'}
+          Hanzi               : {'', '!0!', '!1!', '!2!'}
+          Regional_Population : {8000001, 8000002, 10000000}
+        values shared across local sorts (joins):
+          10000000 : City_ID, Regional_Population
+          8000001 : City_ID, Regional_Population
+          8000002 : City_ID, Regional_Population
+          '!0!' : City, Hanyu_Pinyin, Hanzi
+          '!1!' : Hanyu_Pinyin, Hanzi
+          '!2!' : Hanyu_Pinyin, Hanzi
+          '' : Hanyu_Pinyin, Hanzi
+   [R3] took 0.093 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

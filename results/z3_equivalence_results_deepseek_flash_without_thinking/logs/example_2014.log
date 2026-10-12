@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2014.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2014.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3406 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give the distinct names of wines made before 2000 or after 2010.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 11 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Appelation = text -> StringSort()
+        Cases = integer -> IntSort()
+        Drink = text -> StringSort()
+        Grape = text -> StringSort()
+        Name = text -> StringSort()
+        No = integer -> IntSort()
+        Price = integer -> IntSort()
+        Score = integer -> IntSort()
+        State = text -> StringSort()
+        Winery = text -> StringSort()
+        Year = integer -> IntSort()
+      symbols:
+        wine(No, Grape, Winery, Appelation, State, Name, Year, Price, Score, Cases, Drink)
+        constant 2000 : Year
+        constant 2010 : Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : No ∃g : Grape ∃d : Drink ∃w : Winery ∃a : Appelation ∃s : State ∃y : Year ∃p : Price ∃s1 : Score ∃c : Cases ( (wine(n,g,w,a,s,n1,y,p,s1,c,d)) ∧ ((y < 2000) ∨ (y > 2010)) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:No EXISTS:∃ IDENT:g COLON:: IDENT:Grape EXISTS:∃ IDENT:d COLON:: IDENT:Drink EXISTS:∃ IDENT:w COLON:: IDENT:Winery EXISTS:∃ IDENT:a COLON:: IDENT:Appelation EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:p COLON:: IDENT:Price EXISTS:∃ IDENT:s1 COLON:: IDENT:Score EXISTS:∃ IDENT:c COLON:: IDENT:Cases LPAR:( LPAR:( IDENT:wine LPAR:( IDENT:n COMMA:, IDENT:g COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:n1 COMMA:, IDENT:y COMMA:, IDENT:p COMMA:, IDENT:s1 COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:y LT:< NUM:2000 RPAR:) OR:∨ LPAR:( IDENT:y GT:> NUM:2010 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:No
+            EXISTS g:Grape
+              EXISTS d:Drink
+                EXISTS w:Winery
+                  EXISTS a:Appelation
+                    EXISTS s:State
+                      EXISTS y:Year
+                        EXISTS p:Price
+                          EXISTS s1:Score
+                            EXISTS c:Cases
+                              AND
+                                PRED wine(n, g, w, a, s, n1, y, p, s1, c, d)
+                                OR
+                                  CMP  y < 2000
+                                  CMP  y > 2010
+      Predicted FOL: ∃y : Year ( (y < 2000 ∨ y > 2010) ∧ ∃n : Name ∃g : Grape ∃w : Winery ∃a : Appelation ∃s : State ∃p : Price ∃sc : Score ∃c : Cases ∃d : Drink wine(n, g, w, a, s, n, y, p, sc, c, d) )
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:Year LPAR:( LPAR:( IDENT:y LT:< NUM:2000 OR:∨ IDENT:y GT:> NUM:2010 RPAR:) AND:∧ EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:g COLON:: IDENT:Grape EXISTS:∃ IDENT:w COLON:: IDENT:Winery EXISTS:∃ IDENT:a COLON:: IDENT:Appelation EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:p COLON:: IDENT:Price EXISTS:∃ IDENT:sc COLON:: IDENT:Score EXISTS:∃ IDENT:c COLON:: IDENT:Cases EXISTS:∃ IDENT:d COLON:: IDENT:Drink IDENT:wine LPAR:( IDENT:n COMMA:, IDENT:g COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:p COMMA:, IDENT:sc COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:Year
+            AND
+              OR
+                CMP  y < 2000
+                CMP  y > 2010
+              EXISTS n:Name
+                EXISTS g:Grape
+                  EXISTS w:Winery
+                    EXISTS a:Appelation
+                      EXISTS s:State
+                        EXISTS p:Price
+                          EXISTS sc:Score
+                            EXISTS c:Cases
+                              EXISTS d:Drink
+                                PRED wine(n, g, w, a, s, n, y, p, sc, c, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'n' used at incompatible global sorts text and integer
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 6 more times]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'n' used at incompatible global sorts text and integer

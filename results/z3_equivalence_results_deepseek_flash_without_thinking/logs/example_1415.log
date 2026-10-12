@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1415.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1415.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3856 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the id and address of the shops which have a happy hour in May?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Address = text -> StringSort()
+        HH_ID = int -> IntSort()
+        Month = text -> StringSort()
+        Num_of_shaff_in_charge = int -> IntSort()
+        Num_of_staff = text -> StringSort()
+        Open_Year = text -> StringSort()
+        Score = real -> Float32()
+        Shop_ID = int -> IntSort()
+      symbols:
+        happy_hour(HH_ID, Shop_ID, Month, Num_of_shaff_in_charge)
+        shop(Shop_ID, Address, Num_of_staff, Score, Open_Year)
+        constant May : Month
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : Num_of_staff ∃s1 : Score ∃o : Open_Year ∃h : HH_ID ∃s2 : Shop_ID ∃m : Month ∃n1 : Num_of_shaff_in_charge ( (((shop(s,a,n,s1,o)) ∧ (happy_hour(h,s2,m,n1))) ∧ (s = s2)) ∧ (m = 'May') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_staff EXISTS:∃ IDENT:s1 COLON:: IDENT:Score EXISTS:∃ IDENT:o COLON:: IDENT:Open_Year EXISTS:∃ IDENT:h COLON:: IDENT:HH_ID EXISTS:∃ IDENT:s2 COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:m COLON:: IDENT:Month EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_shaff_in_charge LPAR:( LPAR:( LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:s1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:happy_hour LPAR:( IDENT:h COMMA:, IDENT:s2 COMMA:, IDENT:m COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= LIT:May RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:Num_of_staff
+            EXISTS s1:Score
+              EXISTS o:Open_Year
+                EXISTS h:HH_ID
+                  EXISTS s2:Shop_ID
+                    EXISTS m:Month
+                      EXISTS n1:Num_of_shaff_in_charge
+                        AND
+                          AND
+                            AND
+                              PRED shop(s, a, n, s1, o)
+                              PRED happy_hour(h, s2, m, n1)
+                            EQ  s = s2
+                          EQ  m = 'May'
+      Predicted FOL: ∃s : Shop_ID ∃a : Address ∃n : Num_of_staff ∃sc : Score ∃oy : Open_Year (shop(s, a, n, sc, oy) ∧ ∃h : HH_ID ∃m : Month ∃c : Num_of_shaff_in_charge (happy_hour(h, s, m, c) ∧ m = 'May'))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:a COLON:: IDENT:Address EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_staff EXISTS:∃ IDENT:sc COLON:: IDENT:Score EXISTS:∃ IDENT:oy COLON:: IDENT:Open_Year LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:a COMMA:, IDENT:n COMMA:, IDENT:sc COMMA:, IDENT:oy RPAR:) AND:∧ EXISTS:∃ IDENT:h COLON:: IDENT:HH_ID EXISTS:∃ IDENT:m COLON:: IDENT:Month EXISTS:∃ IDENT:c COLON:: IDENT:Num_of_shaff_in_charge LPAR:( IDENT:happy_hour LPAR:( IDENT:h COMMA:, IDENT:s COMMA:, IDENT:m COMMA:, IDENT:c RPAR:) AND:∧ IDENT:m EQ:= LIT:May RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Shop_ID
+            EXISTS a:Address
+              EXISTS n:Num_of_staff
+                EXISTS sc:Score
+                  EXISTS oy:Open_Year
+                    AND
+                      PRED shop(s, a, n, sc, oy)
+                      EXISTS h:HH_ID
+                        EXISTS m:Month
+                          EXISTS c:Num_of_shaff_in_charge
+                            AND
+                              PRED happy_hour(h, s, m, c)
+                              EQ  m = 'May'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (s : Shop_ID, a : Address) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Address, global text -> StringSort()
+        h : local HH_ID, global int -> IntSort()
+        m : local Month, global text -> StringSort()
+        n : local Num_of_staff, global text -> StringSort()
+        n1 : local Num_of_shaff_in_charge, global int -> IntSort()
+        o : local Open_Year, global text -> StringSort()
+        s : local Shop_ID, global int -> IntSort()
+        s1 : local Score, global real -> Float32()
+        s2 : local Shop_ID, global int -> IntSort()
+      Predicted FOL:
+        a : local Address, global text -> StringSort()
+        c : local Num_of_shaff_in_charge, global int -> IntSort()
+        h : local HH_ID, global int -> IntSort()
+        m : local Month, global text -> StringSort()
+        n : local Num_of_staff, global text -> StringSort()
+        oy : local Open_Year, global text -> StringSort()
+        s : local Shop_ID, global int -> IntSort()
+        sc : local Score, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5544 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1415.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (s : Shop_ID, a : Address) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

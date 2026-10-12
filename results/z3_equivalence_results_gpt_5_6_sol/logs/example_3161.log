@@ -1,0 +1,121 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3161.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3161.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3404 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the names of phones that are not on any market.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Carrier = text -> StringSort()
+        Market_ID = int -> IntSort()
+        Memory_in_G = int -> IntSort()
+        Name = text -> StringSort()
+        Num_of_stock = int -> IntSort()
+        Phone_ID = text -> StringSort()
+        Price = real -> Float32()
+      symbols:
+        phone(Name, Phone_ID, Memory_in_G, Carrier, Price)
+        phone_market(Market_ID, Phone_ID, Num_of_stock)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Memory_in_G ∃p : Phone_ID ∃p1 : Price ∃c : Carrier( (phone(n,p,m,c,p1)) ∧ (¬(∃p2 : Phone_ID( ((phone(n,p,m,c,p1)) ∧ (∃m1 : Market_ID ∃n1 : Num_of_stock( phone_market(m1,p2,n1) ))) ∧ (p = p2) ))) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Memory_in_G EXISTS:∃ IDENT:p COLON:: IDENT:Phone_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Price EXISTS:∃ IDENT:c COLON:: IDENT:Carrier LPAR:( LPAR:( IDENT:phone LPAR:( IDENT:n COMMA:, IDENT:p COMMA:, IDENT:m COMMA:, IDENT:c COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p2 COLON:: IDENT:Phone_ID LPAR:( LPAR:( LPAR:( IDENT:phone LPAR:( IDENT:n COMMA:, IDENT:p COMMA:, IDENT:m COMMA:, IDENT:c COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:m1 COLON:: IDENT:Market_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_of_stock LPAR:( IDENT:phone_market LPAR:( IDENT:m1 COMMA:, IDENT:p2 COMMA:, IDENT:n1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Memory_in_G
+            EXISTS p:Phone_ID
+              EXISTS p1:Price
+                EXISTS c:Carrier
+                  AND
+                    PRED phone(n, p, m, c, p1)
+                    NOT
+                      EXISTS p2:Phone_ID
+                        AND
+                          AND
+                            PRED phone(n, p, m, c, p1)
+                            EXISTS m1:Market_ID
+                              EXISTS n1:Num_of_stock
+                                PRED phone_market(m1, p2, n1)
+                          EQ  p = p2
+      Predicted FOL: ∃p : Phone_ID ∃g : Memory_in_G ∃c : Carrier ∃r : Price (phone(n, p, g, c, r) ∧ ¬∃m : Market_ID ∃s : Num_of_stock phone_market(m, p, s))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Phone_ID EXISTS:∃ IDENT:g COLON:: IDENT:Memory_in_G EXISTS:∃ IDENT:c COLON:: IDENT:Carrier EXISTS:∃ IDENT:r COLON:: IDENT:Price LPAR:( IDENT:phone LPAR:( IDENT:n COMMA:, IDENT:p COMMA:, IDENT:g COMMA:, IDENT:c COMMA:, IDENT:r RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:m COLON:: IDENT:Market_ID EXISTS:∃ IDENT:s COLON:: IDENT:Num_of_stock IDENT:phone_market LPAR:( IDENT:m COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Phone_ID
+            EXISTS g:Memory_in_G
+              EXISTS c:Carrier
+                EXISTS r:Price
+                  AND
+                    PRED phone(n, p, g, c, r)
+                    NOT
+                      EXISTS m:Market_ID
+                        EXISTS s:Num_of_stock
+                          PRED phone_market(m, p, s)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Carrier, global text -> StringSort()
+        m : local Memory_in_G, global int -> IntSort()
+        m1 : local Market_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_of_stock, global int -> IntSort()
+        p : local Phone_ID, global text -> StringSort()
+        p1 : local Price, global real -> Float32()
+        p2 : local Phone_ID, global text -> StringSort()
+      Predicted FOL:
+        c : local Carrier, global text -> StringSort()
+        g : local Memory_in_G, global int -> IntSort()
+        m : local Market_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        p : local Phone_ID, global text -> StringSort()
+        r : local Price, global real -> Float32()
+        s : local Num_of_stock, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_p_2, gold_p1_3, gold_c_4], And(D_real(gold_p1_3), And(P_phone(FV_Name_0, gold_p_2, gold_m_1, gold_c_4, gold_p1_3), Not(Exists([gold_p2_5], And(And(P_phone(FV_Name_0, gold_p_2, gold_m_1, gold_c_4, gold_p1_3), Exists([gold_m1_6, gold_n1_7], P_phone_market(gold_m1_6, gold_p2_5, gold_n1_7))), (gold_p_2 == gold_p2_5)))))))
+      gold_skolem (witnesses WGOLD_m, WGOLD_p, WGOLD_p1, WGOLD_c):  And(D_real(WGOLD_p1), And(P_phone(FV_Name_0, WGOLD_p, WGOLD_m, WGOLD_c, WGOLD_p1), Not(Exists([goldsk_p2_1], And(And(P_phone(FV_Name_0, WGOLD_p, WGOLD_m, WGOLD_c, WGOLD_p1), Exists([goldsk_m1_2, goldsk_n1_3], P_phone_market(goldsk_m1_2, goldsk_p2_1, goldsk_n1_3))), (WGOLD_p == goldsk_p2_1))))))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_g_2, predicted_c_3, predicted_r_4], And(D_real(predicted_r_4), And(P_phone(FV_Name_0, predicted_p_1, predicted_g_2, predicted_c_3, predicted_r_4), Not(Exists([predicted_m_5, predicted_s_6], P_phone_market(predicted_m_5, predicted_p_1, predicted_s_6))))))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_g, WPREDICTED_c, WPREDICTED_r):  And(D_real(WPREDICTED_r), And(P_phone(FV_Name_0, WPREDICTED_p, WPREDICTED_g, WPREDICTED_c, WPREDICTED_r), Not(Exists([predictedsk_m_1, predictedsk_s_2], P_phone_market(predictedsk_m_1, WPREDICTED_p, predictedsk_s_2)))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 756 lines, 29476 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3161.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_p, WGOLD_p1, WGOLD_c
+      claim: And(And(And(Not(fpIsNaN(WGOLD_p1)), Not(And(fpIsZero(WGOLD_p1), fpIsNegative(WGOLD_p1)))), And(phone(FV_Name_0, WGOLD_p, WGOLD_m, WGOLD_c, WGOLD_p1), Not(Exists(goldsk_p2_1, And(And(phone(FV_Name_0, WGOLD_p, WGOLD_m, WGOLD_c, WGOLD_p1), Exists([goldsk_m1_2, goldsk_n1_3], phone_market(goldsk_m1_2, goldsk_p2_1, goldsk_n1_3))), WGOLD_p == goldsk_p2_1))))), Not(Exists([predicted_p_1, predicted_g_2, predicted_c_3, predicted_r_4], And(And(Not(fpIsNaN(predicted_r_4)), Not(And(fpIsZero(predicted_r_4), fpIsNegative(predicted_r_4)))), And(phone(FV_Name_0, predicted_p_1, predicted_g_2, predicted_c_3, predicted_r_4), Not(Exists([predicted_m_5, predicted_s_6], phone_market(predicted_m_5, predicted_p_1, predicted_s_6))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.017 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_g, WPREDICTED_c, WPREDICTED_r
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_r)), Not(And(fpIsZero(WPREDICTED_r), fpIsNegative(WPREDICTED_r)))), And(phone(FV_Name_0, WPREDICTED_p, WPREDICTED_g, WPREDICTED_c, WPREDICTED_r), Not(Exists([predictedsk_m_1, predictedsk_s_2], phone_market(predictedsk_m_1, WPREDICTED_p, predictedsk_s_2))))), Not(Exists([gold_m_1, gold_p_2, gold_p1_3, gold_c_4], And(And(Not(fpIsNaN(gold_p1_3)), Not(And(fpIsZero(gold_p1_3), fpIsNegative(gold_p1_3)))), And(phone(FV_Name_0, gold_p_2, gold_m_1, gold_c_4, gold_p1_3), Not(Exists(gold_p2_5, And(And(phone(FV_Name_0, gold_p_2, gold_m_1, gold_c_4, gold_p1_3), Exists([gold_m1_6, gold_n1_7], phone_market(gold_m1_6, gold_p2_5, gold_n1_7))), gold_p_2 == gold_p2_5))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

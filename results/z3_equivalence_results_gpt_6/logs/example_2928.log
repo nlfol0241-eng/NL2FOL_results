@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2928.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2928.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3524 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of employees who never won any award in the evaluation.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Bonus = real -> Float32()
+        City = text -> StringSort()
+        Employee_ID = text -> StringSort()
+        Name = text -> StringSort()
+        Year_awarded = text -> StringSort()
+      symbols:
+        employee(Employee_ID, Name, Age, City)
+        evaluation(Employee_ID, Year_awarded, Bonus)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Age ∃c : City ∃e : Employee_ID( (employee(e,n,a,c)) ∧ (¬(∃e1 : Employee_ID( ((employee(e,n,a,c)) ∧ (∃b : Bonus ∃y : Year_awarded( evaluation(e1,y,b) ))) ∧ (e = e1) ))) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:c COLON:: IDENT:City EXISTS:∃ IDENT:e COLON:: IDENT:Employee_ID LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e1 COLON:: IDENT:Employee_ID LPAR:( LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:Bonus EXISTS:∃ IDENT:y COLON:: IDENT:Year_awarded LPAR:( IDENT:evaluation LPAR:( IDENT:e1 COMMA:, IDENT:y COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:e1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Age
+            EXISTS c:City
+              EXISTS e:Employee_ID
+                AND
+                  PRED employee(e, n, a, c)
+                  NOT
+                    EXISTS e1:Employee_ID
+                      AND
+                        AND
+                          PRED employee(e, n, a, c)
+                          EXISTS b:Bonus
+                            EXISTS y:Year_awarded
+                              PRED evaluation(e1, y, b)
+                        EQ  e = e1
+      Predicted FOL: ∃e : Employee_ID ∃a : Age ∃c : City (employee(e, n, a, c) ∧ ¬∃y : Year_awarded ∃b : Bonus evaluation(e, y, b))
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Employee_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:c COLON:: IDENT:City LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:y COLON:: IDENT:Year_awarded EXISTS:∃ IDENT:b COLON:: IDENT:Bonus IDENT:evaluation LPAR:( IDENT:e COMMA:, IDENT:y COMMA:, IDENT:b RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Employee_ID
+            EXISTS a:Age
+              EXISTS c:City
+                AND
+                  PRED employee(e, n, a, c)
+                  NOT
+                    EXISTS y:Year_awarded
+                      EXISTS b:Bonus
+                        PRED evaluation(e, y, b)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global int -> IntSort()
+        b : local Bonus, global real -> Float32()
+        c : local City, global text -> StringSort()
+        e : local Employee_ID, global text -> StringSort()
+        e1 : local Employee_ID, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        y : local Year_awarded, global text -> StringSort()
+      Predicted FOL:
+        a : local Age, global int -> IntSort()
+        b : local Bonus, global real -> Float32()
+        c : local City, global text -> StringSort()
+        e : local Employee_ID, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        y : local Year_awarded, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_e_3], And(P_employee(gold_e_3, FV_Name_0, gold_a_1, gold_c_2), Not(Exists([gold_e1_4], And(And(P_employee(gold_e_3, FV_Name_0, gold_a_1, gold_c_2), Exists([gold_b_5, gold_y_6], And(D_real(gold_b_5), P_evaluation(gold_e1_4, gold_y_6, gold_b_5)))), (gold_e_3 == gold_e1_4))))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_e):  And(P_employee(WGOLD_e, FV_Name_0, WGOLD_a, WGOLD_c), Not(Exists([goldsk_e1_1], And(And(P_employee(WGOLD_e, FV_Name_0, WGOLD_a, WGOLD_c), Exists([goldsk_b_2, goldsk_y_3], And(D_real(goldsk_b_2), P_evaluation(goldsk_e1_1, goldsk_y_3, goldsk_b_2)))), (WGOLD_e == goldsk_e1_1)))))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_a_2, predicted_c_3], And(P_employee(predicted_e_1, FV_Name_0, predicted_a_2, predicted_c_3), Not(Exists([predicted_y_4, predicted_b_5], And(D_real(predicted_b_5), P_evaluation(predicted_e_1, predicted_y_4, predicted_b_5))))))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_a, WPREDICTED_c):  And(P_employee(WPREDICTED_e, FV_Name_0, WPREDICTED_a, WPREDICTED_c), Not(Exists([predictedsk_y_1, predictedsk_b_2], And(D_real(predictedsk_b_2), P_evaluation(WPREDICTED_e, predictedsk_y_1, predictedsk_b_2)))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 748 lines, 28849 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2928.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_e
+      claim: And(And(employee(WGOLD_e, FV_Name_0, WGOLD_a, WGOLD_c), Not(Exists(goldsk_e1_1, And(And(employee(WGOLD_e, FV_Name_0, WGOLD_a, WGOLD_c), Exists([goldsk_b_2, goldsk_y_3], And(And(Not(fpIsNaN(goldsk_b_2)), Not(And(fpIsZero(goldsk_b_2), fpIsNegative(goldsk_b_2)))), evaluation(goldsk_e1_1, goldsk_y_3, goldsk_b_2)))), WGOLD_e == goldsk_e1_1)))), Not(Exists([predicted_e_1, predicted_a_2, predicted_c_3], And(employee(predicted_e_1, FV_Name_0, predicted_a_2, predicted_c_3), Not(Exists([predicted_y_4, predicted_b_5], And(And(Not(fpIsNaN(predicted_b_5)), Not(And(fpIsZero(predicted_b_5), fpIsNegative(predicted_b_5)))), evaluation(predicted_e_1, predicted_y_4, predicted_b_5))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.017 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.048 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_a, WPREDICTED_c
+      claim: And(And(employee(WPREDICTED_e, FV_Name_0, WPREDICTED_a, WPREDICTED_c), Not(Exists([predictedsk_y_1, predictedsk_b_2], And(And(Not(fpIsNaN(predictedsk_b_2)), Not(And(fpIsZero(predictedsk_b_2), fpIsNegative(predictedsk_b_2)))), evaluation(WPREDICTED_e, predictedsk_y_1, predictedsk_b_2))))), Not(Exists([gold_a_1, gold_c_2, gold_e_3], And(employee(gold_e_3, FV_Name_0, gold_a_1, gold_c_2), Not(Exists(gold_e1_4, And(And(employee(gold_e_3, FV_Name_0, gold_a_1, gold_c_2), Exists([gold_b_5, gold_y_6], And(And(Not(fpIsNaN(gold_b_5)), Not(And(fpIsZero(gold_b_5), fpIsNegative(gold_b_5)))), evaluation(gold_e1_4, gold_y_6, gold_b_5)))), gold_e_3 == gold_e1_4)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.032 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

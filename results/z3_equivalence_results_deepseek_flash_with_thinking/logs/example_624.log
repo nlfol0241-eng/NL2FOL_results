@@ -1,0 +1,54 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_624.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_624.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2704 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the team and starting year for each technician?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Name = text -> StringSort()
+        Starting_Year = real -> Float32()
+        Team = text -> StringSort()
+        technician_id = real -> Float32()
+      symbols:
+        technician(technician_id, Name, Team, Starting_Year, Age)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : technician_id ∃n : Name ∃a : Age ( technician(t,n,t1,s,a) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:technician_id EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( IDENT:technician LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:technician_id
+            EXISTS n:Name
+              EXISTS a:Age
+                PRED technician(t, n, t1, s, a)
+      Predicted FOL: ∃id : real ∃name : text ∃age : int technician(id, name, Team, Starting_Year, age)
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:real EXISTS:∃ IDENT:name COLON:: IDENT:text EXISTS:∃ IDENT:age COLON:: IDENT:int IDENT:technician LPAR:( IDENT:id COMMA:, IDENT:name COMMA:, IDENT:Team COMMA:, IDENT:Starting_Year COMMA:, IDENT:age RPAR:) EOF
+        AST:
+          EXISTS id:real
+            EXISTS name:text
+              EXISTS age:int
+                PRED technician(id, name, Team, Starting_Year, age)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['Starting_Year', 'Team'] vs Predicted ['real', 'text']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['Starting_Year', 'Team'] vs Predicted ['real', 'text']

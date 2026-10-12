@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1781.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1781.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2820 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of members whose country is "United States" or "Canada".
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        College_ID = int -> IntSort()
+        Country = text -> StringSort()
+        Member_ID = int -> IntSort()
+        Name = text -> StringSort()
+      symbols:
+        member(Member_ID, Name, Country, College_ID)
+        constant Canada : Country
+        constant United States : Country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Member_ID ∃c : Country ∃c1 : College_ID ( (member(m,n,c,c1)) ∧ ((c = 'United States') ∨ (c = 'Canada')) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:c1 COLON:: IDENT:College_ID LPAR:( LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:c EQ:= LIT:United States RPAR:) OR:∨ LPAR:( IDENT:c EQ:= LIT:Canada RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS c:Country
+              EXISTS c1:College_ID
+                AND
+                  PRED member(m, n, c, c1)
+                  OR
+                    EQ  c = 'United States'
+                    EQ  c = 'Canada'
+      Predicted FOL: ∃ m : Member_ID ∃ c : Country ∃ k : College_ID ( member(m, n, c, k) ∧ ( c = 'United States' ∨ c = 'Canada' ) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:k COLON:: IDENT:College_ID LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:k RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:United States OR:∨ IDENT:c EQ:= LIT:Canada RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS c:Country
+              EXISTS k:College_ID
+                AND
+                  PRED member(m, n, c, k)
+                  OR
+                    EQ  c = 'United States'
+                    EQ  c = 'Canada'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Country, global text -> StringSort()
+        c1 : local College_ID, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+      Predicted FOL:
+        c : local Country, global text -> StringSort()
+        k : local College_ID, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_c_2, gold_c1_3], And(P_member(gold_m_1, FV_Name_0, gold_c_2, gold_c1_3), Or((gold_c_2 == L_United_States), (gold_c_2 == L_Canada))))
+      gold_skolem (witnesses WGOLD_m, WGOLD_c, WGOLD_c1):  And(P_member(WGOLD_m, FV_Name_0, WGOLD_c, WGOLD_c1), Or((WGOLD_c == L_United_States), (WGOLD_c == L_Canada)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_c_2, predicted_k_3], And(P_member(predicted_m_1, FV_Name_0, predicted_c_2, predicted_k_3), Or((predicted_c_2 == L_United_States), (predicted_c_2 == L_Canada))))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_c, WPREDICTED_k):  And(P_member(WPREDICTED_m, FV_Name_0, WPREDICTED_c, WPREDICTED_k), Or((WPREDICTED_c == L_United_States), (WPREDICTED_c == L_Canada)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Canada' at text -> L_Canada = StringVal('Canada')
+      literal 'United States' at text -> L_United_States = StringVal('United States')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 732 lines, 27345 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1781.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_c, WGOLD_c1
+      claim: And(And(member(WGOLD_m, FV_Name_0, WGOLD_c, WGOLD_c1), Or(WGOLD_c == "United States", WGOLD_c == "Canada")), Not(Exists([predicted_m_1, predicted_c_2, predicted_k_3], And(member(predicted_m_1, FV_Name_0, predicted_c_2, predicted_k_3), Or(predicted_c_2 == "United States", predicted_c_2 == "Canada")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_c, WPREDICTED_k
+      claim: And(And(member(WPREDICTED_m, FV_Name_0, WPREDICTED_c, WPREDICTED_k), Or(WPREDICTED_c == "United States", WPREDICTED_c == "Canada")), Not(Exists([gold_m_1, gold_c_2, gold_c1_3], And(member(gold_m_1, FV_Name_0, gold_c_2, gold_c1_3), Or(gold_c_2 == "United States", gold_c_2 == "Canada")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

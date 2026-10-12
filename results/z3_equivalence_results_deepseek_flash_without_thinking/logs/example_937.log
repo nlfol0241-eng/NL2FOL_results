@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_937.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_937.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3024 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the instruments used?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        BandmateId = integer -> IntSort()
+        Instrument = text -> StringSort()
+        SongId = integer -> IntSort()
+      symbols:
+        Instruments(SongId, BandmateId, Instrument)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : SongId ∃b : BandmateId ( Instruments(s,b,i) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId EXISTS:∃ IDENT:b COLON:: IDENT:BandmateId LPAR:( IDENT:Instruments LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:i RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            EXISTS b:BandmateId
+              PRED Instruments(s, b, i)
+      Predicted FOL: ∃x : SongId ∃y : BandmateId ∃z : Instrument (Instruments(x, y, z))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:SongId EXISTS:∃ IDENT:y COLON:: IDENT:BandmateId EXISTS:∃ IDENT:z COLON:: IDENT:Instrument LPAR:( IDENT:Instruments LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:SongId
+            EXISTS y:BandmateId
+              EXISTS z:Instrument
+                PRED Instruments(x, y, z)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) z do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Instrument_0 : Instrument   Gold i <-> Predicted z
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local BandmateId, global integer -> IntSort()
+        i : local Instrument, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+      Predicted FOL:
+        x : local SongId, global integer -> IntSort()
+        y : local BandmateId, global integer -> IntSort()
+        z : local Instrument, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_b_2], P_Instruments(gold_s_1, gold_b_2, FV_Instrument_0))
+      gold_skolem (witnesses WGOLD_s, WGOLD_b):  P_Instruments(WGOLD_s, WGOLD_b, FV_Instrument_0)
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1, predicted_y_2, predicted_z_3], P_Instruments(predicted_x_1, predicted_y_2, predicted_z_3))
+      predicted_skolem (witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z):  P_Instruments(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 723 lines, 26560 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_937.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_b
+      claim: And(Instruments(WGOLD_s, WGOLD_b, FV_Instrument_0), Not(Exists([predicted_x_1, predicted_y_2, predicted_z_3], Instruments(predicted_x_1, predicted_y_2, predicted_z_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x, WPREDICTED_y, WPREDICTED_z
+      claim: And(Instruments(WPREDICTED_x, WPREDICTED_y, WPREDICTED_z), Not(Exists([gold_s_1, gold_b_2], Instruments(gold_s_1, gold_b_2, FV_Instrument_0))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 4 relation tuple(s) listed, 4 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x : SongId = 2
+          y : BandmateId = 3
+          z : Instrument = '!0!'
+        free (answer) variables:
+          FV_Instrument_0 : Instrument = '!1!'
+        relations (each value tagged with the local sort of its position):
+          Instruments(SongId, BandmateId, Instrument):
+            Instruments(SongId=0, BandmateId=2, Instrument='')
+            Instruments(SongId=2, BandmateId=3, Instrument='!0!')
+            Instruments(SongId=3, BandmateId=4, Instrument='')
+            Instruments(SongId=4, BandmateId=0, Instrument='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          BandmateId : {0, 2, 3, 4}
+          Instrument : {'', '!0!', '!1!'}
+          SongId     : {0, 2, 3, 4}
+        values shared across local sorts (joins):
+          0 : BandmateId, SongId
+          2 : BandmateId, SongId
+          3 : BandmateId, SongId
+          4 : BandmateId, SongId
+   [R3] took 0.037 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

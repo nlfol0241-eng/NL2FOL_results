@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3299.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3299.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3117 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all the dorms that don't have any amenities?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        amenid = integer -> IntSort()
+        dorm_name = varchar(20) -> StringSort()
+        dormid = integer -> IntSort()
+        gender = varchar(1) -> StringSort()
+        student_capacity = integer -> IntSort()
+      symbols:
+        Dorm(dormid, dorm_name, student_capacity, gender)
+        Has_amenity(dormid, amenid)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : student_capacity ∃g : gender ∃d : dormid( (Dorm(d,d1,s,g)) ∧ (¬(∃d2 : dormid( ((Dorm(d,d1,s,g)) ∧ (∃a : amenid( Has_amenity(d2,a) ))) ∧ (d = d2) ))) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:d COLON:: IDENT:dormid LPAR:( LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:d2 COLON:: IDENT:dormid LPAR:( LPAR:( LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:amenid LPAR:( IDENT:Has_amenity LPAR:( IDENT:d2 COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:student_capacity
+            EXISTS g:gender
+              EXISTS d:dormid
+                AND
+                  PRED Dorm(d, d1, s, g)
+                  NOT
+                    EXISTS d2:dormid
+                      AND
+                        AND
+                          PRED Dorm(d, d1, s, g)
+                          EXISTS a:amenid
+                            PRED Has_amenity(d2, a)
+                        EQ  d = d2
+      Predicted FOL: ∃n:dorm_name (∃d:dormid ∃c:student_capacity ∃g:gender (Dorm(d,n,c,g) ∧ ¬∃a:amenid Has_amenity(d,a)))
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:dorm_name LPAR:( EXISTS:∃ IDENT:d COLON:: IDENT:dormid EXISTS:∃ IDENT:c COLON:: IDENT:student_capacity EXISTS:∃ IDENT:g COLON:: IDENT:gender LPAR:( IDENT:Dorm LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:g RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:a COLON:: IDENT:amenid IDENT:Has_amenity LPAR:( IDENT:d COMMA:, IDENT:a RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:dorm_name
+            EXISTS d:dormid
+              EXISTS c:student_capacity
+                EXISTS g:gender
+                  AND
+                    PRED Dorm(d, n, c, g)
+                    NOT
+                      EXISTS a:amenid
+                        PRED Has_amenity(d, a)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d1 : dorm_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local amenid, global integer -> IntSort()
+        d : local dormid, global integer -> IntSort()
+        d1 : local dorm_name, global varchar(20) -> StringSort()
+        d2 : local dormid, global integer -> IntSort()
+        g : local gender, global varchar(1) -> StringSort()
+        s : local student_capacity, global integer -> IntSort()
+      Predicted FOL:
+        a : local amenid, global integer -> IntSort()
+        c : local student_capacity, global integer -> IntSort()
+        d : local dormid, global integer -> IntSort()
+        g : local gender, global varchar(1) -> StringSort()
+        n : local dorm_name, global varchar(20) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5392 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3299.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d1 : dorm_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

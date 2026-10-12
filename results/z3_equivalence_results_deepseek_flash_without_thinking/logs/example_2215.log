@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2215.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2215.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4230 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is a good restaurant on bethel island rd in bethel island ?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        CITY_NAME = text -> StringSort()
+        FOOD_TYPE = text -> StringSort()
+        HOUSE_NUMBER = int -> IntSort()
+        ID = int -> IntSort()
+        NAME = text -> StringSort()
+        RATING = real -> Float32()
+        RESTAURANT_ID = int -> IntSort()
+        STREET_NAME = text -> StringSort()
+      symbols:
+        LOCATION(RESTAURANT_ID, HOUSE_NUMBER, STREET_NAME, CITY_NAME)
+        RESTAURANT(ID, NAME, FOOD_TYPE, CITY_NAME, RATING)
+        constant 2.5 : RATING
+        constant bethel island : CITY_NAME
+        constant bethel island rd : STREET_NAME
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃f : FOOD_TYPE ∃c : CITY_NAME ∃r : RATING ∃r1 : RESTAURANT_ID ∃s : STREET_NAME ∃c1 : CITY_NAME ( (((RESTAURANT(i,n,f,c,r)) ∧ (LOCATION(r1,h,s,c1))) ∧ (i = r1)) ∧ (((c1 = 'bethel island') ∧ (s = 'bethel island rd')) ∧ (r > 2.5)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:f COLON:: IDENT:FOOD_TYPE EXISTS:∃ IDENT:c COLON:: IDENT:CITY_NAME EXISTS:∃ IDENT:r COLON:: IDENT:RATING EXISTS:∃ IDENT:r1 COLON:: IDENT:RESTAURANT_ID EXISTS:∃ IDENT:s COLON:: IDENT:STREET_NAME EXISTS:∃ IDENT:c1 COLON:: IDENT:CITY_NAME LPAR:( LPAR:( LPAR:( LPAR:( IDENT:RESTAURANT LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:c COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:LOCATION LPAR:( IDENT:r1 COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:c1 EQ:= LIT:bethel island RPAR:) AND:∧ LPAR:( IDENT:s EQ:= LIT:bethel island rd RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r GT:> NUM:2.5 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS f:FOOD_TYPE
+              EXISTS c:CITY_NAME
+                EXISTS r:RATING
+                  EXISTS r1:RESTAURANT_ID
+                    EXISTS s:STREET_NAME
+                      EXISTS c1:CITY_NAME
+                        AND
+                          AND
+                            AND
+                              PRED RESTAURANT(i, n, f, c, r)
+                              PRED LOCATION(r1, h, s, c1)
+                            EQ  i = r1
+                          AND
+                            AND
+                              EQ  c1 = 'bethel island'
+                              EQ  s = 'bethel island rd'
+                            CMP  r > 2.5
+      Predicted FOL: ∃x : ID ∃y : NAME ∃z : FOOD_TYPE ∃w : RATING ( RESTAURANT(x, y, z, 'bethel island', w) ∧ LOCATION(x, h, 'bethel island rd', 'bethel island') ∧ w > 2.5 )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:ID EXISTS:∃ IDENT:y COLON:: IDENT:NAME EXISTS:∃ IDENT:z COLON:: IDENT:FOOD_TYPE EXISTS:∃ IDENT:w COLON:: IDENT:RATING LPAR:( IDENT:RESTAURANT LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, LIT:bethel island COMMA:, IDENT:w RPAR:) AND:∧ IDENT:LOCATION LPAR:( IDENT:x COMMA:, IDENT:h COMMA:, LIT:bethel island rd COMMA:, LIT:bethel island RPAR:) AND:∧ IDENT:w GT:> NUM:2.5 RPAR:) EOF
+        AST:
+          EXISTS x:ID
+            EXISTS y:NAME
+              EXISTS z:FOOD_TYPE
+                EXISTS w:RATING
+                  AND
+                    PRED RESTAURANT(x, y, z, 'bethel island', w)
+                    PRED LOCATION(x, h, 'bethel island rd', 'bethel island')
+                    CMP  w > 2.5
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) h occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 2 free variable(s) (n : NAME, h : HOUSE_NUMBER) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CITY_NAME, global text -> StringSort()
+        c1 : local CITY_NAME, global text -> StringSort()
+        f : local FOOD_TYPE, global text -> StringSort()
+        h : local HOUSE_NUMBER, global int -> IntSort()
+        i : local ID, global int -> IntSort()
+        n : local NAME, global text -> StringSort()
+        r : local RATING, global real -> Float32()
+        r1 : local RESTAURANT_ID, global int -> IntSort()
+        s : local STREET_NAME, global text -> StringSort()
+      Predicted FOL:
+        h : local HOUSE_NUMBER, global int -> IntSort()
+        w : local RATING, global real -> Float32()
+        x : local ID, global int -> IntSort()
+        y : local NAME, global text -> StringSort()
+        z : local FOOD_TYPE, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5652 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2215.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (n : NAME, h : HOUSE_NUMBER) but Predicted has 0 (none): their answers have different arities
+   WARNING: Predicted FOL: variable(s) h occur free in the formula but are not declared in 'free vars'
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

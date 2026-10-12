@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_791.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_791.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2543 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the ships that are not from the United States?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Ship_ID = int -> IntSort()
+        Tonnage = int -> IntSort()
+        Type = text -> StringSort()
+      symbols:
+        ship(Ship_ID, Name, Type, Nationality, Tonnage)
+        constant United States : Nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Ship_ID ∃t : Type ∃n1 : Nationality ∃t1 : Tonnage ( (ship(s,n,t,n1,t1)) ∧ (n1 <> 'United States') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Ship_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:t1 COLON:: IDENT:Tonnage LPAR:( LPAR:( IDENT:ship LPAR:( IDENT:s COMMA:, IDENT:n COMMA:, IDENT:t COMMA:, IDENT:n1 COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 NEQ:<> LIT:United States RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Ship_ID
+            EXISTS t:Type
+              EXISTS n1:Nationality
+                EXISTS t1:Tonnage
+                  AND
+                    PRED ship(s, n, t, n1, t1)
+                    NEQ  n1 != 'United States'
+      Predicted FOL: ∃i : Ship_ID ∃t : Type ∃n : Nationality ∃w : Tonnage (ship(i, s, t, n, w) ∧ n ≠ 'United States')
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Ship_ID EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:n COLON:: IDENT:Nationality EXISTS:∃ IDENT:w COLON:: IDENT:Tonnage LPAR:( IDENT:ship LPAR:( IDENT:i COMMA:, IDENT:s COMMA:, IDENT:t COMMA:, IDENT:n COMMA:, IDENT:w RPAR:) AND:∧ IDENT:n NEQ:≠ LIT:United States RPAR:) EOF
+        AST:
+          EXISTS i:Ship_ID
+            EXISTS t:Type
+              EXISTS n:Nationality
+                EXISTS w:Tonnage
+                  AND
+                    PRED ship(i, s, t, n, w)
+                    NEQ  n != 'United States'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        s : local Ship_ID, global int -> IntSort()
+        t : local Type, global text -> StringSort()
+        t1 : local Tonnage, global int -> IntSort()
+      Predicted FOL:
+        i : local Ship_ID, global int -> IntSort()
+        n : local Nationality, global text -> StringSort()
+        s : local Name, global text -> StringSort()
+        t : local Type, global text -> StringSort()
+        w : local Tonnage, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_t_2, gold_n1_3, gold_t1_4], And(P_ship(gold_s_1, FV_Name_0, gold_t_2, gold_n1_3, gold_t1_4), (gold_n1_3 != L_United_States)))
+      gold_skolem (witnesses WGOLD_s, WGOLD_t, WGOLD_n1, WGOLD_t1):  And(P_ship(WGOLD_s, FV_Name_0, WGOLD_t, WGOLD_n1, WGOLD_t1), (WGOLD_n1 != L_United_States))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_t_2, predicted_n_3, predicted_w_4], And(P_ship(predicted_i_1, FV_Name_0, predicted_t_2, predicted_n_3, predicted_w_4), (predicted_n_3 != L_United_States)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_t, WPREDICTED_n, WPREDICTED_w):  And(P_ship(WPREDICTED_i, FV_Name_0, WPREDICTED_t, WPREDICTED_n, WPREDICTED_w), (WPREDICTED_n != L_United_States))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'United States' at text -> L_United_States = StringVal('United States')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 738 lines, 27615 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_791.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_t, WGOLD_n1, WGOLD_t1
+      claim: And(And(ship(WGOLD_s, FV_Name_0, WGOLD_t, WGOLD_n1, WGOLD_t1), WGOLD_n1 != "United States"), Not(Exists([predicted_i_1, predicted_t_2, predicted_n_3, predicted_w_4], And(ship(predicted_i_1, FV_Name_0, predicted_t_2, predicted_n_3, predicted_w_4), predicted_n_3 != "United States"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_t, WPREDICTED_n, WPREDICTED_w
+      claim: And(And(ship(WPREDICTED_i, FV_Name_0, WPREDICTED_t, WPREDICTED_n, WPREDICTED_w), WPREDICTED_n != "United States"), Not(Exists([gold_s_1, gold_t_2, gold_n1_3, gold_t1_4], And(ship(gold_s_1, FV_Name_0, gold_t_2, gold_n1_3, gold_t1_4), gold_n1_3 != "United States"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

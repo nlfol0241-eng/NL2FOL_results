@@ -1,0 +1,117 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1883.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1883.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4121 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the member names and hometowns of those who registered at a branch in 2016?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Branch_ID = text -> StringSort()
+        Card_Number = text -> StringSort()
+        Hometown = text -> StringSort()
+        Level = int -> IntSort()
+        Member_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Register_Year = text -> StringSort()
+      symbols:
+        member(Member_ID, Card_Number, Name, Hometown, Level)
+        membership_register_branch(Member_ID, Branch_ID, Register_Year)
+        constant 2016 : Register_Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Member_ID ∃b : Branch_ID ∃r : Register_Year ∃m1 : Member_ID ∃c : Card_Number ∃l : Level ( (((membership_register_branch(m,b,r)) ∧ (member(m1,c,n,h,l))) ∧ (m = m1)) ∧ (r = 2016) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:b COLON:: IDENT:Branch_ID EXISTS:∃ IDENT:r COLON:: IDENT:Register_Year EXISTS:∃ IDENT:m1 COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c COLON:: IDENT:Card_Number EXISTS:∃ IDENT:l COLON:: IDENT:Level LPAR:( LPAR:( LPAR:( LPAR:( IDENT:membership_register_branch LPAR:( IDENT:m COMMA:, IDENT:b COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:member LPAR:( IDENT:m1 COMMA:, IDENT:c COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:l RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m EQ:= IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= NUM:2016 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS b:Branch_ID
+              EXISTS r:Register_Year
+                EXISTS m1:Member_ID
+                  EXISTS c:Card_Number
+                    EXISTS l:Level
+                      AND
+                        AND
+                          AND
+                            PRED membership_register_branch(m, b, r)
+                            PRED member(m1, c, n, h, l)
+                          EQ  m = m1
+                        EQ  r = 2016
+      Predicted FOL: ∃ m : Member_ID ∃ c : Card_Number ∃ l : Level ∃ b : Branch_ID ( member(m, c, name, hometown, l) ∧ membership_register_branch(m, b, 2016) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Member_ID EXISTS:∃ IDENT:c COLON:: IDENT:Card_Number EXISTS:∃ IDENT:l COLON:: IDENT:Level EXISTS:∃ IDENT:b COLON:: IDENT:Branch_ID LPAR:( IDENT:member LPAR:( IDENT:m COMMA:, IDENT:c COMMA:, IDENT:name COMMA:, IDENT:hometown COMMA:, IDENT:l RPAR:) AND:∧ IDENT:membership_register_branch LPAR:( IDENT:m COMMA:, IDENT:b COMMA:, NUM:2016 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Member_ID
+            EXISTS c:Card_Number
+              EXISTS l:Level
+                EXISTS b:Branch_ID
+                  AND
+                    PRED member(m, c, name, hometown, l)
+                    PRED membership_register_branch(m, b, 2016)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Hometown_0 : Hometown   Gold h <-> Predicted hometown
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Branch_ID, global text -> StringSort()
+        c : local Card_Number, global text -> StringSort()
+        h : local Hometown, global text -> StringSort()
+        l : local Level, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        m1 : local Member_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        r : local Register_Year, global text -> StringSort()
+      Predicted FOL:
+        b : local Branch_ID, global text -> StringSort()
+        c : local Card_Number, global text -> StringSort()
+        hometown : local Hometown, global text -> StringSort()
+        l : local Level, global int -> IntSort()
+        m : local Member_ID, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_b_2, gold_r_3, gold_m1_4, gold_c_5, gold_l_6], And(And(And(P_membership_register_branch(gold_m_1, gold_b_2, gold_r_3), P_member(gold_m1_4, gold_c_5, FV_Name_0, FV_Hometown_0, gold_l_6)), (gold_m_1 == gold_m1_4)), (gold_r_3 == L_v_2016)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_b, WGOLD_r, WGOLD_m1, WGOLD_c, WGOLD_l):  And(And(And(P_membership_register_branch(WGOLD_m, WGOLD_b, WGOLD_r), P_member(WGOLD_m1, WGOLD_c, FV_Name_0, FV_Hometown_0, WGOLD_l)), (WGOLD_m == WGOLD_m1)), (WGOLD_r == L_v_2016))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_c_2, predicted_l_3, predicted_b_4], And(P_member(predicted_m_1, predicted_c_2, FV_Name_0, FV_Hometown_0, predicted_l_3), P_membership_register_branch(predicted_m_1, predicted_b_4, L_v_2016)))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_c, WPREDICTED_l, WPREDICTED_b):  And(P_member(WPREDICTED_m, WPREDICTED_c, FV_Name_0, FV_Hometown_0, WPREDICTED_l), P_membership_register_branch(WPREDICTED_m, WPREDICTED_b, L_v_2016))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2016' at text -> L_v_2016 = StringVal('2016')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 753 lines, 29001 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1883.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_b, WGOLD_r, WGOLD_m1, WGOLD_c, WGOLD_l
+      claim: And(And(And(And(membership_register_branch(WGOLD_m, WGOLD_b, WGOLD_r), member(WGOLD_m1, WGOLD_c, FV_Name_0, FV_Hometown_0, WGOLD_l)), WGOLD_m == WGOLD_m1), WGOLD_r == "2016"), Not(Exists([predicted_m_1, predicted_c_2, predicted_l_3, predicted_b_4], And(member(predicted_m_1, predicted_c_2, FV_Name_0, FV_Hometown_0, predicted_l_3), membership_register_branch(predicted_m_1, predicted_b_4, "2016")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_c, WPREDICTED_l, WPREDICTED_b
+      claim: And(And(member(WPREDICTED_m, WPREDICTED_c, FV_Name_0, FV_Hometown_0, WPREDICTED_l), membership_register_branch(WPREDICTED_m, WPREDICTED_b, "2016")), Not(Exists([gold_m_1, gold_b_2, gold_r_3, gold_m1_4, gold_c_5, gold_l_6], And(And(And(membership_register_branch(gold_m_1, gold_b_2, gold_r_3), member(gold_m1_4, gold_c_5, FV_Name_0, FV_Hometown_0, gold_l_6)), gold_m_1 == gold_m1_4), gold_r_3 == "2016"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

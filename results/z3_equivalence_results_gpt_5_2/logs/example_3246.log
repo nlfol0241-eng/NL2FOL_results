@@ -1,0 +1,115 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3246.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3246.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6371 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the project details of the projects which did not hire any staff for a researcher role.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 8 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+      local sorts:
+        date_from = datetime -> IntSort()
+        date_to = datetime -> IntSort()
+        organisation_id = integer -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        project_details = varchar(255) -> StringSort()
+        project_id = integer -> IntSort()
+        role_code = varchar(10) -> StringSort()
+        staff_id = real -> Float32()
+      symbols:
+        Project_Staff(staff_id, project_id, role_code, date_from, date_to, other_details)
+        Projects(project_id, organisation_id, project_details)
+        constant researcher : role_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : organisation_id ∃p : project_id( (Projects(p,o,p1)) ∧ (¬(∃p2 : project_id( ((Projects(p,o,p1)) ∧ (∃s : staff_id ∃d : date_from ∃r : role_code ∃o1 : other_details ∃d1 : date_to( (Project_Staff(s,p2,r,d,d1,o1)) ∧ (r = 'researcher') ))) ∧ (p = p2) ))) )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:organisation_id EXISTS:∃ IDENT:p COLON:: IDENT:project_id LPAR:( LPAR:( IDENT:Projects LPAR:( IDENT:p COMMA:, IDENT:o COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p2 COLON:: IDENT:project_id LPAR:( LPAR:( LPAR:( IDENT:Projects LPAR:( IDENT:p COMMA:, IDENT:o COMMA:, IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:staff_id EXISTS:∃ IDENT:d COLON:: IDENT:date_from EXISTS:∃ IDENT:r COLON:: IDENT:role_code EXISTS:∃ IDENT:o1 COLON:: IDENT:other_details EXISTS:∃ IDENT:d1 COLON:: IDENT:date_to LPAR:( LPAR:( IDENT:Project_Staff LPAR:( IDENT:s COMMA:, IDENT:p2 COMMA:, IDENT:r COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:researcher RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:organisation_id
+            EXISTS p:project_id
+              AND
+                PRED Projects(p, o, p1)
+                NOT
+                  EXISTS p2:project_id
+                    AND
+                      AND
+                        PRED Projects(p, o, p1)
+                        EXISTS s:staff_id
+                          EXISTS d:date_from
+                            EXISTS r:role_code
+                              EXISTS o1:other_details
+                                EXISTS d1:date_to
+                                  AND
+                                    PRED Project_Staff(s, p2, r, d, d1, o1)
+                                    EQ  r = 'researcher'
+                      EQ  p = p2
+      Predicted FOL: ∃p_id:project_id ∃org_id:organisation_id ∃p_det:project_details ( Projects(p_id, org_id, p_det) ∧ ¬∃s_id:staff_id ∃rc:role_code ∃df:date_from ∃dt:date_to ∃od:other_details ( Project_Staff(s_id, p_id, rc, df, dt, od) ∧ rc = researcher ) )
+        tokens: EXISTS:∃ IDENT:p_id COLON:: IDENT:project_id EXISTS:∃ IDENT:org_id COLON:: IDENT:organisation_id EXISTS:∃ IDENT:p_det COLON:: IDENT:project_details LPAR:( IDENT:Projects LPAR:( IDENT:p_id COMMA:, IDENT:org_id COMMA:, IDENT:p_det RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:s_id COLON:: IDENT:staff_id EXISTS:∃ IDENT:rc COLON:: IDENT:role_code EXISTS:∃ IDENT:df COLON:: IDENT:date_from EXISTS:∃ IDENT:dt COLON:: IDENT:date_to EXISTS:∃ IDENT:od COLON:: IDENT:other_details LPAR:( IDENT:Project_Staff LPAR:( IDENT:s_id COMMA:, IDENT:p_id COMMA:, IDENT:rc COMMA:, IDENT:df COMMA:, IDENT:dt COMMA:, IDENT:od RPAR:) AND:∧ IDENT:rc EQ:= IDENT:researcher RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p_id:project_id
+            EXISTS org_id:organisation_id
+              EXISTS p_det:project_details
+                AND
+                  PRED Projects(p_id, org_id, p_det)
+                  NOT
+                    EXISTS s_id:staff_id
+                      EXISTS rc:role_code
+                        EXISTS df:date_from
+                          EXISTS dt:date_to
+                            EXISTS od:other_details
+                              AND
+                                PRED Project_Staff(s_id, p_id, rc, df, dt, od)
+                                EQ  rc = researcher<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (p1 : project_details) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_from, global datetime -> IntSort()
+        d1 : local date_to, global datetime -> IntSort()
+        o : local organisation_id, global integer -> IntSort()
+        o1 : local other_details, global varchar(255) -> StringSort()
+        p : local project_id, global integer -> IntSort()
+        p1 : local project_details, global varchar(255) -> StringSort()
+        p2 : local project_id, global integer -> IntSort()
+        r : local role_code, global varchar(10) -> StringSort()
+        s : local staff_id, global real -> Float32()
+      Predicted FOL:
+        df : local date_from, global datetime -> IntSort()
+        dt : local date_to, global datetime -> IntSort()
+        od : local other_details, global varchar(255) -> StringSort()
+        org_id : local organisation_id, global integer -> IntSort()
+        p_det : local project_details, global varchar(255) -> StringSort()
+        p_id : local project_id, global integer -> IntSort()
+        rc : local role_code, global varchar(10) -> StringSort()
+        s_id : local staff_id, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5683 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3246.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (p1 : project_details) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

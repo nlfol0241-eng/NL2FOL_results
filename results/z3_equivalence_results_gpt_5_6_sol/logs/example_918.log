@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_918.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_918.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2655 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the open dates and years for the shop named Apple?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Location = text -> StringSort()
+        Open_Date = text -> StringSort()
+        Open_Year = int -> IntSort()
+        Shop_ID = int -> IntSort()
+        Shop_Name = text -> StringSort()
+      symbols:
+        shop(Shop_ID, Shop_Name, Location, Open_Date, Open_Year)
+        constant Apple : Shop_Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : Shop_ID ∃s1 : Shop_Name ∃l : Location ( (shop(s,s1,l,o,o1)) ∧ (s1 = 'Apple') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Shop_Name EXISTS:∃ IDENT:l COLON:: IDENT:Location LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:o COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:Apple RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Shop_ID
+            EXISTS s1:Shop_Name
+              EXISTS l:Location
+                AND
+                  PRED shop(s, s1, l, o, o1)
+                  EQ  s1 = 'Apple'
+      Predicted FOL: ∃i : Shop_ID ∃l : Location shop(i, 'Apple', l, d, y)
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:l COLON:: IDENT:Location IDENT:shop LPAR:( IDENT:i COMMA:, LIT:Apple COMMA:, IDENT:l COMMA:, IDENT:d COMMA:, IDENT:y RPAR:) EOF
+        AST:
+          EXISTS i:Shop_ID
+            EXISTS l:Location
+              PRED shop(i, 'Apple', l, d, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Open_Date_0 : Open_Date   Gold o <-> Predicted d
+      FV_Open_Year_0 : Open_Year   Gold o1 <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Location, global text -> StringSort()
+        o : local Open_Date, global text -> StringSort()
+        o1 : local Open_Year, global int -> IntSort()
+        s : local Shop_ID, global int -> IntSort()
+        s1 : local Shop_Name, global text -> StringSort()
+      Predicted FOL:
+        d : local Open_Date, global text -> StringSort()
+        i : local Shop_ID, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        y : local Open_Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_s1_2, gold_l_3], And(P_shop(gold_s_1, gold_s1_2, gold_l_3, FV_Open_Date_0, FV_Open_Year_0), (gold_s1_2 == L_Apple)))
+      gold_skolem (witnesses WGOLD_s, WGOLD_s1, WGOLD_l):  And(P_shop(WGOLD_s, WGOLD_s1, WGOLD_l, FV_Open_Date_0, FV_Open_Year_0), (WGOLD_s1 == L_Apple))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_l_2], P_shop(predicted_i_1, L_Apple, predicted_l_2, FV_Open_Date_0, FV_Open_Year_0))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_l):  P_shop(WPREDICTED_i, L_Apple, WPREDICTED_l, FV_Open_Date_0, FV_Open_Year_0)
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Apple' at text -> L_Apple = StringVal('Apple')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 731 lines, 27049 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_918.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_s1, WGOLD_l
+      claim: And(And(shop(WGOLD_s, WGOLD_s1, WGOLD_l, FV_Open_Date_0, FV_Open_Year_0), WGOLD_s1 == "Apple"), Not(Exists([predicted_i_1, predicted_l_2], shop(predicted_i_1, "Apple", predicted_l_2, FV_Open_Date_0, FV_Open_Year_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_l
+      claim: And(shop(WPREDICTED_i, "Apple", WPREDICTED_l, FV_Open_Date_0, FV_Open_Year_0), Not(Exists([gold_s_1, gold_s1_2, gold_l_3], And(shop(gold_s_1, gold_s1_2, gold_l_3, FV_Open_Date_0, FV_Open_Year_0), gold_s1_2 == "Apple"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

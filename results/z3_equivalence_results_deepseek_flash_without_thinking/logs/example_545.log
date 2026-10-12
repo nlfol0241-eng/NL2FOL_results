@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_545.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_545.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4945 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all instructors in the Comp. Sci. department?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        numeric(8,2) -> RealSort()   [domain And(IsInt(x * 100), x > -1000000, x < 1000000); 8 digits, 2 after the point]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+      local sorts:
+        ID = varchar(5) -> StringSort()
+        dept_name = varchar(20) -> StringSort()
+        name = varchar(20) -> StringSort()
+        salary = numeric(8,2) -> RealSort()
+      symbols:
+        instructor(ID, name, dept_name, salary)
+        constant Comp. Sci. : dept_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃d : dept_name ∃s : salary ( (instructor(i,n,d,s)) ∧ (d = 'Comp. Sci.') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:s COLON:: IDENT:salary LPAR:( LPAR:( IDENT:instructor LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Comp. Sci. RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS d:dept_name
+              EXISTS s:salary
+                AND
+                  PRED instructor(i, n, d, s)
+                  EQ  d = 'Comp. Sci.'
+      Predicted FOL: ∃x0 : ID ∃x1 : name ∃x2 : dept_name ∃x3 : salary (instructor(x0, x1, x2, x3) ∧ x2 = 'Comp. Sci.')
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:ID EXISTS:∃ IDENT:x1 COLON:: IDENT:name EXISTS:∃ IDENT:x2 COLON:: IDENT:dept_name EXISTS:∃ IDENT:x3 COLON:: IDENT:salary LPAR:( IDENT:instructor LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) AND:∧ IDENT:x2 EQ:= LIT:Comp. Sci. RPAR:) EOF
+        AST:
+          EXISTS x0:ID
+            EXISTS x1:name
+              EXISTS x2:dept_name
+                EXISTS x3:salary
+                  AND
+                    PRED instructor(x0, x1, x2, x3)
+                    EQ  x2 = 'Comp. Sci.'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local dept_name, global varchar(20) -> StringSort()
+        i : local ID, global varchar(5) -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        s : local salary, global numeric(8,2) -> RealSort()
+      Predicted FOL:
+        x0 : local ID, global varchar(5) -> StringSort()
+        x1 : local name, global varchar(20) -> StringSort()
+        x2 : local dept_name, global varchar(20) -> StringSort()
+        x3 : local salary, global numeric(8,2) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5292 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_545.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

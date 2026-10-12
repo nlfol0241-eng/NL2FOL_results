@@ -1,0 +1,138 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_47.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_47.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2630 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the teachers whose hometown is not `` Little Lever Urban District '' ?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Hometown = text -> StringSort()
+        Name = text -> StringSort()
+        Teacher_ID = int -> IntSort()
+      symbols:
+        teacher(Teacher_ID, Name, Age, Hometown)
+        constant little lever urban district : Hometown
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : Teacher_ID ∃a : Age ∃h : Hometown ( (teacher(t,n,a,h)) ∧ (h <> 'little lever urban district') )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Hometown LPAR:( LPAR:( IDENT:teacher LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h NEQ:<> LIT:little lever urban district RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Teacher_ID
+            EXISTS a:Age
+              EXISTS h:Hometown
+                AND
+                  PRED teacher(t, n, a, h)
+                  NEQ  h != 'little lever urban district'
+      Predicted FOL: ∃x_Teacher_ID : Teacher_ID ∃x_Name : Name ∃x_Age : Age ∃x_Hometown : Hometown (teacher(x_Teacher_ID, x_Name, x_Age, x_Hometown) ∧ x_Hometown ≠ 'little lever urban district')
+        tokens: EXISTS:∃ IDENT:x_Teacher_ID COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:x_Name COLON:: IDENT:Name EXISTS:∃ IDENT:x_Age COLON:: IDENT:Age EXISTS:∃ IDENT:x_Hometown COLON:: IDENT:Hometown LPAR:( IDENT:teacher LPAR:( IDENT:x_Teacher_ID COMMA:, IDENT:x_Name COMMA:, IDENT:x_Age COMMA:, IDENT:x_Hometown RPAR:) AND:∧ IDENT:x_Hometown NEQ:≠ LIT:little lever urban district RPAR:) EOF
+        AST:
+          EXISTS x_Teacher_ID:Teacher_ID
+            EXISTS x_Name:Name
+              EXISTS x_Age:Age
+                EXISTS x_Hometown:Hometown
+                  AND
+                    PRED teacher(x_Teacher_ID, x_Name, x_Age, x_Hometown)
+                    NEQ  x_Hometown != 'little lever urban district'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x_Name do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted x_Name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        h : local Hometown, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        t : local Teacher_ID, global int -> IntSort()
+      Predicted FOL:
+        x_Age : local Age, global text -> StringSort()
+        x_Hometown : local Hometown, global text -> StringSort()
+        x_Name : local Name, global text -> StringSort()
+        x_Teacher_ID : local Teacher_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_a_2, gold_h_3], And(P_teacher(gold_t_1, FV_Name_0, gold_a_2, gold_h_3), (gold_h_3 != L_little_lever_urban_district)))
+      gold_skolem (witnesses WGOLD_t, WGOLD_a, WGOLD_h):  And(P_teacher(WGOLD_t, FV_Name_0, WGOLD_a, WGOLD_h), (WGOLD_h != L_little_lever_urban_district))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_Teacher_ID_1, predicted_x_Name_2, predicted_x_Age_3, predicted_x_Hometown_4], And(P_teacher(predicted_x_Teacher_ID_1, predicted_x_Name_2, predicted_x_Age_3, predicted_x_Hometown_4), (predicted_x_Hometown_4 != L_little_lever_urban_district)))
+      predicted_skolem (witnesses WPREDICTED_x_Teacher_ID, WPREDICTED_x_Name, WPREDICTED_x_Age, WPREDICTED_x_Hometown):  And(P_teacher(WPREDICTED_x_Teacher_ID, WPREDICTED_x_Name, WPREDICTED_x_Age, WPREDICTED_x_Hometown), (WPREDICTED_x_Hometown != L_little_lever_urban_district))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'little lever urban district' at text -> L_little_lever_urban_district = StringVal('little lever urban district')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 733 lines, 27828 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_47.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_a, WGOLD_h
+      claim: And(And(teacher(WGOLD_t, FV_Name_0, WGOLD_a, WGOLD_h), WGOLD_h != "little lever urban district"), Not(Exists([predicted_x_Teacher_ID_1, predicted_x_Name_2, predicted_x_Age_3, predicted_x_Hometown_4], And(teacher(predicted_x_Teacher_ID_1, predicted_x_Name_2, predicted_x_Age_3, predicted_x_Hometown_4), predicted_x_Hometown_4 != "little lever urban district"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x_Teacher_ID, WPREDICTED_x_Name, WPREDICTED_x_Age, WPREDICTED_x_Hometown
+      claim: And(And(teacher(WPREDICTED_x_Teacher_ID, WPREDICTED_x_Name, WPREDICTED_x_Age, WPREDICTED_x_Hometown), WPREDICTED_x_Hometown != "little lever urban district"), Not(Exists([gold_t_1, gold_a_2, gold_h_3], And(teacher(gold_t_1, FV_Name_0, gold_a_2, gold_h_3), gold_h_3 != "little lever urban district"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.013 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 12 relation tuple(s) listed, 11 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x_Teacher_ID : Teacher_ID = 2
+          x_Name : Name = 'A'
+          x_Age : Age = 'A'
+          x_Hometown : Hometown = ''
+        free (answer) variables:
+          FV_Name_0 : Name = 'l'
+        literals / constants:
+          little lever urban district : Hometown = 'little lever urban district'
+        relations (each value tagged with the local sort of its position):
+          teacher(Teacher_ID, Name, Age, Hometown):
+            teacher(Teacher_ID=0, Name='', Age='', Hometown='!0!')
+            teacher(Teacher_ID=0, Name='', Age='', Hometown='A')
+            teacher(Teacher_ID=0, Name='', Age='', Hometown='l')
+            teacher(Teacher_ID=0, Name='', Age='!1!', Hometown='')
+            teacher(Teacher_ID=0, Name='', Age='l', Hometown='')
+            teacher(Teacher_ID=0, Name='', Age='little lever urban district', Hometown='')
+            teacher(Teacher_ID=0, Name='!0!', Age='', Hometown='')
+            teacher(Teacher_ID=0, Name='!1!', Age='', Hometown='')
+            teacher(Teacher_ID=0, Name='little lever urban district', Age='', Hometown='')
+            teacher(Teacher_ID=2, Name='A', Age='A', Hometown='')
+            teacher(Teacher_ID=2, Name='A', Age='A', Hometown='little lever urban district')
+            teacher(Teacher_ID=3, Name='', Age='!0!', Hometown='!1!')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Age        : {'', '!0!', '!1!', 'A', 'l', 'little lever urban district'}
+          Hometown   : {'', '!0!', '!1!', 'A', 'l', 'little lever urban district'}
+          Name       : {'', '!0!', '!1!', 'A', 'l', 'little lever urban district'}
+          Teacher_ID : {0, 2, 3}
+        values shared across local sorts (joins):
+          '!0!' : Age, Hometown, Name
+          '!1!' : Age, Hometown, Name
+          '' : Age, Hometown, Name
+          'A' : Age, Hometown, Name
+          'l' : Age, Hometown, Name
+          'little lever urban district' : Age, Hometown, Name
+   [R3] took 0.078 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

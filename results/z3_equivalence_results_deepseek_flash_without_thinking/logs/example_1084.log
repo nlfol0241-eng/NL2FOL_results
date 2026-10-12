@@ -1,0 +1,87 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1084.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1084.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3830 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the match ids of the cities that hosted competition "1994 FIFA World Cup qualification"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Competition = text -> StringSort()
+        Date = text -> StringSort()
+        Match_ID = int -> IntSort()
+        Result = text -> StringSort()
+        Score = text -> StringSort()
+        Venue = text -> StringSort()
+      symbols:
+        match(Match_ID, Date, Venue, Score, Result, Competition)
+        constant 1994 FIFA World Cup qualification : Competition
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Date ∃v : Venue ∃s : Score ∃r : Result ∃c : Competition ( (match(m,d,v,s,r,c)) ∧ (c = '1994 FIFA World Cup qualification') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:v COLON:: IDENT:Venue EXISTS:∃ IDENT:s COLON:: IDENT:Score EXISTS:∃ IDENT:r COLON:: IDENT:Result EXISTS:∃ IDENT:c COLON:: IDENT:Competition LPAR:( LPAR:( IDENT:match LPAR:( IDENT:m COMMA:, IDENT:d COMMA:, IDENT:v COMMA:, IDENT:s COMMA:, IDENT:r COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:1994 FIFA World Cup qualification RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Date
+            EXISTS v:Venue
+              EXISTS s:Score
+                EXISTS r:Result
+                  EXISTS c:Competition
+                    AND
+                      PRED match(m, d, v, s, r, c)
+                      EQ  c = '1994 FIFA World Cup qualification'
+      Predicted FOL: ∃m : Match_ID ∃d : Date ∃v : Venue ∃s : Score ∃r : Result (match(m, d, v, s, r, '1994 FIFA World Cup qualification') ∧ ∃c : City_ID ∃n : City_Name ∃p : Population ∃lat : Latitude ∃lon : Longitude (hosting_city(c, m, v) ∧ city(c, n, p, lat, lon, v)))
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Match_ID EXISTS:∃ IDENT:d COLON:: IDENT:Date EXISTS:∃ IDENT:v COLON:: IDENT:Venue EXISTS:∃ IDENT:s COLON:: IDENT:Score EXISTS:∃ IDENT:r COLON:: IDENT:Result LPAR:( IDENT:match LPAR:( IDENT:m COMMA:, IDENT:d COMMA:, IDENT:v COMMA:, IDENT:s COMMA:, IDENT:r COMMA:, LIT:1994 FIFA World Cup qualification RPAR:) AND:∧ EXISTS:∃ IDENT:c COLON:: IDENT:City_ID EXISTS:∃ IDENT:n COLON:: IDENT:City_Name EXISTS:∃ IDENT:p COLON:: IDENT:Population EXISTS:∃ IDENT:lat COLON:: IDENT:Latitude EXISTS:∃ IDENT:lon COLON:: IDENT:Longitude LPAR:( IDENT:hosting_city LPAR:( IDENT:c COMMA:, IDENT:m COMMA:, IDENT:v RPAR:) AND:∧ IDENT:city LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:lat COMMA:, IDENT:lon COMMA:, IDENT:v RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Match_ID
+            EXISTS d:Date
+              EXISTS v:Venue
+                EXISTS s:Score
+                  EXISTS r:Result
+                    AND
+                      PRED match(m, d, v, s, r, '1994 FIFA World Cup qualification')
+                      EXISTS c:City_ID
+                        EXISTS n:City_Name
+                          EXISTS p:Population
+                            EXISTS lat:Latitude
+                              EXISTS lon:Longitude
+                                AND
+                                  PRED hosting_city(c, m, v)
+                                  PRED city(c, n, p, lat, lon, v)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (m : Match_ID) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: unknown sort 'City_ID'
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 2 more times]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 131, in infer
+    env.assign(node[2], sig.g(node[3]))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\signature.py", line 97, in g
+    raise ValueError(f"unknown sort {local_sort!r}")
+ValueError: unknown sort 'City_ID'

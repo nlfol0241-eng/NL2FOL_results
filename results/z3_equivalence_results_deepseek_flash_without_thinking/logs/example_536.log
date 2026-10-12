@@ -1,0 +1,86 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_536.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_536.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4122 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the date of birth for all the guests with gender code "Male".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        integer -> IntSort()
+      local sorts:
+        date_of_birth = datetime -> IntSort()
+        gender_code = char(1) -> StringSort()
+        guest_first_name = varchar(80) -> StringSort()
+        guest_id = integer -> IntSort()
+        guest_last_name = varchar(80) -> StringSort()
+      symbols:
+        Guests(guest_id, gender_code, guest_first_name, guest_last_name, date_of_birth)
+        constant Male : gender_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : guest_id ∃g1 : gender_code ∃g2 : guest_first_name ∃g3 : guest_last_name ( (Guests(g,g1,g2,g3,d)) ∧ (g1 = 'Male') )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:guest_id EXISTS:∃ IDENT:g1 COLON:: IDENT:gender_code EXISTS:∃ IDENT:g2 COLON:: IDENT:guest_first_name EXISTS:∃ IDENT:g3 COLON:: IDENT:guest_last_name LPAR:( LPAR:( IDENT:Guests LPAR:( IDENT:g COMMA:, IDENT:g1 COMMA:, IDENT:g2 COMMA:, IDENT:g3 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:g1 EQ:= LIT:Male RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:guest_id
+            EXISTS g1:gender_code
+              EXISTS g2:guest_first_name
+                EXISTS g3:guest_last_name
+                  AND
+                    PRED Guests(g, g1, g2, g3, d)
+                    EQ  g1 = 'Male'
+      Predicted FOL: ∃g0 : guest_id ∃g1 : gender_code ∃g2 : guest_first_name ∃g3 : guest_last_name ∃g4 : date_of_birth (Guests(g0, g1, g2, g3, g4) ∧ g1 = Male)
+        tokens: EXISTS:∃ IDENT:g0 COLON:: IDENT:guest_id EXISTS:∃ IDENT:g1 COLON:: IDENT:gender_code EXISTS:∃ IDENT:g2 COLON:: IDENT:guest_first_name EXISTS:∃ IDENT:g3 COLON:: IDENT:guest_last_name EXISTS:∃ IDENT:g4 COLON:: IDENT:date_of_birth LPAR:( IDENT:Guests LPAR:( IDENT:g0 COMMA:, IDENT:g1 COMMA:, IDENT:g2 COMMA:, IDENT:g3 COMMA:, IDENT:g4 RPAR:) AND:∧ IDENT:g1 EQ:= IDENT:Male RPAR:) EOF
+        AST:
+          EXISTS g0:guest_id
+            EXISTS g1:gender_code
+              EXISTS g2:guest_first_name
+                EXISTS g3:guest_last_name
+                  EXISTS g4:date_of_birth
+                    AND
+                      PRED Guests(g0, g1, g2, g3, g4)
+                      EQ  g1 = Male<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (d : date_of_birth) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_of_birth, global datetime -> IntSort()
+        g : local guest_id, global integer -> IntSort()
+        g1 : local gender_code, global char(1) -> StringSort()
+        g2 : local guest_first_name, global varchar(80) -> StringSort()
+        g3 : local guest_last_name, global varchar(80) -> StringSort()
+      Predicted FOL:
+        g0 : local guest_id, global integer -> IntSort()
+        g1 : local gender_code, global char(1) -> StringSort()
+        g2 : local guest_first_name, global varchar(80) -> StringSort()
+        g3 : local guest_last_name, global varchar(80) -> StringSort()
+        g4 : local date_of_birth, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5394 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_536.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (d : date_of_birth) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

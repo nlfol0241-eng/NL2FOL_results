@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_710.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_710.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6504 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the distinct last names of all the engineers?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        company_id = integer -> IntSort()
+        engineer_id = integer -> IntSort()
+        first_name = varchar(50) -> StringSort()
+        last_name = varchar(50) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+      symbols:
+        Maintenance_Engineers(engineer_id, company_id, first_name, last_name, other_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : engineer_id ∃c : company_id ∃f : first_name ∃o : other_details ( Maintenance_Engineers(e,c,f,l,o) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:engineer_id EXISTS:∃ IDENT:c COLON:: IDENT:company_id EXISTS:∃ IDENT:f COLON:: IDENT:first_name EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Maintenance_Engineers LPAR:( IDENT:e COMMA:, IDENT:c COMMA:, IDENT:f COMMA:, IDENT:l COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:engineer_id
+            EXISTS c:company_id
+              EXISTS f:first_name
+                EXISTS o:other_details
+                  PRED Maintenance_Engineers(e, c, f, l, o)
+      Predicted FOL: ∃e_id : engineer_id ∃c_id : company_id ∃f_name : first_name ∃o_details : other_details ( Maintenance_Engineers(e_id, c_id, f_name, y, o_details) )
+        tokens: EXISTS:∃ IDENT:e_id COLON:: IDENT:engineer_id EXISTS:∃ IDENT:c_id COLON:: IDENT:company_id EXISTS:∃ IDENT:f_name COLON:: IDENT:first_name EXISTS:∃ IDENT:o_details COLON:: IDENT:other_details LPAR:( IDENT:Maintenance_Engineers LPAR:( IDENT:e_id COMMA:, IDENT:c_id COMMA:, IDENT:f_name COMMA:, IDENT:y COMMA:, IDENT:o_details RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e_id:engineer_id
+            EXISTS c_id:company_id
+              EXISTS f_name:first_name
+                EXISTS o_details:other_details
+                  PRED Maintenance_Engineers(e_id, c_id, f_name, y, o_details)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_last_name_0 : last_name   Gold l <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local company_id, global integer -> IntSort()
+        e : local engineer_id, global integer -> IntSort()
+        f : local first_name, global varchar(50) -> StringSort()
+        l : local last_name, global varchar(50) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        c_id : local company_id, global integer -> IntSort()
+        e_id : local engineer_id, global integer -> IntSort()
+        f_name : local first_name, global varchar(50) -> StringSort()
+        o_details : local other_details, global varchar(255) -> StringSort()
+        y : local last_name, global varchar(50) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_c_2, gold_f_3, gold_o_4], And(D_varchar_50_(gold_f_3), D_varchar_255_(gold_o_4), P_Maintenance_Engineers(gold_e_1, gold_c_2, gold_f_3, FV_last_name_0, gold_o_4)))
+      gold_skolem (witnesses WGOLD_e, WGOLD_c, WGOLD_f, WGOLD_o):  And(D_varchar_50_(WGOLD_f), D_varchar_255_(WGOLD_o), P_Maintenance_Engineers(WGOLD_e, WGOLD_c, WGOLD_f, FV_last_name_0, WGOLD_o))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_id_1, predicted_c_id_2, predicted_f_name_3, predicted_o_details_4], And(D_varchar_50_(predicted_f_name_3), D_varchar_255_(predicted_o_details_4), P_Maintenance_Engineers(predicted_e_id_1, predicted_c_id_2, predicted_f_name_3, FV_last_name_0, predicted_o_details_4)))
+      predicted_skolem (witnesses WPREDICTED_e_id, WPREDICTED_c_id, WPREDICTED_f_name, WPREDICTED_o_details):  And(D_varchar_50_(WPREDICTED_f_name), D_varchar_255_(WPREDICTED_o_details), P_Maintenance_Engineers(WPREDICTED_e_id, WPREDICTED_c_id, WPREDICTED_f_name, FV_last_name_0, WPREDICTED_o_details))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 743 lines, 28621 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_710.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_last_name_0) <= 50
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_c, WGOLD_f, WGOLD_o
+      claim: And(And(Length(WGOLD_f) <= 50, Length(WGOLD_o) <= 255, Maintenance_Engineers(WGOLD_e, WGOLD_c, WGOLD_f, FV_last_name_0, WGOLD_o)), Not(Exists([predicted_e_id_1, predicted_c_id_2, predicted_f_name_3, predicted_o_details_4], And(Length(predicted_f_name_3) <= 50, Length(predicted_o_details_4) <= 255, Maintenance_Engineers(predicted_e_id_1, predicted_c_id_2, predicted_f_name_3, FV_last_name_0, predicted_o_details_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_e_id, WPREDICTED_c_id, WPREDICTED_f_name, WPREDICTED_o_details
+      claim: And(And(Length(WPREDICTED_f_name) <= 50, Length(WPREDICTED_o_details) <= 255, Maintenance_Engineers(WPREDICTED_e_id, WPREDICTED_c_id, WPREDICTED_f_name, FV_last_name_0, WPREDICTED_o_details)), Not(Exists([gold_e_1, gold_c_2, gold_f_3, gold_o_4], And(Length(gold_f_3) <= 50, Length(gold_o_4) <= 255, Maintenance_Engineers(gold_e_1, gold_c_2, gold_f_3, FV_last_name_0, gold_o_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

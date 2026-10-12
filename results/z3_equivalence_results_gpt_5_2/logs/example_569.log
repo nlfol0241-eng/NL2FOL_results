@@ -1,0 +1,70 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_569.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_569.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2430 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the id and market share of the browser Safari?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        id = int -> IntSort()
+        market_share = real -> Float32()
+        name = text -> StringSort()
+      symbols:
+        browser(id, name, market_share)
+        constant Safari : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ( (browser(i,n,m)) ∧ (n = 'Safari') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( IDENT:browser LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Safari RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            AND
+              PRED browser(i, n, m)
+              EQ  n = 'Safari'
+      Predicted FOL: ∃i:id ∃m:market_share (browser(i, 'Safari', m))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:m COLON:: IDENT:market_share LPAR:( IDENT:browser LPAR:( IDENT:i COMMA:, LIT:Safari COMMA:, IDENT:m RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS m:market_share
+              PRED browser(i, 'Safari', m)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (i : id, m : market_share) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        i : local id, global int -> IntSort()
+        m : local market_share, global real -> Float32()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        i : local id, global int -> IntSort()
+        m : local market_share, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5217 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_569.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (i : id, m : market_share) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

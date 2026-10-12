@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1416.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1416.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6307 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the title of all the albums of the artist "AC/DC".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(120) -> StringSort()   [domain Length(x) <= 120; length <= 120]
+        varchar(160) -> StringSort()   [domain Length(x) <= 160; length <= 160]
+        integer -> IntSort()
+      local sorts:
+        AlbumId = integer -> IntSort()
+        ArtistId = integer -> IntSort()
+        Name = varchar(120) -> StringSort()
+        Title = varchar(160) -> StringSort()
+      symbols:
+        Album(AlbumId, Title, ArtistId)
+        Artist(ArtistId, Name)
+        constant AC/DC : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : AlbumId ∃a1 : ArtistId ∃a2 : ArtistId ∃n : Name ( (((Album(a,t,a1)) ∧ (Artist(a2,n))) ∧ (a1 = a2)) ∧ (n = 'AC/DC') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:AlbumId EXISTS:∃ IDENT:a1 COLON:: IDENT:ArtistId EXISTS:∃ IDENT:a2 COLON:: IDENT:ArtistId EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Album LPAR:( IDENT:a COMMA:, IDENT:t COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Artist LPAR:( IDENT:a2 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a1 EQ:= IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:AC/DC RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:AlbumId
+            EXISTS a1:ArtistId
+              EXISTS a2:ArtistId
+                EXISTS n:Name
+                  AND
+                    AND
+                      AND
+                        PRED Album(a, t, a1)
+                        PRED Artist(a2, n)
+                      EQ  a1 = a2
+                    EQ  n = 'AC/DC'
+      Predicted FOL: ∀a0:AlbumId∀a1:Title∀a2:ArtistId( (Album(a0, a1, a2) ∧ ∃b0:ArtistId∃b1:Name(Artist(b0, b1) ∧ b0 = a2 ∧ b1 = 'AC/DC')) → Result(a1) )
+        tokens: FORALL:∀ IDENT:a0 COLON:: IDENT:AlbumId FORALL:∀ IDENT:a1 COLON:: IDENT:Title FORALL:∀ IDENT:a2 COLON:: IDENT:ArtistId LPAR:( LPAR:( IDENT:Album LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 RPAR:) AND:∧ EXISTS:∃ IDENT:b0 COLON:: IDENT:ArtistId EXISTS:∃ IDENT:b1 COLON:: IDENT:Name LPAR:( IDENT:Artist LPAR:( IDENT:b0 COMMA:, IDENT:b1 RPAR:) AND:∧ IDENT:b0 EQ:= IDENT:a2 AND:∧ IDENT:b1 EQ:= LIT:AC/DC RPAR:) RPAR:) IMPL:→ IDENT:Result LPAR:( IDENT:a1 RPAR:) RPAR:) EOF
+        AST:
+          FORALL a0:AlbumId
+            FORALL a1:Title
+              FORALL a2:ArtistId
+                IMPLIES
+                  AND
+                    PRED Album(a0, a1, a2)
+                    EXISTS b0:ArtistId
+                      EXISTS b1:Name
+                        AND
+                          PRED Artist(b0, b1)
+                          EQ  b0 = a2
+                          EQ  b1 = 'AC/DC'
+                  PRED Result(a1)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : Title) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'Result' has no declared arity
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 140, in infer
+    infer(node[2], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 144, in infer
+    raise ValueError(f"predicate {node[1]!r} has no declared arity")
+ValueError: predicate 'Result' has no declared arity

@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_763.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_763.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4087 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the description for the courses named "database".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(120) -> StringSort()   [domain Length(x) <= 120; length <= 120]
+        integer -> IntSort()
+      local sorts:
+        author_id = integer -> IntSort()
+        course_description = varchar(255) -> StringSort()
+        course_id = integer -> IntSort()
+        course_name = varchar(120) -> StringSort()
+        subject_id = integer -> IntSort()
+      symbols:
+        Courses(course_id, author_id, subject_id, course_name, course_description)
+        constant database : course_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : course_id ∃a : author_id ∃s : subject_id ∃c1 : course_name ( (Courses(c,a,s,c1,c2)) ∧ (c1 = 'database') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:a COLON:: IDENT:author_id EXISTS:∃ IDENT:s COLON:: IDENT:subject_id EXISTS:∃ IDENT:c1 COLON:: IDENT:course_name LPAR:( LPAR:( IDENT:Courses LPAR:( IDENT:c COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:database RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:course_id
+            EXISTS a:author_id
+              EXISTS s:subject_id
+                EXISTS c1:course_name
+                  AND
+                    PRED Courses(c, a, s, c1, c2)
+                    EQ  c1 = 'database'
+      Predicted FOL: ∃x0 : course_id ∃x1 : author_id ∃x2 : subject_id ∃x4 : course_description (Courses(x0, x1, x2, 'database', x4) ∧ ∀y0 : course_id ∀y1 : author_id ∀y2 : subject_id ∀y3 : course_name ∀y4 : course_description (Courses(y0, y1, y2, y3, y4) ∧ y3 = 'database' → y4 = x4))
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:course_id EXISTS:∃ IDENT:x1 COLON:: IDENT:author_id EXISTS:∃ IDENT:x2 COLON:: IDENT:subject_id EXISTS:∃ IDENT:x4 COLON:: IDENT:course_description LPAR:( IDENT:Courses LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, LIT:database COMMA:, IDENT:x4 RPAR:) AND:∧ FORALL:∀ IDENT:y0 COLON:: IDENT:course_id FORALL:∀ IDENT:y1 COLON:: IDENT:author_id FORALL:∀ IDENT:y2 COLON:: IDENT:subject_id FORALL:∀ IDENT:y3 COLON:: IDENT:course_name FORALL:∀ IDENT:y4 COLON:: IDENT:course_description LPAR:( IDENT:Courses LPAR:( IDENT:y0 COMMA:, IDENT:y1 COMMA:, IDENT:y2 COMMA:, IDENT:y3 COMMA:, IDENT:y4 RPAR:) AND:∧ IDENT:y3 EQ:= LIT:database IMPL:→ IDENT:y4 EQ:= IDENT:x4 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:course_id
+            EXISTS x1:author_id
+              EXISTS x2:subject_id
+                EXISTS x4:course_description
+                  AND
+                    PRED Courses(x0, x1, x2, 'database', x4)
+                    FORALL y0:course_id
+                      FORALL y1:author_id
+                        FORALL y2:subject_id
+                          FORALL y3:course_name
+                            FORALL y4:course_description
+                              IMPLIES
+                                AND
+                                  PRED Courses(y0, y1, y2, y3, y4)
+                                  EQ  y3 = 'database'
+                                EQ  y4 = x4
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c2 : course_description) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local author_id, global integer -> IntSort()
+        c : local course_id, global integer -> IntSort()
+        c1 : local course_name, global varchar(120) -> StringSort()
+        c2 : local course_description, global varchar(255) -> StringSort()
+        s : local subject_id, global integer -> IntSort()
+      Predicted FOL:
+        x0 : local course_id, global integer -> IntSort()
+        x1 : local author_id, global integer -> IntSort()
+        x2 : local subject_id, global integer -> IntSort()
+        x4 : local course_description, global varchar(255) -> StringSort()
+        y0 : local course_id, global integer -> IntSort()
+        y1 : local author_id, global integer -> IntSort()
+        y2 : local subject_id, global integer -> IntSort()
+        y3 : local course_name, global varchar(120) -> StringSort()
+        y4 : local course_description, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5522 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_763.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c2 : course_description) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

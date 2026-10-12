@@ -1,0 +1,171 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1590.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1590.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2765 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: For each director who directed more than one movie, what are the titles and dates of release for all those movies?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mID ∃d : director ∃m1 : mID ∃t1 : title ∃y1 : year ∃d1 : director ( (((Movie(m,t,y,d)) ∧ (Movie(m1,t1,y1,d1))) ∧ (d = d1)) ∧ (t <> t1) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:d COLON:: IDENT:director EXISTS:∃ IDENT:m1 COLON:: IDENT:mID EXISTS:∃ IDENT:t1 COLON:: IDENT:title EXISTS:∃ IDENT:y1 COLON:: IDENT:year EXISTS:∃ IDENT:d1 COLON:: IDENT:director LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Movie LPAR:( IDENT:m1 COMMA:, IDENT:t1 COMMA:, IDENT:y1 COMMA:, IDENT:d1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t NEQ:<> IDENT:t1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mID
+            EXISTS d:director
+              EXISTS m1:mID
+                EXISTS t1:title
+                  EXISTS y1:year
+                    EXISTS d1:director
+                      AND
+                        AND
+                          AND
+                            PRED Movie(m, t, y, d)
+                            PRED Movie(m1, t1, y1, d1)
+                          EQ  d = d1
+                        NEQ  t != t1
+      Predicted FOL: ∃i : mID ∃d : director ( Movie(i, t, y, d) ∧ ∃i2 : mID ∃t2 : title ∃y2 : year ( Movie(i2, t2, y2, d) ∧ i2 ≠ i ) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:mID EXISTS:∃ IDENT:d COLON:: IDENT:director LPAR:( IDENT:Movie LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) AND:∧ EXISTS:∃ IDENT:i2 COLON:: IDENT:mID EXISTS:∃ IDENT:t2 COLON:: IDENT:title EXISTS:∃ IDENT:y2 COLON:: IDENT:year LPAR:( IDENT:Movie LPAR:( IDENT:i2 COMMA:, IDENT:t2 COMMA:, IDENT:y2 COMMA:, IDENT:d RPAR:) AND:∧ IDENT:i2 NEQ:≠ IDENT:i RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:mID
+            EXISTS d:director
+              AND
+                PRED Movie(i, t, y, d)
+                EXISTS i2:mID
+                  EXISTS t2:title
+                    EXISTS y2:year
+                      AND
+                        PRED Movie(i2, t2, y2, d)
+                        NEQ  i2 != i
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted t
+      FV_year_0 : year   Gold y <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        d1 : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        m1 : local mID, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        t1 : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+        y1 : local year, global int -> IntSort()
+      Predicted FOL:
+        d : local director, global text -> StringSort()
+        i : local mID, global int -> IntSort()
+        i2 : local mID, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        t2 : local title, global text -> StringSort()
+        y : local year, global int -> IntSort()
+        y2 : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_d_2, gold_m1_3, gold_t1_4, gold_y1_5, gold_d1_6], And(And(And(P_Movie(gold_m_1, FV_title_0, FV_year_0, gold_d_2), P_Movie(gold_m1_3, gold_t1_4, gold_y1_5, gold_d1_6)), (gold_d_2 == gold_d1_6)), (FV_title_0 != gold_t1_4)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_d, WGOLD_m1, WGOLD_t1, WGOLD_y1, WGOLD_d1):  And(And(And(P_Movie(WGOLD_m, FV_title_0, FV_year_0, WGOLD_d), P_Movie(WGOLD_m1, WGOLD_t1, WGOLD_y1, WGOLD_d1)), (WGOLD_d == WGOLD_d1)), (FV_title_0 != WGOLD_t1))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_d_2], And(P_Movie(predicted_i_1, FV_title_0, FV_year_0, predicted_d_2), Exists([predicted_i2_3, predicted_t2_4, predicted_y2_5], And(P_Movie(predicted_i2_3, predicted_t2_4, predicted_y2_5, predicted_d_2), (predicted_i2_3 != predicted_i_1)))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_d):  And(P_Movie(WPREDICTED_i, FV_title_0, FV_year_0, WPREDICTED_d), Exists([predictedsk_i2_1, predictedsk_t2_2, predictedsk_y2_3], And(P_Movie(predictedsk_i2_1, predictedsk_t2_2, predictedsk_y2_3, WPREDICTED_d), (predictedsk_i2_1 != WPREDICTED_i))))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 742 lines, 28329 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1590.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_d, WGOLD_m1, WGOLD_t1, WGOLD_y1, WGOLD_d1
+      claim: And(And(And(And(Movie(WGOLD_m, FV_title_0, FV_year_0, WGOLD_d), Movie(WGOLD_m1, WGOLD_t1, WGOLD_y1, WGOLD_d1)), WGOLD_d == WGOLD_d1), FV_title_0 != WGOLD_t1), Not(Exists([predicted_i_1, predicted_d_2], And(Movie(predicted_i_1, FV_title_0, FV_year_0, predicted_d_2), Exists([predicted_i2_3, predicted_t2_4, predicted_y2_5], And(Movie(predicted_i2_3, predicted_t2_4, predicted_y2_5, predicted_d_2), predicted_i2_3 != predicted_i_1))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.014 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 5 relation tuple(s) listed, 8 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          m : mID = 3
+          d : director = 'AE'
+          m1 : mID = 3
+          t1 : title = 'A'
+          y1 : year = 6
+          d1 : director = 'AE'
+        free (answer) variables:
+          FV_title_0 : title = 'CD'
+          FV_year_0 : year = 4
+        relations (each value tagged with the local sort of its position):
+          Movie(mID, title, year, director):
+            Movie(mID=3, title='A', year=6, director='AE')
+            Movie(mID=3, title='AE', year=6, director='AE')
+            Movie(mID=3, title='CD', year=2, director='AE')
+            Movie(mID=3, title='CD', year=3, director='AE')
+            Movie(mID=3, title='CD', year=4, director='AE')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          director : {'AE'}
+          mID      : {3}
+          title    : {'A', 'AE', 'CD'}
+          year     : {2, 3, 4, 6}
+        values shared across local sorts (joins):
+          3 : mID, year
+          'AE' : director, title
+   [R2] took 0.039 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_d
+      claim: And(And(Movie(WPREDICTED_i, FV_title_0, FV_year_0, WPREDICTED_d), Exists([predictedsk_i2_1, predictedsk_t2_2, predictedsk_y2_3], And(Movie(predictedsk_i2_1, predictedsk_t2_2, predictedsk_y2_3, WPREDICTED_d), predictedsk_i2_1 != WPREDICTED_i))), Not(Exists([gold_m_1, gold_d_2, gold_m1_3, gold_t1_4, gold_y1_5, gold_d1_6], And(And(And(Movie(gold_m_1, FV_title_0, FV_year_0, gold_d_2), Movie(gold_m1_3, gold_t1_4, gold_y1_5, gold_d1_6)), gold_d_2 == gold_d1_6), FV_title_0 != gold_t1_4))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.006 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 6 relation tuple(s) listed, 6 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          i : mID = 2
+          d : director = ''
+        free (answer) variables:
+          FV_title_0 : title = ''
+          FV_year_0 : year = 3
+        relations (each value tagged with the local sort of its position):
+          Movie(mID, title, year, director):
+            Movie(mID=2, title='', year=2, director='')
+            Movie(mID=2, title='', year=3, director='')
+            Movie(mID=2, title='', year=4, director='A')
+            Movie(mID=3, title='', year=5, director='')
+            Movie(mID=4, title='', year=5, director='')
+            Movie(mID=5, title='', year=5, director='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          director : {'', 'A'}
+          mID      : {2, 3, 4, 5}
+          title    : {''}
+          year     : {2, 3, 4, 5}
+        values shared across local sorts (joins):
+          2 : mID, year
+          3 : mID, year
+          4 : mID, year
+          5 : mID, year
+          '' : director, title
+   [R3] took 0.026 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

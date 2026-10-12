@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_388.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_388.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2566 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of all aircrafts that can cover a distance of more than 1000?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        number(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        distance = number(6,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+      symbols:
+        aircraft(aid, name, distance)
+        constant 1000 : distance
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃d : distance ( (aircraft(a,n,d)) ∧ (d > 1000) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:d COLON:: IDENT:distance LPAR:( LPAR:( IDENT:aircraft LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d GT:> NUM:1000 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS d:distance
+              AND
+                PRED aircraft(a, n, d)
+                CMP  d > 1000
+      Predicted FOL: ∃x_aid : aid ∃x_name : name ∃x_distance : distance (aircraft(x_aid, x_name, x_distance) ∧ x_distance > 1000)
+        tokens: EXISTS:∃ IDENT:x_aid COLON:: IDENT:aid EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:x_distance COLON:: IDENT:distance LPAR:( IDENT:aircraft LPAR:( IDENT:x_aid COMMA:, IDENT:x_name COMMA:, IDENT:x_distance RPAR:) AND:∧ IDENT:x_distance GT:> NUM:1000 RPAR:) EOF
+        AST:
+          EXISTS x_aid:aid
+            EXISTS x_name:name
+              EXISTS x_distance:distance
+                AND
+                  PRED aircraft(x_aid, x_name, x_distance)
+                  CMP  x_distance > 1000
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x_aid do not occur free in the formula
+   1 shared answer variable(s)
+      FV_aid_0 : aid   Gold a <-> Predicted x_aid
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        d : local distance, global number(6,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+      Predicted FOL:
+        x_aid : local aid, global number(9,0) -> RealSort()
+        x_distance : local distance, global number(6,0) -> RealSort()
+        x_name : local name, global varchar2(30) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_d_2], And(D_varchar2_30_(gold_n_1), D_number_6_0_(gold_d_2), And(P_aircraft(FV_aid_0, gold_n_1, gold_d_2), (gold_d_2 > L_v_1000_number_6_0_))))
+      gold_skolem (witnesses WGOLD_n, WGOLD_d):  And(D_varchar2_30_(WGOLD_n), D_number_6_0_(WGOLD_d), And(P_aircraft(FV_aid_0, WGOLD_n, WGOLD_d), (WGOLD_d > L_v_1000_number_6_0_)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_aid_1, predicted_x_name_2, predicted_x_distance_3], And(D_number_9_0_(predicted_x_aid_1), D_varchar2_30_(predicted_x_name_2), D_number_6_0_(predicted_x_distance_3), And(P_aircraft(predicted_x_aid_1, predicted_x_name_2, predicted_x_distance_3), (predicted_x_distance_3 > L_v_1000_number_6_0_))))
+      predicted_skolem (witnesses WPREDICTED_x_aid, WPREDICTED_x_name, WPREDICTED_x_distance):  And(D_number_9_0_(WPREDICTED_x_aid), D_varchar2_30_(WPREDICTED_x_name), D_number_6_0_(WPREDICTED_x_distance), And(P_aircraft(WPREDICTED_x_aid, WPREDICTED_x_name, WPREDICTED_x_distance), (WPREDICTED_x_distance > L_v_1000_number_6_0_)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '1000' at number(6,0) -> L_v_1000_number_6_0_ = RealVal('1000')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 735 lines, 27841 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_388.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_aid_0), FV_aid_0 > -1000000000, FV_aid_0 < 1000000000)
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_d
+      claim: And(And(Length(WGOLD_n) <= 30, And(IsInt(WGOLD_d), WGOLD_d > -1000000, WGOLD_d < 1000000), And(aircraft(FV_aid_0, WGOLD_n, WGOLD_d), 1000 < WGOLD_d)), Not(Exists([predicted_x_aid_1, predicted_x_name_2, predicted_x_distance_3], And(And(IsInt(predicted_x_aid_1), predicted_x_aid_1 > -1000000000, predicted_x_aid_1 < 1000000000), Length(predicted_x_name_2) <= 30, And(IsInt(predicted_x_distance_3), predicted_x_distance_3 > -1000000, predicted_x_distance_3 < 1000000), And(aircraft(predicted_x_aid_1, predicted_x_name_2, predicted_x_distance_3), 1000 < predicted_x_distance_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_x_aid, WPREDICTED_x_name, WPREDICTED_x_distance
+      claim: And(And(And(IsInt(WPREDICTED_x_aid), WPREDICTED_x_aid > -1000000000, WPREDICTED_x_aid < 1000000000), Length(WPREDICTED_x_name) <= 30, And(IsInt(WPREDICTED_x_distance), WPREDICTED_x_distance > -1000000, WPREDICTED_x_distance < 1000000), And(aircraft(WPREDICTED_x_aid, WPREDICTED_x_name, WPREDICTED_x_distance), 1000 < WPREDICTED_x_distance)), Not(Exists([gold_n_1, gold_d_2], And(Length(gold_n_1) <= 30, And(IsInt(gold_d_2), gold_d_2 > -1000000, gold_d_2 < 1000000), And(aircraft(FV_aid_0, gold_n_1, gold_d_2), 1000 < gold_d_2)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.010 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 2 relation tuple(s) listed, 3 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x_aid : aid = -999978344
+          x_name : name = 'A'
+          x_distance : distance = 26907
+        free (answer) variables:
+          FV_aid_0 : aid = 1
+        literals / constants:
+          1000 : distance = 1000
+        relations (each value tagged with the local sort of its position):
+          aircraft(aid, name, distance):
+            aircraft(aid=-999978344, name='', distance=26908)
+            aircraft(aid=-999978344, name='A', distance=26907)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          aid      : {-999978344, 1}
+          distance : {26907, 26908}
+          name     : {'', 'A'}
+   [R3] took 0.035 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

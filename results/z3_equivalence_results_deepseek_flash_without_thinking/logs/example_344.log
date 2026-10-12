@@ -1,0 +1,133 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_344.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_344.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2644 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the heads who are born outside the California state?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        age = real -> Float32()
+        born_state = text -> StringSort()
+        head_ID = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        head(head_ID, name, born_state, age)
+        constant California : born_state
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃h : head_ID ∃b : born_state ∃a : age ( (head(h,n,b,a)) ∧ (b <> 'California') )
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:head_ID EXISTS:∃ IDENT:b COLON:: IDENT:born_state EXISTS:∃ IDENT:a COLON:: IDENT:age LPAR:( LPAR:( IDENT:head LPAR:( IDENT:h COMMA:, IDENT:n COMMA:, IDENT:b COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:b NEQ:<> LIT:California RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:head_ID
+            EXISTS b:born_state
+              EXISTS a:age
+                AND
+                  PRED head(h, n, b, a)
+                  NEQ  b != 'California'
+      Predicted FOL: ∃x_head_ID : head_ID ∃x_name : name ∃x_born_state : born_state ∃x_age : age (head(x_head_ID, x_name, x_born_state, x_age) ∧ x_born_state ≠ California)
+        tokens: EXISTS:∃ IDENT:x_head_ID COLON:: IDENT:head_ID EXISTS:∃ IDENT:x_name COLON:: IDENT:name EXISTS:∃ IDENT:x_born_state COLON:: IDENT:born_state EXISTS:∃ IDENT:x_age COLON:: IDENT:age LPAR:( IDENT:head LPAR:( IDENT:x_head_ID COMMA:, IDENT:x_name COMMA:, IDENT:x_born_state COMMA:, IDENT:x_age RPAR:) AND:∧ IDENT:x_born_state NEQ:≠ IDENT:California RPAR:) EOF
+        AST:
+          EXISTS x_head_ID:head_ID
+            EXISTS x_name:name
+              EXISTS x_born_state:born_state
+                EXISTS x_age:age
+                  AND
+                    PRED head(x_head_ID, x_name, x_born_state, x_age)
+                    NEQ  x_born_state != California<const>
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x_name do not occur free in the formula
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted x_name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global real -> Float32()
+        b : local born_state, global text -> StringSort()
+        h : local head_ID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+      Predicted FOL:
+        x_age : local age, global real -> Float32()
+        x_born_state : local born_state, global text -> StringSort()
+        x_head_ID : local head_ID, global int -> IntSort()
+        x_name : local name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_h_1, gold_b_2, gold_a_3], And(D_real(gold_a_3), And(P_head(gold_h_1, FV_name_0, gold_b_2, gold_a_3), (gold_b_2 != L_California))))
+      gold_skolem (witnesses WGOLD_h, WGOLD_b, WGOLD_a):  And(D_real(WGOLD_a), And(P_head(WGOLD_h, FV_name_0, WGOLD_b, WGOLD_a), (WGOLD_b != L_California)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_head_ID_1, predicted_x_name_2, predicted_x_born_state_3, predicted_x_age_4], And(D_real(predicted_x_age_4), And(P_head(predicted_x_head_ID_1, predicted_x_name_2, predicted_x_born_state_3, predicted_x_age_4), (predicted_x_born_state_3 != L_California))))
+      predicted_skolem (witnesses WPREDICTED_x_head_ID, WPREDICTED_x_name, WPREDICTED_x_born_state, WPREDICTED_x_age):  And(D_real(WPREDICTED_x_age), And(P_head(WPREDICTED_x_head_ID, WPREDICTED_x_name, WPREDICTED_x_born_state, WPREDICTED_x_age), (WPREDICTED_x_born_state != L_California)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'California' at text -> L_California = StringVal('California')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 736 lines, 27843 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_344.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_h, WGOLD_b, WGOLD_a
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(head(WGOLD_h, FV_name_0, WGOLD_b, WGOLD_a), WGOLD_b != "California")), Not(Exists([predicted_x_head_ID_1, predicted_x_name_2, predicted_x_born_state_3, predicted_x_age_4], And(And(Not(fpIsNaN(predicted_x_age_4)), Not(And(fpIsZero(predicted_x_age_4), fpIsNegative(predicted_x_age_4)))), And(head(predicted_x_head_ID_1, predicted_x_name_2, predicted_x_born_state_3, predicted_x_age_4), predicted_x_born_state_3 != "California")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.014 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x_head_ID, WPREDICTED_x_name, WPREDICTED_x_born_state, WPREDICTED_x_age
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_x_age)), Not(And(fpIsZero(WPREDICTED_x_age), fpIsNegative(WPREDICTED_x_age)))), And(head(WPREDICTED_x_head_ID, WPREDICTED_x_name, WPREDICTED_x_born_state, WPREDICTED_x_age), WPREDICTED_x_born_state != "California")), Not(Exists([gold_h_1, gold_b_2, gold_a_3], And(And(Not(fpIsNaN(gold_a_3)), Not(And(fpIsZero(gold_a_3), fpIsNegative(gold_a_3)))), And(head(gold_h_1, FV_name_0, gold_b_2, gold_a_3), gold_b_2 != "California")))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.012 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 7 relation tuple(s) listed, 6 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x_head_ID : head_ID = 2
+          x_name : name = ''
+          x_born_state : born_state = 'a'
+          x_age : age = 2.8398992587956425e-29
+        free (answer) variables:
+          FV_name_0 : name = 'C'
+        literals / constants:
+          California : born_state = 'California'
+        relations (each value tagged with the local sort of its position):
+          head(head_ID, name, born_state, age):
+            head(head_ID=0, name='', born_state='A', age=1.175494490952134e-38)
+            head(head_ID=0, name='', born_state='C', age=1.175494490952134e-38)
+            head(head_ID=0, name='California', born_state='', age=1.175494490952134e-38)
+            head(head_ID=0, name='a', born_state='', age=1.175494490952134e-38)
+            head(head_ID=2, name='', born_state='California', age=2.8398992587956425e-29)
+            head(head_ID=2, name='', born_state='a', age=2.8398992587956425e-29)
+            head(head_ID=3, name='A', born_state='', age=1.175494490952134e-38)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          age        : {1.175494490952134e-38, 2.8398992587956425e-29}
+          born_state : {'', 'A', 'C', 'California', 'a'}
+          head_ID    : {0, 2, 3}
+          name       : {'', 'A', 'C', 'California', 'a'}
+        values shared across local sorts (joins):
+          '' : born_state, name
+          'A' : born_state, name
+          'C' : born_state, name
+          'California' : born_state, name
+          'a' : born_state, name
+   [R3] took 0.059 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_933.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_933.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3235 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the labels?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        AId = integer -> IntSort()
+        Label = text -> StringSort()
+        Title = text -> StringSort()
+        Type = text -> StringSort()
+        Year = integer -> IntSort()
+      symbols:
+        Albums(AId, Title, Year, Label, Type)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : AId ∃t : Title ∃y : Year ∃t1 : Type ( Albums(a,t,y,l,t1) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:AId EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:t1 COLON:: IDENT:Type LPAR:( IDENT:Albums LPAR:( IDENT:a COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:l COMMA:, IDENT:t1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:AId
+            EXISTS t:Title
+              EXISTS y:Year
+                EXISTS t1:Type
+                  PRED Albums(a, t, y, l, t1)
+      Predicted FOL: ∃x_AId∃x_Title∃x_Year∃x_Label∃x_Type (Albums(x_AId, x_Title, x_Year, x_Label, x_Type) ∧ ∀y_Label ( (∃y_AId∃y_Title∃y_Year∃y_Type Albums(y_AId, y_Title, y_Year, y_Label, y_Type)) → y_Label = x_Label ) )
+        tokens: EXISTS:∃ IDENT:x_AId EXISTS:∃ IDENT:x_Title EXISTS:∃ IDENT:x_Year EXISTS:∃ IDENT:x_Label EXISTS:∃ IDENT:x_Type LPAR:( IDENT:Albums LPAR:( IDENT:x_AId COMMA:, IDENT:x_Title COMMA:, IDENT:x_Year COMMA:, IDENT:x_Label COMMA:, IDENT:x_Type RPAR:) AND:∧ FORALL:∀ IDENT:y_Label LPAR:( LPAR:( EXISTS:∃ IDENT:y_AId EXISTS:∃ IDENT:y_Title EXISTS:∃ IDENT:y_Year EXISTS:∃ IDENT:y_Type IDENT:Albums LPAR:( IDENT:y_AId COMMA:, IDENT:y_Title COMMA:, IDENT:y_Year COMMA:, IDENT:y_Label COMMA:, IDENT:y_Type RPAR:) RPAR:) IMPL:→ IDENT:y_Label EQ:= IDENT:x_Label RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x_AId
+            EXISTS x_Title
+              EXISTS x_Year
+                EXISTS x_Label
+                  EXISTS x_Type
+                    AND
+                      PRED Albums(x_AId, x_Title, x_Year, x_Label, x_Type)
+                      FORALL y_Label
+                        IMPLIES
+                          EXISTS y_AId
+                            EXISTS y_Title
+                              EXISTS y_Year
+                                EXISTS y_Type
+                                  PRED Albums(y_AId, y_Title, y_Year, y_Label, y_Type)
+                          EQ  y_Label = x_Label
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (l : Label) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local AId, global integer -> IntSort()
+        l : local Label, global text -> StringSort()
+        t : local Title, global text -> StringSort()
+        t1 : local Type, global text -> StringSort()
+        y : local Year, global integer -> IntSort()
+      Predicted FOL:
+        x_AId : local AId, global integer -> IntSort()
+        x_Label : local Label, global text -> StringSort()
+        x_Title : local Title, global text -> StringSort()
+        x_Type : local Type, global text -> StringSort()
+        x_Year : local Year, global integer -> IntSort()
+        y_AId : local AId, global integer -> IntSort()
+        y_Label : local Label, global text -> StringSort()
+        y_Title : local Title, global text -> StringSort()
+        y_Type : local Type, global text -> StringSort()
+        y_Year : local Year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5351 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_933.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (l : Label) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

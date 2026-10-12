@@ -1,0 +1,215 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3671.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3671.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4916 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is the capital of the state that borders the state that borders texas
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        border = text -> StringSort()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        state(state_name, population, area, country_name, capital, density)
+        constant texas : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : area ∃d : density ∃p : population ∃c : country_name ∃s : state_name( ∃b : border( ((state(s,p,a,c,c1,d)) ∧ (∃s1 : state_name( ∃b1 : border( ((border_info(s1,b)) ∧ (∃s2 : state_name( (border_info(s2,b1)) ∧ (s2 = 'texas') ))) ∧ (s1 = b1) ) ))) ∧ (s = b) ) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:border LPAR:( LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:b1 COLON:: IDENT:border LPAR:( LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s2 COMMA:, IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s2 EQ:= LIT:texas RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= IDENT:b1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:b RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:area
+            EXISTS d:density
+              EXISTS p:population
+                EXISTS c:country_name
+                  EXISTS s:state_name
+                    EXISTS b:border
+                      AND
+                        AND
+                          PRED state(s, p, a, c, c1, d)
+                          EXISTS s1:state_name
+                            EXISTS b1:border
+                              AND
+                                AND
+                                  PRED border_info(s1, b)
+                                  EXISTS s2:state_name
+                                    AND
+                                      PRED border_info(s2, b1)
+                                      EQ  s2 = 'texas'
+                                EQ  s1 = b1
+                        EQ  s = b
+      Predicted FOL: ∃ s1 : state_name ∃ s2 : state_name ∃ p : population ∃ a : area ∃ co : country_name ∃ d : density ( state(s1, p, a, co, c, d) ∧ border_info(s1, s2) ∧ border_info(s2, 'texas') )
+        tokens: EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name EXISTS:∃ IDENT:s2 COLON:: IDENT:state_name EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:co COLON:: IDENT:country_name EXISTS:∃ IDENT:d COLON:: IDENT:density LPAR:( IDENT:state LPAR:( IDENT:s1 COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:co COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) AND:∧ IDENT:border_info LPAR:( IDENT:s1 COMMA:, IDENT:s2 RPAR:) AND:∧ IDENT:border_info LPAR:( IDENT:s2 COMMA:, LIT:texas RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s1:state_name
+            EXISTS s2:state_name
+              EXISTS p:population
+                EXISTS a:area
+                  EXISTS co:country_name
+                    EXISTS d:density
+                      AND
+                        PRED state(s1, p, a, co, c, d)
+                        PRED border_info(s1, s2)
+                        PRED border_info(s2, 'texas')
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_capital_0 : capital   Gold c1 <-> Predicted c
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local area, global double -> Float64()
+        b : local border, global text -> StringSort()
+        b1 : local border, global text -> StringSort()
+        c : local country_name, global varchar(3) -> StringSort()
+        c1 : local capital, global text -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+        s1 : local state_name, global text -> StringSort()
+        s2 : local state_name, global text -> StringSort()
+      Predicted FOL:
+        a : local area, global double -> Float64()
+        c : local capital, global text -> StringSort()
+        co : local country_name, global varchar(3) -> StringSort()
+        d : local density, global double -> Float64()
+        p : local population, global integer -> IntSort()
+        s1 : local state_name, global text -> StringSort()
+        s2 : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_d_2, gold_p_3, gold_c_4, gold_s_5, gold_b_6], And(D_double(gold_a_1), D_double(gold_d_2), D_varchar_3_(gold_c_4), And(And(P_state(gold_s_5, gold_p_3, gold_a_1, gold_c_4, FV_capital_0, gold_d_2), Exists([gold_s1_7, gold_b1_8], And(And(P_border_info(gold_s1_7, gold_b_6), Exists([gold_s2_9], And(P_border_info(gold_s2_9, gold_b1_8), (gold_s2_9 == L_texas)))), (gold_s1_7 == gold_b1_8)))), (gold_s_5 == gold_b_6))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_d, WGOLD_p, WGOLD_c, WGOLD_s, WGOLD_b):  And(D_double(WGOLD_a), D_double(WGOLD_d), D_varchar_3_(WGOLD_c), And(And(P_state(WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_c, FV_capital_0, WGOLD_d), Exists([goldsk_s1_1, goldsk_b1_2], And(And(P_border_info(goldsk_s1_1, WGOLD_b), Exists([goldsk_s2_3], And(P_border_info(goldsk_s2_3, goldsk_b1_2), (goldsk_s2_3 == L_texas)))), (goldsk_s1_1 == goldsk_b1_2)))), (WGOLD_s == WGOLD_b)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s1_1, predicted_s2_2, predicted_p_3, predicted_a_4, predicted_co_5, predicted_d_6], And(D_double(predicted_a_4), D_varchar_3_(predicted_co_5), D_double(predicted_d_6), And(P_state(predicted_s1_1, predicted_p_3, predicted_a_4, predicted_co_5, FV_capital_0, predicted_d_6), P_border_info(predicted_s1_1, predicted_s2_2), P_border_info(predicted_s2_2, L_texas))))
+      predicted_skolem (witnesses WPREDICTED_s1, WPREDICTED_s2, WPREDICTED_p, WPREDICTED_a, WPREDICTED_co, WPREDICTED_d):  And(D_double(WPREDICTED_a), D_varchar_3_(WPREDICTED_co), D_double(WPREDICTED_d), And(P_state(WPREDICTED_s1, WPREDICTED_p, WPREDICTED_a, WPREDICTED_co, FV_capital_0, WPREDICTED_d), P_border_info(WPREDICTED_s1, WPREDICTED_s2), P_border_info(WPREDICTED_s2, L_texas)))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'texas' at text -> L_texas = StringVal('texas')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 771 lines, 30723 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3671.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_d, WGOLD_p, WGOLD_c, WGOLD_s, WGOLD_b
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(Not(fpIsNaN(WGOLD_d)), Not(And(fpIsZero(WGOLD_d), fpIsNegative(WGOLD_d)))), Length(WGOLD_c) <= 3, And(And(state(WGOLD_s, WGOLD_p, WGOLD_a, WGOLD_c, FV_capital_0, WGOLD_d), Exists([goldsk_s1_1, goldsk_b1_2], And(And(border_info(goldsk_s1_1, WGOLD_b), Exists(goldsk_s2_3, And(border_info(goldsk_s2_3, goldsk_b1_2), goldsk_s2_3 == "texas"))), goldsk_s1_1 == goldsk_b1_2))), WGOLD_s == WGOLD_b)), Not(Exists([predicted_s1_1, predicted_s2_2, predicted_p_3, predicted_a_4, predicted_co_5, predicted_d_6], And(And(Not(fpIsNaN(predicted_a_4)), Not(And(fpIsZero(predicted_a_4), fpIsNegative(predicted_a_4)))), Length(predicted_co_5) <= 3, And(Not(fpIsNaN(predicted_d_6)), Not(And(fpIsZero(predicted_d_6), fpIsNegative(predicted_d_6)))), And(state(predicted_s1_1, predicted_p_3, predicted_a_4, predicted_co_5, FV_capital_0, predicted_d_6), border_info(predicted_s1_1, predicted_s2_2), border_info(predicted_s2_2, "texas"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.037 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 16 relation tuple(s) listed, 17 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          a : area = 3.78946403381545e-270
+          d : density = 2.848094538890513e-306
+          p : population = 2
+          c : country_name = ''
+          s : state_name = 'B'
+          b : border = 'B'
+        free (answer) variables:
+          FV_capital_0 : capital = ''
+        literals / constants:
+          texas : state_name = 'texas'
+        relations (each value tagged with the local sort of its position):
+          border_info(state_name, border):
+            border_info(state_name='', border='B')
+            border_info(state_name='!0!', border='')
+            border_info(state_name='A', border='')
+            border_info(state_name='C', border='')
+            border_info(state_name='texas', border='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          state(state_name, population, area, country_name, capital, density):
+            state(state_name='', population=0, area=2.225073858507202e-308, country_name='', capital='!0!', density=2.225073858507202e-308)
+            state(state_name='', population=0, area=2.225073858507202e-308, country_name='', capital='B', density=2.225073858507202e-308)
+            state(state_name='', population=0, area=2.225073858507202e-308, country_name='', capital='texas', density=2.225073858507202e-308)
+            state(state_name='', population=2, area=3.78946403381545e-270, country_name='', capital='', density=2.848094538890513e-306)
+            state(state_name='!0!', population=0, area=2.225073858507202e-308, country_name='', capital='A', density=3.78946403381545e-270)
+            state(state_name='!0!', population=0, area=2.848094538890513e-306, country_name='', capital='A', density=2.225073858507202e-308)
+            state(state_name='!0!', population=3, area=2.225073858507202e-308, country_name='A', capital='C', density=2.225073858507202e-308)
+            state(state_name='A', population=0, area=2.225073858507202e-308, country_name='', capital='A', density=2.225073858507202e-308)
+            state(state_name='B', population=2, area=3.78946403381545e-270, country_name='', capital='', density=2.848094538890513e-306)
+            state(state_name='C', population=0, area=2.225073858507202e-308, country_name='', capital='A', density=2.225073858507202e-308)
+            state(state_name='texas', population=0, area=2.225073858507202e-308, country_name='', capital='A', density=2.225073858507202e-308)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          area         : {2.225073858507202e-308, 2.848094538890513e-306, 3.78946403381545e-270}
+          border       : {'', 'B'}
+          capital      : {'', '!0!', 'A', 'B', 'C', 'texas'}
+          country_name : {'', 'A'}
+          density      : {2.225073858507202e-308, 2.848094538890513e-306, 3.78946403381545e-270}
+          population   : {0, 2, 3}
+          state_name   : {'', '!0!', 'A', 'B', 'C', 'texas'}
+        values shared across local sorts (joins):
+          2.225073858507202e-308 : area, density
+          2.848094538890513e-306 : area, density
+          3.78946403381545e-270 : area, density
+          '!0!' : capital, state_name
+          '' : border, capital, state_name
+          'A' : capital, state_name
+          'B' : border, capital, state_name
+          'C' : capital, state_name
+          'texas' : capital, state_name
+   [R2] took 0.192 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s1, WPREDICTED_s2, WPREDICTED_p, WPREDICTED_a, WPREDICTED_co, WPREDICTED_d
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_a)), Not(And(fpIsZero(WPREDICTED_a), fpIsNegative(WPREDICTED_a)))), Length(WPREDICTED_co) <= 3, And(Not(fpIsNaN(WPREDICTED_d)), Not(And(fpIsZero(WPREDICTED_d), fpIsNegative(WPREDICTED_d)))), And(state(WPREDICTED_s1, WPREDICTED_p, WPREDICTED_a, WPREDICTED_co, FV_capital_0, WPREDICTED_d), border_info(WPREDICTED_s1, WPREDICTED_s2), border_info(WPREDICTED_s2, "texas"))), Not(Exists([gold_a_1, gold_d_2, gold_p_3, gold_c_4, gold_s_5, gold_b_6], And(And(Not(fpIsNaN(gold_a_1)), Not(And(fpIsZero(gold_a_1), fpIsNegative(gold_a_1)))), And(Not(fpIsNaN(gold_d_2)), Not(And(fpIsZero(gold_d_2), fpIsNegative(gold_d_2)))), Length(gold_c_4) <= 3, And(And(state(gold_s_5, gold_p_3, gold_a_1, gold_c_4, FV_capital_0, gold_d_2), Exists([gold_s1_7, gold_b1_8], And(And(border_info(gold_s1_7, gold_b_6), Exists(gold_s2_9, And(border_info(gold_s2_9, gold_b1_8), gold_s2_9 == "texas"))), gold_s1_7 == gold_b1_8))), gold_s_5 == gold_b_6)))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.035 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 4 relation tuple(s) listed, 24 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          s1 : state_name = 'A'
+          s2 : state_name = ''
+          p : population = 2
+          a : area = 4.450147717014403e-308
+          co : country_name = ''
+          d : density = 7.291122019768597e-304
+        free (answer) variables:
+          FV_capital_0 : capital = ''
+        literals / constants:
+          texas : state_name = 'texas'
+        relations (each value tagged with the local sort of its position):
+          border_info(state_name, border):
+            border_info(state_name='', border='C')
+            border_info(state_name='', border='texas')
+            border_info(state_name='A', border='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          state(state_name, population, area, country_name, capital, density):
+            state(state_name='A', population=2, area=4.450147717014403e-308, country_name='', capital='', density=7.291122019768597e-304)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          area         : {4.450147717014403e-308}
+          border       : {'', 'C', 'texas'}
+          capital      : {''}
+          country_name : {''}
+          density      : {7.291122019768597e-304}
+          population   : {2}
+          state_name   : {'', 'A'}
+        values shared across local sorts (joins):
+          '' : border, capital, state_name
+   [R3] took 0.144 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

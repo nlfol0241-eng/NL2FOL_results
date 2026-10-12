@@ -1,0 +1,131 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_3565.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4801 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of customers who do not have any policies?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Customer_Details = varchar(255) -> StringSort()
+        Customer_ID = integer -> IntSort()
+        End_Date = datetime -> IntSort()
+        Policy_ID = integer -> IntSort()
+        Policy_Type_Code = char(15) -> StringSort()
+        Start_Date = datetime -> IntSort()
+      symbols:
+        Customers(Customer_ID, Customer_Details)
+        Policies(Policy_ID, Customer_ID, Policy_Type_Code, Start_Date, End_Date)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c : Customer_ID( Customers(c,c1) )) ∧ (¬(∃p : Policy_ID ∃s : Start_Date ∃p1 : Policy_Type_Code ∃c2 : Customer_ID ∃e : End_Date ∃c : Customer_ID( ((Policies(p,c2,p1,s,e)) ∧ (Customers(c,c1))) ∧ (c2 = c) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:s COLON:: IDENT:Start_Date EXISTS:∃ IDENT:p1 COLON:: IDENT:Policy_Type_Code EXISTS:∃ IDENT:c2 COLON:: IDENT:Customer_ID EXISTS:∃ IDENT:e COLON:: IDENT:End_Date EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID LPAR:( LPAR:( LPAR:( IDENT:Policies LPAR:( IDENT:p COMMA:, IDENT:c2 COMMA:, IDENT:p1 COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c2 EQ:= IDENT:c RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c:Customer_ID
+              PRED Customers(c, c1)
+            NOT
+              EXISTS p:Policy_ID
+                EXISTS s:Start_Date
+                  EXISTS p1:Policy_Type_Code
+                    EXISTS c2:Customer_ID
+                      EXISTS e:End_Date
+                        EXISTS c:Customer_ID
+                          AND
+                            AND
+                              PRED Policies(p, c2, p1, s, e)
+                              PRED Customers(c, c1)
+                            EQ  c2 = c
+      Predicted FOL: ∃c : Customer_ID (Customers(c, n) ∧ ¬∃p : Policy_ID ∃t : Policy_Type_Code ∃s : Start_Date ∃e : End_Date (Policies(p, c, t, s, e)))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Customer_ID LPAR:( IDENT:Customers LPAR:( IDENT:c COMMA:, IDENT:n RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:p COLON:: IDENT:Policy_ID EXISTS:∃ IDENT:t COLON:: IDENT:Policy_Type_Code EXISTS:∃ IDENT:s COLON:: IDENT:Start_Date EXISTS:∃ IDENT:e COLON:: IDENT:End_Date LPAR:( IDENT:Policies LPAR:( IDENT:p COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Customer_ID
+            AND
+              PRED Customers(c, n)
+              NOT
+                EXISTS p:Policy_ID
+                  EXISTS t:Policy_Type_Code
+                    EXISTS s:Start_Date
+                      EXISTS e:End_Date
+                        PRED Policies(p, c, t, s, e)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Customer_Details_0 : Customer_Details   Gold c1 <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        c1 : local Customer_Details, global varchar(255) -> StringSort()
+        c2 : local Customer_ID, global integer -> IntSort()
+        e : local End_Date, global datetime -> IntSort()
+        p : local Policy_ID, global integer -> IntSort()
+        p1 : local Policy_Type_Code, global char(15) -> StringSort()
+        s : local Start_Date, global datetime -> IntSort()
+      Predicted FOL:
+        c : local Customer_ID, global integer -> IntSort()
+        e : local End_Date, global datetime -> IntSort()
+        n : local Customer_Details, global varchar(255) -> StringSort()
+        p : local Policy_ID, global integer -> IntSort()
+        s : local Start_Date, global datetime -> IntSort()
+        t : local Policy_Type_Code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_c_1], P_Customers(gold_c_1, FV_Customer_Details_0)), Not(Exists([gold_p_2, gold_s_3, gold_p1_4, gold_c2_5, gold_e_6, gold_c_7], And(D_char_15_(gold_p1_4), And(And(P_Policies(gold_p_2, gold_c2_5, gold_p1_4, gold_s_3, gold_e_6), P_Customers(gold_c_7, FV_Customer_Details_0)), (gold_c2_5 == gold_c_7))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c_1], And(P_Customers(predicted_c_1, FV_Customer_Details_0), Not(Exists([predicted_p_2, predicted_t_3, predicted_s_4, predicted_e_5], And(D_char_15_(predicted_t_3), P_Policies(predicted_p_2, predicted_c_1, predicted_t_3, predicted_s_4, predicted_e_5))))))
+      predicted_skolem (witnesses WPREDICTED_c):  And(P_Customers(WPREDICTED_c, FV_Customer_Details_0), Not(Exists([predictedsk_p_1, predictedsk_t_2, predictedsk_s_3, predictedsk_e_4], And(D_char_15_(predictedsk_t_2), P_Policies(predictedsk_p_1, WPREDICTED_c, predictedsk_t_2, predictedsk_s_3, predictedsk_e_4)))))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 746 lines, 28758 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Customer_Details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists(gold_c_1, Customers(gold_c_1, FV_Customer_Details_0)), Not(Exists([gold_p_2, gold_s_3, gold_p1_4, gold_c2_5, gold_e_6, gold_c_7], And(Length(gold_p1_4) <= 15, And(And(Policies(gold_p_2, gold_c2_5, gold_p1_4, gold_s_3, gold_e_6), Customers(gold_c_7, FV_Customer_Details_0)), gold_c2_5 == gold_c_7))))), Not(Exists(predicted_c_1, And(Customers(predicted_c_1, FV_Customer_Details_0), Not(Exists([predicted_p_2, predicted_t_3, predicted_s_4, predicted_e_5], And(Length(predicted_t_3) <= 15, Policies(predicted_p_2, predicted_c_1, predicted_t_3, predicted_s_4, predicted_e_5))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_c
+      claim: And(And(Customers(WPREDICTED_c, FV_Customer_Details_0), Not(Exists([predictedsk_p_1, predictedsk_t_2, predictedsk_s_3, predictedsk_e_4], And(Length(predictedsk_t_2) <= 15, Policies(predictedsk_p_1, WPREDICTED_c, predictedsk_t_2, predictedsk_s_3, predictedsk_e_4))))), Not(And(Exists(gold_c_1, Customers(gold_c_1, FV_Customer_Details_0)), Not(Exists([gold_p_2, gold_s_3, gold_p1_4, gold_c2_5, gold_e_6, gold_c_7], And(Length(gold_p1_4) <= 15, And(And(Policies(gold_p_2, gold_c2_5, gold_p1_4, gold_s_3, gold_e_6), Customers(gold_c_7, FV_Customer_Details_0)), gold_c2_5 == gold_c_7)))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py", line 694, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py", line 725, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py", line 676, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py", line 574, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py", line 498, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py", line 378, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_3565.py", line 378, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

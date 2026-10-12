@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1375.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1375.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5024 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which attribute definitions have attribute value 0? Give me the attribute name and attribute ID.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 6 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        attribute_data_type = varchar(10) -> StringSort()
+        attribute_id = integer -> IntSort()
+        attribute_name = varchar(30) -> StringSort()
+        attribute_value = varchar(255) -> StringSort()
+        catalog_entry_id = integer -> IntSort()
+        catalog_level_number = integer -> IntSort()
+      symbols:
+        Attribute_Definitions(attribute_id, attribute_name, attribute_data_type)
+        Catalog_Contents_Additional_Attributes(catalog_entry_id, catalog_level_number, attribute_id, attribute_value)
+        constant 0 : attribute_value
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a2 : attribute_data_type ∃c : catalog_entry_id ∃c1 : catalog_level_number ∃a3 : attribute_id ∃a4 : attribute_value ( (((Attribute_Definitions(a,a1,a2)) ∧ (Catalog_Contents_Additional_Attributes(c,c1,a3,a4))) ∧ (a = a3)) ∧ (a4 = 0) )
+        tokens: EXISTS:∃ IDENT:a2 COLON:: IDENT:attribute_data_type EXISTS:∃ IDENT:c COLON:: IDENT:catalog_entry_id EXISTS:∃ IDENT:c1 COLON:: IDENT:catalog_level_number EXISTS:∃ IDENT:a3 COLON:: IDENT:attribute_id EXISTS:∃ IDENT:a4 COLON:: IDENT:attribute_value LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Attribute_Definitions LPAR:( IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Catalog_Contents_Additional_Attributes LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:a3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a4 EQ:= NUM:0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a2:attribute_data_type
+            EXISTS c:catalog_entry_id
+              EXISTS c1:catalog_level_number
+                EXISTS a3:attribute_id
+                  EXISTS a4:attribute_value
+                    AND
+                      AND
+                        AND
+                          PRED Attribute_Definitions(a, a1, a2)
+                          PRED Catalog_Contents_Additional_Attributes(c, c1, a3, a4)
+                        EQ  a = a3
+                      EQ  a4 = 0
+      Predicted FOL: ∃x : attribute_id ∃y : attribute_name ∃z : attribute_data_type (Attribute_Definitions(x, y, z) ∧ ∃u : catalog_entry_id ∃v : catalog_level_number ∃w : attribute_value (Catalog_Contents_Additional_Attributes(u, v, x, w) ∧ w = 0))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:attribute_id EXISTS:∃ IDENT:y COLON:: IDENT:attribute_name EXISTS:∃ IDENT:z COLON:: IDENT:attribute_data_type LPAR:( IDENT:Attribute_Definitions LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ EXISTS:∃ IDENT:u COLON:: IDENT:catalog_entry_id EXISTS:∃ IDENT:v COLON:: IDENT:catalog_level_number EXISTS:∃ IDENT:w COLON:: IDENT:attribute_value LPAR:( IDENT:Catalog_Contents_Additional_Attributes LPAR:( IDENT:u COMMA:, IDENT:v COMMA:, IDENT:x COMMA:, IDENT:w RPAR:) AND:∧ IDENT:w EQ:= NUM:0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:attribute_id
+            EXISTS y:attribute_name
+              EXISTS z:attribute_data_type
+                AND
+                  PRED Attribute_Definitions(x, y, z)
+                  EXISTS u:catalog_entry_id
+                    EXISTS v:catalog_level_number
+                      EXISTS w:attribute_value
+                        AND
+                          PRED Catalog_Contents_Additional_Attributes(u, v, x, w)
+                          EQ  w = 0
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (a : attribute_id, a1 : attribute_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local attribute_id, global integer -> IntSort()
+        a1 : local attribute_name, global varchar(30) -> StringSort()
+        a2 : local attribute_data_type, global varchar(10) -> StringSort()
+        a3 : local attribute_id, global integer -> IntSort()
+        a4 : local attribute_value, global varchar(255) -> StringSort()
+        c : local catalog_entry_id, global integer -> IntSort()
+        c1 : local catalog_level_number, global integer -> IntSort()
+      Predicted FOL:
+        u : local catalog_entry_id, global integer -> IntSort()
+        v : local catalog_level_number, global integer -> IntSort()
+        w : local attribute_value, global varchar(255) -> StringSort()
+        x : local attribute_id, global integer -> IntSort()
+        y : local attribute_name, global varchar(30) -> StringSort()
+        z : local attribute_data_type, global varchar(10) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5675 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1375.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (a : attribute_id, a1 : attribute_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

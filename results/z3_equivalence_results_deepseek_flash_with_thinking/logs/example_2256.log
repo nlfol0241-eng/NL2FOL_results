@@ -1,0 +1,78 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2256.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2256.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4159 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: where are some good arabics in mountain view ?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        CITY_NAME = text -> StringSort()
+        FOOD_TYPE = text -> StringSort()
+        HOUSE_NUMBER = int -> IntSort()
+        ID = int -> IntSort()
+        NAME = text -> StringSort()
+        RATING = real -> Float32()
+        RESTAURANT_ID = int -> IntSort()
+        STREET_NAME = text -> StringSort()
+      symbols:
+        LOCATION(RESTAURANT_ID, HOUSE_NUMBER, STREET_NAME, CITY_NAME)
+        RESTAURANT(ID, NAME, FOOD_TYPE, CITY_NAME, RATING)
+        constant 2.5 : RATING
+        constant arabic : FOOD_TYPE
+        constant mountain view : CITY_NAME
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃f : FOOD_TYPE ∃c : CITY_NAME ∃r : RATING ∃r1 : RESTAURANT_ID ∃s : STREET_NAME ∃c1 : CITY_NAME ( (((RESTAURANT(i,n,f,c,r)) ∧ (LOCATION(r1,h,s,c1))) ∧ (i = r1)) ∧ (((c1 = 'mountain view') ∧ (f = 'arabic')) ∧ (r > 2.5)) )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:f COLON:: IDENT:FOOD_TYPE EXISTS:∃ IDENT:c COLON:: IDENT:CITY_NAME EXISTS:∃ IDENT:r COLON:: IDENT:RATING EXISTS:∃ IDENT:r1 COLON:: IDENT:RESTAURANT_ID EXISTS:∃ IDENT:s COLON:: IDENT:STREET_NAME EXISTS:∃ IDENT:c1 COLON:: IDENT:CITY_NAME LPAR:( LPAR:( LPAR:( LPAR:( IDENT:RESTAURANT LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:f COMMA:, IDENT:c COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:LOCATION LPAR:( IDENT:r1 COMMA:, IDENT:h COMMA:, IDENT:s COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( LPAR:( IDENT:c1 EQ:= LIT:mountain view RPAR:) AND:∧ LPAR:( IDENT:f EQ:= LIT:arabic RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r GT:> NUM:2.5 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS f:FOOD_TYPE
+              EXISTS c:CITY_NAME
+                EXISTS r:RATING
+                  EXISTS r1:RESTAURANT_ID
+                    EXISTS s:STREET_NAME
+                      EXISTS c1:CITY_NAME
+                        AND
+                          AND
+                            AND
+                              PRED RESTAURANT(i, n, f, c, r)
+                              PRED LOCATION(r1, h, s, c1)
+                            EQ  i = r1
+                          AND
+                            AND
+                              EQ  c1 = 'mountain view'
+                              EQ  f = 'arabic'
+                            CMP  r > 2.5
+      Predicted FOL: ∃rid : ID ∃name : NAME ∃rating : RATING ( RESTAURANT(rid, name, 'arabic', 'mountain view', rating) ∧ rating > 2.5 ∧ LOCATION(rid, house, street, 'mountain view') )
+        tokens: EXISTS:∃ IDENT:rid COLON:: IDENT:ID EXISTS:∃ IDENT:name COLON:: IDENT:NAME EXISTS:∃ IDENT:rating COLON:: IDENT:RATING LPAR:( IDENT:RESTAURANT LPAR:( IDENT:rid COMMA:, IDENT:name COMMA:, LIT:arabic COMMA:, LIT:mountain view COMMA:, IDENT:rating RPAR:) AND:∧ IDENT:rating GT:> NUM:2.5 AND:∧ IDENT:LOCATION LPAR:( IDENT:rid COMMA:, IDENT:house COMMA:, IDENT:street COMMA:, LIT:mountain view RPAR:) RPAR:) EOF
+        AST:
+          EXISTS rid:ID
+            EXISTS name:NAME
+              EXISTS rating:RATING
+                AND
+                  PRED RESTAURANT(rid, name, 'arabic', 'mountain view', rating)
+                  CMP  rating > 2.5
+                  PRED LOCATION(rid, house, street, 'mountain view')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['HOUSE_NUMBER', 'NAME'] vs Predicted ['HOUSE_NUMBER', 'STREET_NAME']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['HOUSE_NUMBER', 'NAME'] vs Predicted ['HOUSE_NUMBER', 'STREET_NAME']

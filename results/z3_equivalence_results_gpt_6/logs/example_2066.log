@@ -1,0 +1,128 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2066.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2066.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3604 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show names of teachers and the courses they are arranged to teach.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 3 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Course = text -> StringSort()
+        Course_ID = int -> IntSort()
+        Grade = int -> IntSort()
+        Hometown = text -> StringSort()
+        Name = text -> StringSort()
+        Staring_Date = text -> StringSort()
+        Teacher_ID = int -> IntSort()
+      symbols:
+        course(Course_ID, Staring_Date, Course)
+        course_arrange(Course_ID, Teacher_ID, Grade)
+        teacher(Teacher_ID, Name, Age, Hometown)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Course_ID ∃t : Teacher_ID ∃g : Grade ∃c1 : Course_ID ∃s : Staring_Date ∃t1 : Teacher_ID ∃a : Age ∃h : Hometown ( ((((course_arrange(c,t,g)) ∧ (course(c1,s,c2))) ∧ (c = c1)) ∧ (teacher(t1,n,a,h))) ∧ (t = t1) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Course_ID EXISTS:∃ IDENT:t COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:c1 COLON:: IDENT:Course_ID EXISTS:∃ IDENT:s COLON:: IDENT:Staring_Date EXISTS:∃ IDENT:t1 COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Hometown LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:course_arrange LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:course LPAR:( IDENT:c1 COMMA:, IDENT:s COMMA:, IDENT:c2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:teacher LPAR:( IDENT:t1 COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= IDENT:t1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Course_ID
+            EXISTS t:Teacher_ID
+              EXISTS g:Grade
+                EXISTS c1:Course_ID
+                  EXISTS s:Staring_Date
+                    EXISTS t1:Teacher_ID
+                      EXISTS a:Age
+                        EXISTS h:Hometown
+                          AND
+                            AND
+                              AND
+                                AND
+                                  PRED course_arrange(c, t, g)
+                                  PRED course(c1, s, c2)
+                                EQ  c = c1
+                              PRED teacher(t1, n, a, h)
+                            EQ  t = t1
+      Predicted FOL: ∃t : Teacher_ID ∃c : Course_ID ∃g : Grade ∃d : Staring_Date ∃a : Age ∃h : Hometown (teacher(t, n, a, h) ∧ course_arrange(c, t, g) ∧ course(c, d, k))
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Teacher_ID EXISTS:∃ IDENT:c COLON:: IDENT:Course_ID EXISTS:∃ IDENT:g COLON:: IDENT:Grade EXISTS:∃ IDENT:d COLON:: IDENT:Staring_Date EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:h COLON:: IDENT:Hometown LPAR:( IDENT:teacher LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:a COMMA:, IDENT:h RPAR:) AND:∧ IDENT:course_arrange LPAR:( IDENT:c COMMA:, IDENT:t COMMA:, IDENT:g RPAR:) AND:∧ IDENT:course LPAR:( IDENT:c COMMA:, IDENT:d COMMA:, IDENT:k RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Teacher_ID
+            EXISTS c:Course_ID
+              EXISTS g:Grade
+                EXISTS d:Staring_Date
+                  EXISTS a:Age
+                    EXISTS h:Hometown
+                      AND
+                        PRED teacher(t, n, a, h)
+                        PRED course_arrange(c, t, g)
+                        PRED course(c, d, k)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Course_0 : Course   Gold c2 <-> Predicted k
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        c : local Course_ID, global int -> IntSort()
+        c1 : local Course_ID, global int -> IntSort()
+        c2 : local Course, global text -> StringSort()
+        g : local Grade, global int -> IntSort()
+        h : local Hometown, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        s : local Staring_Date, global text -> StringSort()
+        t : local Teacher_ID, global int -> IntSort()
+        t1 : local Teacher_ID, global int -> IntSort()
+      Predicted FOL:
+        a : local Age, global text -> StringSort()
+        c : local Course_ID, global int -> IntSort()
+        d : local Staring_Date, global text -> StringSort()
+        g : local Grade, global int -> IntSort()
+        h : local Hometown, global text -> StringSort()
+        k : local Course, global text -> StringSort()
+        n : local Name, global text -> StringSort()
+        t : local Teacher_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_t_2, gold_g_3, gold_c1_4, gold_s_5, gold_t1_6, gold_a_7, gold_h_8], And(And(And(And(P_course_arrange(gold_c_1, gold_t_2, gold_g_3), P_course(gold_c1_4, gold_s_5, FV_Course_0)), (gold_c_1 == gold_c1_4)), P_teacher(gold_t1_6, FV_Name_0, gold_a_7, gold_h_8)), (gold_t_2 == gold_t1_6)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_t, WGOLD_g, WGOLD_c1, WGOLD_s, WGOLD_t1, WGOLD_a, WGOLD_h):  And(And(And(And(P_course_arrange(WGOLD_c, WGOLD_t, WGOLD_g), P_course(WGOLD_c1, WGOLD_s, FV_Course_0)), (WGOLD_c == WGOLD_c1)), P_teacher(WGOLD_t1, FV_Name_0, WGOLD_a, WGOLD_h)), (WGOLD_t == WGOLD_t1))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_t_1, predicted_c_2, predicted_g_3, predicted_d_4, predicted_a_5, predicted_h_6], And(P_teacher(predicted_t_1, FV_Name_0, predicted_a_5, predicted_h_6), P_course_arrange(predicted_c_2, predicted_t_1, predicted_g_3), P_course(predicted_c_2, predicted_d_4, FV_Course_0)))
+      predicted_skolem (witnesses WPREDICTED_t, WPREDICTED_c, WPREDICTED_g, WPREDICTED_d, WPREDICTED_a, WPREDICTED_h):  And(P_teacher(WPREDICTED_t, FV_Name_0, WPREDICTED_a, WPREDICTED_h), P_course_arrange(WPREDICTED_c, WPREDICTED_t, WPREDICTED_g), P_course(WPREDICTED_c, WPREDICTED_d, FV_Course_0))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 768 lines, 29914 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2066.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_t, WGOLD_g, WGOLD_c1, WGOLD_s, WGOLD_t1, WGOLD_a, WGOLD_h
+      claim: And(And(And(And(And(course_arrange(WGOLD_c, WGOLD_t, WGOLD_g), course(WGOLD_c1, WGOLD_s, FV_Course_0)), WGOLD_c == WGOLD_c1), teacher(WGOLD_t1, FV_Name_0, WGOLD_a, WGOLD_h)), WGOLD_t == WGOLD_t1), Not(Exists([predicted_t_1, predicted_c_2, predicted_g_3, predicted_d_4, predicted_a_5, predicted_h_6], And(teacher(predicted_t_1, FV_Name_0, predicted_a_5, predicted_h_6), course_arrange(predicted_c_2, predicted_t_1, predicted_g_3), course(predicted_c_2, predicted_d_4, FV_Course_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_t, WPREDICTED_c, WPREDICTED_g, WPREDICTED_d, WPREDICTED_a, WPREDICTED_h
+      claim: And(And(teacher(WPREDICTED_t, FV_Name_0, WPREDICTED_a, WPREDICTED_h), course_arrange(WPREDICTED_c, WPREDICTED_t, WPREDICTED_g), course(WPREDICTED_c, WPREDICTED_d, FV_Course_0)), Not(Exists([gold_c_1, gold_t_2, gold_g_3, gold_c1_4, gold_s_5, gold_t1_6, gold_a_7, gold_h_8], And(And(And(And(course_arrange(gold_c_1, gold_t_2, gold_g_3), course(gold_c1_4, gold_s_5, FV_Course_0)), gold_c_1 == gold_c1_4), teacher(gold_t1_6, FV_Name_0, gold_a_7, gold_h_8)), gold_t_2 == gold_t1_6))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

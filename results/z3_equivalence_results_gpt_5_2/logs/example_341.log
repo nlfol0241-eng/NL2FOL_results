@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_341.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_341.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5494 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: How much was the budget of " Finding Nemo "
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        budget = text -> StringSort()
+        mid = int -> IntSort()
+        release_year = int -> IntSort()
+        title = text -> StringSort()
+        title_aka = text -> StringSort()
+      symbols:
+        movie(mid, title, release_year, title_aka, budget)
+        constant Finding Nemo : title
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mid ∃t : title ∃r : release_year ∃t1 : title_aka ( (movie(m,t,r,t1,b)) ∧ (t = 'Finding Nemo') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:t COLON:: IDENT:title EXISTS:∃ IDENT:r COLON:: IDENT:release_year EXISTS:∃ IDENT:t1 COLON:: IDENT:title_aka LPAR:( LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, IDENT:t COMMA:, IDENT:r COMMA:, IDENT:t1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Finding Nemo RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS t:title
+              EXISTS r:release_year
+                EXISTS t1:title_aka
+                  AND
+                    PRED movie(m, t, r, t1, b)
+                    EQ  t = 'Finding Nemo'
+      Predicted FOL: ∃m:mid ∃ry:release_year ∃ta:title_aka ( movie(m, 'Finding Nemo', ry, ta, b) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mid EXISTS:∃ IDENT:ry COLON:: IDENT:release_year EXISTS:∃ IDENT:ta COLON:: IDENT:title_aka LPAR:( IDENT:movie LPAR:( IDENT:m COMMA:, LIT:Finding Nemo COMMA:, IDENT:ry COMMA:, IDENT:ta COMMA:, IDENT:b RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mid
+            EXISTS ry:release_year
+              EXISTS ta:title_aka
+                PRED movie(m, 'Finding Nemo', ry, ta, b)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_budget_0 : budget   Gold b <-> Predicted b
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local budget, global text -> StringSort()
+        m : local mid, global int -> IntSort()
+        r : local release_year, global int -> IntSort()
+        t : local title, global text -> StringSort()
+        t1 : local title_aka, global text -> StringSort()
+      Predicted FOL:
+        b : local budget, global text -> StringSort()
+        m : local mid, global int -> IntSort()
+        ry : local release_year, global int -> IntSort()
+        ta : local title_aka, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_t_2, gold_r_3, gold_t1_4], And(P_movie(gold_m_1, gold_t_2, gold_r_3, gold_t1_4, FV_budget_0), (gold_t_2 == L_Finding_Nemo)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_t, WGOLD_r, WGOLD_t1):  And(P_movie(WGOLD_m, WGOLD_t, WGOLD_r, WGOLD_t1, FV_budget_0), (WGOLD_t == L_Finding_Nemo))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_ry_2, predicted_ta_3], P_movie(predicted_m_1, L_Finding_Nemo, predicted_ry_2, predicted_ta_3, FV_budget_0))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_ry, WPREDICTED_ta):  P_movie(WPREDICTED_m, L_Finding_Nemo, WPREDICTED_ry, WPREDICTED_ta, FV_budget_0)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Finding Nemo' at text -> L_Finding_Nemo = StringVal('Finding Nemo')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 735 lines, 27312 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_341.py
+   [G8] took 0.030 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_t, WGOLD_r, WGOLD_t1
+      claim: And(And(movie(WGOLD_m, WGOLD_t, WGOLD_r, WGOLD_t1, FV_budget_0), WGOLD_t == "Finding Nemo"), Not(Exists([predicted_m_1, predicted_ry_2, predicted_ta_3], movie(predicted_m_1, "Finding Nemo", predicted_ry_2, predicted_ta_3, FV_budget_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_ry, WPREDICTED_ta
+      claim: And(movie(WPREDICTED_m, "Finding Nemo", WPREDICTED_ry, WPREDICTED_ta, FV_budget_0), Not(Exists([gold_m_1, gold_t_2, gold_r_3, gold_t1_4], And(movie(gold_m_1, gold_t_2, gold_r_3, gold_t1_4, FV_budget_0), gold_t_2 == "Finding Nemo"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

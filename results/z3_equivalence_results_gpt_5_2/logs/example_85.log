@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_85.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_85.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2541 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct states and create time of all votes?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        timestamp -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        integer -> IntSort()
+      local sorts:
+        contestant_number = integer -> IntSort()
+        created = timestamp -> IntSort()
+        phone_number = integer -> IntSort()
+        state = varchar(2) -> StringSort()
+        vote_id = integer -> IntSort()
+      symbols:
+        VOTES(vote_id, phone_number, state, contestant_number, created)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃v : vote_id ∃p : phone_number ∃c : contestant_number ( VOTES(v,p,s,c,c1) )
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:vote_id EXISTS:∃ IDENT:p COLON:: IDENT:phone_number EXISTS:∃ IDENT:c COLON:: IDENT:contestant_number LPAR:( IDENT:VOTES LPAR:( IDENT:v COMMA:, IDENT:p COMMA:, IDENT:s COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v:vote_id
+            EXISTS p:phone_number
+              EXISTS c:contestant_number
+                PRED VOTES(v, p, s, c, c1)
+      Predicted FOL: ∃s:state ∃t:created ( (∃v:vote_id ∃p:phone_number ∃c:contestant_number ( VOTES(v,p,s,c,t) )) ∧ (∀s':state ∀t':created ( (∃v':vote_id ∃p':phone_number ∃c':contestant_number ( VOTES(v',p',s',c',t') )) → ( (s' = s ∧ t' = t) → (s = s ∧ t = t) ) )) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state EXISTS:∃ IDENT:t COLON:: IDENT:created LPAR:( LPAR:( EXISTS:∃ IDENT:v COLON:: IDENT:vote_id EXISTS:∃ IDENT:p COLON:: IDENT:phone_number EXISTS:∃ IDENT:c COLON:: IDENT:contestant_number LPAR:( IDENT:VOTES LPAR:( IDENT:v COMMA:, IDENT:p COMMA:, IDENT:s COMMA:, IDENT:c COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( FORALL:∀ IDENT:s' COLON:: IDENT:state FORALL:∀ IDENT:t' COLON:: IDENT:created LPAR:( LPAR:( EXISTS:∃ IDENT:v' COLON:: IDENT:vote_id EXISTS:∃ IDENT:p' COLON:: IDENT:phone_number EXISTS:∃ IDENT:c' COLON:: IDENT:contestant_number LPAR:( IDENT:VOTES LPAR:( IDENT:v' COMMA:, IDENT:p' COMMA:, IDENT:s' COMMA:, IDENT:c' COMMA:, IDENT:t' RPAR:) RPAR:) RPAR:) IMPL:→ LPAR:( LPAR:( IDENT:s' EQ:= IDENT:s AND:∧ IDENT:t' EQ:= IDENT:t RPAR:) IMPL:→ LPAR:( IDENT:s EQ:= IDENT:s AND:∧ IDENT:t EQ:= IDENT:t RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state
+            EXISTS t:created
+              AND
+                EXISTS v:vote_id
+                  EXISTS p:phone_number
+                    EXISTS c:contestant_number
+                      PRED VOTES(v, p, s, c, t)
+                FORALL s':state
+                  FORALL t':created
+                    IMPLIES
+                      EXISTS v':vote_id
+                        EXISTS p':phone_number
+                          EXISTS c':contestant_number
+                            PRED VOTES(v', p', s', c', t')
+                      IMPLIES
+                        AND
+                          EQ  s' = s
+                          EQ  t' = t
+                        AND
+                          EQ  s = s
+                          EQ  t = t
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (s : state, c1 : created) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local contestant_number, global integer -> IntSort()
+        c1 : local created, global timestamp -> IntSort()
+        p : local phone_number, global integer -> IntSort()
+        s : local state, global varchar(2) -> StringSort()
+        v : local vote_id, global integer -> IntSort()
+      Predicted FOL:
+        c : local contestant_number, global integer -> IntSort()
+        c' : local contestant_number, global integer -> IntSort()
+        p : local phone_number, global integer -> IntSort()
+        p' : local phone_number, global integer -> IntSort()
+        s : local state, global varchar(2) -> StringSort()
+        s' : local state, global varchar(2) -> StringSort()
+        t : local created, global timestamp -> IntSort()
+        t' : local created, global timestamp -> IntSort()
+        v : local vote_id, global integer -> IntSort()
+        v' : local vote_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5473 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_85.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (s : state, c1 : created) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

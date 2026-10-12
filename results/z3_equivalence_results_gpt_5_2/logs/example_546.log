@@ -1,0 +1,77 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_546.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_546.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2441 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the date and venue of each debate?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Date = text -> StringSort()
+        Debate_ID = int -> IntSort()
+        Num_of_Audience = int -> IntSort()
+        Venue = text -> StringSort()
+      symbols:
+        debate(Debate_ID, Date, Venue, Num_of_Audience)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Debate_ID ∃n : Num_of_Audience ( debate(d,d1,v,n) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Debate_ID EXISTS:∃ IDENT:n COLON:: IDENT:Num_of_Audience LPAR:( IDENT:debate LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:v COMMA:, IDENT:n RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Debate_ID
+            EXISTS n:Num_of_Audience
+              PRED debate(d, d1, v, n)
+      Predicted FOL: ∀d:Debate_ID ∀n:Num_of_Audience ( (∃dt:Date ∃v:Venue debate(d, dt, v, n)) → ∃dt:Date ∃v:Venue debate(d, dt, v, n) )
+        tokens: FORALL:∀ IDENT:d COLON:: IDENT:Debate_ID FORALL:∀ IDENT:n COLON:: IDENT:Num_of_Audience LPAR:( LPAR:( EXISTS:∃ IDENT:dt COLON:: IDENT:Date EXISTS:∃ IDENT:v COLON:: IDENT:Venue IDENT:debate LPAR:( IDENT:d COMMA:, IDENT:dt COMMA:, IDENT:v COMMA:, IDENT:n RPAR:) RPAR:) IMPL:→ EXISTS:∃ IDENT:dt COLON:: IDENT:Date EXISTS:∃ IDENT:v COLON:: IDENT:Venue IDENT:debate LPAR:( IDENT:d COMMA:, IDENT:dt COMMA:, IDENT:v COMMA:, IDENT:n RPAR:) RPAR:) EOF
+        AST:
+          FORALL d:Debate_ID
+            FORALL n:Num_of_Audience
+              IMPLIES
+                EXISTS dt:Date
+                  EXISTS v:Venue
+                    PRED debate(d, dt, v, n)
+                EXISTS dt:Date
+                  EXISTS v:Venue
+                    PRED debate(d, dt, v, n)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (d1 : Date, v : Venue) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Debate_ID, global int -> IntSort()
+        d1 : local Date, global text -> StringSort()
+        n : local Num_of_Audience, global int -> IntSort()
+        v : local Venue, global text -> StringSort()
+      Predicted FOL:
+        d : local Debate_ID, global int -> IntSort()
+        dt : local Date, global text -> StringSort()
+        n : local Num_of_Audience, global int -> IntSort()
+        v : local Venue, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5285 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_546.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (d1 : Date, v : Venue) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_908.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_908.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5015 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct move in dates of the residents?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        date_moved_in = datetime -> IntSort()
+        date_moved_out = datetime -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        property_id = integer -> IntSort()
+        resident_id = integer -> IntSort()
+      symbols:
+        Residents(resident_id, property_id, date_moved_in, date_moved_out, other_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : resident_id ∃p : property_id ∃d1 : date_moved_out ∃o : other_details ( Residents(r,p,d,d1,o) )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:resident_id EXISTS:∃ IDENT:p COLON:: IDENT:property_id EXISTS:∃ IDENT:d1 COLON:: IDENT:date_moved_out EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( IDENT:Residents LPAR:( IDENT:r COMMA:, IDENT:p COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:resident_id
+            EXISTS p:property_id
+              EXISTS d1:date_moved_out
+                EXISTS o:other_details
+                  PRED Residents(r, p, d, d1, o)
+      Predicted FOL: ∃r : resident_id ∃p : property_id ∃o : date_moved_out ∃t : other_details Residents(r, p, d, o, t)
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:resident_id EXISTS:∃ IDENT:p COLON:: IDENT:property_id EXISTS:∃ IDENT:o COLON:: IDENT:date_moved_out EXISTS:∃ IDENT:t COLON:: IDENT:other_details IDENT:Residents LPAR:( IDENT:r COMMA:, IDENT:p COMMA:, IDENT:d COMMA:, IDENT:o COMMA:, IDENT:t RPAR:) EOF
+        AST:
+          EXISTS r:resident_id
+            EXISTS p:property_id
+              EXISTS o:date_moved_out
+                EXISTS t:other_details
+                  PRED Residents(r, p, d, o, t)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_date_moved_in_0 : date_moved_in   Gold d <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_moved_in, global datetime -> IntSort()
+        d1 : local date_moved_out, global datetime -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        p : local property_id, global integer -> IntSort()
+        r : local resident_id, global integer -> IntSort()
+      Predicted FOL:
+        d : local date_moved_in, global datetime -> IntSort()
+        o : local date_moved_out, global datetime -> IntSort()
+        p : local property_id, global integer -> IntSort()
+        r : local resident_id, global integer -> IntSort()
+        t : local other_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_p_2, gold_d1_3, gold_o_4], And(D_varchar_255_(gold_o_4), P_Residents(gold_r_1, gold_p_2, FV_date_moved_in_0, gold_d1_3, gold_o_4)))
+      gold_skolem (witnesses WGOLD_r, WGOLD_p, WGOLD_d1, WGOLD_o):  And(D_varchar_255_(WGOLD_o), P_Residents(WGOLD_r, WGOLD_p, FV_date_moved_in_0, WGOLD_d1, WGOLD_o))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_r_1, predicted_p_2, predicted_o_3, predicted_t_4], And(D_varchar_255_(predicted_t_4), P_Residents(predicted_r_1, predicted_p_2, FV_date_moved_in_0, predicted_o_3, predicted_t_4)))
+      predicted_skolem (witnesses WPREDICTED_r, WPREDICTED_p, WPREDICTED_o, WPREDICTED_t):  And(D_varchar_255_(WPREDICTED_t), P_Residents(WPREDICTED_r, WPREDICTED_p, FV_date_moved_in_0, WPREDICTED_o, WPREDICTED_t))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 742 lines, 28190 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_908.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_p, WGOLD_d1, WGOLD_o
+      claim: And(And(Length(WGOLD_o) <= 255, Residents(WGOLD_r, WGOLD_p, FV_date_moved_in_0, WGOLD_d1, WGOLD_o)), Not(Exists([predicted_r_1, predicted_p_2, predicted_o_3, predicted_t_4], And(Length(predicted_t_4) <= 255, Residents(predicted_r_1, predicted_p_2, FV_date_moved_in_0, predicted_o_3, predicted_t_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_r, WPREDICTED_p, WPREDICTED_o, WPREDICTED_t
+      claim: And(And(Length(WPREDICTED_t) <= 255, Residents(WPREDICTED_r, WPREDICTED_p, FV_date_moved_in_0, WPREDICTED_o, WPREDICTED_t)), Not(Exists([gold_r_1, gold_p_2, gold_d1_3, gold_o_4], And(Length(gold_o_4) <= 255, Residents(gold_r_1, gold_p_2, FV_date_moved_in_0, gold_d1_3, gold_o_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

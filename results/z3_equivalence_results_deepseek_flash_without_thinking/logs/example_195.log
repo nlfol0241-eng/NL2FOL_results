@@ -1,0 +1,76 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_195.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_195.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3390 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: which rivers flow through illinois
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        country_name = varchar(3) -> StringSort()
+        length = integer -> IntSort()
+        river_name = text -> StringSort()
+        traverse = text -> StringSort()
+      symbols:
+        river(river_name, length, country_name, traverse)
+        constant illinois : traverse
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : length ∃c : country_name ∃t : traverse ( (river(r,l,c,t)) ∧ (t = 'illinois') )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:length EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:t COLON:: IDENT:traverse LPAR:( LPAR:( IDENT:river LPAR:( IDENT:r COMMA:, IDENT:l COMMA:, IDENT:c COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:illinois RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:length
+            EXISTS c:country_name
+              EXISTS t:traverse
+                AND
+                  PRED river(r, l, c, t)
+                  EQ  t = 'illinois'
+      Predicted FOL: ∃x0 : river_name ∃x1 : length ∃x2 : country_name ( river(x0, x1, x2, 'illinois') )
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:river_name EXISTS:∃ IDENT:x1 COLON:: IDENT:length EXISTS:∃ IDENT:x2 COLON:: IDENT:country_name LPAR:( IDENT:river LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, LIT:illinois RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x0:river_name
+            EXISTS x1:length
+              EXISTS x2:country_name
+                PRED river(x0, x1, x2, 'illinois')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (r : river_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local country_name, global varchar(3) -> StringSort()
+        l : local length, global integer -> IntSort()
+        r : local river_name, global text -> StringSort()
+        t : local traverse, global text -> StringSort()
+      Predicted FOL:
+        x0 : local river_name, global text -> StringSort()
+        x1 : local length, global integer -> IntSort()
+        x2 : local country_name, global varchar(3) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5254 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_195.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (r : river_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

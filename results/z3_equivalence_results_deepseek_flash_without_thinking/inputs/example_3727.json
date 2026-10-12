@@ -1,0 +1,98 @@
+{
+  "NL": "Find the name of airports which do not have any flight in and out.",
+  "Vocabulary": {
+    "Predicates": [
+      "airports",
+      "flights"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "airports": [
+        "City",
+        "AirportCode",
+        "AirportName",
+        "Country",
+        "CountryAbbrev"
+      ],
+      "flights": [
+        "a_uid",
+        "FlightNo",
+        "SourceAirport",
+        "DestAirport"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( airlines(a0, a1, a2, a3) ∧ airlines(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b4∀b0'∀b1'∀b2'∀b3'∀b4'( airports(b0, b1, b2, b3, b4) ∧ airports(b0', b1', b2', b3', b4') ∧ b1 = b1' ) → ( b0 = b0' ∧ b2 = b2' ∧ b3 = b3' ∧ b4 = b4' )",
+    "axiom3": "∀c0∀c1∀c2∀c3∀c0'∀c1'∀c2'∀c3'( flights(c0, c1, c2, c3) ∧ flights(c0', c1', c2', c3') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' ∧ c3 = c3' )",
+    "axiom4": "∀c0∀c1∀c2∀c3 ( flights(c0, c1, c2, c3) → ∃b0∃b1∃b2∃b3∃b4 ( airports(b0, b1, b2, b3, b4) ∧ b1 = c3 ) )",
+    "axiom5": "∀c0∀c1∀c2∀c3 ( flights(c0, c1, c2, c3) → ∃b0∃b1∃b2∃b3∃b4 ( airports(b0, b1, b2, b3, b4) ∧ b1 = c2 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "airports": {
+        "A": "airports",
+        "A0": "City",
+        "A1": "AirportCode",
+        "A2": "AirportName",
+        "A3": "Country",
+        "A4": "CountryAbbrev"
+      },
+      "flights": {
+        "B": "flights",
+        "B0": "a_uid",
+        "B1": "FlightNo",
+        "B2": "SourceAirport",
+        "B3": "DestAirport"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃p : AirportCode ∃r : CountryAbbrev ∃c1 : Country ∃c : City( (airports(c,p,n,c1,r)) ∧ (¬(∃s : SourceAirport( ((airports(c,p,n,c1,r)) ∧ ((∃a : a_uid ∃d : DestAirport ∃f : FlightNo( flights(a,f,x,d) )) ∨ (∃a : a_uid ∃s : SourceAirport ∃f : FlightNo( flights(a,f,s,x) )))) ∧ (p = s) ))) )",
+    "free vars": "n : AirportName, x : SourceAirport"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A2]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A1 = B2]((A)<X>((<P>[B2](B))<U>(<R>[B3->B2](<P>[B3](B))))))))",
+    "Processed_RA": "<P>[A2]((<P>[A0,A1,A2,A3,A4](A))<D>(<P>[A0,A1,A2,A3,A4](<S>[A1 = B2]((A)<X>((<P>[B2](B))<U>(<R>[B3->B2](<P>[B3](B))))))))",
+    "RC": "[E]?A1,?A4,?A3,?A0( (A(?A0,?A1,?A2,?A3,?A4)) & (~([E]?B2( ((A(?A0,?A1,?A2,?A3,?A4)) & (([E]?B0,?B3,?B1( B(?B0,?B1,?B2,?B3) )) | ([E]?B0,?B2',?B1( B(?B0,?B1,?B2',?B2) )))) & (?A1 = ?B2) ))) )",
+    "string": "∃A1 ∃A4 ∃A3 ∃A0( (A(A0,A1,A2,A3,A4)) ∧ (¬(∃B2( ((A(A0,A1,A2,A3,A4)) ∧ ((∃B0 ∃B3 ∃B1( B(B0,B1,B2,B3) )) ∨ (∃B0 ∃B2' ∃B1( B(B0,B1,B2',B2) )))) ∧ (A1 = B2) ))) )",
+    "free variables": "A2, B2",
+    "db_id": "flight_2",
+    "processed_sql": "SELECT AirportName FROM Airports WHERE AirportCode NOT IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)"
+  },
+  "Global Sorts": [
+    "integer",
+    "text"
+  ],
+  "Sort Axioms": {
+    "airports": {
+      "sortaxiom0": "City = text",
+      "sortaxiom1": "AirportCode = text",
+      "sortaxiom2": "AirportName = text",
+      "sortaxiom3": "Country = text",
+      "sortaxiom4": "CountryAbbrev = text"
+    },
+    "flights": {
+      "sortaxiom0": "a_uid = integer",
+      "sortaxiom1": "FlightNo = integer",
+      "sortaxiom2": "SourceAirport = text",
+      "sortaxiom3": "DestAirport = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT AirportName FROM Airports WHERE AirportCode NOT IN (SELECT SourceAirport FROM Flights UNION SELECT DestAirport FROM Flights)"
+  },
+  "id": 3727,
+  "Predicted FOL": {
+    "string": "∃x0 : City ∃x1 : AirportCode ∃x2 : AirportName ∃x3 : Country ∃x4 : CountryAbbrev ( airports(x0, x1, x2, x3, x4) ∧ ¬∃y0 : a_uid ∃y1 : FlightNo ∃y2 : SourceAirport ∃y3 : DestAirport ( flights(y0, y1, y2, y3) ∧ (y2 = x1 ∨ y3 = x1) ) )",
+    "free vars": ""
+  }
+}

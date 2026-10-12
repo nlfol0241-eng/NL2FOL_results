@@ -1,0 +1,82 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_461.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_461.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2213 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and locations of all tracks?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Location = text -> StringSort()
+        Name = text -> StringSort()
+        Seating = real -> Float32()
+        Track_ID = text -> StringSort()
+        Year_Opened = real -> Float32()
+      symbols:
+        track(Track_ID, Name, Location, Seating, Year_Opened)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : Track_ID ∃s : Seating ∃y : Year_Opened ( track(t,n,l,s,y) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:Track_ID EXISTS:∃ IDENT:s COLON:: IDENT:Seating EXISTS:∃ IDENT:y COLON:: IDENT:Year_Opened LPAR:( IDENT:track LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:l COMMA:, IDENT:s COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:Track_ID
+            EXISTS s:Seating
+              EXISTS y:Year_Opened
+                PRED track(t, n, l, s, y)
+      Predicted FOL: ∀t0:Track_ID ∀t3:Seating ∀t4:Year_Opened ( (∃t1:Name ∃t2:Location track(t0,t1,t2,t3,t4)) → ∃t1:Name ∃t2:Location (track(t0,t1,t2,t3,t4) ∧ Name(t1) ∧ Location(t2)) )
+        tokens: FORALL:∀ IDENT:t0 COLON:: IDENT:Track_ID FORALL:∀ IDENT:t3 COLON:: IDENT:Seating FORALL:∀ IDENT:t4 COLON:: IDENT:Year_Opened LPAR:( LPAR:( EXISTS:∃ IDENT:t1 COLON:: IDENT:Name EXISTS:∃ IDENT:t2 COLON:: IDENT:Location IDENT:track LPAR:( IDENT:t0 COMMA:, IDENT:t1 COMMA:, IDENT:t2 COMMA:, IDENT:t3 COMMA:, IDENT:t4 RPAR:) RPAR:) IMPL:→ EXISTS:∃ IDENT:t1 COLON:: IDENT:Name EXISTS:∃ IDENT:t2 COLON:: IDENT:Location LPAR:( IDENT:track LPAR:( IDENT:t0 COMMA:, IDENT:t1 COMMA:, IDENT:t2 COMMA:, IDENT:t3 COMMA:, IDENT:t4 RPAR:) AND:∧ IDENT:Name LPAR:( IDENT:t1 RPAR:) AND:∧ IDENT:Location LPAR:( IDENT:t2 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          FORALL t0:Track_ID
+            FORALL t3:Seating
+              FORALL t4:Year_Opened
+                IMPLIES
+                  EXISTS t1:Name
+                    EXISTS t2:Location
+                      PRED track(t0, t1, t2, t3, t4)
+                  EXISTS t1:Name
+                    EXISTS t2:Location
+                      AND
+                        PRED track(t0, t1, t2, t3, t4)
+                        PRED Name(t1)
+                        PRED Location(t2)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (n : Name, l : Location) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'Name' has no declared arity
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 140, in infer
+    infer(node[2], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 144, in infer
+    raise ValueError(f"predicate {node[1]!r} has no declared arity")
+ValueError: predicate 'Name' has no declared arity

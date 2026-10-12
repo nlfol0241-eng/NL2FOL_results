@@ -1,0 +1,126 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3307.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3307.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3376 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which colleges have both authors with submission score above 90 and authors with submission score below 80?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Author = text -> StringSort()
+        College = text -> StringSort()
+        Scores = real -> Float32()
+        Submission_ID = int -> IntSort()
+      symbols:
+        submission(Submission_ID, Scores, Author, College)
+        constant 80 : Scores
+        constant 90 : Scores
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 > 90) )) ∧ (¬((∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 > 90) )) ∧ (¬(∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 < 80) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 GT:> NUM:90 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 GT:> NUM:90 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 LT:< NUM:80 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS a:Author
+              EXISTS s1:Scores
+                EXISTS s:Submission_ID
+                  AND
+                    PRED submission(s, s1, a, c)
+                    CMP  s1 > 90
+            NOT
+              AND
+                EXISTS a:Author
+                  EXISTS s1:Scores
+                    EXISTS s:Submission_ID
+                      AND
+                        PRED submission(s, s1, a, c)
+                        CMP  s1 > 90
+                NOT
+                  EXISTS a:Author
+                    EXISTS s1:Scores
+                      EXISTS s:Submission_ID
+                        AND
+                          PRED submission(s, s1, a, c)
+                          CMP  s1 < 80
+      Predicted FOL: ∃id1 : Submission_ID ∃score1 : Scores ∃author1 : Author (submission(id1, score1, author1, c) ∧ score1 > 90) ∧ ∃id2 : Submission_ID ∃score2 : Scores ∃author2 : Author (submission(id2, score2, author2, c) ∧ score2 < 80)
+        tokens: EXISTS:∃ IDENT:id1 COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:score1 COLON:: IDENT:Scores EXISTS:∃ IDENT:author1 COLON:: IDENT:Author LPAR:( IDENT:submission LPAR:( IDENT:id1 COMMA:, IDENT:score1 COMMA:, IDENT:author1 COMMA:, IDENT:c RPAR:) AND:∧ IDENT:score1 GT:> NUM:90 RPAR:) AND:∧ EXISTS:∃ IDENT:id2 COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:score2 COLON:: IDENT:Scores EXISTS:∃ IDENT:author2 COLON:: IDENT:Author LPAR:( IDENT:submission LPAR:( IDENT:id2 COMMA:, IDENT:score2 COMMA:, IDENT:author2 COMMA:, IDENT:c RPAR:) AND:∧ IDENT:score2 LT:< NUM:80 RPAR:) EOF
+        AST:
+          EXISTS id1:Submission_ID
+            EXISTS score1:Scores
+              EXISTS author1:Author
+                AND
+                  AND
+                    PRED submission(id1, score1, author1, c)
+                    CMP  score1 > 90
+                  EXISTS id2:Submission_ID
+                    EXISTS score2:Scores
+                      EXISTS author2:Author
+                        AND
+                          PRED submission(id2, score2, author2, c)
+                          CMP  score2 < 80
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_College_0 : College   Gold c <-> Predicted c
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        s : local Submission_ID, global int -> IntSort()
+        s1 : local Scores, global real -> Float32()
+      Predicted FOL:
+        author1 : local Author, global text -> StringSort()
+        author2 : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        id1 : local Submission_ID, global int -> IntSort()
+        id2 : local Submission_ID, global int -> IntSort()
+        score1 : local Scores, global real -> Float32()
+        score2 : local Scores, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_a_1, gold_s1_2, gold_s_3], And(D_real(gold_s1_2), And(P_submission(gold_s_3, gold_s1_2, gold_a_1, FV_College_0), (gold_s1_2 > L_v_90_real)))), Not(And(Exists([gold_a_4, gold_s1_5, gold_s_6], And(D_real(gold_s1_5), And(P_submission(gold_s_6, gold_s1_5, gold_a_4, FV_College_0), (gold_s1_5 > L_v_90_real)))), Not(Exists([gold_a_7, gold_s1_8, gold_s_9], And(D_real(gold_s1_8), And(P_submission(gold_s_9, gold_s1_8, gold_a_7, FV_College_0), (gold_s1_8 < L_v_80_real))))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id1_1, predicted_score1_2, predicted_author1_3], And(D_real(predicted_score1_2), And(And(P_submission(predicted_id1_1, predicted_score1_2, predicted_author1_3, FV_College_0), (predicted_score1_2 > L_v_90_real)), Exists([predicted_id2_4, predicted_score2_5, predicted_author2_6], And(D_real(predicted_score2_5), And(P_submission(predicted_id2_4, predicted_score2_5, predicted_author2_6, FV_College_0), (predicted_score2_5 < L_v_80_real)))))))
+      predicted_skolem (witnesses WPREDICTED_id1, WPREDICTED_score1, WPREDICTED_author1):  And(D_real(WPREDICTED_score1), And(And(P_submission(WPREDICTED_id1, WPREDICTED_score1, WPREDICTED_author1, FV_College_0), (WPREDICTED_score1 > L_v_90_real)), Exists([predictedsk_id2_1, predictedsk_score2_2, predictedsk_author2_3], And(D_real(predictedsk_score2_2), And(P_submission(predictedsk_id2_1, predictedsk_score2_2, predictedsk_author2_3, FV_College_0), (predictedsk_score2_2 < L_v_80_real))))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '80' at real -> L_v_80_real = FPVal(80.0, Float32())
+      literal '90' at real -> L_v_90_real = FPVal(90.0, Float32())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 740 lines, 29155 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3307.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_a_1, gold_s1_2, gold_s_3], And(And(Not(fpIsNaN(gold_s1_2)), Not(And(fpIsZero(gold_s1_2), fpIsNegative(gold_s1_2)))), And(submission(gold_s_3, gold_s1_2, gold_a_1, FV_College_0), 1.40625*(2**6) < gold_s1_2))), Not(And(Exists([gold_a_4, gold_s1_5, gold_s_6], And(And(Not(fpIsNaN(gold_s1_5)), Not(And(fpIsZero(gold_s1_5), fpIsNegative(gold_s1_5)))), And(submission(gold_s_6, gold_s1_5, gold_a_4, FV_College_0), 1.40625*(2**6) < gold_s1_5))), Not(Exists([gold_a_7, gold_s1_8, gold_s_9], And(And(Not(fpIsNaN(gold_s1_8)), Not(And(fpIsZero(gold_s1_8), fpIsNegative(gold_s1_8)))), And(submission(gold_s_9, gold_s1_8, gold_a_7, FV_College_0), 1.25*(2**6) > gold_s1_8))))))), Not(Exists([predicted_id1_1, predicted_score1_2, predicted_author1_3], And(And(Not(fpIsNaN(predicted_score1_2)), Not(And(fpIsZero(predicted_score1_2), fpIsNegative(predicted_score1_2)))), And(And(submission(predicted_id1_1, predicted_score1_2, predicted_author1_3, FV_College_0), 1.40625*(2**6) < predicted_score1_2), Exists([predicted_id2_4, predicted_score2_5, predicted_author2_6], And(And(Not(fpIsNaN(predicted_score2_5)), Not(And(fpIsZero(predicted_score2_5), fpIsNegative(predicted_score2_5)))), And(submission(predicted_id2_4, predicted_score2_5, predicted_author2_6, FV_College_0), 1.25*(2**6) > predicted_score2_5))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id1, WPREDICTED_score1, WPREDICTED_author1
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_score1)), Not(And(fpIsZero(WPREDICTED_score1), fpIsNegative(WPREDICTED_score1)))), And(And(submission(WPREDICTED_id1, WPREDICTED_score1, WPREDICTED_author1, FV_College_0), 1.40625*(2**6) < WPREDICTED_score1), Exists([predictedsk_id2_1, predictedsk_score2_2, predictedsk_author2_3], And(And(Not(fpIsNaN(predictedsk_score2_2)), Not(And(fpIsZero(predictedsk_score2_2), fpIsNegative(predictedsk_score2_2)))), And(submission(predictedsk_id2_1, predictedsk_score2_2, predictedsk_author2_3, FV_College_0), 1.25*(2**6) > predictedsk_score2_2))))), Not(And(Exists([gold_a_1, gold_s1_2, gold_s_3], And(And(Not(fpIsNaN(gold_s1_2)), Not(And(fpIsZero(gold_s1_2), fpIsNegative(gold_s1_2)))), And(submission(gold_s_3, gold_s1_2, gold_a_1, FV_College_0), 1.40625*(2**6) < gold_s1_2))), Not(And(Exists([gold_a_4, gold_s1_5, gold_s_6], And(And(Not(fpIsNaN(gold_s1_5)), Not(And(fpIsZero(gold_s1_5), fpIsNegative(gold_s1_5)))), And(submission(gold_s_6, gold_s1_5, gold_a_4, FV_College_0), 1.40625*(2**6) < gold_s1_5))), Not(Exists([gold_a_7, gold_s1_8, gold_s_9], And(And(Not(fpIsNaN(gold_s1_8)), Not(And(fpIsZero(gold_s1_8), fpIsNegative(gold_s1_8)))), And(submission(gold_s_9, gold_s1_8, gold_a_7, FV_College_0), 1.25*(2**6) > gold_s1_8)))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3450.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3112 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which studios have never worked with the director Walter Hill?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Director = text -> StringSort()
+        Film_ID = int -> IntSort()
+        Gross_in_dollar = int -> IntSort()
+        Studio = text -> StringSort()
+        Title = text -> StringSort()
+      symbols:
+        film(Film_ID, Title, Studio, Director, Gross_in_dollar)
+        constant Walter Hill : Director
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃t : Title ∃g : Gross_in_dollar ∃d : Director ∃f : Film_ID( film(f,t,s,d,g) )) ∧ (¬(∃t : Title ∃g : Gross_in_dollar ∃d : Director ∃f : Film_ID( (film(f,t,s,d,g)) ∧ (d = 'Walter Hill') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:g COLON:: IDENT:Gross_in_dollar EXISTS:∃ IDENT:d COLON:: IDENT:Director EXISTS:∃ IDENT:f COLON:: IDENT:Film_ID LPAR:( IDENT:film LPAR:( IDENT:f COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:g RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:g COLON:: IDENT:Gross_in_dollar EXISTS:∃ IDENT:d COLON:: IDENT:Director EXISTS:∃ IDENT:f COLON:: IDENT:Film_ID LPAR:( LPAR:( IDENT:film LPAR:( IDENT:f COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:d COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= LIT:Walter Hill RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS t:Title
+              EXISTS g:Gross_in_dollar
+                EXISTS d:Director
+                  EXISTS f:Film_ID
+                    PRED film(f, t, s, d, g)
+            NOT
+              EXISTS t:Title
+                EXISTS g:Gross_in_dollar
+                  EXISTS d:Director
+                    EXISTS f:Film_ID
+                      AND
+                        PRED film(f, t, s, d, g)
+                        EQ  d = 'Walter Hill'
+      Predicted FOL: ∀s:Studio( s = x ↔ ¬∃f:Film_ID ∃t:Title ∃g:Gross_in_dollar ( film(f, t, s, 'Walter Hill', g) ) )
+        tokens: FORALL:∀ IDENT:s COLON:: IDENT:Studio LPAR:( IDENT:s EQ:= IDENT:x IFF:↔ NOT:¬ EXISTS:∃ IDENT:f COLON:: IDENT:Film_ID EXISTS:∃ IDENT:t COLON:: IDENT:Title EXISTS:∃ IDENT:g COLON:: IDENT:Gross_in_dollar LPAR:( IDENT:film LPAR:( IDENT:f COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, LIT:Walter Hill COMMA:, IDENT:g RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          FORALL s:Studio
+            IFF
+              EQ  s = x
+              NOT
+                EXISTS f:Film_ID
+                  EXISTS t:Title
+                    EXISTS g:Gross_in_dollar
+                      PRED film(f, t, s, 'Walter Hill', g)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Studio_0 : Studio   Gold s <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Director, global text -> StringSort()
+        f : local Film_ID, global int -> IntSort()
+        g : local Gross_in_dollar, global int -> IntSort()
+        s : local Studio, global text -> StringSort()
+        t : local Title, global text -> StringSort()
+      Predicted FOL:
+        f : local Film_ID, global int -> IntSort()
+        g : local Gross_in_dollar, global int -> IntSort()
+        s : local Studio, global text -> StringSort()
+        t : local Title, global text -> StringSort()
+        x : local Studio, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_t_1, gold_g_2, gold_d_3, gold_f_4], P_film(gold_f_4, gold_t_1, FV_Studio_0, gold_d_3, gold_g_2)), Not(Exists([gold_t_5, gold_g_6, gold_d_7, gold_f_8], And(P_film(gold_f_8, gold_t_5, FV_Studio_0, gold_d_7, gold_g_6), (gold_d_7 == L_Walter_Hill)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  ForAll([predicted_s_1], ((predicted_s_1 == FV_Studio_0)) == (Not(Exists([predicted_f_2, predicted_t_3, predicted_g_4], P_film(predicted_f_2, predicted_t_3, predicted_s_1, L_Walter_Hill, predicted_g_4)))))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Walter Hill' at text -> L_Walter_Hill = StringVal('Walter Hill')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 724 lines, 26841 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_t_1, gold_g_2, gold_d_3, gold_f_4], film(gold_f_4, gold_t_1, FV_Studio_0, gold_d_3, gold_g_2)), Not(Exists([gold_t_5, gold_g_6, gold_d_7, gold_f_8], And(film(gold_f_8, gold_t_5, FV_Studio_0, gold_d_7, gold_g_6), gold_d_7 == "Walter Hill")))), Not(ForAll(predicted_s_1, (predicted_s_1 == FV_Studio_0) == Not(Exists([predicted_f_2, predicted_t_3, predicted_g_4], film(predicted_f_2, predicted_t_3, predicted_s_1, "Walter Hill", predicted_g_4))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.013 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R2] check gold |= predicted: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py", line 672, in main
+    return _main()
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py", line 700, in _main
+    r1 = _check("R2", "gold |= predicted ?",
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py", line 654, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py", line 552, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py", line 476, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py", line 356, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3450.py", line 356, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

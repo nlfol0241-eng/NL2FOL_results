@@ -1,0 +1,79 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_63.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_63.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5716 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Describe the section h.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        course_id = integer -> IntSort()
+        other_details = varchar(255) -> StringSort()
+        section_description = varchar(255) -> StringSort()
+        section_id = integer -> IntSort()
+        section_name = varchar(255) -> StringSort()
+      symbols:
+        Sections(section_id, course_id, section_name, section_description, other_details)
+        constant h : section_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : section_id ∃c : course_id ∃s1 : section_name ∃o : other_details ( (Sections(s,c,s1,s2,o)) ∧ (s1 = 'h') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:section_id EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:s1 COLON:: IDENT:section_name EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( IDENT:Sections LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:s1 COMMA:, IDENT:s2 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:h RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:section_id
+            EXISTS c:course_id
+              EXISTS s1:section_name
+                EXISTS o:other_details
+                  AND
+                    PRED Sections(s, c, s1, s2, o)
+                    EQ  s1 = 'h'
+      Predicted FOL: Sections(x0, x1, x2, x3, x4) ∧ (x2 = 'h')
+        tokens: IDENT:Sections LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 RPAR:) AND:∧ LPAR:( IDENT:x2 EQ:= LIT:h RPAR:) EOF
+        AST:
+          AND
+            PRED Sections(x0, x1, x2, x3, x4)
+            EQ  x2 = 'h'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s2 : section_description) but Predicted has 5 (x0 : section_id, x1 : course_id, x2 : section_name, x3 : section_description, x4 : other_details): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global integer -> IntSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        s : local section_id, global integer -> IntSort()
+        s1 : local section_name, global varchar(255) -> StringSort()
+        s2 : local section_description, global varchar(255) -> StringSort()
+      Predicted FOL:
+        x0 : local section_id, global integer -> IntSort()
+        x1 : local course_id, global integer -> IntSort()
+        x2 : local section_name, global varchar(255) -> StringSort()
+        x3 : local section_description, global varchar(255) -> StringSort()
+        x4 : local other_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5430 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_63.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s2 : section_description) but Predicted has 5 (x0 : section_id, x1 : course_id, x2 : section_name, x3 : section_description, x4 : other_details): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

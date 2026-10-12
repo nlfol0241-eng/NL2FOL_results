@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_389.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_389.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2446 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the name and distance for aircraft with id 12?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        number(6,0) -> RealSort()   [domain And(IsInt(x), x > -1000000, x < 1000000); 6 digits, 0 after the point]
+      local sorts:
+        aid = number(9,0) -> RealSort()
+        distance = number(6,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+      symbols:
+        aircraft(aid, name, distance)
+        constant 12 : aid
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : aid ( (aircraft(a,n,d)) ∧ (a = 12) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:aid LPAR:( LPAR:( IDENT:aircraft LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= NUM:12 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:aid
+            AND
+              PRED aircraft(a, n, d)
+              EQ  a = 12
+      Predicted FOL: aircraft(12, n, d)
+        tokens: IDENT:aircraft LPAR:( NUM:12 COMMA:, IDENT:n COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          PRED aircraft(12, n, d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_distance_0 : distance   Gold d <-> Predicted d
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global number(9,0) -> RealSort()
+        d : local distance, global number(6,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+      Predicted FOL:
+        d : local distance, global number(6,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1], And(D_number_9_0_(gold_a_1), And(P_aircraft(gold_a_1, FV_name_0, FV_distance_0), (gold_a_1 == L_v_12_number_9_0_))))
+      gold_skolem (witnesses WGOLD_a):  And(D_number_9_0_(WGOLD_a), And(P_aircraft(WGOLD_a, FV_name_0, FV_distance_0), (WGOLD_a == L_v_12_number_9_0_)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_aircraft(L_v_12_number_9_0_, FV_name_0, FV_distance_0), D_number_9_0_(L_v_12_number_9_0_))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '12' at number(9,0) -> L_v_12_number_9_0_ = RealVal('12')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 725 lines, 26397 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_389.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_distance_0), FV_distance_0 > -1000000, FV_distance_0 < 1000000)
+      [1] Length(FV_name_0) <= 30
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_a
+      claim: And(And(And(IsInt(WGOLD_a), WGOLD_a > -1000000000, WGOLD_a < 1000000000), And(aircraft(WGOLD_a, FV_name_0, FV_distance_0), 12 == WGOLD_a)), Not(And(aircraft(12, FV_name_0, FV_distance_0), And(IsInt(12), 12 > -1000000000, 12 < 1000000000))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses -
+      claim: And(And(aircraft(12, FV_name_0, FV_distance_0), And(IsInt(12), 12 > -1000000000, 12 < 1000000000)), Not(Exists(gold_a_1, And(And(IsInt(gold_a_1), gold_a_1 > -1000000000, gold_a_1 < 1000000000), And(aircraft(gold_a_1, FV_name_0, FV_distance_0), 12 == gold_a_1)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

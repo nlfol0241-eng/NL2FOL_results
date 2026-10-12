@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_343.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_343.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2792 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the creation year, name and budget of each department.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Budget_in_Billions = real -> Float32()
+        Creation = text -> StringSort()
+        Department_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Num_Employees = real -> Float32()
+        Ranking = int -> IntSort()
+      symbols:
+        department(Department_ID, Name, Creation, Ranking, Budget_in_Billions, Num_Employees)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Department_ID ∃r : Ranking ∃n1 : Num_Employees ( department(d,n,c,r,b,n1) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Department_ID EXISTS:∃ IDENT:r COLON:: IDENT:Ranking EXISTS:∃ IDENT:n1 COLON:: IDENT:Num_Employees LPAR:( IDENT:department LPAR:( IDENT:d COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:r COMMA:, IDENT:b COMMA:, IDENT:n1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Department_ID
+            EXISTS r:Ranking
+              EXISTS n1:Num_Employees
+                PRED department(d, n, c, r, b, n1)
+      Predicted FOL: ∀d0:Department_ID ∀d1:Name ∀d2:Creation ∀d3:Ranking ∀d4:Budget_in_Billions ∀d5:Num_Employees( department(d0,d1,d2,d3,d4,d5) → ∃c:Creation ∃n:Name ∃b:Budget_in_Billions( c=d2 ∧ n=d1 ∧ b=d4 ) )
+        tokens: FORALL:∀ IDENT:d0 COLON:: IDENT:Department_ID FORALL:∀ IDENT:d1 COLON:: IDENT:Name FORALL:∀ IDENT:d2 COLON:: IDENT:Creation FORALL:∀ IDENT:d3 COLON:: IDENT:Ranking FORALL:∀ IDENT:d4 COLON:: IDENT:Budget_in_Billions FORALL:∀ IDENT:d5 COLON:: IDENT:Num_Employees LPAR:( IDENT:department LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:d5 RPAR:) IMPL:→ EXISTS:∃ IDENT:c COLON:: IDENT:Creation EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:b COLON:: IDENT:Budget_in_Billions LPAR:( IDENT:c EQ:= IDENT:d2 AND:∧ IDENT:n EQ:= IDENT:d1 AND:∧ IDENT:b EQ:= IDENT:d4 RPAR:) RPAR:) EOF
+        AST:
+          FORALL d0:Department_ID
+            FORALL d1:Name
+              FORALL d2:Creation
+                FORALL d3:Ranking
+                  FORALL d4:Budget_in_Billions
+                    FORALL d5:Num_Employees
+                      IMPLIES
+                        PRED department(d0, d1, d2, d3, d4, d5)
+                        EXISTS c:Creation
+                          EXISTS n:Name
+                            EXISTS b:Budget_in_Billions
+                              AND
+                                EQ  c = d2
+                                EQ  n = d1
+                                EQ  b = d4
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (n : Name, c : Creation, b : Budget_in_Billions) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Budget_in_Billions, global real -> Float32()
+        c : local Creation, global text -> StringSort()
+        d : local Department_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_Employees, global real -> Float32()
+        r : local Ranking, global int -> IntSort()
+      Predicted FOL:
+        b : local Budget_in_Billions, global real -> Float32()
+        c : local Creation, global text -> StringSort()
+        d0 : local Department_ID, global int -> IntSort()
+        d1 : local Name, global text -> StringSort()
+        d2 : local Creation, global text -> StringSort()
+        d3 : local Ranking, global int -> IntSort()
+        d4 : local Budget_in_Billions, global real -> Float32()
+        d5 : local Num_Employees, global real -> Float32()
+        n : local Name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5465 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_343.py
+   [G8] took 0.029 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (n : Name, c : Creation, b : Budget_in_Billions) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

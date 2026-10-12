@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1997.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1997.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5272 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the document type name and the document type description and creation date for all the documents?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        Document_Date = datetime -> IntSort()
+        Document_Description = varchar(255) -> StringSort()
+        Document_ID = integer -> IntSort()
+        Document_Name = varchar(255) -> StringSort()
+        Document_Type_Code = char(15) -> StringSort()
+        Document_Type_Description = varchar(255) -> StringSort()
+        Document_Type_Name = varchar(255) -> StringSort()
+        Other_Details = varchar(255) -> StringSort()
+        Project_ID = integer -> IntSort()
+      symbols:
+        Documents(Document_ID, Document_Type_Code, Project_ID, Document_Date, Document_Name, Document_Description, Other_Details)
+        Ref_Document_Types(Document_Type_Code, Document_Type_Name, Document_Type_Description)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : Document_Type_Code ∃d3 : Document_ID ∃d4 : Document_Type_Code ∃p : Project_ID ∃d6 : Document_Name ∃d7 : Document_Description ∃o : Other_Details ( ((Ref_Document_Types(d,d1,d2)) ∧ (Documents(d3,d4,p,d5,d6,d7,o))) ∧ (d = d4) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:d3 COLON:: IDENT:Document_ID EXISTS:∃ IDENT:d4 COLON:: IDENT:Document_Type_Code EXISTS:∃ IDENT:p COLON:: IDENT:Project_ID EXISTS:∃ IDENT:d6 COLON:: IDENT:Document_Name EXISTS:∃ IDENT:d7 COLON:: IDENT:Document_Description EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( LPAR:( LPAR:( IDENT:Ref_Document_Types LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Documents LPAR:( IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:p COMMA:, IDENT:d5 COMMA:, IDENT:d6 COMMA:, IDENT:d7 COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= IDENT:d4 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_Type_Code
+            EXISTS d3:Document_ID
+              EXISTS d4:Document_Type_Code
+                EXISTS p:Project_ID
+                  EXISTS d6:Document_Name
+                    EXISTS d7:Document_Description
+                      EXISTS o:Other_Details
+                        AND
+                          AND
+                            PRED Ref_Document_Types(d, d1, d2)
+                            PRED Documents(d3, d4, p, d5, d6, d7, o)
+                          EQ  d = d4
+      Predicted FOL: ∀d0:Document_ID ∀d1:Document_Type_Code ∀d2:Project_ID ∀d3:Document_Date ∀d4:Document_Name ∀d5:Document_Description ∀d6:Other_Details ( Documents(d0,d1,d2,d3,d4,d5,d6) → ∃a1:Document_Type_Name ∃a2:Document_Type_Description ( Ref_Document_Types(d1,a1,a2) ) )
+        tokens: FORALL:∀ IDENT:d0 COLON:: IDENT:Document_ID FORALL:∀ IDENT:d1 COLON:: IDENT:Document_Type_Code FORALL:∀ IDENT:d2 COLON:: IDENT:Project_ID FORALL:∀ IDENT:d3 COLON:: IDENT:Document_Date FORALL:∀ IDENT:d4 COLON:: IDENT:Document_Name FORALL:∀ IDENT:d5 COLON:: IDENT:Document_Description FORALL:∀ IDENT:d6 COLON:: IDENT:Other_Details LPAR:( IDENT:Documents LPAR:( IDENT:d0 COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:d3 COMMA:, IDENT:d4 COMMA:, IDENT:d5 COMMA:, IDENT:d6 RPAR:) IMPL:→ EXISTS:∃ IDENT:a1 COLON:: IDENT:Document_Type_Name EXISTS:∃ IDENT:a2 COLON:: IDENT:Document_Type_Description LPAR:( IDENT:Ref_Document_Types LPAR:( IDENT:d1 COMMA:, IDENT:a1 COMMA:, IDENT:a2 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          FORALL d0:Document_ID
+            FORALL d1:Document_Type_Code
+              FORALL d2:Project_ID
+                FORALL d3:Document_Date
+                  FORALL d4:Document_Name
+                    FORALL d5:Document_Description
+                      FORALL d6:Other_Details
+                        IMPLIES
+                          PRED Documents(d0, d1, d2, d3, d4, d5, d6)
+                          EXISTS a1:Document_Type_Name
+                            EXISTS a2:Document_Type_Description
+                              PRED Ref_Document_Types(d1, a1, a2)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (d1 : Document_Type_Name, d2 : Document_Type_Description, d5 : Document_Date) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Document_Type_Code, global char(15) -> StringSort()
+        d1 : local Document_Type_Name, global varchar(255) -> StringSort()
+        d2 : local Document_Type_Description, global varchar(255) -> StringSort()
+        d3 : local Document_ID, global integer -> IntSort()
+        d4 : local Document_Type_Code, global char(15) -> StringSort()
+        d5 : local Document_Date, global datetime -> IntSort()
+        d6 : local Document_Name, global varchar(255) -> StringSort()
+        d7 : local Document_Description, global varchar(255) -> StringSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Project_ID, global integer -> IntSort()
+      Predicted FOL:
+        a1 : local Document_Type_Name, global varchar(255) -> StringSort()
+        a2 : local Document_Type_Description, global varchar(255) -> StringSort()
+        d0 : local Document_ID, global integer -> IntSort()
+        d1 : local Document_Type_Code, global char(15) -> StringSort()
+        d2 : local Project_ID, global integer -> IntSort()
+        d3 : local Document_Date, global datetime -> IntSort()
+        d4 : local Document_Name, global varchar(255) -> StringSort()
+        d5 : local Document_Description, global varchar(255) -> StringSort()
+        d6 : local Other_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5791 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1997.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (d1 : Document_Type_Name, d2 : Document_Type_Description, d5 : Document_Date) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

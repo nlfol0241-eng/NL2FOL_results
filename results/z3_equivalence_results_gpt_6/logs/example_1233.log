@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1233.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1233.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6116 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the cost of each treatment and the corresponding treatment type description.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        decimal(19,4) -> RealSort()   [domain And(IsInt(x * 10000), x > -1000000000000000, x < 1000000000000000); 19 digits, 4 after the point]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+      local sorts:
+        cost_of_treatment = decimal(19,4) -> RealSort()
+        date_of_treatment = datetime -> IntSort()
+        dog_id = integer -> IntSort()
+        professional_id = integer -> IntSort()
+        treatment_id = integer -> IntSort()
+        treatment_type_code = varchar(10) -> StringSort()
+        treatment_type_description = varchar(80) -> StringSort()
+      symbols:
+        Treatment_Types(treatment_type_code, treatment_type_description)
+        Treatments(treatment_id, dog_id, professional_id, treatment_type_code, date_of_treatment, cost_of_treatment)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃t : treatment_id ∃d : dog_id ∃p : professional_id ∃t1 : treatment_type_code ∃d1 : date_of_treatment ∃t2 : treatment_type_code ( ((Treatments(t,d,p,t1,d1,c)) ∧ (Treatment_Types(t2,t3))) ∧ (t1 = t2) )
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:treatment_id EXISTS:∃ IDENT:d COLON:: IDENT:dog_id EXISTS:∃ IDENT:p COLON:: IDENT:professional_id EXISTS:∃ IDENT:t1 COLON:: IDENT:treatment_type_code EXISTS:∃ IDENT:d1 COLON:: IDENT:date_of_treatment EXISTS:∃ IDENT:t2 COLON:: IDENT:treatment_type_code LPAR:( LPAR:( LPAR:( IDENT:Treatments LPAR:( IDENT:t COMMA:, IDENT:d COMMA:, IDENT:p COMMA:, IDENT:t1 COMMA:, IDENT:d1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Treatment_Types LPAR:( IDENT:t2 COMMA:, IDENT:t3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t1 EQ:= IDENT:t2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:treatment_id
+            EXISTS d:dog_id
+              EXISTS p:professional_id
+                EXISTS t1:treatment_type_code
+                  EXISTS d1:date_of_treatment
+                    EXISTS t2:treatment_type_code
+                      AND
+                        AND
+                          PRED Treatments(t, d, p, t1, d1, c)
+                          PRED Treatment_Types(t2, t3)
+                        EQ  t1 = t2
+      Predicted FOL: ∃t : treatment_id ∃d : dog_id ∃p : professional_id ∃k : treatment_type_code ∃s : date_of_treatment (Treatments(t, d, p, k, s, c) ∧ Treatment_Types(k, r))
+        tokens: EXISTS:∃ IDENT:t COLON:: IDENT:treatment_id EXISTS:∃ IDENT:d COLON:: IDENT:dog_id EXISTS:∃ IDENT:p COLON:: IDENT:professional_id EXISTS:∃ IDENT:k COLON:: IDENT:treatment_type_code EXISTS:∃ IDENT:s COLON:: IDENT:date_of_treatment LPAR:( IDENT:Treatments LPAR:( IDENT:t COMMA:, IDENT:d COMMA:, IDENT:p COMMA:, IDENT:k COMMA:, IDENT:s COMMA:, IDENT:c RPAR:) AND:∧ IDENT:Treatment_Types LPAR:( IDENT:k COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS t:treatment_id
+            EXISTS d:dog_id
+              EXISTS p:professional_id
+                EXISTS k:treatment_type_code
+                  EXISTS s:date_of_treatment
+                    AND
+                      PRED Treatments(t, d, p, k, s, c)
+                      PRED Treatment_Types(k, r)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_cost_of_treatment_0 : cost_of_treatment   Gold c <-> Predicted c
+      FV_treatment_type_description_0 : treatment_type_description   Gold t3 <-> Predicted r
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cost_of_treatment, global decimal(19,4) -> RealSort()
+        d : local dog_id, global integer -> IntSort()
+        d1 : local date_of_treatment, global datetime -> IntSort()
+        p : local professional_id, global integer -> IntSort()
+        t : local treatment_id, global integer -> IntSort()
+        t1 : local treatment_type_code, global varchar(10) -> StringSort()
+        t2 : local treatment_type_code, global varchar(10) -> StringSort()
+        t3 : local treatment_type_description, global varchar(80) -> StringSort()
+      Predicted FOL:
+        c : local cost_of_treatment, global decimal(19,4) -> RealSort()
+        d : local dog_id, global integer -> IntSort()
+        k : local treatment_type_code, global varchar(10) -> StringSort()
+        p : local professional_id, global integer -> IntSort()
+        r : local treatment_type_description, global varchar(80) -> StringSort()
+        s : local date_of_treatment, global datetime -> IntSort()
+        t : local treatment_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_t_1, gold_d_2, gold_p_3, gold_t1_4, gold_d1_5, gold_t2_6], And(D_varchar_10_(gold_t1_4), D_varchar_10_(gold_t2_6), And(And(P_Treatments(gold_t_1, gold_d_2, gold_p_3, gold_t1_4, gold_d1_5, FV_cost_of_treatment_0), P_Treatment_Types(gold_t2_6, FV_treatment_type_description_0)), (gold_t1_4 == gold_t2_6))))
+      gold_skolem (witnesses WGOLD_t, WGOLD_d, WGOLD_p, WGOLD_t1, WGOLD_d1, WGOLD_t2):  And(D_varchar_10_(WGOLD_t1), D_varchar_10_(WGOLD_t2), And(And(P_Treatments(WGOLD_t, WGOLD_d, WGOLD_p, WGOLD_t1, WGOLD_d1, FV_cost_of_treatment_0), P_Treatment_Types(WGOLD_t2, FV_treatment_type_description_0)), (WGOLD_t1 == WGOLD_t2)))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_t_1, predicted_d_2, predicted_p_3, predicted_k_4, predicted_s_5], And(D_varchar_10_(predicted_k_4), And(P_Treatments(predicted_t_1, predicted_d_2, predicted_p_3, predicted_k_4, predicted_s_5, FV_cost_of_treatment_0), P_Treatment_Types(predicted_k_4, FV_treatment_type_description_0))))
+      predicted_skolem (witnesses WPREDICTED_t, WPREDICTED_d, WPREDICTED_p, WPREDICTED_k, WPREDICTED_s):  And(D_varchar_10_(WPREDICTED_k), And(P_Treatments(WPREDICTED_t, WPREDICTED_d, WPREDICTED_p, WPREDICTED_k, WPREDICTED_s, FV_cost_of_treatment_0), P_Treatment_Types(WPREDICTED_k, FV_treatment_type_description_0)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 771 lines, 30821 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1233.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_cost_of_treatment_0*10000), FV_cost_of_treatment_0 > -1000000000000000, FV_cost_of_treatment_0 < 1000000000000000)
+      [1] Length(FV_treatment_type_description_0) <= 80
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_t, WGOLD_d, WGOLD_p, WGOLD_t1, WGOLD_d1, WGOLD_t2
+      claim: And(And(Length(WGOLD_t1) <= 10, Length(WGOLD_t2) <= 10, And(And(Treatments(WGOLD_t, WGOLD_d, WGOLD_p, WGOLD_t1, WGOLD_d1, FV_cost_of_treatment_0), Treatment_Types(WGOLD_t2, FV_treatment_type_description_0)), WGOLD_t1 == WGOLD_t2)), Not(Exists([predicted_t_1, predicted_d_2, predicted_p_3, predicted_k_4, predicted_s_5], And(Length(predicted_k_4) <= 10, And(Treatments(predicted_t_1, predicted_d_2, predicted_p_3, predicted_k_4, predicted_s_5, FV_cost_of_treatment_0), Treatment_Types(predicted_k_4, FV_treatment_type_description_0))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_t, WPREDICTED_d, WPREDICTED_p, WPREDICTED_k, WPREDICTED_s
+      claim: And(And(Length(WPREDICTED_k) <= 10, And(Treatments(WPREDICTED_t, WPREDICTED_d, WPREDICTED_p, WPREDICTED_k, WPREDICTED_s, FV_cost_of_treatment_0), Treatment_Types(WPREDICTED_k, FV_treatment_type_description_0))), Not(Exists([gold_t_1, gold_d_2, gold_p_3, gold_t1_4, gold_d1_5, gold_t2_6], And(Length(gold_t1_4) <= 10, Length(gold_t2_6) <= 10, And(And(Treatments(gold_t_1, gold_d_2, gold_p_3, gold_t1_4, gold_d1_5, FV_cost_of_treatment_0), Treatment_Types(gold_t2_6, FV_treatment_type_description_0)), gold_t1_4 == gold_t2_6)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

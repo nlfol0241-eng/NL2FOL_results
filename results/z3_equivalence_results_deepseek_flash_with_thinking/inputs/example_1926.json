@@ -1,0 +1,93 @@
+{
+  "NL": "Show the authors of submissions and the acceptance results of their submissions.",
+  "Vocabulary": {
+    "Predicates": [
+      "Acceptance",
+      "submission"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "Acceptance": [
+        "Submission_ID",
+        "Workshop_ID",
+        "Result"
+      ],
+      "submission": [
+        "Submission_ID",
+        "Scores",
+        "Author",
+        "College"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a0'∀a1'∀a2'∀a3'( workshop(a0, a1, a2, a3) ∧ workshop(a0', a1', a2', a3') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b0'∀b1'∀b2'∀b3'( submission(b0, b1, b2, b3) ∧ submission(b0', b1', b2', b3') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( Acceptance(c0, c1, c2) ∧ Acceptance(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( Acceptance(c0, c1, c2) → ∃a0∃a1∃a2∃a3 ( workshop(a0, a1, a2, a3) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( Acceptance(c0, c1, c2) → ∃b0∃b1∃b2∃b3 ( submission(b0, b1, b2, b3) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "Acceptance": {
+        "A": "Acceptance",
+        "A0": "Submission_ID",
+        "A1": "Workshop_ID",
+        "A2": "Result"
+      },
+      "submission": {
+        "B": "submission",
+        "B0": "Submission_ID",
+        "B1": "Scores",
+        "B2": "Author",
+        "B3": "College"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃s : Submission_ID ∃w : Workshop_ID ∃s1 : Submission_ID ∃s2 : Scores ∃c : College ( ((Acceptance(s,w,r)) ∧ (submission(s1,s2,a,c))) ∧ (s = s1) )",
+    "free vars": "r : Result, a : Author"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[B2,A2](<S>[A0 = B0]((A)<X>(B)))",
+    "Processed_RA": "<P>[B2,A2](<S>[A0 = B0]((A)<X>(B)))",
+    "RC": "[E]?B0,?B3,?A1,?B1,?A0( ((A(?A0,?A1,?A2)) & (B(?B0,?B1,?B2,?B3))) & (?A0 = ?B0) )",
+    "string": "∃B0 ∃B3 ∃A1 ∃B1 ∃A0( ((A(A0,A1,A2)) ∧ (B(B0,B1,B2,B3))) ∧ (A0 = B0) )",
+    "free variables": "A2, B2",
+    "db_id": "workshop_paper",
+    "processed_sql": "SELECT T2.Author ,  T1.\"Result\" FROM acceptance AS T1 JOIN submission AS T2 ON T1.Submission_ID  =  T2.Submission_ID"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "Acceptance": {
+      "sortaxiom0": "Submission_ID = int",
+      "sortaxiom1": "Workshop_ID = int",
+      "sortaxiom2": "Result = text"
+    },
+    "submission": {
+      "sortaxiom0": "Submission_ID = int",
+      "sortaxiom1": "Scores = real",
+      "sortaxiom2": "Author = text",
+      "sortaxiom3": "College = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT T2.Author ,  T1.Result FROM acceptance AS T1 JOIN submission AS T2 ON T1.Submission_ID  =  T2.Submission_ID"
+  },
+  "id": 1926,
+  "Predicted FOL": {
+    "string": "\\exists s : Submission_ID \\exists sc : Scores \\exists c : College \\exists w : Workshop_ID ( submission(s, sc, author, c) ∧ Acceptance(s, w, result) )",
+    "free vars": "author : Author, result : Result"
+  }
+}

@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1989.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1989.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4215 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show statement id, statement detail, account detail for accounts.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Account_Details = varchar(255) -> StringSort()
+        Account_ID = integer -> IntSort()
+        Statement_Details = varchar(255) -> StringSort()
+        Statement_ID = integer -> IntSort()
+      symbols:
+        Accounts(Account_ID, Statement_ID, Account_Details)
+        Statements(Statement_ID, Statement_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : Account_ID ∃s1 : Statement_ID ( ((Accounts(a,s,a1)) ∧ (Statements(s1,s2))) ∧ (s = s1) )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:Account_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Statement_ID LPAR:( LPAR:( LPAR:( IDENT:Accounts LPAR:( IDENT:a COMMA:, IDENT:s COMMA:, IDENT:a1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Statements LPAR:( IDENT:s1 COMMA:, IDENT:s2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:Account_ID
+            EXISTS s1:Statement_ID
+              AND
+                AND
+                  PRED Accounts(a, s, a1)
+                  PRED Statements(s1, s2)
+                EQ  s = s1
+      Predicted FOL: ∃ account_id : Account_ID ( Accounts(account_id, statement_id, account_detail) ∧ Statements(statement_id, statement_detail) )
+        tokens: EXISTS:∃ IDENT:account_id COLON:: IDENT:Account_ID LPAR:( IDENT:Accounts LPAR:( IDENT:account_id COMMA:, IDENT:statement_id COMMA:, IDENT:account_detail RPAR:) AND:∧ IDENT:Statements LPAR:( IDENT:statement_id COMMA:, IDENT:statement_detail RPAR:) RPAR:) EOF
+        AST:
+          EXISTS account_id:Account_ID
+            AND
+              PRED Accounts(account_id, statement_id, account_detail)
+              PRED Statements(statement_id, statement_detail)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Account_Details_0 : Account_Details   Gold a1 <-> Predicted account_detail
+      FV_Statement_Details_0 : Statement_Details   Gold s2 <-> Predicted statement_detail
+      FV_Statement_ID_0 : Statement_ID   Gold s <-> Predicted statement_id
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Account_ID, global integer -> IntSort()
+        a1 : local Account_Details, global varchar(255) -> StringSort()
+        s : local Statement_ID, global integer -> IntSort()
+        s1 : local Statement_ID, global integer -> IntSort()
+        s2 : local Statement_Details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        account_detail : local Account_Details, global varchar(255) -> StringSort()
+        account_id : local Account_ID, global integer -> IntSort()
+        statement_detail : local Statement_Details, global varchar(255) -> StringSort()
+        statement_id : local Statement_ID, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_s1_2], And(And(P_Accounts(gold_a_1, FV_Statement_ID_0, FV_Account_Details_0), P_Statements(gold_s1_2, FV_Statement_Details_0)), (FV_Statement_ID_0 == gold_s1_2)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_s1):  And(And(P_Accounts(WGOLD_a, FV_Statement_ID_0, FV_Account_Details_0), P_Statements(WGOLD_s1, FV_Statement_Details_0)), (FV_Statement_ID_0 == WGOLD_s1))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_account_id_1], And(P_Accounts(predicted_account_id_1, FV_Statement_ID_0, FV_Account_Details_0), P_Statements(FV_Statement_ID_0, FV_Statement_Details_0)))
+      predicted_skolem (witnesses WPREDICTED_account_id):  And(P_Accounts(WPREDICTED_account_id, FV_Statement_ID_0, FV_Account_Details_0), P_Statements(FV_Statement_ID_0, FV_Statement_Details_0))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 729 lines, 27719 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1989.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Account_Details_0) <= 255
+      [1] Length(FV_Statement_Details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_s1
+      claim: And(And(And(Accounts(WGOLD_a, FV_Statement_ID_0, FV_Account_Details_0), Statements(WGOLD_s1, FV_Statement_Details_0)), FV_Statement_ID_0 == WGOLD_s1), Not(Exists(predicted_account_id_1, And(Accounts(predicted_account_id_1, FV_Statement_ID_0, FV_Account_Details_0), Statements(FV_Statement_ID_0, FV_Statement_Details_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_account_id
+      claim: And(And(Accounts(WPREDICTED_account_id, FV_Statement_ID_0, FV_Account_Details_0), Statements(FV_Statement_ID_0, FV_Statement_Details_0)), Not(Exists([gold_a_1, gold_s1_2], And(And(Accounts(gold_a_1, FV_Statement_ID_0, FV_Account_Details_0), Statements(gold_s1_2, FV_Statement_Details_0)), FV_Statement_ID_0 == gold_s1_2))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

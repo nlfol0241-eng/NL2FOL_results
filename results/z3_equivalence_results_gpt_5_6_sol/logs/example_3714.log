@@ -1,0 +1,132 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3714.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3714.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4228 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of the songs without a lead vocal?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Bandmate = integer -> IntSort()
+        SongId = integer -> IntSort()
+        Title = text -> StringSort()
+        Type = text -> StringSort()
+      symbols:
+        Songs(SongId, Title)
+        Vocals(SongId, Bandmate, Type)
+        constant lead : Type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s1 : SongId ∃t : Type ∃b : Bandmate ∃s : SongId( ((Vocals(s,b,t)) ∧ (Songs(s1,t1))) ∧ (s = s1) )) ∧ (¬(∃s1 : SongId ∃t : Type ∃b : Bandmate ∃s : SongId( (((Vocals(s,b,t)) ∧ (Songs(s1,t1))) ∧ (s = s1)) ∧ (t = 'lead') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:SongId EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:s COLON:: IDENT:SongId LPAR:( LPAR:( LPAR:( IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Songs LPAR:( IDENT:s1 COMMA:, IDENT:t1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:SongId EXISTS:∃ IDENT:t COLON:: IDENT:Type EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate EXISTS:∃ IDENT:s COLON:: IDENT:SongId LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Songs LPAR:( IDENT:s1 COMMA:, IDENT:t1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:lead RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s1:SongId
+              EXISTS t:Type
+                EXISTS b:Bandmate
+                  EXISTS s:SongId
+                    AND
+                      AND
+                        PRED Vocals(s, b, t)
+                        PRED Songs(s1, t1)
+                      EQ  s = s1
+            NOT
+              EXISTS s1:SongId
+                EXISTS t:Type
+                  EXISTS b:Bandmate
+                    EXISTS s:SongId
+                      AND
+                        AND
+                          AND
+                            PRED Vocals(s, b, t)
+                            PRED Songs(s1, t1)
+                          EQ  s = s1
+                        EQ  t = 'lead'
+      Predicted FOL: ∃s : SongId (Songs(s, name) ∧ ¬∃b : Bandmate Vocals(s, b, 'lead'))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:SongId LPAR:( IDENT:Songs LPAR:( IDENT:s COMMA:, IDENT:name RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:b COLON:: IDENT:Bandmate IDENT:Vocals LPAR:( IDENT:s COMMA:, IDENT:b COMMA:, LIT:lead RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:SongId
+            AND
+              PRED Songs(s, name)
+              NOT
+                EXISTS b:Bandmate
+                  PRED Vocals(s, b, 'lead')
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Title_0 : Title   Gold t1 <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Bandmate, global integer -> IntSort()
+        s : local SongId, global integer -> IntSort()
+        s1 : local SongId, global integer -> IntSort()
+        t : local Type, global text -> StringSort()
+        t1 : local Title, global text -> StringSort()
+      Predicted FOL:
+        b : local Bandmate, global integer -> IntSort()
+        name : local Title, global text -> StringSort()
+        s : local SongId, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_s1_1, gold_t_2, gold_b_3, gold_s_4], And(And(P_Vocals(gold_s_4, gold_b_3, gold_t_2), P_Songs(gold_s1_1, FV_Title_0)), (gold_s_4 == gold_s1_1))), Not(Exists([gold_s1_5, gold_t_6, gold_b_7, gold_s_8], And(And(And(P_Vocals(gold_s_8, gold_b_7, gold_t_6), P_Songs(gold_s1_5, FV_Title_0)), (gold_s_8 == gold_s1_5)), (gold_t_6 == L_lead)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1], And(P_Songs(predicted_s_1, FV_Title_0), Not(Exists([predicted_b_2], P_Vocals(predicted_s_1, predicted_b_2, L_lead)))))
+      predicted_skolem (witnesses WPREDICTED_s):  And(P_Songs(WPREDICTED_s, FV_Title_0), Not(Exists([predictedsk_b_1], P_Vocals(WPREDICTED_s, predictedsk_b_1, L_lead))))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'lead' at text -> L_lead = StringVal('lead')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 727 lines, 27100 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3714.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_s1_1, gold_t_2, gold_b_3, gold_s_4], And(And(Vocals(gold_s_4, gold_b_3, gold_t_2), Songs(gold_s1_1, FV_Title_0)), gold_s_4 == gold_s1_1)), Not(Exists([gold_s1_5, gold_t_6, gold_b_7, gold_s_8], And(And(And(Vocals(gold_s_8, gold_b_7, gold_t_6), Songs(gold_s1_5, FV_Title_0)), gold_s_8 == gold_s1_5), gold_t_6 == "lead")))), Not(Exists(predicted_s_1, And(Songs(predicted_s_1, FV_Title_0), Not(Exists(predicted_b_2, Vocals(predicted_s_1, predicted_b_2, "lead")))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s
+      claim: And(And(Songs(WPREDICTED_s, FV_Title_0), Not(Exists(predictedsk_b_1, Vocals(WPREDICTED_s, predictedsk_b_1, "lead")))), Not(And(Exists([gold_s1_1, gold_t_2, gold_b_3, gold_s_4], And(And(Vocals(gold_s_4, gold_b_3, gold_t_2), Songs(gold_s1_1, FV_Title_0)), gold_s_4 == gold_s1_1)), Not(Exists([gold_s1_5, gold_t_6, gold_b_7, gold_s_8], And(And(And(Vocals(gold_s_8, gold_b_7, gold_t_6), Songs(gold_s1_5, FV_Title_0)), gold_s_8 == gold_s1_5), gold_t_6 == "lead"))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 2 relation tuple(s) listed, 1 probe query
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          s : SongId = 2
+        free (answer) variables:
+          FV_Title_0 : Title = 'lead'
+        literals / constants:
+          lead : Type = 'lead'
+        relations (each value tagged with the local sort of its position):
+          Songs(SongId, Title):
+            Songs(SongId=2, Title='lead')
+            Songs(SongId=3, Title='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          Vocals(SongId, Bandmate, Type):
+            <empty over the values of this model>
+        local-sort domains (values occurring at positions of each local sort):
+          SongId : {2, 3}
+          Title  : {'', 'lead'}
+   [R3] took 0.016 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

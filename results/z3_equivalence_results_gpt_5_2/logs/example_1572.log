@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1572.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1572.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3624 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the names of entrepreneurs do no not have the investor Rachel Elnaugh.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Company = text -> StringSort()
+        Date_of_Birth = text -> StringSort()
+        Entrepreneur_ID = int -> IntSort()
+        Height = real -> Float32()
+        Investor = text -> StringSort()
+        Money_Requested = real -> Float32()
+        Name = text -> StringSort()
+        People_ID = int -> IntSort()
+        Weight = real -> Float32()
+      symbols:
+        entrepreneur(Entrepreneur_ID, People_ID, Company, Money_Requested, Investor)
+        people(People_ID, Name, Height, Weight, Date_of_Birth)
+        constant Rachel Elnaugh : Investor
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Entrepreneur_ID ∃p : People_ID ∃c : Company ∃m : Money_Requested ∃i : Investor ∃p1 : People_ID ∃h : Height ∃w : Weight ∃d : Date_of_Birth ( (((entrepreneur(e,p,c,m,i)) ∧ (people(p1,n,h,w,d))) ∧ (p = p1)) ∧ (i <> 'Rachel Elnaugh') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Entrepreneur_ID EXISTS:∃ IDENT:p COLON:: IDENT:People_ID EXISTS:∃ IDENT:c COLON:: IDENT:Company EXISTS:∃ IDENT:m COLON:: IDENT:Money_Requested EXISTS:∃ IDENT:i COLON:: IDENT:Investor EXISTS:∃ IDENT:p1 COLON:: IDENT:People_ID EXISTS:∃ IDENT:h COLON:: IDENT:Height EXISTS:∃ IDENT:w COLON:: IDENT:Weight EXISTS:∃ IDENT:d COLON:: IDENT:Date_of_Birth LPAR:( LPAR:( LPAR:( LPAR:( IDENT:entrepreneur LPAR:( IDENT:e COMMA:, IDENT:p COMMA:, IDENT:c COMMA:, IDENT:m COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:people LPAR:( IDENT:p1 COMMA:, IDENT:n COMMA:, IDENT:h COMMA:, IDENT:w COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i NEQ:<> LIT:Rachel Elnaugh RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Entrepreneur_ID
+            EXISTS p:People_ID
+              EXISTS c:Company
+                EXISTS m:Money_Requested
+                  EXISTS i:Investor
+                    EXISTS p1:People_ID
+                      EXISTS h:Height
+                        EXISTS w:Weight
+                          EXISTS d:Date_of_Birth
+                            AND
+                              AND
+                                AND
+                                  PRED entrepreneur(e, p, c, m, i)
+                                  PRED people(p1, n, h, w, d)
+                                EQ  p = p1
+                              NEQ  i != 'Rachel Elnaugh'
+      Predicted FOL: ∀a0:Entrepreneur_ID ∀a1:People_ID ∀a2:Company ∀a3:Money_Requested ∀a4:Investor ( entrepreneur(a0,a1,a2,a3,a4) → a4 ≠ 'Rachel Elnaugh' )
+        tokens: FORALL:∀ IDENT:a0 COLON:: IDENT:Entrepreneur_ID FORALL:∀ IDENT:a1 COLON:: IDENT:People_ID FORALL:∀ IDENT:a2 COLON:: IDENT:Company FORALL:∀ IDENT:a3 COLON:: IDENT:Money_Requested FORALL:∀ IDENT:a4 COLON:: IDENT:Investor LPAR:( IDENT:entrepreneur LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) IMPL:→ IDENT:a4 NEQ:≠ LIT:Rachel Elnaugh RPAR:) EOF
+        AST:
+          FORALL a0:Entrepreneur_ID
+            FORALL a1:People_ID
+              FORALL a2:Company
+                FORALL a3:Money_Requested
+                  FORALL a4:Investor
+                    IMPLIES
+                      PRED entrepreneur(a0, a1, a2, a3, a4)
+                      NEQ  a4 != 'Rachel Elnaugh'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Company, global text -> StringSort()
+        d : local Date_of_Birth, global text -> StringSort()
+        e : local Entrepreneur_ID, global int -> IntSort()
+        h : local Height, global real -> Float32()
+        i : local Investor, global text -> StringSort()
+        m : local Money_Requested, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        p : local People_ID, global int -> IntSort()
+        p1 : local People_ID, global int -> IntSort()
+        w : local Weight, global real -> Float32()
+      Predicted FOL:
+        a0 : local Entrepreneur_ID, global int -> IntSort()
+        a1 : local People_ID, global int -> IntSort()
+        a2 : local Company, global text -> StringSort()
+        a3 : local Money_Requested, global real -> Float32()
+        a4 : local Investor, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5515 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1572.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

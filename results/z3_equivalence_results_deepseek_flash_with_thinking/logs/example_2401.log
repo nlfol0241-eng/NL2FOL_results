@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_2401.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2401.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2426 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return all reviewer names and movie names together in a single list.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        director = text -> StringSort()
+        mID = int -> IntSort()
+        name = text -> StringSort()
+        rID = int -> IntSort()
+        title = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        Movie(mID, title, year, director)
+        Reviewer(rID, name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃r : rID( Reviewer(r,n) )) ∨ (∃m : mID ∃d : director ∃y : year( Movie(m,n,y,d) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:rID LPAR:( IDENT:Reviewer LPAR:( IDENT:r COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:d COLON:: IDENT:director EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS r:rID
+              PRED Reviewer(r, n)
+            EXISTS m:mID
+              EXISTS d:director
+                EXISTS y:year
+                  PRED Movie(m, n, y, d)
+      Predicted FOL: (∃r : rID Reviewer(r, x)) ∨ (∃m : mID ∃y : year ∃d : director Movie(m, x, y, d))
+        tokens: LPAR:( EXISTS:∃ IDENT:r COLON:: IDENT:rID IDENT:Reviewer LPAR:( IDENT:r COMMA:, IDENT:x RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:d COLON:: IDENT:director IDENT:Movie LPAR:( IDENT:m COMMA:, IDENT:x COMMA:, IDENT:y COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS r:rID
+              PRED Reviewer(r, x)
+            EXISTS m:mID
+              EXISTS y:year
+                EXISTS d:director
+                  PRED Movie(m, x, y, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        r : local rID, global int -> IntSort()
+        y : local year, global int -> IntSort()
+      Predicted FOL:
+        d : local director, global text -> StringSort()
+        m : local mID, global int -> IntSort()
+        r : local rID, global int -> IntSort()
+        x : local name, global text -> StringSort()
+        y : local year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_r_1], P_Reviewer(gold_r_1, FV_name_0)), Exists([gold_m_2, gold_d_3, gold_y_4], P_Movie(gold_m_2, FV_name_0, gold_y_4, gold_d_3)))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Or(Exists([predicted_r_1], P_Reviewer(predicted_r_1, FV_name_0)), Exists([predicted_m_2, predicted_y_3, predicted_d_4], P_Movie(predicted_m_2, FV_name_0, predicted_y_3, predicted_d_4)))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 723 lines, 26292 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_2401.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists(gold_r_1, Reviewer(gold_r_1, FV_name_0)), Exists([gold_m_2, gold_d_3, gold_y_4], Movie(gold_m_2, FV_name_0, gold_y_4, gold_d_3))), Not(Or(Exists(predicted_r_1, Reviewer(predicted_r_1, FV_name_0)), Exists([predicted_m_2, predicted_y_3, predicted_d_4], Movie(predicted_m_2, FV_name_0, predicted_y_3, predicted_d_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists(predicted_r_1, Reviewer(predicted_r_1, FV_name_0)), Exists([predicted_m_2, predicted_y_3, predicted_d_4], Movie(predicted_m_2, FV_name_0, predicted_y_3, predicted_d_4))), Not(Or(Exists(gold_r_1, Reviewer(gold_r_1, FV_name_0)), Exists([gold_m_2, gold_d_3, gold_y_4], Movie(gold_m_2, FV_name_0, gold_y_4, gold_d_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

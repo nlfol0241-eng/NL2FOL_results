@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1402.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1402.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2336 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of editors of age either 24 or 25.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = real -> Float32()
+        Editor_ID = int -> IntSort()
+        Name = text -> StringSort()
+      symbols:
+        editor(Editor_ID, Name, Age)
+        constant 24 : Age
+        constant 25 : Age
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Editor_ID ∃a : Age ( (editor(e,n,a)) ∧ ((a = 24) ∨ (a = 25)) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Editor_ID EXISTS:∃ IDENT:a COLON:: IDENT:Age LPAR:( LPAR:( IDENT:editor LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:a EQ:= NUM:24 RPAR:) OR:∨ LPAR:( IDENT:a EQ:= NUM:25 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Editor_ID
+            EXISTS a:Age
+              AND
+                PRED editor(e, n, a)
+                OR
+                  EQ  a = 24
+                  EQ  a = 25
+      Predicted FOL: ∃x : Editor_ID ( editor(x, n, 24) ∨ editor(x, n, 25) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Editor_ID LPAR:( IDENT:editor LPAR:( IDENT:x COMMA:, IDENT:n COMMA:, NUM:24 RPAR:) OR:∨ IDENT:editor LPAR:( IDENT:x COMMA:, IDENT:n COMMA:, NUM:25 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Editor_ID
+            OR
+              PRED editor(x, n, 24)
+              PRED editor(x, n, 25)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global real -> Float32()
+        e : local Editor_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+      Predicted FOL:
+        n : local Name, global text -> StringSort()
+        x : local Editor_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_a_2], And(D_real(gold_a_2), And(P_editor(gold_e_1, FV_Name_0, gold_a_2), Or((gold_a_2 == L_v_24_real), (gold_a_2 == L_v_25_real)))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_a):  And(D_real(WGOLD_a), And(P_editor(WGOLD_e, FV_Name_0, WGOLD_a), Or((WGOLD_a == L_v_24_real), (WGOLD_a == L_v_25_real))))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x_1], Or(And(P_editor(predicted_x_1, FV_Name_0, L_v_24_real), D_real(L_v_24_real)), And(P_editor(predicted_x_1, FV_Name_0, L_v_25_real), D_real(L_v_25_real))))
+      predicted_skolem (witnesses WPREDICTED_x):  Or(And(P_editor(WPREDICTED_x, FV_Name_0, L_v_24_real), D_real(L_v_24_real)), And(P_editor(WPREDICTED_x, FV_Name_0, L_v_25_real), D_real(L_v_25_real)))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '24' at real -> L_v_24_real = FPVal(24.0, Float32())
+      literal '25' at real -> L_v_25_real = FPVal(25.0, Float32())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 724 lines, 26660 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1402.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_a
+      claim: And(And(And(Not(fpIsNaN(WGOLD_a)), Not(And(fpIsZero(WGOLD_a), fpIsNegative(WGOLD_a)))), And(editor(WGOLD_e, FV_Name_0, WGOLD_a), Or(1.5*(2**4) == WGOLD_a, 1.5625*(2**4) == WGOLD_a))), Not(Exists(predicted_x_1, Or(And(editor(predicted_x_1, FV_Name_0, 1.5*(2**4)), And(Not(fpIsNaN(1.5*(2**4))), Not(And(fpIsZero(1.5*(2**4)), fpIsNegative(1.5*(2**4)))))), And(editor(predicted_x_1, FV_Name_0, 1.5625*(2**4)), And(Not(fpIsNaN(1.5625*(2**4))), Not(And(fpIsZero(1.5625*(2**4)), fpIsNegative(1.5625*(2**4))))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x
+      claim: And(Or(And(editor(WPREDICTED_x, FV_Name_0, 1.5*(2**4)), And(Not(fpIsNaN(1.5*(2**4))), Not(And(fpIsZero(1.5*(2**4)), fpIsNegative(1.5*(2**4)))))), And(editor(WPREDICTED_x, FV_Name_0, 1.5625*(2**4)), And(Not(fpIsNaN(1.5625*(2**4))), Not(And(fpIsZero(1.5625*(2**4)), fpIsNegative(1.5625*(2**4))))))), Not(Exists([gold_e_1, gold_a_2], And(And(Not(fpIsNaN(gold_a_2)), Not(And(fpIsZero(gold_a_2), fpIsNegative(gold_a_2)))), And(editor(gold_e_1, FV_Name_0, gold_a_2), Or(1.5*(2**4) == gold_a_2, 1.5625*(2**4) == gold_a_2))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

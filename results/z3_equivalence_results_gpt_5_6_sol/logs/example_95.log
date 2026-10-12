@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_95.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_95.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3357 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Give the country codes for countries in which people speak langauges that are not English.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        char(30) -> StringSort()   [domain Length(x) <= 30; length <= 30 (blank padding not modelled)]
+        float(4, 1) -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        char(3) -> StringSort()   [domain Length(x) <= 3; length <= 3 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        CountryCode = char(3) -> StringSort()
+        IsOfficial = text -> StringSort()
+        Language = char(30) -> StringSort()
+        Percentage = float(4, 1) -> Float32()
+      symbols:
+        countrylanguage(CountryCode, Language, IsOfficial, Percentage)
+        constant English : Language
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : Language ∃i : IsOfficial ∃p : Percentage ( (countrylanguage(c,l,i,p)) ∧ (l <> 'English') )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:Language EXISTS:∃ IDENT:i COLON:: IDENT:IsOfficial EXISTS:∃ IDENT:p COLON:: IDENT:Percentage LPAR:( LPAR:( IDENT:countrylanguage LPAR:( IDENT:c COMMA:, IDENT:l COMMA:, IDENT:i COMMA:, IDENT:p RPAR:) RPAR:) AND:∧ LPAR:( IDENT:l NEQ:<> LIT:English RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:Language
+            EXISTS i:IsOfficial
+              EXISTS p:Percentage
+                AND
+                  PRED countrylanguage(c, l, i, p)
+                  NEQ  l != 'English'
+      Predicted FOL: ∃language : Language ∃isOfficial : IsOfficial ∃percentage : Percentage (countrylanguage(countryCode, language, isOfficial, percentage) ∧ language ≠ 'English')
+        tokens: EXISTS:∃ IDENT:language COLON:: IDENT:Language EXISTS:∃ IDENT:isOfficial COLON:: IDENT:IsOfficial EXISTS:∃ IDENT:percentage COLON:: IDENT:Percentage LPAR:( IDENT:countrylanguage LPAR:( IDENT:countryCode COMMA:, IDENT:language COMMA:, IDENT:isOfficial COMMA:, IDENT:percentage RPAR:) AND:∧ IDENT:language NEQ:≠ LIT:English RPAR:) EOF
+        AST:
+          EXISTS language:Language
+            EXISTS isOfficial:IsOfficial
+              EXISTS percentage:Percentage
+                AND
+                  PRED countrylanguage(countryCode, language, isOfficial, percentage)
+                  NEQ  language != 'English'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_CountryCode_0 : CountryCode   Gold c <-> Predicted countryCode
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CountryCode, global char(3) -> StringSort()
+        i : local IsOfficial, global text -> StringSort()
+        l : local Language, global char(30) -> StringSort()
+        p : local Percentage, global float(4, 1) -> Float32()
+      Predicted FOL:
+        countryCode : local CountryCode, global char(3) -> StringSort()
+        isOfficial : local IsOfficial, global text -> StringSort()
+        language : local Language, global char(30) -> StringSort()
+        percentage : local Percentage, global float(4, 1) -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_l_1, gold_i_2, gold_p_3], And(D_char_30_(gold_l_1), D_float_4__1_(gold_p_3), And(P_countrylanguage(FV_CountryCode_0, gold_l_1, gold_i_2, gold_p_3), (gold_l_1 != L_English))))
+      gold_skolem (witnesses WGOLD_l, WGOLD_i, WGOLD_p):  And(D_char_30_(WGOLD_l), D_float_4__1_(WGOLD_p), And(P_countrylanguage(FV_CountryCode_0, WGOLD_l, WGOLD_i, WGOLD_p), (WGOLD_l != L_English)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_language_1, predicted_isOfficial_2, predicted_percentage_3], And(D_char_30_(predicted_language_1), D_float_4__1_(predicted_percentage_3), And(P_countrylanguage(FV_CountryCode_0, predicted_language_1, predicted_isOfficial_2, predicted_percentage_3), (predicted_language_1 != L_English))))
+      predicted_skolem (witnesses WPREDICTED_language, WPREDICTED_isOfficial, WPREDICTED_percentage):  And(D_char_30_(WPREDICTED_language), D_float_4__1_(WPREDICTED_percentage), And(P_countrylanguage(FV_CountryCode_0, WPREDICTED_language, WPREDICTED_isOfficial, WPREDICTED_percentage), (WPREDICTED_language != L_English)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'English' at char(30) -> L_English = StringVal('English')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 742 lines, 28475 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_95.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_CountryCode_0) <= 3
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_l, WGOLD_i, WGOLD_p
+      claim: And(And(Length(WGOLD_l) <= 30, And(Not(fpIsNaN(WGOLD_p)), Not(And(fpIsZero(WGOLD_p), fpIsNegative(WGOLD_p)))), And(countrylanguage(FV_CountryCode_0, WGOLD_l, WGOLD_i, WGOLD_p), WGOLD_l != "English")), Not(Exists([predicted_language_1, predicted_isOfficial_2, predicted_percentage_3], And(Length(predicted_language_1) <= 30, And(Not(fpIsNaN(predicted_percentage_3)), Not(And(fpIsZero(predicted_percentage_3), fpIsNegative(predicted_percentage_3)))), And(countrylanguage(FV_CountryCode_0, predicted_language_1, predicted_isOfficial_2, predicted_percentage_3), predicted_language_1 != "English")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_language, WPREDICTED_isOfficial, WPREDICTED_percentage
+      claim: And(And(Length(WPREDICTED_language) <= 30, And(Not(fpIsNaN(WPREDICTED_percentage)), Not(And(fpIsZero(WPREDICTED_percentage), fpIsNegative(WPREDICTED_percentage)))), And(countrylanguage(FV_CountryCode_0, WPREDICTED_language, WPREDICTED_isOfficial, WPREDICTED_percentage), WPREDICTED_language != "English")), Not(Exists([gold_l_1, gold_i_2, gold_p_3], And(Length(gold_l_1) <= 30, And(Not(fpIsNaN(gold_p_3)), Not(And(fpIsZero(gold_p_3), fpIsNegative(gold_p_3)))), And(countrylanguage(FV_CountryCode_0, gold_l_1, gold_i_2, gold_p_3), gold_l_1 != "English")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

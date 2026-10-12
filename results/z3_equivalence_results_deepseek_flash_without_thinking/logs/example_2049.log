@@ -1,0 +1,80 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2049.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2049.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4015 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the invoice numbers created before 1989-09-03 or after 2007-12-25?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        invoice_date = datetime -> IntSort()
+        invoice_details = varchar(255) -> StringSort()
+        invoice_number = integer -> IntSort()
+      symbols:
+        Invoices(invoice_number, invoice_date, invoice_details)
+        constant 1989-09-03 : invoice_date
+        constant 2007-12-25 : invoice_date
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i1 : invoice_date ∃i2 : invoice_details ( (Invoices(i,i1,i2)) ∧ ((i1 < '1989-09-03') ∨ (i1 > '2007-12-25')) )
+        tokens: EXISTS:∃ IDENT:i1 COLON:: IDENT:invoice_date EXISTS:∃ IDENT:i2 COLON:: IDENT:invoice_details LPAR:( LPAR:( IDENT:Invoices LPAR:( IDENT:i COMMA:, IDENT:i1 COMMA:, IDENT:i2 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:i1 LT:< LIT:1989-09-03 RPAR:) OR:∨ LPAR:( IDENT:i1 GT:> LIT:2007-12-25 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i1:invoice_date
+            EXISTS i2:invoice_details
+              AND
+                PRED Invoices(i, i1, i2)
+                OR
+                  CMP  i1 < '1989-09-03'
+                  CMP  i1 > '2007-12-25'
+      Predicted FOL: ∃x : invoice_number ∃y : invoice_date ∃z : invoice_details ( Invoices(x, y, z) ∧ ( y < '1989-09-03' ∨ y > '2007-12-25' ) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:invoice_number EXISTS:∃ IDENT:y COLON:: IDENT:invoice_date EXISTS:∃ IDENT:z COLON:: IDENT:invoice_details LPAR:( IDENT:Invoices LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ LPAR:( IDENT:y LT:< LIT:1989-09-03 OR:∨ IDENT:y GT:> LIT:2007-12-25 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:invoice_number
+            EXISTS y:invoice_date
+              EXISTS z:invoice_details
+                AND
+                  PRED Invoices(x, y, z)
+                  OR
+                    CMP  y < '1989-09-03'
+                    CMP  y > '2007-12-25'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (i : invoice_number) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        i : local invoice_number, global integer -> IntSort()
+        i1 : local invoice_date, global datetime -> IntSort()
+        i2 : local invoice_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        x : local invoice_number, global integer -> IntSort()
+        y : local invoice_date, global datetime -> IntSort()
+        z : local invoice_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5374 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2049.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (i : invoice_number) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

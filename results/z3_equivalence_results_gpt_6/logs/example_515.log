@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_515.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_515.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2699 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of climbers who are not from the country of Switzerland?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Climber_ID = int -> IntSort()
+        Country = text -> StringSort()
+        Mountain_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Points = real -> Float32()
+        Time = text -> StringSort()
+      symbols:
+        climber(Climber_ID, Name, Country, Time, Points, Mountain_ID)
+        constant Switzerland : Country
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Climber_ID ∃c1 : Country ∃t : Time ∃p : Points ∃m : Mountain_ID ( (climber(c,n,c1,t,p,m)) ∧ (c1 <> 'Switzerland') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Climber_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Country EXISTS:∃ IDENT:t COLON:: IDENT:Time EXISTS:∃ IDENT:p COLON:: IDENT:Points EXISTS:∃ IDENT:m COLON:: IDENT:Mountain_ID LPAR:( LPAR:( IDENT:climber LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 COMMA:, IDENT:t COMMA:, IDENT:p COMMA:, IDENT:m RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 NEQ:<> LIT:Switzerland RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Climber_ID
+            EXISTS c1:Country
+              EXISTS t:Time
+                EXISTS p:Points
+                  EXISTS m:Mountain_ID
+                    AND
+                      PRED climber(c, n, c1, t, p, m)
+                      NEQ  c1 != 'Switzerland'
+      Predicted FOL: ∃i : Climber_ID ∃c : Country ∃t : Time ∃p : Points ∃m : Mountain_ID (climber(i, n, c, t, p, m) ∧ c ≠ 'Switzerland')
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Climber_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:t COLON:: IDENT:Time EXISTS:∃ IDENT:p COLON:: IDENT:Points EXISTS:∃ IDENT:m COLON:: IDENT:Mountain_ID LPAR:( IDENT:climber LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:t COMMA:, IDENT:p COMMA:, IDENT:m RPAR:) AND:∧ IDENT:c NEQ:≠ LIT:Switzerland RPAR:) EOF
+        AST:
+          EXISTS i:Climber_ID
+            EXISTS c:Country
+              EXISTS t:Time
+                EXISTS p:Points
+                  EXISTS m:Mountain_ID
+                    AND
+                      PRED climber(i, n, c, t, p, m)
+                      NEQ  c != 'Switzerland'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Climber_ID, global int -> IntSort()
+        c1 : local Country, global text -> StringSort()
+        m : local Mountain_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        p : local Points, global real -> Float32()
+        t : local Time, global text -> StringSort()
+      Predicted FOL:
+        c : local Country, global text -> StringSort()
+        i : local Climber_ID, global int -> IntSort()
+        m : local Mountain_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        p : local Points, global real -> Float32()
+        t : local Time, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_t_3, gold_p_4, gold_m_5], And(D_real(gold_p_4), And(P_climber(gold_c_1, FV_Name_0, gold_c1_2, gold_t_3, gold_p_4, gold_m_5), (gold_c1_2 != L_Switzerland))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_t, WGOLD_p, WGOLD_m):  And(D_real(WGOLD_p), And(P_climber(WGOLD_c, FV_Name_0, WGOLD_c1, WGOLD_t, WGOLD_p, WGOLD_m), (WGOLD_c1 != L_Switzerland)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_c_2, predicted_t_3, predicted_p_4, predicted_m_5], And(D_real(predicted_p_4), And(P_climber(predicted_i_1, FV_Name_0, predicted_c_2, predicted_t_3, predicted_p_4, predicted_m_5), (predicted_c_2 != L_Switzerland))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_c, WPREDICTED_t, WPREDICTED_p, WPREDICTED_m):  And(D_real(WPREDICTED_p), And(P_climber(WPREDICTED_i, FV_Name_0, WPREDICTED_c, WPREDICTED_t, WPREDICTED_p, WPREDICTED_m), (WPREDICTED_c != L_Switzerland)))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Switzerland' at text -> L_Switzerland = StringVal('Switzerland')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 749 lines, 28453 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_515.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_t, WGOLD_p, WGOLD_m
+      claim: And(And(And(Not(fpIsNaN(WGOLD_p)), Not(And(fpIsZero(WGOLD_p), fpIsNegative(WGOLD_p)))), And(climber(WGOLD_c, FV_Name_0, WGOLD_c1, WGOLD_t, WGOLD_p, WGOLD_m), WGOLD_c1 != "Switzerland")), Not(Exists([predicted_i_1, predicted_c_2, predicted_t_3, predicted_p_4, predicted_m_5], And(And(Not(fpIsNaN(predicted_p_4)), Not(And(fpIsZero(predicted_p_4), fpIsNegative(predicted_p_4)))), And(climber(predicted_i_1, FV_Name_0, predicted_c_2, predicted_t_3, predicted_p_4, predicted_m_5), predicted_c_2 != "Switzerland")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_c, WPREDICTED_t, WPREDICTED_p, WPREDICTED_m
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_p)), Not(And(fpIsZero(WPREDICTED_p), fpIsNegative(WPREDICTED_p)))), And(climber(WPREDICTED_i, FV_Name_0, WPREDICTED_c, WPREDICTED_t, WPREDICTED_p, WPREDICTED_m), WPREDICTED_c != "Switzerland")), Not(Exists([gold_c_1, gold_c1_2, gold_t_3, gold_p_4, gold_m_5], And(And(Not(fpIsNaN(gold_p_4)), Not(And(fpIsZero(gold_p_4), fpIsNegative(gold_p_4)))), And(climber(gold_c_1, FV_Name_0, gold_c1_2, gold_t_3, gold_p_4, gold_m_5), gold_c1_2 != "Switzerland")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

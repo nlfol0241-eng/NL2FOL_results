@@ -1,0 +1,99 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_615.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_615.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2911 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: find all dependent names who have a spouse relation with some employee.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Bdate = text -> StringSort()
+        Dependent_name = text -> StringSort()
+        Essn = integer -> IntSort()
+        Relationship = text -> StringSort()
+        Sex = text -> StringSort()
+      symbols:
+        dependent(Essn, Dependent_name, Sex, Bdate, Relationship)
+        constant Spouse : Relationship
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Essn ∃s : Sex ∃b : Bdate ∃r : Relationship ( (dependent(e,d,s,b,r)) ∧ (r = 'Spouse') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Essn EXISTS:∃ IDENT:s COLON:: IDENT:Sex EXISTS:∃ IDENT:b COLON:: IDENT:Bdate EXISTS:∃ IDENT:r COLON:: IDENT:Relationship LPAR:( LPAR:( IDENT:dependent LPAR:( IDENT:e COMMA:, IDENT:d COMMA:, IDENT:s COMMA:, IDENT:b COMMA:, IDENT:r RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r EQ:= LIT:Spouse RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Essn
+            EXISTS s:Sex
+              EXISTS b:Bdate
+                EXISTS r:Relationship
+                  AND
+                    PRED dependent(e, d, s, b, r)
+                    EQ  r = 'Spouse'
+      Predicted FOL: ∃e : Essn ∃s : Sex ∃b : Bdate dependent(e, n, s, b, 'Spouse')
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Essn EXISTS:∃ IDENT:s COLON:: IDENT:Sex EXISTS:∃ IDENT:b COLON:: IDENT:Bdate IDENT:dependent LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s COMMA:, IDENT:b COMMA:, LIT:Spouse RPAR:) EOF
+        AST:
+          EXISTS e:Essn
+            EXISTS s:Sex
+              EXISTS b:Bdate
+                PRED dependent(e, n, s, b, 'Spouse')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Dependent_name_0 : Dependent_name   Gold d <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Bdate, global text -> StringSort()
+        d : local Dependent_name, global text -> StringSort()
+        e : local Essn, global integer -> IntSort()
+        r : local Relationship, global text -> StringSort()
+        s : local Sex, global text -> StringSort()
+      Predicted FOL:
+        b : local Bdate, global text -> StringSort()
+        e : local Essn, global integer -> IntSort()
+        n : local Dependent_name, global text -> StringSort()
+        s : local Sex, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_s_2, gold_b_3, gold_r_4], And(P_dependent(gold_e_1, FV_Dependent_name_0, gold_s_2, gold_b_3, gold_r_4), (gold_r_4 == L_Spouse)))
+      gold_skolem (witnesses WGOLD_e, WGOLD_s, WGOLD_b, WGOLD_r):  And(P_dependent(WGOLD_e, FV_Dependent_name_0, WGOLD_s, WGOLD_b, WGOLD_r), (WGOLD_r == L_Spouse))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_e_1, predicted_s_2, predicted_b_3], P_dependent(predicted_e_1, FV_Dependent_name_0, predicted_s_2, predicted_b_3, L_Spouse))
+      predicted_skolem (witnesses WPREDICTED_e, WPREDICTED_s, WPREDICTED_b):  P_dependent(WPREDICTED_e, FV_Dependent_name_0, WPREDICTED_s, WPREDICTED_b, L_Spouse)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Spouse' at text -> L_Spouse = StringVal('Spouse')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 735 lines, 27371 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_615.py
+   [G8] took 0.008 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_s, WGOLD_b, WGOLD_r
+      claim: And(And(dependent(WGOLD_e, FV_Dependent_name_0, WGOLD_s, WGOLD_b, WGOLD_r), WGOLD_r == "Spouse"), Not(Exists([predicted_e_1, predicted_s_2, predicted_b_3], dependent(predicted_e_1, FV_Dependent_name_0, predicted_s_2, predicted_b_3, "Spouse"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_e, WPREDICTED_s, WPREDICTED_b
+      claim: And(dependent(WPREDICTED_e, FV_Dependent_name_0, WPREDICTED_s, WPREDICTED_b, "Spouse"), Not(Exists([gold_e_1, gold_s_2, gold_b_3, gold_r_4], And(dependent(gold_e_1, FV_Dependent_name_0, gold_s_2, gold_b_3, gold_r_4), gold_r_4 == "Spouse"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

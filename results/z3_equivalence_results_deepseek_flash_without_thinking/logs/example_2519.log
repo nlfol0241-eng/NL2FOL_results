@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2519.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2519.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3312 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the friends of Alice who are female?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        age = integer -> IntSort()
+        city = text -> StringSort()
+        friend = varchar(20) -> StringSort()
+        gender = text -> StringSort()
+        job = text -> StringSort()
+        name = varchar(20) -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        Person(name, age, city, gender, job)
+        PersonFriend(name, friend, year)
+        constant Alice : name
+        constant female : gender
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃a : age ∃c : city ∃g : gender ∃j : job ∃n1 : name ∃y : year ( (((Person(n,a,c,g,j)) ∧ (PersonFriend(n1,f,y))) ∧ (n = f)) ∧ ((n1 = 'Alice') ∧ (g = 'female')) )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:a COLON:: IDENT:age EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:PersonFriend LPAR:( IDENT:n1 COMMA:, IDENT:f COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n1 EQ:= LIT:Alice RPAR:) AND:∧ LPAR:( IDENT:g EQ:= LIT:female RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS a:age
+              EXISTS c:city
+                EXISTS g:gender
+                  EXISTS j:job
+                    EXISTS n1:name
+                      EXISTS y:year
+                        AND
+                          AND
+                            AND
+                              PRED Person(n, a, c, g, j)
+                              PRED PersonFriend(n1, f, y)
+                            EQ  n = f
+                          AND
+                            EQ  n1 = 'Alice'
+                            EQ  g = 'female'
+      Predicted FOL: ∃a0 : name ∃a1 : age ∃a2 : city ∃a3 : gender ∃a4 : job (Person(a0, a1, a2, a3, a4) ∧ a0 = 'Alice' ∧ a3 = 'female' ∧ ∃b0 : name ∃b1 : friend ∃b2 : year (PersonFriend(b0, b1, b2) ∧ b0 = a0 ∧ b1 = x))
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:name EXISTS:∃ IDENT:a1 COLON:: IDENT:age EXISTS:∃ IDENT:a2 COLON:: IDENT:city EXISTS:∃ IDENT:a3 COLON:: IDENT:gender EXISTS:∃ IDENT:a4 COLON:: IDENT:job LPAR:( IDENT:Person LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 RPAR:) AND:∧ IDENT:a0 EQ:= LIT:Alice AND:∧ IDENT:a3 EQ:= LIT:female AND:∧ EXISTS:∃ IDENT:b0 COLON:: IDENT:name EXISTS:∃ IDENT:b1 COLON:: IDENT:friend EXISTS:∃ IDENT:b2 COLON:: IDENT:year LPAR:( IDENT:PersonFriend LPAR:( IDENT:b0 COMMA:, IDENT:b1 COMMA:, IDENT:b2 RPAR:) AND:∧ IDENT:b0 EQ:= IDENT:a0 AND:∧ IDENT:b1 EQ:= IDENT:x RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:name
+            EXISTS a1:age
+              EXISTS a2:city
+                EXISTS a3:gender
+                  EXISTS a4:job
+                    AND
+                      PRED Person(a0, a1, a2, a3, a4)
+                      EQ  a0 = 'Alice'
+                      EQ  a3 = 'female'
+                      EXISTS b0:name
+                        EXISTS b1:friend
+                          EXISTS b2:year
+                            AND
+                              PRED PersonFriend(b0, b1, b2)
+                              EQ  b0 = a0
+                              EQ  b1 = x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['friend'] vs Predicted ['name']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['friend'] vs Predicted ['name']

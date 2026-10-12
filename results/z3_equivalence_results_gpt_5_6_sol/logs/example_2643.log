@@ -1,0 +1,112 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2643.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2643.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4410 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what are the high points of states surrounding mississippi
+   [G1] took 0.002 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 6 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        border = text -> StringSort()
+        highest_elevation = text -> StringSort()
+        highest_point = text -> StringSort()
+        lowest_elevation = text -> StringSort()
+        lowest_point = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        highlow(state_name, highest_elevation, lowest_point, highest_point, lowest_elevation)
+        constant mississippi : state_name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : lowest_point ∃h : highest_elevation ∃l1 : lowest_elevation ∃s : state_name( ∃b : border( ((highlow(s,h,l,h1,l1)) ∧ (∃s1 : state_name( (border_info(s1,b)) ∧ (s1 = 'mississippi') ))) ∧ (s = b) ) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:lowest_point EXISTS:∃ IDENT:h COLON:: IDENT:highest_elevation EXISTS:∃ IDENT:l1 COLON:: IDENT:lowest_elevation EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:b COLON:: IDENT:border LPAR:( LPAR:( LPAR:( IDENT:highlow LPAR:( IDENT:s COMMA:, IDENT:h COMMA:, IDENT:l COMMA:, IDENT:h1 COMMA:, IDENT:l1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( LPAR:( IDENT:border_info LPAR:( IDENT:s1 COMMA:, IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:mississippi RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:b RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:lowest_point
+            EXISTS h:highest_elevation
+              EXISTS l1:lowest_elevation
+                EXISTS s:state_name
+                  EXISTS b:border
+                    AND
+                      AND
+                        PRED highlow(s, h, l, h1, l1)
+                        EXISTS s1:state_name
+                          AND
+                            PRED border_info(s1, b)
+                            EQ  s1 = 'mississippi'
+                      EQ  s = b
+      Predicted FOL: ∃s : border ∃he : highest_elevation ∃lp : lowest_point ∃le : lowest_elevation (border_info('mississippi', s) ∧ highlow(s, he, lp, hp, le))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:border EXISTS:∃ IDENT:he COLON:: IDENT:highest_elevation EXISTS:∃ IDENT:lp COLON:: IDENT:lowest_point EXISTS:∃ IDENT:le COLON:: IDENT:lowest_elevation LPAR:( IDENT:border_info LPAR:( LIT:mississippi COMMA:, IDENT:s RPAR:) AND:∧ IDENT:highlow LPAR:( IDENT:s COMMA:, IDENT:he COMMA:, IDENT:lp COMMA:, IDENT:hp COMMA:, IDENT:le RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:border
+            EXISTS he:highest_elevation
+              EXISTS lp:lowest_point
+                EXISTS le:lowest_elevation
+                  AND
+                    PRED border_info('mississippi', s)
+                    PRED highlow(s, he, lp, hp, le)
+   [G3] took 0.005 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_highest_point_0 : highest_point   Gold h1 <-> Predicted hp
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local border, global text -> StringSort()
+        h : local highest_elevation, global text -> StringSort()
+        h1 : local highest_point, global text -> StringSort()
+        l : local lowest_point, global text -> StringSort()
+        l1 : local lowest_elevation, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+        s1 : local state_name, global text -> StringSort()
+      Predicted FOL:
+        he : local highest_elevation, global text -> StringSort()
+        hp : local highest_point, global text -> StringSort()
+        le : local lowest_elevation, global text -> StringSort()
+        lp : local lowest_point, global text -> StringSort()
+        s : local border, global text -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_l_1, gold_h_2, gold_l1_3, gold_s_4, gold_b_5], And(And(P_highlow(gold_s_4, gold_h_2, gold_l_1, FV_highest_point_0, gold_l1_3), Exists([gold_s1_6], And(P_border_info(gold_s1_6, gold_b_5), (gold_s1_6 == L_mississippi)))), (gold_s_4 == gold_b_5)))
+      gold_skolem (witnesses WGOLD_l, WGOLD_h, WGOLD_l1, WGOLD_s, WGOLD_b):  And(And(P_highlow(WGOLD_s, WGOLD_h, WGOLD_l, FV_highest_point_0, WGOLD_l1), Exists([goldsk_s1_1], And(P_border_info(goldsk_s1_1, WGOLD_b), (goldsk_s1_1 == L_mississippi)))), (WGOLD_s == WGOLD_b))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_he_2, predicted_lp_3, predicted_le_4], And(P_border_info(L_mississippi, predicted_s_1), P_highlow(predicted_s_1, predicted_he_2, predicted_lp_3, FV_highest_point_0, predicted_le_4)))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_he, WPREDICTED_lp, WPREDICTED_le):  And(P_border_info(L_mississippi, WPREDICTED_s), P_highlow(WPREDICTED_s, WPREDICTED_he, WPREDICTED_lp, FV_highest_point_0, WPREDICTED_le))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.002 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'mississippi' at text -> L_mississippi = StringVal('mississippi')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 746 lines, 28930 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2643.py
+   [G8] took 0.016 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_l, WGOLD_h, WGOLD_l1, WGOLD_s, WGOLD_b
+      claim: And(And(And(highlow(WGOLD_s, WGOLD_h, WGOLD_l, FV_highest_point_0, WGOLD_l1), Exists(goldsk_s1_1, And(border_info(goldsk_s1_1, WGOLD_b), goldsk_s1_1 == "mississippi"))), WGOLD_s == WGOLD_b), Not(Exists([predicted_s_1, predicted_he_2, predicted_lp_3, predicted_le_4], And(border_info("mississippi", predicted_s_1), highlow(predicted_s_1, predicted_he_2, predicted_lp_3, FV_highest_point_0, predicted_le_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.019 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.045 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_he, WPREDICTED_lp, WPREDICTED_le
+      claim: And(And(border_info("mississippi", WPREDICTED_s), highlow(WPREDICTED_s, WPREDICTED_he, WPREDICTED_lp, FV_highest_point_0, WPREDICTED_le)), Not(Exists([gold_l_1, gold_h_2, gold_l1_3, gold_s_4, gold_b_5], And(And(highlow(gold_s_4, gold_h_2, gold_l_1, FV_highest_point_0, gold_l1_3), Exists(gold_s1_6, And(border_info(gold_s1_6, gold_b_5), gold_s1_6 == "mississippi"))), gold_s_4 == gold_b_5))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.013 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.036 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1174.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1174.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4650 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: How much does the car accelerate that makes amc hornet sportabout (sw)?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 11 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Accelerate = real -> Float32()
+        Cylinders = integer -> IntSort()
+        Edispl = real -> Float32()
+        Horsepower = text -> StringSort()
+        Id = integer -> IntSort()
+        MPG = text -> StringSort()
+        Make = text -> StringSort()
+        MakeId = integer -> IntSort()
+        Model = text -> StringSort()
+        Weight = integer -> IntSort()
+        Year = integer -> IntSort()
+      symbols:
+        car_names(MakeId, Model, Make)
+        cars_data(Id, MPG, Cylinders, Edispl, Horsepower, Weight, Accelerate, Year)
+        constant amc hornet sportabout (sw) : Make
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : Id ∃m : MPG ∃c : Cylinders ∃e : Edispl ∃h : Horsepower ∃w : Weight ∃y : Year ∃m1 : MakeId ∃m2 : Model ∃m3 : Make ( (((cars_data(i,m,c,e,h,w,a,y)) ∧ (car_names(m1,m2,m3))) ∧ (i = m1)) ∧ (m3 = 'amc hornet sportabout (sw)') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:Id EXISTS:∃ IDENT:m COLON:: IDENT:MPG EXISTS:∃ IDENT:c COLON:: IDENT:Cylinders EXISTS:∃ IDENT:e COLON:: IDENT:Edispl EXISTS:∃ IDENT:h COLON:: IDENT:Horsepower EXISTS:∃ IDENT:w COLON:: IDENT:Weight EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:m1 COLON:: IDENT:MakeId EXISTS:∃ IDENT:m2 COLON:: IDENT:Model EXISTS:∃ IDENT:m3 COLON:: IDENT:Make LPAR:( LPAR:( LPAR:( LPAR:( IDENT:cars_data LPAR:( IDENT:i COMMA:, IDENT:m COMMA:, IDENT:c COMMA:, IDENT:e COMMA:, IDENT:h COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( IDENT:car_names LPAR:( IDENT:m1 COMMA:, IDENT:m2 COMMA:, IDENT:m3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:m1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:m3 EQ:= LIT:amc hornet sportabout (sw) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:Id
+            EXISTS m:MPG
+              EXISTS c:Cylinders
+                EXISTS e:Edispl
+                  EXISTS h:Horsepower
+                    EXISTS w:Weight
+                      EXISTS y:Year
+                        EXISTS m1:MakeId
+                          EXISTS m2:Model
+                            EXISTS m3:Make
+                              AND
+                                AND
+                                  AND
+                                    PRED cars_data(i, m, c, e, h, w, a, y)
+                                    PRED car_names(m1, m2, m3)
+                                  EQ  i = m1
+                                EQ  m3 = 'amc hornet sportabout (sw)'
+      Predicted FOL: ∃x : Id ∃y : Accelerate (cars_data(x, y, z, w, v, u, t, s) ∧ car_names(x, r, q) ∧ q = 'amc hornet sportabout (sw)')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Id EXISTS:∃ IDENT:y COLON:: IDENT:Accelerate LPAR:( IDENT:cars_data LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, IDENT:u COMMA:, IDENT:t COMMA:, IDENT:s RPAR:) AND:∧ IDENT:car_names LPAR:( IDENT:x COMMA:, IDENT:r COMMA:, IDENT:q RPAR:) AND:∧ IDENT:q EQ:= LIT:amc hornet sportabout (sw) RPAR:) EOF
+        AST:
+          EXISTS x:Id
+            EXISTS y:Accelerate
+              AND
+                PRED cars_data(x, y, z, w, v, u, t, s)
+                PRED car_names(x, r, q)
+                EQ  q = 'amc hornet sportabout (sw)'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) z, w, v, u, t, s, r, q occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (a : Accelerate) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'y' used at incompatible global sorts real and text
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'y' used at incompatible global sorts real and text

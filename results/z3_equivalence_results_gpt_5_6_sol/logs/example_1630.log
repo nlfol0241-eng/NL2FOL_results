@@ -1,0 +1,109 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1630.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1630.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3045 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of journalists from "England" or "Wales".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Years_working = int -> IntSort()
+        journalist_ID = int -> IntSort()
+      symbols:
+        journalist(journalist_ID, Name, Nationality, Age, Years_working)
+        constant England : Nationality
+        constant Wales : Nationality
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃j : journalist_ID ∃n1 : Nationality ∃a : Age ∃y : Years_working ( (journalist(j,n,n1,a,y)) ∧ ((n1 = 'England') ∨ (n1 = 'Wales')) )
+        tokens: EXISTS:∃ IDENT:j COLON:: IDENT:journalist_ID EXISTS:∃ IDENT:n1 COLON:: IDENT:Nationality EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:y COLON:: IDENT:Years_working LPAR:( LPAR:( IDENT:journalist LPAR:( IDENT:j COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a COMMA:, IDENT:y RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:n1 EQ:= LIT:England RPAR:) OR:∨ LPAR:( IDENT:n1 EQ:= LIT:Wales RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS j:journalist_ID
+            EXISTS n1:Nationality
+              EXISTS a:Age
+                EXISTS y:Years_working
+                  AND
+                    PRED journalist(j, n, n1, a, y)
+                    OR
+                      EQ  n1 = 'England'
+                      EQ  n1 = 'Wales'
+      Predicted FOL: ∃j : journalist_ID ∃nationality : Nationality ∃age : Age ∃years : Years_working (journalist(j, name, nationality, age, years) ∧ (nationality = 'England' ∨ nationality = 'Wales'))
+        tokens: EXISTS:∃ IDENT:j COLON:: IDENT:journalist_ID EXISTS:∃ IDENT:nationality COLON:: IDENT:Nationality EXISTS:∃ IDENT:age COLON:: IDENT:Age EXISTS:∃ IDENT:years COLON:: IDENT:Years_working LPAR:( IDENT:journalist LPAR:( IDENT:j COMMA:, IDENT:name COMMA:, IDENT:nationality COMMA:, IDENT:age COMMA:, IDENT:years RPAR:) AND:∧ LPAR:( IDENT:nationality EQ:= LIT:England OR:∨ IDENT:nationality EQ:= LIT:Wales RPAR:) RPAR:) EOF
+        AST:
+          EXISTS j:journalist_ID
+            EXISTS nationality:Nationality
+              EXISTS age:Age
+                EXISTS years:Years_working
+                  AND
+                    PRED journalist(j, name, nationality, age, years)
+                    OR
+                      EQ  nationality = 'England'
+                      EQ  nationality = 'Wales'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        j : local journalist_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        y : local Years_working, global int -> IntSort()
+      Predicted FOL:
+        age : local Age, global text -> StringSort()
+        j : local journalist_ID, global int -> IntSort()
+        name : local Name, global text -> StringSort()
+        nationality : local Nationality, global text -> StringSort()
+        years : local Years_working, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_j_1, gold_n1_2, gold_a_3, gold_y_4], And(P_journalist(gold_j_1, FV_Name_0, gold_n1_2, gold_a_3, gold_y_4), Or((gold_n1_2 == L_England), (gold_n1_2 == L_Wales))))
+      gold_skolem (witnesses WGOLD_j, WGOLD_n1, WGOLD_a, WGOLD_y):  And(P_journalist(WGOLD_j, FV_Name_0, WGOLD_n1, WGOLD_a, WGOLD_y), Or((WGOLD_n1 == L_England), (WGOLD_n1 == L_Wales)))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_j_1, predicted_nationality_2, predicted_age_3, predicted_years_4], And(P_journalist(predicted_j_1, FV_Name_0, predicted_nationality_2, predicted_age_3, predicted_years_4), Or((predicted_nationality_2 == L_England), (predicted_nationality_2 == L_Wales))))
+      predicted_skolem (witnesses WPREDICTED_j, WPREDICTED_nationality, WPREDICTED_age, WPREDICTED_years):  And(P_journalist(WPREDICTED_j, FV_Name_0, WPREDICTED_nationality, WPREDICTED_age, WPREDICTED_years), Or((WPREDICTED_nationality == L_England), (WPREDICTED_nationality == L_Wales)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'England' at text -> L_England = StringVal('England')
+      literal 'Wales' at text -> L_Wales = StringVal('Wales')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 740 lines, 28217 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1630.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_j, WGOLD_n1, WGOLD_a, WGOLD_y
+      claim: And(And(journalist(WGOLD_j, FV_Name_0, WGOLD_n1, WGOLD_a, WGOLD_y), Or(WGOLD_n1 == "England", WGOLD_n1 == "Wales")), Not(Exists([predicted_j_1, predicted_nationality_2, predicted_age_3, predicted_years_4], And(journalist(predicted_j_1, FV_Name_0, predicted_nationality_2, predicted_age_3, predicted_years_4), Or(predicted_nationality_2 == "England", predicted_nationality_2 == "Wales")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_j, WPREDICTED_nationality, WPREDICTED_age, WPREDICTED_years
+      claim: And(And(journalist(WPREDICTED_j, FV_Name_0, WPREDICTED_nationality, WPREDICTED_age, WPREDICTED_years), Or(WPREDICTED_nationality == "England", WPREDICTED_nationality == "Wales")), Not(Exists([gold_j_1, gold_n1_2, gold_a_3, gold_y_4], And(journalist(gold_j_1, FV_Name_0, gold_n1_2, gold_a_3, gold_y_4), Or(gold_n1_2 == "England", gold_n1_2 == "Wales")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

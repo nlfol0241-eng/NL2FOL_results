@@ -1,0 +1,105 @@
+{
+  "NL": "Show the name and number of employees for the departments managed by heads whose temporary acting value is 'Yes'?",
+  "Vocabulary": {
+    "Predicates": [
+      "department",
+      "management"
+    ],
+    "Functions": [],
+    "Constants": [
+      "Yes"
+    ]
+  },
+  "Arity": {
+    "Predicates": {
+      "department": [
+        "Department_ID",
+        "Name",
+        "Creation",
+        "Ranking",
+        "Budget_in_Billions",
+        "Num_Employees"
+      ],
+      "management": [
+        "department_ID",
+        "head_ID",
+        "temporary_acting"
+      ]
+    },
+    "Functions": {},
+    "Constants": {
+      "Yes": "temporary_acting"
+    }
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'( department(a0, a1, a2, a3, a4, a5) ∧ department(a0', a1', a2', a3', a4', a5') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' )",
+    "axiom2": "∀b0∀b1∀b2∀b3∀b0'∀b1'∀b2'∀b3'( head(b0, b1, b2, b3) ∧ head(b0', b1', b2', b3') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' ∧ b3 = b3' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( management(c0, c1, c2) ∧ management(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( management(c0, c1, c2) → ∃b0∃b1∃b2∃b3 ( head(b0, b1, b2, b3) ∧ b0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( management(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4∃a5 ( department(a0, a1, a2, a3, a4, a5) ∧ a0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "department": {
+        "A": "department",
+        "A0": "Department_ID",
+        "A1": "Name",
+        "A2": "Creation",
+        "A3": "Ranking",
+        "A4": "Budget_in_Billions",
+        "A5": "Num_Employees"
+      },
+      "management": {
+        "B": "management",
+        "B0": "department_ID",
+        "B1": "head_ID",
+        "B2": "temporary_acting"
+      }
+    },
+    "Functions": {},
+    "Constants": {
+      "const1": "Yes"
+    }
+  },
+  "Gold FOL": {
+    "string": "∃d : Department_ID ∃c : Creation ∃r : Ranking ∃b : Budget_in_Billions ∃d1 : department_ID ∃h : head_ID ∃t : temporary_acting ( (((department(d,n,c,r,b,n1)) ∧ (management(d1,h,t))) ∧ (d = d1)) ∧ (t = 'Yes') )",
+    "free vars": "n : Name, n1 : Num_Employees"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A1,A5](<S>[B2 = 'Yes':VARCHAR(65536)](<S>[A0 = B0]((A)<X>(B))))",
+    "Processed_RA": "<P>[A1,A5](<S>[B2 = 'Yes'](<S>[A0 = B0]((A)<X>(B))))",
+    "RC": "[E]?B0,?A2,?B2,?A4,?A3,?B1,?A0( (((A(?A0,?A1,?A2,?A3,?A4,?A5)) & (B(?B0,?B1,?B2))) & (?A0 = ?B0)) & (?B2 = Yes) )",
+    "string": "∃B0 ∃A2 ∃B2 ∃A4 ∃A3 ∃B1 ∃A0( (((A(A0,A1,A2,A3,A4,A5)) ∧ (B(B0,B1,B2))) ∧ (A0 = B0)) ∧ (B2 = 'Yes') )",
+    "free variables": "A1, A5",
+    "db_id": "department_management",
+    "processed_sql": "SELECT T1.name ,  T1.num_employees FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id WHERE T2.temporary_acting  =  'Yes'"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "department": {
+      "sortaxiom0": "Department_ID = int",
+      "sortaxiom1": "Name = text",
+      "sortaxiom2": "Creation = text",
+      "sortaxiom3": "Ranking = int",
+      "sortaxiom4": "Budget_in_Billions = real",
+      "sortaxiom5": "Num_Employees = real"
+    },
+    "management": {
+      "sortaxiom0": "department_ID = int",
+      "sortaxiom1": "head_ID = int",
+      "sortaxiom2": "temporary_acting = text"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT T1.name ,  T1.num_employees FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id WHERE T2.temporary_acting  =  'Yes'"
+  },
+  "id": 1336,
+  "Predicted FOL": {
+    "string": "∃dID:Department_ID ∃dName:Name ∃dCre:Creation ∃dRank:Ranking ∃dBud:Budget_in_Billions ∃dNum:Num_Employees ( department(dID, dName, dCre, dRank, dBud, dNum) ∧ ∃hID:head_ID ( management(dID, hID, 'Yes') ) )",
+    "free vars": ""
+  }
+}

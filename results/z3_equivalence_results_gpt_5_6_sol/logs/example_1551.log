@@ -1,0 +1,113 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1551.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1551.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5355 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the document ids for any documents with the status code done and the type code paper.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+      local sorts:
+        document_id = integer -> IntSort()
+        document_status_code = char(15) -> StringSort()
+        document_type_code = char(15) -> StringSort()
+        other_details = varchar(255) -> StringSort()
+        receipt_date = datetime -> IntSort()
+        receipt_number = varchar(255) -> StringSort()
+        shipping_agent_code = char(15) -> StringSort()
+      symbols:
+        Documents(document_id, document_status_code, document_type_code, shipping_agent_code, receipt_date, receipt_number, other_details)
+        constant Paper : document_type_code
+        constant done : document_status_code
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d1 : document_status_code ∃d2 : document_type_code ∃s : shipping_agent_code ∃r : receipt_date ∃r1 : receipt_number ∃o : other_details ( (Documents(d,d1,d2,s,r,r1,o)) ∧ ((d1 = 'done') ∧ (d2 = 'Paper')) )
+        tokens: EXISTS:∃ IDENT:d1 COLON:: IDENT:document_status_code EXISTS:∃ IDENT:d2 COLON:: IDENT:document_type_code EXISTS:∃ IDENT:s COLON:: IDENT:shipping_agent_code EXISTS:∃ IDENT:r COLON:: IDENT:receipt_date EXISTS:∃ IDENT:r1 COLON:: IDENT:receipt_number EXISTS:∃ IDENT:o COLON:: IDENT:other_details LPAR:( LPAR:( IDENT:Documents LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 COMMA:, IDENT:s COMMA:, IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:d1 EQ:= LIT:done RPAR:) AND:∧ LPAR:( IDENT:d2 EQ:= LIT:Paper RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d1:document_status_code
+            EXISTS d2:document_type_code
+              EXISTS s:shipping_agent_code
+                EXISTS r:receipt_date
+                  EXISTS r1:receipt_number
+                    EXISTS o:other_details
+                      AND
+                        PRED Documents(d, d1, d2, s, r, r1, o)
+                        AND
+                          EQ  d1 = 'done'
+                          EQ  d2 = 'Paper'
+      Predicted FOL: ∃s : shipping_agent_code ∃r : receipt_date ∃n : receipt_number ∃o : other_details Documents(x, 'done', 'Paper', s, r, n, o)
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:shipping_agent_code EXISTS:∃ IDENT:r COLON:: IDENT:receipt_date EXISTS:∃ IDENT:n COLON:: IDENT:receipt_number EXISTS:∃ IDENT:o COLON:: IDENT:other_details IDENT:Documents LPAR:( IDENT:x COMMA:, LIT:done COMMA:, LIT:Paper COMMA:, IDENT:s COMMA:, IDENT:r COMMA:, IDENT:n COMMA:, IDENT:o RPAR:) EOF
+        AST:
+          EXISTS s:shipping_agent_code
+            EXISTS r:receipt_date
+              EXISTS n:receipt_number
+                EXISTS o:other_details
+                  PRED Documents(x, 'done', 'Paper', s, r, n, o)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_document_id_0 : document_id   Gold d <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local document_id, global integer -> IntSort()
+        d1 : local document_status_code, global char(15) -> StringSort()
+        d2 : local document_type_code, global char(15) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        r : local receipt_date, global datetime -> IntSort()
+        r1 : local receipt_number, global varchar(255) -> StringSort()
+        s : local shipping_agent_code, global char(15) -> StringSort()
+      Predicted FOL:
+        n : local receipt_number, global varchar(255) -> StringSort()
+        o : local other_details, global varchar(255) -> StringSort()
+        r : local receipt_date, global datetime -> IntSort()
+        s : local shipping_agent_code, global char(15) -> StringSort()
+        x : local document_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d1_1, gold_d2_2, gold_s_3, gold_r_4, gold_r1_5, gold_o_6], And(D_char_15_(gold_d1_1), D_char_15_(gold_d2_2), D_char_15_(gold_s_3), D_varchar_255_(gold_r1_5), D_varchar_255_(gold_o_6), And(P_Documents(FV_document_id_0, gold_d1_1, gold_d2_2, gold_s_3, gold_r_4, gold_r1_5, gold_o_6), And((gold_d1_1 == L_done), (gold_d2_2 == L_Paper)))))
+      gold_skolem (witnesses WGOLD_d1, WGOLD_d2, WGOLD_s, WGOLD_r, WGOLD_r1, WGOLD_o):  And(D_char_15_(WGOLD_d1), D_char_15_(WGOLD_d2), D_char_15_(WGOLD_s), D_varchar_255_(WGOLD_r1), D_varchar_255_(WGOLD_o), And(P_Documents(FV_document_id_0, WGOLD_d1, WGOLD_d2, WGOLD_s, WGOLD_r, WGOLD_r1, WGOLD_o), And((WGOLD_d1 == L_done), (WGOLD_d2 == L_Paper))))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_r_2, predicted_n_3, predicted_o_4], And(D_char_15_(predicted_s_1), D_varchar_255_(predicted_n_3), D_varchar_255_(predicted_o_4), And(P_Documents(FV_document_id_0, L_done, L_Paper, predicted_s_1, predicted_r_2, predicted_n_3, predicted_o_4), D_char_15_(L_done), D_char_15_(L_Paper))))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_r, WPREDICTED_n, WPREDICTED_o):  And(D_char_15_(WPREDICTED_s), D_varchar_255_(WPREDICTED_n), D_varchar_255_(WPREDICTED_o), And(P_Documents(FV_document_id_0, L_done, L_Paper, WPREDICTED_s, WPREDICTED_r, WPREDICTED_n, WPREDICTED_o), D_char_15_(L_done), D_char_15_(L_Paper)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Paper' at char(15) -> L_Paper = StringVal('Paper')
+      literal 'done' at char(15) -> L_done = StringVal('done')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 760 lines, 30138 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1551.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_d1, WGOLD_d2, WGOLD_s, WGOLD_r, WGOLD_r1, WGOLD_o
+      claim: And(And(Length(WGOLD_d1) <= 15, Length(WGOLD_d2) <= 15, Length(WGOLD_s) <= 15, Length(WGOLD_r1) <= 255, Length(WGOLD_o) <= 255, And(Documents(FV_document_id_0, WGOLD_d1, WGOLD_d2, WGOLD_s, WGOLD_r, WGOLD_r1, WGOLD_o), And(WGOLD_d1 == "done", WGOLD_d2 == "Paper"))), Not(Exists([predicted_s_1, predicted_r_2, predicted_n_3, predicted_o_4], And(Length(predicted_s_1) <= 15, Length(predicted_n_3) <= 255, Length(predicted_o_4) <= 255, And(Documents(FV_document_id_0, "done", "Paper", predicted_s_1, predicted_r_2, predicted_n_3, predicted_o_4), Length("done") <= 15, Length("Paper") <= 15)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_r, WPREDICTED_n, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_s) <= 15, Length(WPREDICTED_n) <= 255, Length(WPREDICTED_o) <= 255, And(Documents(FV_document_id_0, "done", "Paper", WPREDICTED_s, WPREDICTED_r, WPREDICTED_n, WPREDICTED_o), Length("done") <= 15, Length("Paper") <= 15)), Not(Exists([gold_d1_1, gold_d2_2, gold_s_3, gold_r_4, gold_r1_5, gold_o_6], And(Length(gold_d1_1) <= 15, Length(gold_d2_2) <= 15, Length(gold_s_3) <= 15, Length(gold_r1_5) <= 255, Length(gold_o_6) <= 255, And(Documents(FV_document_id_0, gold_d1_1, gold_d2_2, gold_s_3, gold_r_4, gold_r1_5, gold_o_6), And(gold_d1_1 == "done", gold_d2_2 == "Paper"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.013 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

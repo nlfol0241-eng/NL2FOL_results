@@ -1,0 +1,76 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1039.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1039.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5924 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all the distinct visit dates.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+      local sorts:
+        Tourist_Attraction_ID = integer -> IntSort()
+        Tourist_ID = integer -> IntSort()
+        Visit_Date = datetime -> IntSort()
+        Visit_Details = varchar(40) -> StringSort()
+        Visit_ID = integer -> IntSort()
+      symbols:
+        Visits(Visit_ID, Tourist_Attraction_ID, Tourist_ID, Visit_Date, Visit_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃v : Visit_ID ∃t : Tourist_Attraction_ID ∃t1 : Tourist_ID ∃v2 : Visit_Details ( Visits(v,t,t1,v1,v2) )
+        tokens: EXISTS:∃ IDENT:v COLON:: IDENT:Visit_ID EXISTS:∃ IDENT:t COLON:: IDENT:Tourist_Attraction_ID EXISTS:∃ IDENT:t1 COLON:: IDENT:Tourist_ID EXISTS:∃ IDENT:v2 COLON:: IDENT:Visit_Details LPAR:( IDENT:Visits LPAR:( IDENT:v COMMA:, IDENT:t COMMA:, IDENT:t1 COMMA:, IDENT:v1 COMMA:, IDENT:v2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS v:Visit_ID
+            EXISTS t:Tourist_Attraction_ID
+              EXISTS t1:Tourist_ID
+                EXISTS v2:Visit_Details
+                  PRED Visits(v, t, t1, v1, v2)
+      Predicted FOL: ∃x : Visit_Date (Visits(v0, v1, v2, x, v3))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:Visit_Date LPAR:( IDENT:Visits LPAR:( IDENT:v0 COMMA:, IDENT:v1 COMMA:, IDENT:v2 COMMA:, IDENT:x COMMA:, IDENT:v3 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:Visit_Date
+            PRED Visits(v0, v1, v2, x, v3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (v1 : Visit_Date) but Predicted has 4 (v0 : Visit_ID, v1 : Tourist_Attraction_ID, v2 : Tourist_ID, v3 : Visit_Details): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        t : local Tourist_Attraction_ID, global integer -> IntSort()
+        t1 : local Tourist_ID, global integer -> IntSort()
+        v : local Visit_ID, global integer -> IntSort()
+        v1 : local Visit_Date, global datetime -> IntSort()
+        v2 : local Visit_Details, global varchar(40) -> StringSort()
+      Predicted FOL:
+        v0 : local Visit_ID, global integer -> IntSort()
+        v1 : local Tourist_Attraction_ID, global integer -> IntSort()
+        v2 : local Tourist_ID, global integer -> IntSort()
+        v3 : local Visit_Details, global varchar(40) -> StringSort()
+        x : local Visit_Date, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5380 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1039.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (v1 : Visit_Date) but Predicted has 4 (v0 : Visit_ID, v1 : Tourist_Attraction_ID, v2 : Tourist_ID, v3 : Visit_Details): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

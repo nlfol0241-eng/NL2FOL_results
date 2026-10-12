@@ -1,0 +1,68 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_618.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_618.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2178 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the service id and details for the events.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Event_Details = varchar(255) -> StringSort()
+        Event_ID = integer -> IntSort()
+        Service_ID = integer -> IntSort()
+      symbols:
+        Events(Event_ID, Service_ID, Event_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Event_ID ( Events(e,s,e1) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Event_ID LPAR:( IDENT:Events LPAR:( IDENT:e COMMA:, IDENT:s COMMA:, IDENT:e1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Event_ID
+            PRED Events(e, s, e1)
+      Predicted FOL: ∃e0:Event_ID ∃e1:Service_ID ∃e2:Event_Details (Events(e0,e1,e2))
+        tokens: EXISTS:∃ IDENT:e0 COLON:: IDENT:Event_ID EXISTS:∃ IDENT:e1 COLON:: IDENT:Service_ID EXISTS:∃ IDENT:e2 COLON:: IDENT:Event_Details LPAR:( IDENT:Events LPAR:( IDENT:e0 COMMA:, IDENT:e1 COMMA:, IDENT:e2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e0:Event_ID
+            EXISTS e1:Service_ID
+              EXISTS e2:Event_Details
+                PRED Events(e0, e1, e2)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (s : Service_ID, e1 : Event_Details) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local Event_ID, global integer -> IntSort()
+        e1 : local Event_Details, global varchar(255) -> StringSort()
+        s : local Service_ID, global integer -> IntSort()
+      Predicted FOL:
+        e0 : local Event_ID, global integer -> IntSort()
+        e1 : local Service_ID, global integer -> IntSort()
+        e2 : local Event_Details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5232 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_618.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (s : Service_ID, e1 : Event_Details) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

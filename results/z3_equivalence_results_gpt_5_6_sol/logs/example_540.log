@@ -1,0 +1,106 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_540.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_540.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3388 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the player name, number of matches, and information source for players who do not suffer from injury of 'Knee problem'?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Injury = text -> StringSort()
+        Number_of_matches = text -> StringSort()
+        Player = text -> StringSort()
+        Source = text -> StringSort()
+        game_id = int -> IntSort()
+        id = int -> IntSort()
+      symbols:
+        injury_accident(game_id, id, Player, Injury, Number_of_matches, Source)
+        constant Knee problem : Injury
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : game_id ∃i : id ∃i1 : Injury ( (injury_accident(g,i,p,i1,n,s)) ∧ (i1 <> 'Knee problem') )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:game_id EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:i1 COLON:: IDENT:Injury LPAR:( LPAR:( IDENT:injury_accident LPAR:( IDENT:g COMMA:, IDENT:i COMMA:, IDENT:p COMMA:, IDENT:i1 COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i1 NEQ:<> LIT:Knee problem RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:game_id
+            EXISTS i:id
+              EXISTS i1:Injury
+                AND
+                  PRED injury_accident(g, i, p, i1, n, s)
+                  NEQ  i1 != 'Knee problem'
+      Predicted FOL: ∃g : game_id ∃i : id ∃j : Injury (injury_accident(g, i, player, j, number_of_matches, source) ∧ j ≠ 'Knee problem')
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:game_id EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:j COLON:: IDENT:Injury LPAR:( IDENT:injury_accident LPAR:( IDENT:g COMMA:, IDENT:i COMMA:, IDENT:player COMMA:, IDENT:j COMMA:, IDENT:number_of_matches COMMA:, IDENT:source RPAR:) AND:∧ IDENT:j NEQ:≠ LIT:Knee problem RPAR:) EOF
+        AST:
+          EXISTS g:game_id
+            EXISTS i:id
+              EXISTS j:Injury
+                AND
+                  PRED injury_accident(g, i, player, j, number_of_matches, source)
+                  NEQ  j != 'Knee problem'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Number_of_matches_0 : Number_of_matches   Gold n <-> Predicted number_of_matches
+      FV_Player_0 : Player   Gold p <-> Predicted player
+      FV_Source_0 : Source   Gold s <-> Predicted source
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local game_id, global int -> IntSort()
+        i : local id, global int -> IntSort()
+        i1 : local Injury, global text -> StringSort()
+        n : local Number_of_matches, global text -> StringSort()
+        p : local Player, global text -> StringSort()
+        s : local Source, global text -> StringSort()
+      Predicted FOL:
+        g : local game_id, global int -> IntSort()
+        i : local id, global int -> IntSort()
+        j : local Injury, global text -> StringSort()
+        number_of_matches : local Number_of_matches, global text -> StringSort()
+        player : local Player, global text -> StringSort()
+        source : local Source, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_g_1, gold_i_2, gold_i1_3], And(P_injury_accident(gold_g_1, gold_i_2, FV_Player_0, gold_i1_3, FV_Number_of_matches_0, FV_Source_0), (gold_i1_3 != L_Knee_problem)))
+      gold_skolem (witnesses WGOLD_g, WGOLD_i, WGOLD_i1):  And(P_injury_accident(WGOLD_g, WGOLD_i, FV_Player_0, WGOLD_i1, FV_Number_of_matches_0, FV_Source_0), (WGOLD_i1 != L_Knee_problem))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_g_1, predicted_i_2, predicted_j_3], And(P_injury_accident(predicted_g_1, predicted_i_2, FV_Player_0, predicted_j_3, FV_Number_of_matches_0, FV_Source_0), (predicted_j_3 != L_Knee_problem)))
+      predicted_skolem (witnesses WPREDICTED_g, WPREDICTED_i, WPREDICTED_j):  And(P_injury_accident(WPREDICTED_g, WPREDICTED_i, FV_Player_0, WPREDICTED_j, FV_Number_of_matches_0, FV_Source_0), (WPREDICTED_j != L_Knee_problem))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Knee problem' at text -> L_Knee_problem = StringVal('Knee problem')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 738 lines, 27907 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_540.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_g, WGOLD_i, WGOLD_i1
+      claim: And(And(injury_accident(WGOLD_g, WGOLD_i, FV_Player_0, WGOLD_i1, FV_Number_of_matches_0, FV_Source_0), WGOLD_i1 != "Knee problem"), Not(Exists([predicted_g_1, predicted_i_2, predicted_j_3], And(injury_accident(predicted_g_1, predicted_i_2, FV_Player_0, predicted_j_3, FV_Number_of_matches_0, FV_Source_0), predicted_j_3 != "Knee problem"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_g, WPREDICTED_i, WPREDICTED_j
+      claim: And(And(injury_accident(WPREDICTED_g, WPREDICTED_i, FV_Player_0, WPREDICTED_j, FV_Number_of_matches_0, FV_Source_0), WPREDICTED_j != "Knee problem"), Not(Exists([gold_g_1, gold_i_2, gold_i1_3], And(injury_accident(gold_g_1, gold_i_2, FV_Player_0, gold_i1_3, FV_Number_of_matches_0, FV_Source_0), gold_i1_3 != "Knee problem"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.006 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

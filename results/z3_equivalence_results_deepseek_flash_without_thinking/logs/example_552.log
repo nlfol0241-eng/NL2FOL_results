@@ -1,0 +1,78 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_552.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_552.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5339 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids, date opened, name, and other details for all accounts?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(50) -> StringSort()   [domain Length(x) <= 50; length <= 50]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        account_id = integer -> IntSort()
+        account_name = varchar(50) -> StringSort()
+        customer_id = integer -> IntSort()
+        date_account_opened = datetime -> IntSort()
+        other_account_details = varchar(255) -> StringSort()
+      symbols:
+        Accounts(account_id, customer_id, date_account_opened, account_name, other_account_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : customer_id ( Accounts(a,c,d,a1,o) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:customer_id LPAR:( IDENT:Accounts LPAR:( IDENT:a COMMA:, IDENT:c COMMA:, IDENT:d COMMA:, IDENT:a1 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:customer_id
+            PRED Accounts(a, c, d, a1, o)
+      Predicted FOL: ∃x_account_id : account_id ∃x_customer_id : customer_id ∃x_date_account_opened : date_account_opened ∃x_account_name : account_name ∃x_other_account_details : other_account_details Accounts(x_account_id, x_customer_id, x_date_account_opened, x_account_name, x_other_account_details)
+        tokens: EXISTS:∃ IDENT:x_account_id COLON:: IDENT:account_id EXISTS:∃ IDENT:x_customer_id COLON:: IDENT:customer_id EXISTS:∃ IDENT:x_date_account_opened COLON:: IDENT:date_account_opened EXISTS:∃ IDENT:x_account_name COLON:: IDENT:account_name EXISTS:∃ IDENT:x_other_account_details COLON:: IDENT:other_account_details IDENT:Accounts LPAR:( IDENT:x_account_id COMMA:, IDENT:x_customer_id COMMA:, IDENT:x_date_account_opened COMMA:, IDENT:x_account_name COMMA:, IDENT:x_other_account_details RPAR:) EOF
+        AST:
+          EXISTS x_account_id:account_id
+            EXISTS x_customer_id:customer_id
+              EXISTS x_date_account_opened:date_account_opened
+                EXISTS x_account_name:account_name
+                  EXISTS x_other_account_details:other_account_details
+                    PRED Accounts(x_account_id, x_customer_id, x_date_account_opened, x_account_name, x_other_account_details)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 4 free variable(s) (a : account_id, d : date_account_opened, a1 : account_name, o : other_account_details) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local account_id, global integer -> IntSort()
+        a1 : local account_name, global varchar(50) -> StringSort()
+        c : local customer_id, global integer -> IntSort()
+        d : local date_account_opened, global datetime -> IntSort()
+        o : local other_account_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        x_account_id : local account_id, global integer -> IntSort()
+        x_account_name : local account_name, global varchar(50) -> StringSort()
+        x_customer_id : local customer_id, global integer -> IntSort()
+        x_date_account_opened : local date_account_opened, global datetime -> IntSort()
+        x_other_account_details : local other_account_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5590 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_552.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 4 free variable(s) (a : account_id, d : date_account_opened, a1 : account_name, o : other_account_details) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

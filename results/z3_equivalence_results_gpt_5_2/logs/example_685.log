@@ -1,0 +1,95 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_685.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_685.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2987 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the description of the restaurant type Sandwich?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+        varchar(100) -> StringSort()   [domain Length(x) <= 100; length <= 100]
+      local sorts:
+        ResTypeDescription = varchar(100) -> StringSort()
+        ResTypeID = integer -> IntSort()
+        ResTypeName = varchar(40) -> StringSort()
+      symbols:
+        Restaurant_Type(ResTypeID, ResTypeName, ResTypeDescription)
+        constant Sandwich : ResTypeName
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃r : ResTypeID ∃r1 : ResTypeName ( (Restaurant_Type(r,r1,r2)) ∧ (r1 = 'Sandwich') )
+        tokens: EXISTS:∃ IDENT:r COLON:: IDENT:ResTypeID EXISTS:∃ IDENT:r1 COLON:: IDENT:ResTypeName LPAR:( LPAR:( IDENT:Restaurant_Type LPAR:( IDENT:r COMMA:, IDENT:r1 COMMA:, IDENT:r2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:r1 EQ:= LIT:Sandwich RPAR:) RPAR:) EOF
+        AST:
+          EXISTS r:ResTypeID
+            EXISTS r1:ResTypeName
+              AND
+                PRED Restaurant_Type(r, r1, r2)
+                EQ  r1 = 'Sandwich'
+      Predicted FOL: ∃d0:ResTypeID ∃d2:ResTypeDescription (Restaurant_Type(d0, Sandwich, d2) ∧ d2 = x)
+        tokens: EXISTS:∃ IDENT:d0 COLON:: IDENT:ResTypeID EXISTS:∃ IDENT:d2 COLON:: IDENT:ResTypeDescription LPAR:( IDENT:Restaurant_Type LPAR:( IDENT:d0 COMMA:, IDENT:Sandwich COMMA:, IDENT:d2 RPAR:) AND:∧ IDENT:d2 EQ:= IDENT:x RPAR:) EOF
+        AST:
+          EXISTS d0:ResTypeID
+            EXISTS d2:ResTypeDescription
+              AND
+                PRED Restaurant_Type(d0, Sandwich<const>, d2)
+                EQ  d2 = x
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_ResTypeDescription_0 : ResTypeDescription   Gold r2 <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        r : local ResTypeID, global integer -> IntSort()
+        r1 : local ResTypeName, global varchar(40) -> StringSort()
+        r2 : local ResTypeDescription, global varchar(100) -> StringSort()
+      Predicted FOL:
+        d0 : local ResTypeID, global integer -> IntSort()
+        d2 : local ResTypeDescription, global varchar(100) -> StringSort()
+        x : local ResTypeDescription, global varchar(100) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_r_1, gold_r1_2], And(D_varchar_40_(gold_r1_2), And(P_Restaurant_Type(gold_r_1, gold_r1_2, FV_ResTypeDescription_0), (gold_r1_2 == L_Sandwich))))
+      gold_skolem (witnesses WGOLD_r, WGOLD_r1):  And(D_varchar_40_(WGOLD_r1), And(P_Restaurant_Type(WGOLD_r, WGOLD_r1, FV_ResTypeDescription_0), (WGOLD_r1 == L_Sandwich)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d0_1, predicted_d2_2], And(D_varchar_100_(predicted_d2_2), And(And(P_Restaurant_Type(predicted_d0_1, L_Sandwich, predicted_d2_2), D_varchar_40_(L_Sandwich)), (predicted_d2_2 == FV_ResTypeDescription_0))))
+      predicted_skolem (witnesses WPREDICTED_d0, WPREDICTED_d2):  And(D_varchar_100_(WPREDICTED_d2), And(And(P_Restaurant_Type(WPREDICTED_d0, L_Sandwich, WPREDICTED_d2), D_varchar_40_(L_Sandwich)), (WPREDICTED_d2 == FV_ResTypeDescription_0)))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Sandwich' at varchar(40) -> L_Sandwich = StringVal('Sandwich')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 729 lines, 27446 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_685.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_ResTypeDescription_0) <= 100
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_r, WGOLD_r1
+      claim: And(And(Length(WGOLD_r1) <= 40, And(Restaurant_Type(WGOLD_r, WGOLD_r1, FV_ResTypeDescription_0), WGOLD_r1 == "Sandwich")), Not(Exists([predicted_d0_1, predicted_d2_2], And(Length(predicted_d2_2) <= 100, And(And(Restaurant_Type(predicted_d0_1, "Sandwich", predicted_d2_2), Length("Sandwich") <= 40), predicted_d2_2 == FV_ResTypeDescription_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_d0, WPREDICTED_d2
+      claim: And(And(Length(WPREDICTED_d2) <= 100, And(And(Restaurant_Type(WPREDICTED_d0, "Sandwich", WPREDICTED_d2), Length("Sandwich") <= 40), WPREDICTED_d2 == FV_ResTypeDescription_0)), Not(Exists([gold_r_1, gold_r1_2], And(Length(gold_r1_2) <= 40, And(Restaurant_Type(gold_r_1, gold_r1_2, FV_ResTypeDescription_0), gold_r1_2 == "Sandwich")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

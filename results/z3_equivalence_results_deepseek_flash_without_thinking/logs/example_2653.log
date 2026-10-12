@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2653.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2653.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4893 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: what is the highest point in the state with capital des moines
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        highest_elevation = text -> StringSort()
+        highest_point = text -> StringSort()
+        lowest_elevation = text -> StringSort()
+        lowest_point = text -> StringSort()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        highlow(state_name, highest_elevation, lowest_point, highest_point, lowest_elevation)
+        state(state_name, population, area, country_name, capital, density)
+        constant des moines : capital
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : lowest_point ∃h : highest_elevation ∃l1 : lowest_elevation ∃s : state_name( ∃s1 : state_name( ((highlow(s,h,l,h1,l1)) ∧ (∃c : country_name ∃a : area ∃d : density ∃p : population ∃c1 : capital( (state(s1,p,a,c,c1,d)) ∧ (c1 = 'des moines') ))) ∧ (s = s1) ) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:lowest_point EXISTS:∃ IDENT:h COLON:: IDENT:highest_elevation EXISTS:∃ IDENT:l1 COLON:: IDENT:lowest_elevation EXISTS:∃ IDENT:s COLON:: IDENT:state_name LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name LPAR:( LPAR:( LPAR:( IDENT:highlow LPAR:( IDENT:s COMMA:, IDENT:h COMMA:, IDENT:l COMMA:, IDENT:h1 COMMA:, IDENT:l1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:c1 COLON:: IDENT:capital LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s1 COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:des moines RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s1 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:lowest_point
+            EXISTS h:highest_elevation
+              EXISTS l1:lowest_elevation
+                EXISTS s:state_name
+                  EXISTS s1:state_name
+                    AND
+                      AND
+                        PRED highlow(s, h, l, h1, l1)
+                        EXISTS c:country_name
+                          EXISTS a:area
+                            EXISTS d:density
+                              EXISTS p:population
+                                EXISTS c1:capital
+                                  AND
+                                    PRED state(s1, p, a, c, c1, d)
+                                    EQ  c1 = 'des moines'
+                      EQ  s = s1
+      Predicted FOL: ∃x : state_name ∃y : highest_elevation ∃z : lowest_point ∃w : highest_point ∃v : lowest_elevation (state(x, y, z, w, v, 'des moines') ∧ highlow(x, y, z, w, v))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:state_name EXISTS:∃ IDENT:y COLON:: IDENT:highest_elevation EXISTS:∃ IDENT:z COLON:: IDENT:lowest_point EXISTS:∃ IDENT:w COLON:: IDENT:highest_point EXISTS:∃ IDENT:v COLON:: IDENT:lowest_elevation LPAR:( IDENT:state LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, LIT:des moines RPAR:) AND:∧ IDENT:highlow LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:state_name
+            EXISTS y:highest_elevation
+              EXISTS z:lowest_point
+                EXISTS w:highest_point
+                  EXISTS v:lowest_elevation
+                    AND
+                      PRED state(x, y, z, w, v, 'des moines')
+                      PRED highlow(x, y, z, w, v)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (h1 : highest_point) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'y' used at incompatible global sorts text and integer
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  [Previous line repeated 2 more times]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'y' used at incompatible global sorts text and integer

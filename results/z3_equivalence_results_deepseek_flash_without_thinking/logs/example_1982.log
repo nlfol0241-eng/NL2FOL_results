@@ -1,0 +1,85 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1982.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1982.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4353 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: IN which year did city "Taizhou ( Zhejiang )" serve as a host city?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        City = text -> StringSort()
+        City_ID = int -> IntSort()
+        GDP = real -> Float32()
+        Hanyu_Pinyin = text -> StringSort()
+        Hanzi = text -> StringSort()
+        Host_City = int -> IntSort()
+        Match_ID = int -> IntSort()
+        Regional_Population = int -> IntSort()
+        Year = int -> IntSort()
+      symbols:
+        city(City_ID, City, Hanzi, Hanyu_Pinyin, Regional_Population, GDP)
+        hosting_city(Year, Match_ID, Host_City)
+        constant Taizhou ( Zhejiang ) : City
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : City_ID ∃c1 : City ∃h : Hanzi ∃h1 : Hanyu_Pinyin ∃r : Regional_Population ∃g : GDP ∃m : Match_ID ∃h2 : Host_City ( (((city(c,c1,h,h1,r,g)) ∧ (hosting_city(y,m,h2))) ∧ (c = h2)) ∧ (c1 = 'Taizhou ( Zhejiang )') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:City_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:City EXISTS:∃ IDENT:h COLON:: IDENT:Hanzi EXISTS:∃ IDENT:h1 COLON:: IDENT:Hanyu_Pinyin EXISTS:∃ IDENT:r COLON:: IDENT:Regional_Population EXISTS:∃ IDENT:g COLON:: IDENT:GDP EXISTS:∃ IDENT:m COLON:: IDENT:Match_ID EXISTS:∃ IDENT:h2 COLON:: IDENT:Host_City LPAR:( LPAR:( LPAR:( LPAR:( IDENT:city LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:h COMMA:, IDENT:h1 COMMA:, IDENT:r COMMA:, IDENT:g RPAR:) RPAR:) AND:∧ LPAR:( IDENT:hosting_city LPAR:( IDENT:y COMMA:, IDENT:m COMMA:, IDENT:h2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:h2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 EQ:= LIT:Taizhou ( Zhejiang ) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:City_ID
+            EXISTS c1:City
+              EXISTS h:Hanzi
+                EXISTS h1:Hanyu_Pinyin
+                  EXISTS r:Regional_Population
+                    EXISTS g:GDP
+                      EXISTS m:Match_ID
+                        EXISTS h2:Host_City
+                          AND
+                            AND
+                              AND
+                                PRED city(c, c1, h, h1, r, g)
+                                PRED hosting_city(y, m, h2)
+                              EQ  c = h2
+                            EQ  c1 = 'Taizhou ( Zhejiang )'
+      Predicted FOL: ∃y : Year (hosting_city(y, m, c) ∧ city(c, 'Taizhou ( Zhejiang )', h, p, r, g))
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:Year LPAR:( IDENT:hosting_city LPAR:( IDENT:y COMMA:, IDENT:m COMMA:, IDENT:c RPAR:) AND:∧ IDENT:city LPAR:( IDENT:c COMMA:, LIT:Taizhou ( Zhejiang ) COMMA:, IDENT:h COMMA:, IDENT:p COMMA:, IDENT:r COMMA:, IDENT:g RPAR:) RPAR:) EOF
+        AST:
+          EXISTS y:Year
+            AND
+              PRED hosting_city(y, m, c)
+              PRED city(c, 'Taizhou ( Zhejiang )', h, p, r, g)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (y : Year) but Predicted has 6 (m : Match_ID, c : City, h : Hanzi, p : Hanyu_Pinyin, r : Regional_Population, g : GDP): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'c' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'c' used at incompatible global sorts text and int

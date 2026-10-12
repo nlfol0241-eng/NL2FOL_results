@@ -1,0 +1,107 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3306.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3306.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3359 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the colleges that have both authors with submission score larger than 90 and authors with submission score smaller than 80.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 4 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Author = text -> StringSort()
+        College = text -> StringSort()
+        Scores = real -> Float32()
+        Submission_ID = int -> IntSort()
+      symbols:
+        submission(Submission_ID, Scores, Author, College)
+        constant 80 : Scores
+        constant 90 : Scores
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 > 90) )) ∧ (¬((∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 > 90) )) ∧ (¬(∃a : Author ∃s1 : Scores ∃s : Submission_ID( (submission(s,s1,a,c)) ∧ (s1 < 80) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 GT:> NUM:90 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 GT:> NUM:90 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:Author EXISTS:∃ IDENT:s1 COLON:: IDENT:Scores EXISTS:∃ IDENT:s COLON:: IDENT:Submission_ID LPAR:( LPAR:( IDENT:submission LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:a COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 LT:< NUM:80 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS a:Author
+              EXISTS s1:Scores
+                EXISTS s:Submission_ID
+                  AND
+                    PRED submission(s, s1, a, c)
+                    CMP  s1 > 90
+            NOT
+              AND
+                EXISTS a:Author
+                  EXISTS s1:Scores
+                    EXISTS s:Submission_ID
+                      AND
+                        PRED submission(s, s1, a, c)
+                        CMP  s1 > 90
+                NOT
+                  EXISTS a:Author
+                    EXISTS s1:Scores
+                      EXISTS s:Submission_ID
+                        AND
+                          PRED submission(s, s1, a, c)
+                          CMP  s1 < 80
+      Predicted FOL: ∃c : College (∃s1 : Submission_ID ∃a1 : Author ∃sc1 : Scores (submission(s1, sc1, a1, c) ∧ sc1 > 90) ∧ ∃s2 : Submission_ID ∃a2 : Author ∃sc2 : Scores (submission(s2, sc2, a2, c) ∧ sc2 < 80))
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:College LPAR:( EXISTS:∃ IDENT:s1 COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:a1 COLON:: IDENT:Author EXISTS:∃ IDENT:sc1 COLON:: IDENT:Scores LPAR:( IDENT:submission LPAR:( IDENT:s1 COMMA:, IDENT:sc1 COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) AND:∧ IDENT:sc1 GT:> NUM:90 RPAR:) AND:∧ EXISTS:∃ IDENT:s2 COLON:: IDENT:Submission_ID EXISTS:∃ IDENT:a2 COLON:: IDENT:Author EXISTS:∃ IDENT:sc2 COLON:: IDENT:Scores LPAR:( IDENT:submission LPAR:( IDENT:s2 COMMA:, IDENT:sc2 COMMA:, IDENT:a2 COMMA:, IDENT:c RPAR:) AND:∧ IDENT:sc2 LT:< NUM:80 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:College
+            EXISTS s1:Submission_ID
+              EXISTS a1:Author
+                EXISTS sc1:Scores
+                  AND
+                    AND
+                      PRED submission(s1, sc1, a1, c)
+                      CMP  sc1 > 90
+                    EXISTS s2:Submission_ID
+                      EXISTS a2:Author
+                        EXISTS sc2:Scores
+                          AND
+                            PRED submission(s2, sc2, a2, c)
+                            CMP  sc2 < 80
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : College) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        s : local Submission_ID, global int -> IntSort()
+        s1 : local Scores, global real -> Float32()
+      Predicted FOL:
+        a1 : local Author, global text -> StringSort()
+        a2 : local Author, global text -> StringSort()
+        c : local College, global text -> StringSort()
+        s1 : local Submission_ID, global int -> IntSort()
+        s2 : local Submission_ID, global int -> IntSort()
+        sc1 : local Scores, global real -> Float32()
+        sc2 : local Scores, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5666 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3306.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : College) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

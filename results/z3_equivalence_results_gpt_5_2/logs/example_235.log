@@ -1,0 +1,98 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_235.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_235.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3702 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: how tall is guadalupe peak
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   1 global sorts, 5 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        text -> StringSort()
+      local sorts:
+        highest_elevation = text -> StringSort()
+        highest_point = text -> StringSort()
+        lowest_elevation = text -> StringSort()
+        lowest_point = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        highlow(state_name, highest_elevation, lowest_point, highest_point, lowest_elevation)
+        constant guadalupe peak : highest_point
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ∃l : lowest_point ∃h1 : highest_point ∃l1 : lowest_elevation ( (highlow(s,h,l,h1,l1)) ∧ (h1 = 'guadalupe peak') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:l COLON:: IDENT:lowest_point EXISTS:∃ IDENT:h1 COLON:: IDENT:highest_point EXISTS:∃ IDENT:l1 COLON:: IDENT:lowest_elevation LPAR:( LPAR:( IDENT:highlow LPAR:( IDENT:s COMMA:, IDENT:h COMMA:, IDENT:l COMMA:, IDENT:h1 COMMA:, IDENT:l1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:h1 EQ:= LIT:guadalupe peak RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS l:lowest_point
+              EXISTS h1:highest_point
+                EXISTS l1:lowest_elevation
+                  AND
+                    PRED highlow(s, h, l, h1, l1)
+                    EQ  h1 = 'guadalupe peak'
+      Predicted FOL: ∃s:state_name ∃loPt:lowest_point ∃loEl:lowest_elevation ( highlow(s, x, loPt, 'guadalupe peak', loEl) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:loPt COLON:: IDENT:lowest_point EXISTS:∃ IDENT:loEl COLON:: IDENT:lowest_elevation LPAR:( IDENT:highlow LPAR:( IDENT:s COMMA:, IDENT:x COMMA:, IDENT:loPt COMMA:, LIT:guadalupe peak COMMA:, IDENT:loEl RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS loPt:lowest_point
+              EXISTS loEl:lowest_elevation
+                PRED highlow(s, x, loPt, 'guadalupe peak', loEl)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_highest_elevation_0 : highest_elevation   Gold h <-> Predicted x
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 9 variable occurrences in 2 formulas
+      Gold FOL:
+        h : local highest_elevation, global text -> StringSort()
+        h1 : local highest_point, global text -> StringSort()
+        l : local lowest_point, global text -> StringSort()
+        l1 : local lowest_elevation, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        loEl : local lowest_elevation, global text -> StringSort()
+        loPt : local lowest_point, global text -> StringSort()
+        s : local state_name, global text -> StringSort()
+        x : local highest_elevation, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_l_2, gold_h1_3, gold_l1_4], And(P_highlow(gold_s_1, FV_highest_elevation_0, gold_l_2, gold_h1_3, gold_l1_4), (gold_h1_3 == L_guadalupe_peak)))
+      gold_skolem (witnesses WGOLD_s, WGOLD_l, WGOLD_h1, WGOLD_l1):  And(P_highlow(WGOLD_s, FV_highest_elevation_0, WGOLD_l, WGOLD_h1, WGOLD_l1), (WGOLD_h1 == L_guadalupe_peak))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_s_1, predicted_loPt_2, predicted_loEl_3], P_highlow(predicted_s_1, FV_highest_elevation_0, predicted_loPt_2, L_guadalupe_peak, predicted_loEl_3))
+      predicted_skolem (witnesses WPREDICTED_s, WPREDICTED_loPt, WPREDICTED_loEl):  P_highlow(WPREDICTED_s, FV_highest_elevation_0, WPREDICTED_loPt, L_guadalupe_peak, WPREDICTED_loEl)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'guadalupe peak' at text -> L_guadalupe_peak = StringVal('guadalupe peak')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 733 lines, 27801 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_235.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_l, WGOLD_h1, WGOLD_l1
+      claim: And(And(highlow(WGOLD_s, FV_highest_elevation_0, WGOLD_l, WGOLD_h1, WGOLD_l1), WGOLD_h1 == "guadalupe peak"), Not(Exists([predicted_s_1, predicted_loPt_2, predicted_loEl_3], highlow(predicted_s_1, FV_highest_elevation_0, predicted_loPt_2, "guadalupe peak", predicted_loEl_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_s, WPREDICTED_loPt, WPREDICTED_loEl
+      claim: And(highlow(WPREDICTED_s, FV_highest_elevation_0, WPREDICTED_loPt, "guadalupe peak", WPREDICTED_loEl), Not(Exists([gold_s_1, gold_l_2, gold_h1_3, gold_l1_4], And(highlow(gold_s_1, FV_highest_elevation_0, gold_l_2, gold_h1_3, gold_l1_4), gold_h1_3 == "guadalupe peak"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

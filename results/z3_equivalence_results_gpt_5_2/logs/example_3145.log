@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_3145.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3145.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3109 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the names of users who did not leave any review.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(128) -> StringSort()   [domain Length(x) <= 128; length <= 128]
+        integer -> IntSort()
+      local sorts:
+        a_id = integer -> IntSort()
+        i_id = integer -> IntSort()
+        name = varchar(128) -> StringSort()
+        rank = integer -> IntSort()
+        rating = integer -> IntSort()
+        u_id = integer -> IntSort()
+      symbols:
+        review(a_id, u_id, i_id, rating, rank)
+        useracct(u_id, name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : u_id( (useracct(u,n)) ∧ (¬(∃u1 : u_id( ((useracct(u,n)) ∧ (∃a : a_id ∃r : rating ∃i : i_id ∃r1 : rank( review(a,u1,i,r,r1) ))) ∧ (u = u1) ))) )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:u_id LPAR:( LPAR:( IDENT:useracct LPAR:( IDENT:u COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:u1 COLON:: IDENT:u_id LPAR:( LPAR:( LPAR:( IDENT:useracct LPAR:( IDENT:u COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:a COLON:: IDENT:a_id EXISTS:∃ IDENT:r COLON:: IDENT:rating EXISTS:∃ IDENT:i COLON:: IDENT:i_id EXISTS:∃ IDENT:r1 COLON:: IDENT:rank LPAR:( IDENT:review LPAR:( IDENT:a COMMA:, IDENT:u1 COMMA:, IDENT:i COMMA:, IDENT:r COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:u EQ:= IDENT:u1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:u_id
+            AND
+              PRED useracct(u, n)
+              NOT
+                EXISTS u1:u_id
+                  AND
+                    AND
+                      PRED useracct(u, n)
+                      EXISTS a:a_id
+                        EXISTS r:rating
+                          EXISTS i:i_id
+                            EXISTS r1:rank
+                              PRED review(a, u1, i, r, r1)
+                    EQ  u = u1
+      Predicted FOL: ∃c0:u_id ∃c1:name ( useracct(c0, c1) ∧ ¬∃b0:a_id ∃b2:i_id ∃b3:rating ∃b4:rank ( review(b0, c0, b2, b3, b4) ) )
+        tokens: EXISTS:∃ IDENT:c0 COLON:: IDENT:u_id EXISTS:∃ IDENT:c1 COLON:: IDENT:name LPAR:( IDENT:useracct LPAR:( IDENT:c0 COMMA:, IDENT:c1 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:b0 COLON:: IDENT:a_id EXISTS:∃ IDENT:b2 COLON:: IDENT:i_id EXISTS:∃ IDENT:b3 COLON:: IDENT:rating EXISTS:∃ IDENT:b4 COLON:: IDENT:rank LPAR:( IDENT:review LPAR:( IDENT:b0 COMMA:, IDENT:c0 COMMA:, IDENT:b2 COMMA:, IDENT:b3 COMMA:, IDENT:b4 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c0:u_id
+            EXISTS c1:name
+              AND
+                PRED useracct(c0, c1)
+                NOT
+                  EXISTS b0:a_id
+                    EXISTS b2:i_id
+                      EXISTS b3:rating
+                        EXISTS b4:rank
+                          PRED review(b0, c0, b2, b3, b4)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 13 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local a_id, global integer -> IntSort()
+        i : local i_id, global integer -> IntSort()
+        n : local name, global varchar(128) -> StringSort()
+        r : local rating, global integer -> IntSort()
+        r1 : local rank, global integer -> IntSort()
+        u : local u_id, global integer -> IntSort()
+        u1 : local u_id, global integer -> IntSort()
+      Predicted FOL:
+        b0 : local a_id, global integer -> IntSort()
+        b2 : local i_id, global integer -> IntSort()
+        b3 : local rating, global integer -> IntSort()
+        b4 : local rank, global integer -> IntSort()
+        c0 : local u_id, global integer -> IntSort()
+        c1 : local name, global varchar(128) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5374 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_3145.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

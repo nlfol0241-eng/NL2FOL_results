@@ -1,0 +1,102 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3277.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3277.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3361 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of shops that do not have any devices in stock?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Device_ID = int -> IntSort()
+        Location = text -> StringSort()
+        Open_Date = text -> StringSort()
+        Open_Year = int -> IntSort()
+        Quantity = int -> IntSort()
+        Shop_ID = int -> IntSort()
+        Shop_Name = text -> StringSort()
+      symbols:
+        shop(Shop_ID, Shop_Name, Location, Open_Date, Open_Year)
+        stock(Shop_ID, Device_ID, Quantity)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃l : Location ∃o1 : Open_Year ∃o : Open_Date ∃s : Shop_ID( (shop(s,s1,l,o,o1)) ∧ (¬(∃s2 : Shop_ID( ((shop(s,s1,l,o,o1)) ∧ (∃q : Quantity ∃d : Device_ID( stock(s2,d,q) ))) ∧ (s = s2) ))) )
+        tokens: EXISTS:∃ IDENT:l COLON:: IDENT:Location EXISTS:∃ IDENT:o1 COLON:: IDENT:Open_Year EXISTS:∃ IDENT:o COLON:: IDENT:Open_Date EXISTS:∃ IDENT:s COLON:: IDENT:Shop_ID LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:o COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s2 COLON:: IDENT:Shop_ID LPAR:( LPAR:( LPAR:( IDENT:shop LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:l COMMA:, IDENT:o COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( EXISTS:∃ IDENT:q COLON:: IDENT:Quantity EXISTS:∃ IDENT:d COLON:: IDENT:Device_ID LPAR:( IDENT:stock LPAR:( IDENT:s2 COMMA:, IDENT:d COMMA:, IDENT:q RPAR:) RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:s2 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS l:Location
+            EXISTS o1:Open_Year
+              EXISTS o:Open_Date
+                EXISTS s:Shop_ID
+                  AND
+                    PRED shop(s, s1, l, o, o1)
+                    NOT
+                      EXISTS s2:Shop_ID
+                        AND
+                          AND
+                            PRED shop(s, s1, l, o, o1)
+                            EXISTS q:Quantity
+                              EXISTS d:Device_ID
+                                PRED stock(s2, d, q)
+                          EQ  s = s2
+      Predicted FOL: ∃s0 : Shop_ID ∃s1 : Shop_Name ∃s2 : Location ∃s3 : Open_Date ∃s4 : Open_Year ( shop(s0, s1, s2, s3, s4) ∧ ¬∃d0 : Device_ID ∃q : Quantity stock(s0, d0, q) )
+        tokens: EXISTS:∃ IDENT:s0 COLON:: IDENT:Shop_ID EXISTS:∃ IDENT:s1 COLON:: IDENT:Shop_Name EXISTS:∃ IDENT:s2 COLON:: IDENT:Location EXISTS:∃ IDENT:s3 COLON:: IDENT:Open_Date EXISTS:∃ IDENT:s4 COLON:: IDENT:Open_Year LPAR:( IDENT:shop LPAR:( IDENT:s0 COMMA:, IDENT:s1 COMMA:, IDENT:s2 COMMA:, IDENT:s3 COMMA:, IDENT:s4 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:d0 COLON:: IDENT:Device_ID EXISTS:∃ IDENT:q COLON:: IDENT:Quantity IDENT:stock LPAR:( IDENT:s0 COMMA:, IDENT:d0 COMMA:, IDENT:q RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s0:Shop_ID
+            EXISTS s1:Shop_Name
+              EXISTS s2:Location
+                EXISTS s3:Open_Date
+                  EXISTS s4:Open_Year
+                    AND
+                      PRED shop(s0, s1, s2, s3, s4)
+                      NOT
+                        EXISTS d0:Device_ID
+                          EXISTS q:Quantity
+                            PRED stock(s0, d0, q)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s1 : Shop_Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local Device_ID, global int -> IntSort()
+        l : local Location, global text -> StringSort()
+        o : local Open_Date, global text -> StringSort()
+        o1 : local Open_Year, global int -> IntSort()
+        q : local Quantity, global int -> IntSort()
+        s : local Shop_ID, global int -> IntSort()
+        s1 : local Shop_Name, global text -> StringSort()
+        s2 : local Shop_ID, global int -> IntSort()
+      Predicted FOL:
+        d0 : local Device_ID, global int -> IntSort()
+        q : local Quantity, global int -> IntSort()
+        s0 : local Shop_ID, global int -> IntSort()
+        s1 : local Shop_Name, global text -> StringSort()
+        s2 : local Location, global text -> StringSort()
+        s3 : local Open_Date, global text -> StringSort()
+        s4 : local Open_Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5487 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3277.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s1 : Shop_Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

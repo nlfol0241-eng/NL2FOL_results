@@ -1,0 +1,118 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1814.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1814.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6185 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the id and type of each thing, and the details of the organization that owns it.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        text -> StringSort()
+      local sorts:
+        Type_of_Thing_Code = char(15) -> StringSort()
+        organization_details = varchar(255) -> StringSort()
+        organization_id = integer -> IntSort()
+        parent_organization_id = integer -> IntSort()
+        service_details = varchar(255) -> StringSort()
+        service_type_code = text -> StringSort()
+        thing_id = integer -> IntSort()
+      symbols:
+        Organizations(organization_id, parent_organization_id, organization_details)
+        Things(thing_id, organization_id, Type_of_Thing_Code, service_type_code, service_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃o : organization_id ∃s : service_type_code ∃s1 : service_details ∃o1 : organization_id ∃p : parent_organization_id ( ((Things(t,o,t1,s,s1)) ∧ (Organizations(o1,p,o2))) ∧ (o = o1) )
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:organization_id EXISTS:∃ IDENT:s COLON:: IDENT:service_type_code EXISTS:∃ IDENT:s1 COLON:: IDENT:service_details EXISTS:∃ IDENT:o1 COLON:: IDENT:organization_id EXISTS:∃ IDENT:p COLON:: IDENT:parent_organization_id LPAR:( LPAR:( LPAR:( IDENT:Things LPAR:( IDENT:t COMMA:, IDENT:o COMMA:, IDENT:t1 COMMA:, IDENT:s COMMA:, IDENT:s1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Organizations LPAR:( IDENT:o1 COMMA:, IDENT:p COMMA:, IDENT:o2 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:o EQ:= IDENT:o1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:organization_id
+            EXISTS s:service_type_code
+              EXISTS s1:service_details
+                EXISTS o1:organization_id
+                  EXISTS p:parent_organization_id
+                    AND
+                      AND
+                        PRED Things(t, o, t1, s, s1)
+                        PRED Organizations(o1, p, o2)
+                      EQ  o = o1
+      Predicted FOL: ∃o : organization_id ∃s : service_type_code ∃d : service_details ∃p : parent_organization_id (Things(i, o, t, s, d) ∧ Organizations(o, p, r))
+        tokens: EXISTS:∃ IDENT:o COLON:: IDENT:organization_id EXISTS:∃ IDENT:s COLON:: IDENT:service_type_code EXISTS:∃ IDENT:d COLON:: IDENT:service_details EXISTS:∃ IDENT:p COLON:: IDENT:parent_organization_id LPAR:( IDENT:Things LPAR:( IDENT:i COMMA:, IDENT:o COMMA:, IDENT:t COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) AND:∧ IDENT:Organizations LPAR:( IDENT:o COMMA:, IDENT:p COMMA:, IDENT:r RPAR:) RPAR:) EOF
+        AST:
+          EXISTS o:organization_id
+            EXISTS s:service_type_code
+              EXISTS d:service_details
+                EXISTS p:parent_organization_id
+                  AND
+                    PRED Things(i, o, t, s, d)
+                    PRED Organizations(o, p, r)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Type_of_Thing_Code_0 : Type_of_Thing_Code   Gold t1 <-> Predicted t
+      FV_organization_details_0 : organization_details   Gold o2 <-> Predicted r
+      FV_thing_id_0 : thing_id   Gold t <-> Predicted i
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        o : local organization_id, global integer -> IntSort()
+        o1 : local organization_id, global integer -> IntSort()
+        o2 : local organization_details, global varchar(255) -> StringSort()
+        p : local parent_organization_id, global integer -> IntSort()
+        s : local service_type_code, global text -> StringSort()
+        s1 : local service_details, global varchar(255) -> StringSort()
+        t : local thing_id, global integer -> IntSort()
+        t1 : local Type_of_Thing_Code, global char(15) -> StringSort()
+      Predicted FOL:
+        d : local service_details, global varchar(255) -> StringSort()
+        i : local thing_id, global integer -> IntSort()
+        o : local organization_id, global integer -> IntSort()
+        p : local parent_organization_id, global integer -> IntSort()
+        r : local organization_details, global varchar(255) -> StringSort()
+        s : local service_type_code, global text -> StringSort()
+        t : local Type_of_Thing_Code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_o_1, gold_s_2, gold_s1_3, gold_o1_4, gold_p_5], And(D_varchar_255_(gold_s1_3), And(And(P_Things(FV_thing_id_0, gold_o_1, FV_Type_of_Thing_Code_0, gold_s_2, gold_s1_3), P_Organizations(gold_o1_4, gold_p_5, FV_organization_details_0)), (gold_o_1 == gold_o1_4))))
+      gold_skolem (witnesses WGOLD_o, WGOLD_s, WGOLD_s1, WGOLD_o1, WGOLD_p):  And(D_varchar_255_(WGOLD_s1), And(And(P_Things(FV_thing_id_0, WGOLD_o, FV_Type_of_Thing_Code_0, WGOLD_s, WGOLD_s1), P_Organizations(WGOLD_o1, WGOLD_p, FV_organization_details_0)), (WGOLD_o == WGOLD_o1)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_o_1, predicted_s_2, predicted_d_3, predicted_p_4], And(D_varchar_255_(predicted_d_3), And(P_Things(FV_thing_id_0, predicted_o_1, FV_Type_of_Thing_Code_0, predicted_s_2, predicted_d_3), P_Organizations(predicted_o_1, predicted_p_4, FV_organization_details_0))))
+      predicted_skolem (witnesses WPREDICTED_o, WPREDICTED_s, WPREDICTED_d, WPREDICTED_p):  And(D_varchar_255_(WPREDICTED_d), And(P_Things(FV_thing_id_0, WPREDICTED_o, FV_Type_of_Thing_Code_0, WPREDICTED_s, WPREDICTED_d), P_Organizations(WPREDICTED_o, WPREDICTED_p, FV_organization_details_0)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 760 lines, 30090 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1814.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_Type_of_Thing_Code_0) <= 15
+      [1] Length(FV_organization_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_o, WGOLD_s, WGOLD_s1, WGOLD_o1, WGOLD_p
+      claim: And(And(Length(WGOLD_s1) <= 255, And(And(Things(FV_thing_id_0, WGOLD_o, FV_Type_of_Thing_Code_0, WGOLD_s, WGOLD_s1), Organizations(WGOLD_o1, WGOLD_p, FV_organization_details_0)), WGOLD_o == WGOLD_o1)), Not(Exists([predicted_o_1, predicted_s_2, predicted_d_3, predicted_p_4], And(Length(predicted_d_3) <= 255, And(Things(FV_thing_id_0, predicted_o_1, FV_Type_of_Thing_Code_0, predicted_s_2, predicted_d_3), Organizations(predicted_o_1, predicted_p_4, FV_organization_details_0))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_o, WPREDICTED_s, WPREDICTED_d, WPREDICTED_p
+      claim: And(And(Length(WPREDICTED_d) <= 255, And(Things(FV_thing_id_0, WPREDICTED_o, FV_Type_of_Thing_Code_0, WPREDICTED_s, WPREDICTED_d), Organizations(WPREDICTED_o, WPREDICTED_p, FV_organization_details_0))), Not(Exists([gold_o_1, gold_s_2, gold_s1_3, gold_o1_4, gold_p_5], And(Length(gold_s1_3) <= 255, And(And(Things(FV_thing_id_0, gold_o_1, FV_Type_of_Thing_Code_0, gold_s_2, gold_s1_3), Organizations(gold_o1_4, gold_p_5, FV_organization_details_0)), gold_o_1 == gold_o1_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

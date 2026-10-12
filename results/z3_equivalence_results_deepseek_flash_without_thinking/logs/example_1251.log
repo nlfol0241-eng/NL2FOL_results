@@ -1,0 +1,82 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1251.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1251.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5141 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the feature type name of feature AirCon?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+      local sorts:
+        feature_description = varchar(80) -> StringSort()
+        feature_id = integer -> IntSort()
+        feature_name = varchar(80) -> StringSort()
+        feature_type_code = varchar(20) -> StringSort()
+        feature_type_name = varchar(80) -> StringSort()
+      symbols:
+        Other_Available_Features(feature_id, feature_type_code, feature_name, feature_description)
+        Ref_Feature_Types(feature_type_code, feature_type_name)
+        constant AirCon : feature_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃f : feature_id ∃f1 : feature_type_code ∃f2 : feature_name ∃f3 : feature_description ∃f4 : feature_type_code ( (((Other_Available_Features(f,f1,f2,f3)) ∧ (Ref_Feature_Types(f4,f5))) ∧ (f1 = f4)) ∧ (f2 = 'AirCon') )
+        tokens: EXISTS:∃ IDENT:f COLON:: IDENT:feature_id EXISTS:∃ IDENT:f1 COLON:: IDENT:feature_type_code EXISTS:∃ IDENT:f2 COLON:: IDENT:feature_name EXISTS:∃ IDENT:f3 COLON:: IDENT:feature_description EXISTS:∃ IDENT:f4 COLON:: IDENT:feature_type_code LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Other_Available_Features LPAR:( IDENT:f COMMA:, IDENT:f1 COMMA:, IDENT:f2 COMMA:, IDENT:f3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Ref_Feature_Types LPAR:( IDENT:f4 COMMA:, IDENT:f5 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f1 EQ:= IDENT:f4 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f2 EQ:= LIT:AirCon RPAR:) RPAR:) EOF
+        AST:
+          EXISTS f:feature_id
+            EXISTS f1:feature_type_code
+              EXISTS f2:feature_name
+                EXISTS f3:feature_description
+                  EXISTS f4:feature_type_code
+                    AND
+                      AND
+                        AND
+                          PRED Other_Available_Features(f, f1, f2, f3)
+                          PRED Ref_Feature_Types(f4, f5)
+                        EQ  f1 = f4
+                      EQ  f2 = 'AirCon'
+      Predicted FOL: ∃x : feature_type_code ∃y : feature_type_name (Other_Available_Features(x, x, 'AirCon', x) ∧ Ref_Feature_Types(x, y))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:feature_type_code EXISTS:∃ IDENT:y COLON:: IDENT:feature_type_name LPAR:( IDENT:Other_Available_Features LPAR:( IDENT:x COMMA:, IDENT:x COMMA:, LIT:AirCon COMMA:, IDENT:x RPAR:) AND:∧ IDENT:Ref_Feature_Types LPAR:( IDENT:x COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:feature_type_code
+            EXISTS y:feature_type_name
+              AND
+                PRED Other_Available_Features(x, x, 'AirCon', x)
+                PRED Ref_Feature_Types(x, y)
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) y do not occur free in the formula
+   1 shared answer variable(s)
+      FV_feature_type_name_0 : feature_type_name   Gold f5 <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'x' used at incompatible global sorts varchar(20) and integer
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'x' used at incompatible global sorts varchar(20) and integer

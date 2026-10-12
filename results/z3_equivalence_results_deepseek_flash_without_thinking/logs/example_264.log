@@ -1,0 +1,75 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_264.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_264.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3214 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: where are mountains
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        country_name = varchar(3) -> StringSort()
+        mountain_altitude = integer -> IntSort()
+        mountain_name = text -> StringSort()
+        state_name = text -> StringSort()
+      symbols:
+        mountain(mountain_name, mountain_altitude, country_name, state_name)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : mountain_name ∃m1 : mountain_altitude ∃c : country_name ( mountain(m,m1,c,s) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mountain_name EXISTS:∃ IDENT:m1 COLON:: IDENT:mountain_altitude EXISTS:∃ IDENT:c COLON:: IDENT:country_name LPAR:( IDENT:mountain LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:c COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mountain_name
+            EXISTS m1:mountain_altitude
+              EXISTS c:country_name
+                PRED mountain(m, m1, c, s)
+      Predicted FOL: ∃x0 : mountain_name ∃x1 : mountain_altitude ∃x2 : country_name ∃x3 : state_name mountain(x0, x1, x2, x3)
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:mountain_name EXISTS:∃ IDENT:x1 COLON:: IDENT:mountain_altitude EXISTS:∃ IDENT:x2 COLON:: IDENT:country_name EXISTS:∃ IDENT:x3 COLON:: IDENT:state_name IDENT:mountain LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) EOF
+        AST:
+          EXISTS x0:mountain_name
+            EXISTS x1:mountain_altitude
+              EXISTS x2:country_name
+                EXISTS x3:state_name
+                  PRED mountain(x0, x1, x2, x3)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s : state_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local country_name, global varchar(3) -> StringSort()
+        m : local mountain_name, global text -> StringSort()
+        m1 : local mountain_altitude, global integer -> IntSort()
+        s : local state_name, global text -> StringSort()
+      Predicted FOL:
+        x0 : local mountain_name, global text -> StringSort()
+        x1 : local mountain_altitude, global integer -> IntSort()
+        x2 : local country_name, global varchar(3) -> StringSort()
+        x3 : local state_name, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5261 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_264.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s : state_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

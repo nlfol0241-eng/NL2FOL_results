@@ -1,0 +1,78 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_354.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_354.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4575 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of the students who registered for course 301?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        course_id = text -> StringSort()
+        date_of_attendance = datetime -> IntSort()
+        student_id = integer -> IntSort()
+      symbols:
+        Student_Course_Attendance(student_id, course_id, date_of_attendance)
+        constant 301 : course_id
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : course_id ∃d : date_of_attendance ( (Student_Course_Attendance(s,c,d)) ∧ (c = 301) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:course_id EXISTS:∃ IDENT:d COLON:: IDENT:date_of_attendance LPAR:( LPAR:( IDENT:Student_Course_Attendance LPAR:( IDENT:s COMMA:, IDENT:c COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= NUM:301 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:course_id
+            EXISTS d:date_of_attendance
+              AND
+                PRED Student_Course_Attendance(s, c, d)
+                EQ  c = 301
+      Predicted FOL: ∃x : student_id (Student_Course_Attendance(x, 301, y) ∧ ∀z : date_of_attendance (Student_Course_Attendance(x, 301, z) → z = y))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:student_id LPAR:( IDENT:Student_Course_Attendance LPAR:( IDENT:x COMMA:, NUM:301 COMMA:, IDENT:y RPAR:) AND:∧ FORALL:∀ IDENT:z COLON:: IDENT:date_of_attendance LPAR:( IDENT:Student_Course_Attendance LPAR:( IDENT:x COMMA:, NUM:301 COMMA:, IDENT:z RPAR:) IMPL:→ IDENT:z EQ:= IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:student_id
+            AND
+              PRED Student_Course_Attendance(x, 301, y)
+              FORALL z:date_of_attendance
+                IMPLIES
+                  PRED Student_Course_Attendance(x, 301, z)
+                  EQ  z = y
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x do not occur free in the formula
+   MISMATCH: Gold has 1 free variable(s) (s : student_id) but Predicted has 2 (x : student_id, y : date_of_attendance): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local course_id, global text -> StringSort()
+        d : local date_of_attendance, global datetime -> IntSort()
+        s : local student_id, global integer -> IntSort()
+      Predicted FOL:
+        x : local student_id, global integer -> IntSort()
+        y : local date_of_attendance, global datetime -> IntSort()
+        z : local date_of_attendance, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5485 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_354.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s : student_id) but Predicted has 2 (x : student_id, y : date_of_attendance): their answers have different arities
+   WARNING: Predicted FOL: declared free variable(s) x do not occur free in the formula
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,129 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_495.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_495.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2698 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and trade names of the medcines that are FDA approved?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        FDA_approved = text -> StringSort()
+        Trade_Name = text -> StringSort()
+        id = int -> IntSort()
+        name = text -> StringSort()
+      symbols:
+        medicine(id, name, Trade_Name, FDA_approved)
+        constant Yes : FDA_approved
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃f : FDA_approved ( (medicine(i,n,t,f)) ∧ (f = 'Yes') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:f COLON:: IDENT:FDA_approved LPAR:( LPAR:( IDENT:medicine LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:t COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:f EQ:= LIT:Yes RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS f:FDA_approved
+              AND
+                PRED medicine(i, n, t, f)
+                EQ  f = 'Yes'
+      Predicted FOL: ∃x0 : id ∃x1 : name ∃x2 : Trade_Name ∃x3 : FDA_approved (medicine(x0, x1, x2, x3) ∧ x3 = 'Yes')
+        tokens: EXISTS:∃ IDENT:x0 COLON:: IDENT:id EXISTS:∃ IDENT:x1 COLON:: IDENT:name EXISTS:∃ IDENT:x2 COLON:: IDENT:Trade_Name EXISTS:∃ IDENT:x3 COLON:: IDENT:FDA_approved LPAR:( IDENT:medicine LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 RPAR:) AND:∧ IDENT:x3 EQ:= LIT:Yes RPAR:) EOF
+        AST:
+          EXISTS x0:id
+            EXISTS x1:name
+              EXISTS x2:Trade_Name
+                EXISTS x3:FDA_approved
+                  AND
+                    PRED medicine(x0, x1, x2, x3)
+                    EQ  x3 = 'Yes'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x1, x2 do not occur free in the formula
+   2 shared answer variable(s)
+      FV_Trade_Name_0 : Trade_Name   Gold t <-> Predicted x2
+      FV_name_0 : name   Gold n <-> Predicted x1
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        f : local FDA_approved, global text -> StringSort()
+        i : local id, global int -> IntSort()
+        n : local name, global text -> StringSort()
+        t : local Trade_Name, global text -> StringSort()
+      Predicted FOL:
+        x0 : local id, global int -> IntSort()
+        x1 : local name, global text -> StringSort()
+        x2 : local Trade_Name, global text -> StringSort()
+        x3 : local FDA_approved, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_f_2], And(P_medicine(gold_i_1, FV_name_0, FV_Trade_Name_0, gold_f_2), (gold_f_2 == L_Yes)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_f):  And(P_medicine(WGOLD_i, FV_name_0, FV_Trade_Name_0, WGOLD_f), (WGOLD_f == L_Yes))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_x0_1, predicted_x1_2, predicted_x2_3, predicted_x3_4], And(P_medicine(predicted_x0_1, predicted_x1_2, predicted_x2_3, predicted_x3_4), (predicted_x3_4 == L_Yes)))
+      predicted_skolem (witnesses WPREDICTED_x0, WPREDICTED_x1, WPREDICTED_x2, WPREDICTED_x3):  And(P_medicine(WPREDICTED_x0, WPREDICTED_x1, WPREDICTED_x2, WPREDICTED_x3), (WPREDICTED_x3 == L_Yes))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Yes' at text -> L_Yes = StringVal('Yes')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 732 lines, 27254 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_495.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_f
+      claim: And(And(medicine(WGOLD_i, FV_name_0, FV_Trade_Name_0, WGOLD_f), WGOLD_f == "Yes"), Not(Exists([predicted_x0_1, predicted_x1_2, predicted_x2_3, predicted_x3_4], And(medicine(predicted_x0_1, predicted_x1_2, predicted_x2_3, predicted_x3_4), predicted_x3_4 == "Yes"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_x0, WPREDICTED_x1, WPREDICTED_x2, WPREDICTED_x3
+      claim: And(And(medicine(WPREDICTED_x0, WPREDICTED_x1, WPREDICTED_x2, WPREDICTED_x3), WPREDICTED_x3 == "Yes"), Not(Exists([gold_i_1, gold_f_2], And(medicine(gold_i_1, FV_name_0, FV_Trade_Name_0, gold_f_2), gold_f_2 == "Yes"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 5 relation tuple(s) listed, 2 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          x0 : id = 2
+          x1 : name = 'Yes'
+          x2 : Trade_Name = 'Yes'
+          x3 : FDA_approved = 'Yes'
+        free (answer) variables:
+          FV_Trade_Name_0 : Trade_Name = 'Y'
+          FV_name_0 : name = 'Y'
+        literals / constants:
+          Yes : FDA_approved = 'Yes'
+        relations (each value tagged with the local sort of its position):
+          medicine(id, name, Trade_Name, FDA_approved):
+            medicine(id=0, name='', Trade_Name='', FDA_approved='Y')
+            medicine(id=2, name='Y', Trade_Name='Yes', FDA_approved='Yes')
+            medicine(id=2, name='Yes', Trade_Name='Y', FDA_approved='Yes')
+            medicine(id=2, name='Yes', Trade_Name='Yes', FDA_approved='Yes')
+            medicine(id=3, name='', Trade_Name='', FDA_approved='')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          FDA_approved : {'', 'Y', 'Yes'}
+          Trade_Name   : {'', 'Y', 'Yes'}
+          id           : {0, 2, 3}
+          name         : {'', 'Y', 'Yes'}
+        values shared across local sorts (joins):
+          '' : FDA_approved, Trade_Name, name
+          'Y' : FDA_approved, Trade_Name, name
+          'Yes' : FDA_approved, Trade_Name, name
+   [R3] took 0.024 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

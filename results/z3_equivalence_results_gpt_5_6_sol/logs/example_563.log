@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_563.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_563.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2833 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the theme and year for all exhibitions that have a ticket price under 15?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Artist_ID = int -> IntSort()
+        Exhibition_ID = int -> IntSort()
+        Theme = text -> StringSort()
+        Ticket_Price = real -> Float32()
+        Year = int -> IntSort()
+      symbols:
+        exhibition(Exhibition_ID, Year, Theme, Artist_ID, Ticket_Price)
+        constant 15 : Ticket_Price
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : Exhibition_ID ∃a : Artist_ID ∃t1 : Ticket_Price ( (exhibition(e,y,t,a,t1)) ∧ (t1 < 15) )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:Exhibition_ID EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:t1 COLON:: IDENT:Ticket_Price LPAR:( LPAR:( IDENT:exhibition LPAR:( IDENT:e COMMA:, IDENT:y COMMA:, IDENT:t COMMA:, IDENT:a COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t1 LT:< NUM:15 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:Exhibition_ID
+            EXISTS a:Artist_ID
+              EXISTS t1:Ticket_Price
+                AND
+                  PRED exhibition(e, y, t, a, t1)
+                  CMP  t1 < 15
+      Predicted FOL: ∃exhibition_id:Exhibition_ID ∃artist_id:Artist_ID ∃ticket_price:Ticket_Price (exhibition(exhibition_id, year, theme, artist_id, ticket_price) ∧ ticket_price < 15)
+        tokens: EXISTS:∃ IDENT:exhibition_id COLON:: IDENT:Exhibition_ID EXISTS:∃ IDENT:artist_id COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:ticket_price COLON:: IDENT:Ticket_Price LPAR:( IDENT:exhibition LPAR:( IDENT:exhibition_id COMMA:, IDENT:year COMMA:, IDENT:theme COMMA:, IDENT:artist_id COMMA:, IDENT:ticket_price RPAR:) AND:∧ IDENT:ticket_price LT:< NUM:15 RPAR:) EOF
+        AST:
+          EXISTS exhibition_id:Exhibition_ID
+            EXISTS artist_id:Artist_ID
+              EXISTS ticket_price:Ticket_Price
+                AND
+                  PRED exhibition(exhibition_id, year, theme, artist_id, ticket_price)
+                  CMP  ticket_price < 15
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Theme_0 : Theme   Gold t <-> Predicted theme
+      FV_Year_0 : Year   Gold y <-> Predicted year
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artist_ID, global int -> IntSort()
+        e : local Exhibition_ID, global int -> IntSort()
+        t : local Theme, global text -> StringSort()
+        t1 : local Ticket_Price, global real -> Float32()
+        y : local Year, global int -> IntSort()
+      Predicted FOL:
+        artist_id : local Artist_ID, global int -> IntSort()
+        exhibition_id : local Exhibition_ID, global int -> IntSort()
+        theme : local Theme, global text -> StringSort()
+        ticket_price : local Ticket_Price, global real -> Float32()
+        year : local Year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_e_1, gold_a_2, gold_t1_3], And(D_real(gold_t1_3), And(P_exhibition(gold_e_1, FV_Year_0, FV_Theme_0, gold_a_2, gold_t1_3), (gold_t1_3 < L_v_15_real))))
+      gold_skolem (witnesses WGOLD_e, WGOLD_a, WGOLD_t1):  And(D_real(WGOLD_t1), And(P_exhibition(WGOLD_e, FV_Year_0, FV_Theme_0, WGOLD_a, WGOLD_t1), (WGOLD_t1 < L_v_15_real)))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_exhibition_id_1, predicted_artist_id_2, predicted_ticket_price_3], And(D_real(predicted_ticket_price_3), And(P_exhibition(predicted_exhibition_id_1, FV_Year_0, FV_Theme_0, predicted_artist_id_2, predicted_ticket_price_3), (predicted_ticket_price_3 < L_v_15_real))))
+      predicted_skolem (witnesses WPREDICTED_exhibition_id, WPREDICTED_artist_id, WPREDICTED_ticket_price):  And(D_real(WPREDICTED_ticket_price), And(P_exhibition(WPREDICTED_exhibition_id, FV_Year_0, FV_Theme_0, WPREDICTED_artist_id, WPREDICTED_ticket_price), (WPREDICTED_ticket_price < L_v_15_real)))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '15' at real -> L_v_15_real = FPVal(15.0, Float32())
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 737 lines, 28126 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_563.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_e, WGOLD_a, WGOLD_t1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_t1)), Not(And(fpIsZero(WGOLD_t1), fpIsNegative(WGOLD_t1)))), And(exhibition(WGOLD_e, FV_Year_0, FV_Theme_0, WGOLD_a, WGOLD_t1), 1.875*(2**3) > WGOLD_t1)), Not(Exists([predicted_exhibition_id_1, predicted_artist_id_2, predicted_ticket_price_3], And(And(Not(fpIsNaN(predicted_ticket_price_3)), Not(And(fpIsZero(predicted_ticket_price_3), fpIsNegative(predicted_ticket_price_3)))), And(exhibition(predicted_exhibition_id_1, FV_Year_0, FV_Theme_0, predicted_artist_id_2, predicted_ticket_price_3), 1.875*(2**3) > predicted_ticket_price_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_exhibition_id, WPREDICTED_artist_id, WPREDICTED_ticket_price
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_ticket_price)), Not(And(fpIsZero(WPREDICTED_ticket_price), fpIsNegative(WPREDICTED_ticket_price)))), And(exhibition(WPREDICTED_exhibition_id, FV_Year_0, FV_Theme_0, WPREDICTED_artist_id, WPREDICTED_ticket_price), 1.875*(2**3) > WPREDICTED_ticket_price)), Not(Exists([gold_e_1, gold_a_2, gold_t1_3], And(And(Not(fpIsNaN(gold_t1_3)), Not(And(fpIsZero(gold_t1_3), fpIsNegative(gold_t1_3)))), And(exhibition(gold_e_1, FV_Year_0, FV_Theme_0, gold_a_2, gold_t1_3), 1.875*(2**3) > gold_t1_3)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3710.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3710.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4020 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of all the states with college students playing in the mid position but no goalies?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 6 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        varchar(2) -> StringSort()   [domain Length(x) <= 2; length <= 2]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        numeric(5,0) -> RealSort()   [domain And(IsInt(x), x > -100000, x < 100000); 5 digits, 0 after the point]
+      local sorts:
+        cName = varchar(20) -> StringSort()
+        decision = varchar(3) -> StringSort()
+        enr = numeric(5,0) -> RealSort()
+        pID = numeric(5,0) -> RealSort()
+        pPos = varchar(8) -> StringSort()
+        state = varchar(2) -> StringSort()
+      symbols:
+        College(cName, state, enr)
+        Tryout(pID, cName, pPos, decision)
+        constant goalie : pPos
+        constant mid : pPos
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃p : pID ∃d : decision ∃e : enr ∃p1 : pPos ∃c1 : cName ∃c : cName( (((College(c,s,e)) ∧ (Tryout(p,c1,p1,d))) ∧ (c = c1)) ∧ (p1 = 'mid') )) ∧ (¬(∃p : pID ∃d : decision ∃e : enr ∃p1 : pPos ∃c1 : cName ∃c : cName( (((College(c,s,e)) ∧ (Tryout(p,c1,p1,d))) ∧ (c = c1)) ∧ (p1 = 'goalie') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:d COLON:: IDENT:decision EXISTS:∃ IDENT:e COLON:: IDENT:enr EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:c1 COLON:: IDENT:cName EXISTS:∃ IDENT:c COLON:: IDENT:cName LPAR:( LPAR:( LPAR:( LPAR:( IDENT:College LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:mid RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:d COLON:: IDENT:decision EXISTS:∃ IDENT:e COLON:: IDENT:enr EXISTS:∃ IDENT:p1 COLON:: IDENT:pPos EXISTS:∃ IDENT:c1 COLON:: IDENT:cName EXISTS:∃ IDENT:c COLON:: IDENT:cName LPAR:( LPAR:( LPAR:( LPAR:( IDENT:College LPAR:( IDENT:c COMMA:, IDENT:s COMMA:, IDENT:e RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:c1 COMMA:, IDENT:p1 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p1 EQ:= LIT:goalie RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS p:pID
+              EXISTS d:decision
+                EXISTS e:enr
+                  EXISTS p1:pPos
+                    EXISTS c1:cName
+                      EXISTS c:cName
+                        AND
+                          AND
+                            AND
+                              PRED College(c, s, e)
+                              PRED Tryout(p, c1, p1, d)
+                            EQ  c = c1
+                          EQ  p1 = 'mid'
+            NOT
+              EXISTS p:pID
+                EXISTS d:decision
+                  EXISTS e:enr
+                    EXISTS p1:pPos
+                      EXISTS c1:cName
+                        EXISTS c:cName
+                          AND
+                            AND
+                              AND
+                                PRED College(c, s, e)
+                                PRED Tryout(p, c1, p1, d)
+                              EQ  c = c1
+                            EQ  p1 = 'goalie'
+      Predicted FOL: ∃x : cName ∃y : state ∃z : enr ( College(x, y, z) ∧ ∃p : pID ∃d : decision ( Tryout(p, x, mid, d) ∧ ¬∃p' : pID ∃d' : decision Tryout(p', x, goalie, d') ) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:cName EXISTS:∃ IDENT:y COLON:: IDENT:state EXISTS:∃ IDENT:z COLON:: IDENT:enr LPAR:( IDENT:College LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ EXISTS:∃ IDENT:p COLON:: IDENT:pID EXISTS:∃ IDENT:d COLON:: IDENT:decision LPAR:( IDENT:Tryout LPAR:( IDENT:p COMMA:, IDENT:x COMMA:, IDENT:mid COMMA:, IDENT:d RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:p' COLON:: IDENT:pID EXISTS:∃ IDENT:d' COLON:: IDENT:decision IDENT:Tryout LPAR:( IDENT:p' COMMA:, IDENT:x COMMA:, IDENT:goalie COMMA:, IDENT:d' RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:cName
+            EXISTS y:state
+              EXISTS z:enr
+                AND
+                  PRED College(x, y, z)
+                  EXISTS p:pID
+                    EXISTS d:decision
+                      AND
+                        PRED Tryout(p, x, mid<const>, d)
+                        NOT
+                          EXISTS p':pID
+                            EXISTS d':decision
+                              PRED Tryout(p', x, goalie<const>, d')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s : state) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local cName, global varchar(20) -> StringSort()
+        c1 : local cName, global varchar(20) -> StringSort()
+        d : local decision, global varchar(3) -> StringSort()
+        e : local enr, global numeric(5,0) -> RealSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p1 : local pPos, global varchar(8) -> StringSort()
+        s : local state, global varchar(2) -> StringSort()
+      Predicted FOL:
+        d : local decision, global varchar(3) -> StringSort()
+        d' : local decision, global varchar(3) -> StringSort()
+        p : local pID, global numeric(5,0) -> RealSort()
+        p' : local pID, global numeric(5,0) -> RealSort()
+        x : local cName, global varchar(20) -> StringSort()
+        y : local state, global varchar(2) -> StringSort()
+        z : local enr, global numeric(5,0) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5633 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3710.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s : state) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

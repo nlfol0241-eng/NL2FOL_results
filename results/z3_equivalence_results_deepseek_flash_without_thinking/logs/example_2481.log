@@ -1,0 +1,110 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2481.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2481.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 8798 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of procedures physician John Wen was trained in?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+      local sorts:
+        CertificationDate = datetime -> IntSort()
+        CertificationExpires = datetime -> IntSort()
+        Code = integer -> IntSort()
+        Cost = real -> Float32()
+        EmployeeID = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        SSN = integer -> IntSort()
+        Treatment = integer -> IntSort()
+      symbols:
+        Physician(EmployeeID, Name, Position, SSN)
+        Procedures(Code, Name, Cost)
+        Trained_In(Physician, Treatment, CertificationDate, CertificationExpires)
+        constant John Wen : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃e : EmployeeID ∃n : Name ∃p : Position ∃s : SSN ∃p1 : Physician ∃t : Treatment ∃c : CertificationDate ∃c1 : CertificationExpires ∃c2 : Code ∃c3 : Cost ( (((((Physician(e,n,p,s)) ∧ (Trained_In(p1,t,c,c1))) ∧ (e = p1)) ∧ (Procedures(c2,n1,c3))) ∧ (c2 = t)) ∧ (n = 'John Wen') )
+        tokens: EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:p1 COLON:: IDENT:Physician EXISTS:∃ IDENT:t COLON:: IDENT:Treatment EXISTS:∃ IDENT:c COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:c1 COLON:: IDENT:CertificationExpires EXISTS:∃ IDENT:c2 COLON:: IDENT:Code EXISTS:∃ IDENT:c3 COLON:: IDENT:Cost LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Trained_In LPAR:( IDENT:p1 COMMA:, IDENT:t COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Procedures LPAR:( IDENT:c2 COMMA:, IDENT:n1 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c2 EQ:= IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:John Wen RPAR:) RPAR:) EOF
+        AST:
+          EXISTS e:EmployeeID
+            EXISTS n:Name
+              EXISTS p:Position
+                EXISTS s:SSN
+                  EXISTS p1:Physician
+                    EXISTS t:Treatment
+                      EXISTS c:CertificationDate
+                        EXISTS c1:CertificationExpires
+                          EXISTS c2:Code
+                            EXISTS c3:Cost
+                              AND
+                                AND
+                                  AND
+                                    AND
+                                      AND
+                                        PRED Physician(e, n, p, s)
+                                        PRED Trained_In(p1, t, c, c1)
+                                      EQ  e = p1
+                                    PRED Procedures(c2, n1, c3)
+                                  EQ  c2 = t
+                                EQ  n = 'John Wen'
+      Predicted FOL: ∃p : Physician ∃n : Name ( Physician(p, n, 'John Wen', p) ∧ ∃t : Treatment ∃d : CertificationDate ∃e : CertificationExpires ( Trained_In(p, t, d, e) ∧ Procedures(t, n, t) ) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Physician EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( IDENT:Physician LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, LIT:John Wen COMMA:, IDENT:p RPAR:) AND:∧ EXISTS:∃ IDENT:t COLON:: IDENT:Treatment EXISTS:∃ IDENT:d COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:e COLON:: IDENT:CertificationExpires LPAR:( IDENT:Trained_In LPAR:( IDENT:p COMMA:, IDENT:t COMMA:, IDENT:d COMMA:, IDENT:e RPAR:) AND:∧ IDENT:Procedures LPAR:( IDENT:t COMMA:, IDENT:n COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Physician
+            EXISTS n:Name
+              AND
+                PRED Physician(p, n, 'John Wen', p)
+                EXISTS t:Treatment
+                  EXISTS d:CertificationDate
+                    EXISTS e:CertificationExpires
+                      AND
+                        PRED Trained_In(p, t, d, e)
+                        PRED Procedures(t, n, t)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 't' used at incompatible global sorts integer and real
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 't' used at incompatible global sorts integer and real

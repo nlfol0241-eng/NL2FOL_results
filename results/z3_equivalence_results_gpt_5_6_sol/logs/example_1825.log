@@ -1,0 +1,120 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_1825.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1825.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3796 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the products with the maximum page size eqal to A4 or a pages per minute color less than 5?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 1 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        dimensions = text -> StringSort()
+        dpi = real -> Float32()
+        interface = text -> StringSort()
+        max_page_size = text -> StringSort()
+        pages_per_minute_color = real -> Float32()
+        product = text -> StringSort()
+        product_id = int -> IntSort()
+      symbols:
+        product(product_id, product, dimensions, dpi, pages_per_minute_color, max_page_size, interface)
+        constant 5 : pages_per_minute_color
+        constant A4 : max_page_size
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ∃d : dimensions ∃d1 : dpi ∃p2 : pages_per_minute_color ∃m : max_page_size ∃i : interface ( (product(p,p1,d,d1,p2,m,i)) ∧ ((m = 'A4') ∨ (p2 < 5)) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id EXISTS:∃ IDENT:d COLON:: IDENT:dimensions EXISTS:∃ IDENT:d1 COLON:: IDENT:dpi EXISTS:∃ IDENT:p2 COLON:: IDENT:pages_per_minute_color EXISTS:∃ IDENT:m COLON:: IDENT:max_page_size EXISTS:∃ IDENT:i COLON:: IDENT:interface LPAR:( LPAR:( IDENT:product LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:p2 COMMA:, IDENT:m COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:m EQ:= LIT:A4 RPAR:) OR:∨ LPAR:( IDENT:p2 LT:< NUM:5 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            EXISTS d:dimensions
+              EXISTS d1:dpi
+                EXISTS p2:pages_per_minute_color
+                  EXISTS m:max_page_size
+                    EXISTS i:interface
+                      AND
+                        PRED product(p, p1, d, d1, p2, m, i)
+                        OR
+                          EQ  m = 'A4'
+                          CMP  p2 < 5
+      Predicted FOL: ∃id : product_id ∃dims : dimensions ∃resolution : dpi ∃ppm : pages_per_minute_color ∃size : max_page_size ∃iface : interface (product(id, p, dims, resolution, ppm, size, iface) ∧ (size = 'A4' ∨ ppm < 5))
+        tokens: EXISTS:∃ IDENT:id COLON:: IDENT:product_id EXISTS:∃ IDENT:dims COLON:: IDENT:dimensions EXISTS:∃ IDENT:resolution COLON:: IDENT:dpi EXISTS:∃ IDENT:ppm COLON:: IDENT:pages_per_minute_color EXISTS:∃ IDENT:size COLON:: IDENT:max_page_size EXISTS:∃ IDENT:iface COLON:: IDENT:interface LPAR:( IDENT:product LPAR:( IDENT:id COMMA:, IDENT:p COMMA:, IDENT:dims COMMA:, IDENT:resolution COMMA:, IDENT:ppm COMMA:, IDENT:size COMMA:, IDENT:iface RPAR:) AND:∧ LPAR:( IDENT:size EQ:= LIT:A4 OR:∨ IDENT:ppm LT:< NUM:5 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS id:product_id
+            EXISTS dims:dimensions
+              EXISTS resolution:dpi
+                EXISTS ppm:pages_per_minute_color
+                  EXISTS size:max_page_size
+                    EXISTS iface:interface
+                      AND
+                        PRED product(id, p, dims, resolution, ppm, size, iface)
+                        OR
+                          EQ  size = 'A4'
+                          CMP  ppm < 5
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_product_0 : product   Gold p1 <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local dimensions, global text -> StringSort()
+        d1 : local dpi, global real -> Float32()
+        i : local interface, global text -> StringSort()
+        m : local max_page_size, global text -> StringSort()
+        p : local product_id, global int -> IntSort()
+        p1 : local product, global text -> StringSort()
+        p2 : local pages_per_minute_color, global real -> Float32()
+      Predicted FOL:
+        dims : local dimensions, global text -> StringSort()
+        id : local product_id, global int -> IntSort()
+        iface : local interface, global text -> StringSort()
+        p : local product, global text -> StringSort()
+        ppm : local pages_per_minute_color, global real -> Float32()
+        resolution : local dpi, global real -> Float32()
+        size : local max_page_size, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_d_2, gold_d1_3, gold_p2_4, gold_m_5, gold_i_6], And(D_real(gold_d1_3), D_real(gold_p2_4), And(P_product(gold_p_1, FV_product_0, gold_d_2, gold_d1_3, gold_p2_4, gold_m_5, gold_i_6), Or((gold_m_5 == L_A4), (gold_p2_4 < L_v_5_real)))))
+      gold_skolem (witnesses WGOLD_p, WGOLD_d, WGOLD_d1, WGOLD_p2, WGOLD_m, WGOLD_i):  And(D_real(WGOLD_d1), D_real(WGOLD_p2), And(P_product(WGOLD_p, FV_product_0, WGOLD_d, WGOLD_d1, WGOLD_p2, WGOLD_m, WGOLD_i), Or((WGOLD_m == L_A4), (WGOLD_p2 < L_v_5_real))))
+   Gold: 6 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_id_1, predicted_dims_2, predicted_resolution_3, predicted_ppm_4, predicted_size_5, predicted_iface_6], And(D_real(predicted_resolution_3), D_real(predicted_ppm_4), And(P_product(predicted_id_1, FV_product_0, predicted_dims_2, predicted_resolution_3, predicted_ppm_4, predicted_size_5, predicted_iface_6), Or((predicted_size_5 == L_A4), (predicted_ppm_4 < L_v_5_real)))))
+      predicted_skolem (witnesses WPREDICTED_id, WPREDICTED_dims, WPREDICTED_resolution, WPREDICTED_ppm, WPREDICTED_size, WPREDICTED_iface):  And(D_real(WPREDICTED_resolution), D_real(WPREDICTED_ppm), And(P_product(WPREDICTED_id, FV_product_0, WPREDICTED_dims, WPREDICTED_resolution, WPREDICTED_ppm, WPREDICTED_size, WPREDICTED_iface), Or((WPREDICTED_size == L_A4), (WPREDICTED_ppm < L_v_5_real))))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'A4' at text -> L_A4 = StringVal('A4')
+      literal '5' at real -> L_v_5_real = FPVal(5.0, Float32())
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 759 lines, 29908 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_1825.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_d, WGOLD_d1, WGOLD_p2, WGOLD_m, WGOLD_i
+      claim: And(And(And(Not(fpIsNaN(WGOLD_d1)), Not(And(fpIsZero(WGOLD_d1), fpIsNegative(WGOLD_d1)))), And(Not(fpIsNaN(WGOLD_p2)), Not(And(fpIsZero(WGOLD_p2), fpIsNegative(WGOLD_p2)))), And(product(WGOLD_p, FV_product_0, WGOLD_d, WGOLD_d1, WGOLD_p2, WGOLD_m, WGOLD_i), Or(WGOLD_m == "A4", 1.25*(2**2) > WGOLD_p2))), Not(Exists([predicted_id_1, predicted_dims_2, predicted_resolution_3, predicted_ppm_4, predicted_size_5, predicted_iface_6], And(And(Not(fpIsNaN(predicted_resolution_3)), Not(And(fpIsZero(predicted_resolution_3), fpIsNegative(predicted_resolution_3)))), And(Not(fpIsNaN(predicted_ppm_4)), Not(And(fpIsZero(predicted_ppm_4), fpIsNegative(predicted_ppm_4)))), And(product(predicted_id_1, FV_product_0, predicted_dims_2, predicted_resolution_3, predicted_ppm_4, predicted_size_5, predicted_iface_6), Or(predicted_size_5 == "A4", 1.25*(2**2) > predicted_ppm_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.026 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_id, WPREDICTED_dims, WPREDICTED_resolution, WPREDICTED_ppm, WPREDICTED_size, WPREDICTED_iface
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_resolution)), Not(And(fpIsZero(WPREDICTED_resolution), fpIsNegative(WPREDICTED_resolution)))), And(Not(fpIsNaN(WPREDICTED_ppm)), Not(And(fpIsZero(WPREDICTED_ppm), fpIsNegative(WPREDICTED_ppm)))), And(product(WPREDICTED_id, FV_product_0, WPREDICTED_dims, WPREDICTED_resolution, WPREDICTED_ppm, WPREDICTED_size, WPREDICTED_iface), Or(WPREDICTED_size == "A4", 1.25*(2**2) > WPREDICTED_ppm))), Not(Exists([gold_p_1, gold_d_2, gold_d1_3, gold_p2_4, gold_m_5, gold_i_6], And(And(Not(fpIsNaN(gold_d1_3)), Not(And(fpIsZero(gold_d1_3), fpIsNegative(gold_d1_3)))), And(Not(fpIsNaN(gold_p2_4)), Not(And(fpIsZero(gold_p2_4), fpIsNegative(gold_p2_4)))), And(product(gold_p_1, FV_product_0, gold_d_2, gold_d1_3, gold_p2_4, gold_m_5, gold_i_6), Or(gold_m_5 == "A4", 1.25*(2**2) > gold_p2_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.006 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.023 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_680.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_680.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2497 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the nationalities and ages of journalists?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Age = text -> StringSort()
+        Name = text -> StringSort()
+        Nationality = text -> StringSort()
+        Years_working = int -> IntSort()
+        journalist_ID = int -> IntSort()
+      symbols:
+        journalist(journalist_ID, Name, Nationality, Age, Years_working)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃j : journalist_ID ∃n : Name ∃y : Years_working ( journalist(j,n,n1,a,y) )
+        tokens: EXISTS:∃ IDENT:j COLON:: IDENT:journalist_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:y COLON:: IDENT:Years_working LPAR:( IDENT:journalist LPAR:( IDENT:j COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:a COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS j:journalist_ID
+            EXISTS n:Name
+              EXISTS y:Years_working
+                PRED journalist(j, n, n1, a, y)
+      Predicted FOL: ∃j : journalist_ID ∃n : Name ∃y : Years_working journalist(j, n, nationality, age, y)
+        tokens: EXISTS:∃ IDENT:j COLON:: IDENT:journalist_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name EXISTS:∃ IDENT:y COLON:: IDENT:Years_working IDENT:journalist LPAR:( IDENT:j COMMA:, IDENT:n COMMA:, IDENT:nationality COMMA:, IDENT:age COMMA:, IDENT:y RPAR:) EOF
+        AST:
+          EXISTS j:journalist_ID
+            EXISTS n:Name
+              EXISTS y:Years_working
+                PRED journalist(j, n, nationality, age, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Age_0 : Age   Gold a <-> Predicted age
+      FV_Nationality_0 : Nationality   Gold n1 <-> Predicted nationality
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global text -> StringSort()
+        j : local journalist_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Nationality, global text -> StringSort()
+        y : local Years_working, global int -> IntSort()
+      Predicted FOL:
+        age : local Age, global text -> StringSort()
+        j : local journalist_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        nationality : local Nationality, global text -> StringSort()
+        y : local Years_working, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_j_1, gold_n_2, gold_y_3], P_journalist(gold_j_1, gold_n_2, FV_Nationality_0, FV_Age_0, gold_y_3))
+      gold_skolem (witnesses WGOLD_j, WGOLD_n, WGOLD_y):  P_journalist(WGOLD_j, WGOLD_n, FV_Nationality_0, FV_Age_0, WGOLD_y)
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_j_1, predicted_n_2, predicted_y_3], P_journalist(predicted_j_1, predicted_n_2, FV_Nationality_0, FV_Age_0, predicted_y_3))
+      predicted_skolem (witnesses WPREDICTED_j, WPREDICTED_n, WPREDICTED_y):  P_journalist(WPREDICTED_j, WPREDICTED_n, FV_Nationality_0, FV_Age_0, WPREDICTED_y)
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 732 lines, 27210 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_680.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_j, WGOLD_n, WGOLD_y
+      claim: And(journalist(WGOLD_j, WGOLD_n, FV_Nationality_0, FV_Age_0, WGOLD_y), Not(Exists([predicted_j_1, predicted_n_2, predicted_y_3], journalist(predicted_j_1, predicted_n_2, FV_Nationality_0, FV_Age_0, predicted_y_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_j, WPREDICTED_n, WPREDICTED_y
+      claim: And(journalist(WPREDICTED_j, WPREDICTED_n, FV_Nationality_0, FV_Age_0, WPREDICTED_y), Not(Exists([gold_j_1, gold_n_2, gold_y_3], journalist(gold_j_1, gold_n_2, FV_Nationality_0, FV_Age_0, gold_y_3))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

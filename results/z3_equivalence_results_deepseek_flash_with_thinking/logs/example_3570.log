@@ -1,0 +1,149 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_3570.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3975 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of artists who did not have an exhibition in 2004?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 9 local sorts, 2 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Age = int -> IntSort()
+        Artist_ID = int -> IntSort()
+        Country = text -> StringSort()
+        Exhibition_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Theme = text -> StringSort()
+        Ticket_Price = real -> Float32()
+        Year = int -> IntSort()
+        Year_Join = int -> IntSort()
+      symbols:
+        artist(Artist_ID, Name, Country, Year_Join, Age)
+        exhibition(Exhibition_ID, Year, Theme, Artist_ID, Ticket_Price)
+        constant 2004 : Year
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c : Country ∃a1 : Age ∃y : Year_Join ∃a : Artist_ID( artist(a,n,c,y,a1) )) ∧ (¬(∃e : Exhibition_ID ∃a2 : Artist_ID ∃c : Country ∃t : Theme ∃a1 : Age ∃y1 : Year ∃y : Year_Join ∃t1 : Ticket_Price ∃a : Artist_ID( (((exhibition(e,y1,t,a2,t1)) ∧ (artist(a,n,c,y,a1))) ∧ (a2 = a)) ∧ (y1 = 2004) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:a1 COLON:: IDENT:Age EXISTS:∃ IDENT:y COLON:: IDENT:Year_Join EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:y COMMA:, IDENT:a1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:Exhibition_ID EXISTS:∃ IDENT:a2 COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:t COLON:: IDENT:Theme EXISTS:∃ IDENT:a1 COLON:: IDENT:Age EXISTS:∃ IDENT:y1 COLON:: IDENT:Year EXISTS:∃ IDENT:y COLON:: IDENT:Year_Join EXISTS:∃ IDENT:t1 COLON:: IDENT:Ticket_Price EXISTS:∃ IDENT:a COLON:: IDENT:Artist_ID LPAR:( LPAR:( LPAR:( LPAR:( IDENT:exhibition LPAR:( IDENT:e COMMA:, IDENT:y1 COMMA:, IDENT:t COMMA:, IDENT:a2 COMMA:, IDENT:t1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:artist LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:y COMMA:, IDENT:a1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a2 EQ:= IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:y1 EQ:= NUM:2004 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS c:Country
+              EXISTS a1:Age
+                EXISTS y:Year_Join
+                  EXISTS a:Artist_ID
+                    PRED artist(a, n, c, y, a1)
+            NOT
+              EXISTS e:Exhibition_ID
+                EXISTS a2:Artist_ID
+                  EXISTS c:Country
+                    EXISTS t:Theme
+                      EXISTS a1:Age
+                        EXISTS y1:Year
+                          EXISTS y:Year_Join
+                            EXISTS t1:Ticket_Price
+                              EXISTS a:Artist_ID
+                                AND
+                                  AND
+                                    AND
+                                      PRED exhibition(e, y1, t, a2, t1)
+                                      PRED artist(a, n, c, y, a1)
+                                    EQ  a2 = a
+                                  EQ  y1 = 2004
+      Predicted FOL: ∃a0 : Artist_ID ∃c : Country ∃yj : Year_Join ∃age : Age ( artist(a0, n, c, yj, age) ∧ ¬∃e0 : Exhibition_ID ∃e2 : Theme ∃e4 : Ticket_Price ( exhibition(e0, 2004, e2, a0, e4) ) )
+        tokens: EXISTS:∃ IDENT:a0 COLON:: IDENT:Artist_ID EXISTS:∃ IDENT:c COLON:: IDENT:Country EXISTS:∃ IDENT:yj COLON:: IDENT:Year_Join EXISTS:∃ IDENT:age COLON:: IDENT:Age LPAR:( IDENT:artist LPAR:( IDENT:a0 COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:yj COMMA:, IDENT:age RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:e0 COLON:: IDENT:Exhibition_ID EXISTS:∃ IDENT:e2 COLON:: IDENT:Theme EXISTS:∃ IDENT:e4 COLON:: IDENT:Ticket_Price LPAR:( IDENT:exhibition LPAR:( IDENT:e0 COMMA:, NUM:2004 COMMA:, IDENT:e2 COMMA:, IDENT:a0 COMMA:, IDENT:e4 RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a0:Artist_ID
+            EXISTS c:Country
+              EXISTS yj:Year_Join
+                EXISTS age:Age
+                  AND
+                    PRED artist(a0, n, c, yj, age)
+                    NOT
+                      EXISTS e0:Exhibition_ID
+                        EXISTS e2:Theme
+                          EXISTS e4:Ticket_Price
+                            PRED exhibition(e0, 2004, e2, a0, e4)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Artist_ID, global int -> IntSort()
+        a1 : local Age, global int -> IntSort()
+        a2 : local Artist_ID, global int -> IntSort()
+        c : local Country, global text -> StringSort()
+        e : local Exhibition_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        t : local Theme, global text -> StringSort()
+        t1 : local Ticket_Price, global real -> Float32()
+        y : local Year_Join, global int -> IntSort()
+        y1 : local Year, global int -> IntSort()
+      Predicted FOL:
+        a0 : local Artist_ID, global int -> IntSort()
+        age : local Age, global int -> IntSort()
+        c : local Country, global text -> StringSort()
+        e0 : local Exhibition_ID, global int -> IntSort()
+        e2 : local Theme, global text -> StringSort()
+        e4 : local Ticket_Price, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        yj : local Year_Join, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_c_1, gold_a1_2, gold_y_3, gold_a_4], P_artist(gold_a_4, FV_Name_0, gold_c_1, gold_y_3, gold_a1_2)), Not(Exists([gold_e_5, gold_a2_6, gold_c_7, gold_t_8, gold_a1_9, gold_y1_10, gold_y_11, gold_t1_12, gold_a_13], And(D_real(gold_t1_12), And(And(And(P_exhibition(gold_e_5, gold_y1_10, gold_t_8, gold_a2_6, gold_t1_12), P_artist(gold_a_13, FV_Name_0, gold_c_7, gold_y_11, gold_a1_9)), (gold_a2_6 == gold_a_13)), (gold_y1_10 == L_v_2004_int))))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a0_1, predicted_c_2, predicted_yj_3, predicted_age_4], And(P_artist(predicted_a0_1, FV_Name_0, predicted_c_2, predicted_yj_3, predicted_age_4), Not(Exists([predicted_e0_5, predicted_e2_6, predicted_e4_7], And(D_real(predicted_e4_7), P_exhibition(predicted_e0_5, L_v_2004_int, predicted_e2_6, predicted_a0_1, predicted_e4_7))))))
+      predicted_skolem (witnesses WPREDICTED_a0, WPREDICTED_c, WPREDICTED_yj, WPREDICTED_age):  And(P_artist(WPREDICTED_a0, FV_Name_0, WPREDICTED_c, WPREDICTED_yj, WPREDICTED_age), Not(Exists([predictedsk_e0_1, predictedsk_e2_2, predictedsk_e4_3], And(D_real(predictedsk_e4_3), P_exhibition(predictedsk_e0_1, L_v_2004_int, predictedsk_e2_2, WPREDICTED_a0, predictedsk_e4_3)))))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '2004' at int -> L_v_2004_int = IntVal(2004)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 758 lines, 29633 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_c_1, gold_a1_2, gold_y_3, gold_a_4], artist(gold_a_4, FV_Name_0, gold_c_1, gold_y_3, gold_a1_2)), Not(Exists([gold_e_5, gold_a2_6, gold_c_7, gold_t_8, gold_a1_9, gold_y1_10, gold_y_11, gold_t1_12, gold_a_13], And(And(Not(fpIsNaN(gold_t1_12)), Not(And(fpIsZero(gold_t1_12), fpIsNegative(gold_t1_12)))), And(And(And(exhibition(gold_e_5, gold_y1_10, gold_t_8, gold_a2_6, gold_t1_12), artist(gold_a_13, FV_Name_0, gold_c_7, gold_y_11, gold_a1_9)), gold_a2_6 == gold_a_13), 2004 == gold_y1_10))))), Not(Exists([predicted_a0_1, predicted_c_2, predicted_yj_3, predicted_age_4], And(artist(predicted_a0_1, FV_Name_0, predicted_c_2, predicted_yj_3, predicted_age_4), Not(Exists([predicted_e0_5, predicted_e2_6, predicted_e4_7], And(And(Not(fpIsNaN(predicted_e4_7)), Not(And(fpIsZero(predicted_e4_7), fpIsNegative(predicted_e4_7)))), exhibition(predicted_e0_5, 2004, predicted_e2_6, predicted_a0_1, predicted_e4_7))))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a0, WPREDICTED_c, WPREDICTED_yj, WPREDICTED_age
+      claim: And(And(artist(WPREDICTED_a0, FV_Name_0, WPREDICTED_c, WPREDICTED_yj, WPREDICTED_age), Not(Exists([predictedsk_e0_1, predictedsk_e2_2, predictedsk_e4_3], And(And(Not(fpIsNaN(predictedsk_e4_3)), Not(And(fpIsZero(predictedsk_e4_3), fpIsNegative(predictedsk_e4_3)))), exhibition(predictedsk_e0_1, 2004, predictedsk_e2_2, WPREDICTED_a0, predictedsk_e4_3))))), Not(And(Exists([gold_c_1, gold_a1_2, gold_y_3, gold_a_4], artist(gold_a_4, FV_Name_0, gold_c_1, gold_y_3, gold_a1_2)), Not(Exists([gold_e_5, gold_a2_6, gold_c_7, gold_t_8, gold_a1_9, gold_y1_10, gold_y_11, gold_t1_12, gold_a_13], And(And(Not(fpIsNaN(gold_t1_12)), Not(And(fpIsZero(gold_t1_12), fpIsNegative(gold_t1_12)))), And(And(And(exhibition(gold_e_5, gold_y1_10, gold_t_8, gold_a2_6, gold_t1_12), artist(gold_a_13, FV_Name_0, gold_c_7, gold_y_11, gold_a1_9)), gold_a2_6 == gold_a_13), 2004 == gold_y1_10)))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.005 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+!! FAILED in stage [R3] check predicted |= gold: IndexError: list index out of range
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py", line 706, in main
+    return _main()
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py", line 737, in _main
+    r2 = _check("R3", "predicted |= gold ?",
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py", line 688, in _check
+    lm = print_model(s.model(), witnesses, witness_label)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py", line 586, in print_model
+    lm = localize_model(model, witnesses)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py", line 510, in localize_model
+    for args in _product(cands):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py", line 390, in _product
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_3570.py", line 390, in <listcomp>
+    yield [cands[i][idx[i]] for i in range(len(cands))]
+IndexError: list index out of range

@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_324.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_324.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5732 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What year was " Benedict Cumberbatch " born ?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        aid = int -> IntSort()
+        birth_city = text -> StringSort()
+        birth_year = int -> IntSort()
+        gender = text -> StringSort()
+        name = text -> StringSort()
+        nationality = text -> StringSort()
+      symbols:
+        actor(aid, gender, name, nationality, birth_city, birth_year)
+        constant Benedict Cumberbatch : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : aid ∃g : gender ∃n : name ∃n1 : nationality ∃b : birth_city ( (actor(a,g,n,n1,b,b1)) ∧ (n = 'Benedict Cumberbatch') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:n1 COLON:: IDENT:nationality EXISTS:∃ IDENT:b COLON:: IDENT:birth_city LPAR:( LPAR:( IDENT:actor LPAR:( IDENT:a COMMA:, IDENT:g COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:b COMMA:, IDENT:b1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Benedict Cumberbatch RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:aid
+            EXISTS g:gender
+              EXISTS n:name
+                EXISTS n1:nationality
+                  EXISTS b:birth_city
+                    AND
+                      PRED actor(a, g, n, n1, b, b1)
+                      EQ  n = 'Benedict Cumberbatch'
+      Predicted FOL: ∃a : aid ∃g : gender ∃n : nationality ∃c : birth_city (actor(a, g, 'Benedict Cumberbatch', n, c, y))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:aid EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:n COLON:: IDENT:nationality EXISTS:∃ IDENT:c COLON:: IDENT:birth_city LPAR:( IDENT:actor LPAR:( IDENT:a COMMA:, IDENT:g COMMA:, LIT:Benedict Cumberbatch COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:y RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:aid
+            EXISTS g:gender
+              EXISTS n:nationality
+                EXISTS c:birth_city
+                  PRED actor(a, g, 'Benedict Cumberbatch', n, c, y)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_birth_year_0 : birth_year   Gold b1 <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 11 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local aid, global int -> IntSort()
+        b : local birth_city, global text -> StringSort()
+        b1 : local birth_year, global int -> IntSort()
+        g : local gender, global text -> StringSort()
+        n : local name, global text -> StringSort()
+        n1 : local nationality, global text -> StringSort()
+      Predicted FOL:
+        a : local aid, global int -> IntSort()
+        c : local birth_city, global text -> StringSort()
+        g : local gender, global text -> StringSort()
+        n : local nationality, global text -> StringSort()
+        y : local birth_year, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_g_2, gold_n_3, gold_n1_4, gold_b_5], And(P_actor(gold_a_1, gold_g_2, gold_n_3, gold_n1_4, gold_b_5, FV_birth_year_0), (gold_n_3 == L_Benedict_Cumberbatch)))
+      gold_skolem (witnesses WGOLD_a, WGOLD_g, WGOLD_n, WGOLD_n1, WGOLD_b):  And(P_actor(WGOLD_a, WGOLD_g, WGOLD_n, WGOLD_n1, WGOLD_b, FV_birth_year_0), (WGOLD_n == L_Benedict_Cumberbatch))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_g_2, predicted_n_3, predicted_c_4], P_actor(predicted_a_1, predicted_g_2, L_Benedict_Cumberbatch, predicted_n_3, predicted_c_4, FV_birth_year_0))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_g, WPREDICTED_n, WPREDICTED_c):  P_actor(WPREDICTED_a, WPREDICTED_g, L_Benedict_Cumberbatch, WPREDICTED_n, WPREDICTED_c, FV_birth_year_0)
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Benedict Cumberbatch' at text -> L_Benedict_Cumberbatch = StringVal('Benedict Cumberbatch')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 743 lines, 27986 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_324.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_g, WGOLD_n, WGOLD_n1, WGOLD_b
+      claim: And(And(actor(WGOLD_a, WGOLD_g, WGOLD_n, WGOLD_n1, WGOLD_b, FV_birth_year_0), WGOLD_n == "Benedict Cumberbatch"), Not(Exists([predicted_a_1, predicted_g_2, predicted_n_3, predicted_c_4], actor(predicted_a_1, predicted_g_2, "Benedict Cumberbatch", predicted_n_3, predicted_c_4, FV_birth_year_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_g, WPREDICTED_n, WPREDICTED_c
+      claim: And(actor(WPREDICTED_a, WPREDICTED_g, "Benedict Cumberbatch", WPREDICTED_n, WPREDICTED_c, FV_birth_year_0), Not(Exists([gold_a_1, gold_g_2, gold_n_3, gold_n1_4, gold_b_5], And(actor(gold_a_1, gold_g_2, gold_n_3, gold_n1_4, gold_b_5, FV_birth_year_0), gold_n_3 == "Benedict Cumberbatch"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,123 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1153.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1153.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3656 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find the name of the airport in the city of Goroka.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 9 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(4) -> StringSort()   [domain Length(x) <= 4; length <= 4]
+        bigint -> IntSort()   [domain And(x >= -9223372036854775808, x <= 9223372036854775807); range [-9223372036854775808, 9223372036854775807]]
+        integer -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+      local sorts:
+        apid = integer -> IntSort()
+        city = text -> StringSort()
+        country = text -> StringSort()
+        elevation = bigint -> IntSort()
+        iata = varchar(3) -> StringSort()
+        icao = varchar(4) -> StringSort()
+        name = text -> StringSort()
+        x = real -> Float32()
+        y = real -> Float32()
+      symbols:
+        airports(apid, name, city, country, x, y, elevation, iata, icao)
+        constant Goroka : city
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃a : apid ∃c : city ∃c1 : country ∃x : x ∃y : y ∃e : elevation ∃i : iata ∃i1 : icao ( (airports(a,n,c,c1,x,y,e,i,i1)) ∧ (c = 'Goroka') )
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apid EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:c1 COLON:: IDENT:country EXISTS:∃ IDENT:x COLON:: IDENT:x EXISTS:∃ IDENT:y COLON:: IDENT:y EXISTS:∃ IDENT:e COLON:: IDENT:elevation EXISTS:∃ IDENT:i COLON:: IDENT:iata EXISTS:∃ IDENT:i1 COLON:: IDENT:icao LPAR:( LPAR:( IDENT:airports LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:x COMMA:, IDENT:y COMMA:, IDENT:e COMMA:, IDENT:i COMMA:, IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Goroka RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apid
+            EXISTS c:city
+              EXISTS c1:country
+                EXISTS x:x
+                  EXISTS y:y
+                    EXISTS e:elevation
+                      EXISTS i:iata
+                        EXISTS i1:icao
+                          AND
+                            PRED airports(a, n, c, c1, x, y, e, i, i1)
+                            EQ  c = 'Goroka'
+      Predicted FOL: ∃a : apid ∃c : country ∃u : x ∃v : y ∃e : elevation ∃i : iata ∃o : icao (airports(a, n, 'Goroka', c, u, v, e, i, o))
+        tokens: EXISTS:∃ IDENT:a COLON:: IDENT:apid EXISTS:∃ IDENT:c COLON:: IDENT:country EXISTS:∃ IDENT:u COLON:: IDENT:x EXISTS:∃ IDENT:v COLON:: IDENT:y EXISTS:∃ IDENT:e COLON:: IDENT:elevation EXISTS:∃ IDENT:i COLON:: IDENT:iata EXISTS:∃ IDENT:o COLON:: IDENT:icao LPAR:( IDENT:airports LPAR:( IDENT:a COMMA:, IDENT:n COMMA:, LIT:Goroka COMMA:, IDENT:c COMMA:, IDENT:u COMMA:, IDENT:v COMMA:, IDENT:e COMMA:, IDENT:i COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a:apid
+            EXISTS c:country
+              EXISTS u:x
+                EXISTS v:y
+                  EXISTS e:elevation
+                    EXISTS i:iata
+                      EXISTS o:icao
+                        PRED airports(a, n, 'Goroka', c, u, v, e, i, o)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted n
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local apid, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        c1 : local country, global text -> StringSort()
+        e : local elevation, global bigint -> IntSort()
+        i : local iata, global varchar(3) -> StringSort()
+        i1 : local icao, global varchar(4) -> StringSort()
+        n : local name, global text -> StringSort()
+        x : local x, global real -> Float32()
+        y : local y, global real -> Float32()
+      Predicted FOL:
+        a : local apid, global integer -> IntSort()
+        c : local country, global text -> StringSort()
+        e : local elevation, global bigint -> IntSort()
+        i : local iata, global varchar(3) -> StringSort()
+        n : local name, global text -> StringSort()
+        o : local icao, global varchar(4) -> StringSort()
+        u : local x, global real -> Float32()
+        v : local y, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_a_1, gold_c_2, gold_c1_3, gold_x_4, gold_y_5, gold_e_6, gold_i_7, gold_i1_8], And(D_real(gold_x_4), D_real(gold_y_5), D_bigint(gold_e_6), D_varchar_3_(gold_i_7), D_varchar_4_(gold_i1_8), And(P_airports(gold_a_1, FV_name_0, gold_c_2, gold_c1_3, gold_x_4, gold_y_5, gold_e_6, gold_i_7, gold_i1_8), (gold_c_2 == L_Goroka))))
+      gold_skolem (witnesses WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_x, WGOLD_y, WGOLD_e, WGOLD_i, WGOLD_i1):  And(D_real(WGOLD_x), D_real(WGOLD_y), D_bigint(WGOLD_e), D_varchar_3_(WGOLD_i), D_varchar_4_(WGOLD_i1), And(P_airports(WGOLD_a, FV_name_0, WGOLD_c, WGOLD_c1, WGOLD_x, WGOLD_y, WGOLD_e, WGOLD_i, WGOLD_i1), (WGOLD_c == L_Goroka)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a_1, predicted_c_2, predicted_u_3, predicted_v_4, predicted_e_5, predicted_i_6, predicted_o_7], And(D_real(predicted_u_3), D_real(predicted_v_4), D_bigint(predicted_e_5), D_varchar_3_(predicted_i_6), D_varchar_4_(predicted_o_7), P_airports(predicted_a_1, FV_name_0, L_Goroka, predicted_c_2, predicted_u_3, predicted_v_4, predicted_e_5, predicted_i_6, predicted_o_7)))
+      predicted_skolem (witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_u, WPREDICTED_v, WPREDICTED_e, WPREDICTED_i, WPREDICTED_o):  And(D_real(WPREDICTED_u), D_real(WPREDICTED_v), D_bigint(WPREDICTED_e), D_varchar_3_(WPREDICTED_i), D_varchar_4_(WPREDICTED_o), P_airports(WPREDICTED_a, FV_name_0, L_Goroka, WPREDICTED_c, WPREDICTED_u, WPREDICTED_v, WPREDICTED_e, WPREDICTED_i, WPREDICTED_o))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Goroka' at text -> L_Goroka = StringVal('Goroka')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 785 lines, 30427 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1153.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_a, WGOLD_c, WGOLD_c1, WGOLD_x, WGOLD_y, WGOLD_e, WGOLD_i, WGOLD_i1
+      claim: And(And(And(Not(fpIsNaN(WGOLD_x)), Not(And(fpIsZero(WGOLD_x), fpIsNegative(WGOLD_x)))), And(Not(fpIsNaN(WGOLD_y)), Not(And(fpIsZero(WGOLD_y), fpIsNegative(WGOLD_y)))), And(WGOLD_e >= -9223372036854775808, WGOLD_e <= 9223372036854775807), Length(WGOLD_i) <= 3, Length(WGOLD_i1) <= 4, And(airports(WGOLD_a, FV_name_0, WGOLD_c, WGOLD_c1, WGOLD_x, WGOLD_y, WGOLD_e, WGOLD_i, WGOLD_i1), WGOLD_c == "Goroka")), Not(Exists([predicted_a_1, predicted_c_2, predicted_u_3, predicted_v_4, predicted_e_5, predicted_i_6, predicted_o_7], And(And(Not(fpIsNaN(predicted_u_3)), Not(And(fpIsZero(predicted_u_3), fpIsNegative(predicted_u_3)))), And(Not(fpIsNaN(predicted_v_4)), Not(And(fpIsZero(predicted_v_4), fpIsNegative(predicted_v_4)))), And(predicted_e_5 >= -9223372036854775808, predicted_e_5 <= 9223372036854775807), Length(predicted_i_6) <= 3, Length(predicted_o_7) <= 4, airports(predicted_a_1, FV_name_0, "Goroka", predicted_c_2, predicted_u_3, predicted_v_4, predicted_e_5, predicted_i_6, predicted_o_7)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.015 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_a, WPREDICTED_c, WPREDICTED_u, WPREDICTED_v, WPREDICTED_e, WPREDICTED_i, WPREDICTED_o
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_u)), Not(And(fpIsZero(WPREDICTED_u), fpIsNegative(WPREDICTED_u)))), And(Not(fpIsNaN(WPREDICTED_v)), Not(And(fpIsZero(WPREDICTED_v), fpIsNegative(WPREDICTED_v)))), And(WPREDICTED_e >= -9223372036854775808, WPREDICTED_e <= 9223372036854775807), Length(WPREDICTED_i) <= 3, Length(WPREDICTED_o) <= 4, airports(WPREDICTED_a, FV_name_0, "Goroka", WPREDICTED_c, WPREDICTED_u, WPREDICTED_v, WPREDICTED_e, WPREDICTED_i, WPREDICTED_o)), Not(Exists([gold_a_1, gold_c_2, gold_c1_3, gold_x_4, gold_y_5, gold_e_6, gold_i_7, gold_i1_8], And(And(Not(fpIsNaN(gold_x_4)), Not(And(fpIsZero(gold_x_4), fpIsNegative(gold_x_4)))), And(Not(fpIsNaN(gold_y_5)), Not(And(fpIsZero(gold_y_5), fpIsNegative(gold_y_5)))), And(gold_e_6 >= -9223372036854775808, gold_e_6 <= 9223372036854775807), Length(gold_i_7) <= 3, Length(gold_i1_8) <= 4, And(airports(gold_a_1, FV_name_0, gold_c_2, gold_c1_3, gold_x_4, gold_y_5, gold_e_6, gold_i_7, gold_i1_8), gold_c_2 == "Goroka")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,186 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1779.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1779.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3163 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Who has a friend that is from new york city?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        age = integer -> IntSort()
+        city = text -> StringSort()
+        friend = varchar(20) -> StringSort()
+        gender = text -> StringSort()
+        job = text -> StringSort()
+        name = varchar(20) -> StringSort()
+        year = integer -> IntSort()
+      symbols:
+        Person(name, age, city, gender, job)
+        PersonFriend(name, friend, year)
+        constant new york city : city
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ∃a : age ∃c : city ∃g : gender ∃j : job ∃f : friend ∃y : year ( (((Person(n,a,c,g,j)) ∧ (PersonFriend(n1,f,y))) ∧ (n = f)) ∧ (c = 'new york city') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:a COLON:: IDENT:age EXISTS:∃ IDENT:c COLON:: IDENT:city EXISTS:∃ IDENT:g COLON:: IDENT:gender EXISTS:∃ IDENT:j COLON:: IDENT:job EXISTS:∃ IDENT:f COLON:: IDENT:friend EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Person LPAR:( IDENT:n COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:g COMMA:, IDENT:j RPAR:) RPAR:) AND:∧ LPAR:( IDENT:PersonFriend LPAR:( IDENT:n1 COMMA:, IDENT:f COMMA:, IDENT:y RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:new york city RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            EXISTS a:age
+              EXISTS c:city
+                EXISTS g:gender
+                  EXISTS j:job
+                    EXISTS f:friend
+                      EXISTS y:year
+                        AND
+                          AND
+                            AND
+                              PRED Person(n, a, c, g, j)
+                              PRED PersonFriend(n1, f, y)
+                            EQ  n = f
+                          EQ  c = 'new york city'
+      Predicted FOL: ∃ a1 : age ∃ c1 : city ∃ g1 : gender ∃ j1 : job ∃ f : friend ∃ a2 : age ∃ g2 : gender ∃ j2 : job ∃ y : year ( Person(p, a1, c1, g1, j1) ∧ PersonFriend(p, f, y) ∧ Person(f, a2, 'new york city', g2, j2) )
+        tokens: EXISTS:∃ IDENT:a1 COLON:: IDENT:age EXISTS:∃ IDENT:c1 COLON:: IDENT:city EXISTS:∃ IDENT:g1 COLON:: IDENT:gender EXISTS:∃ IDENT:j1 COLON:: IDENT:job EXISTS:∃ IDENT:f COLON:: IDENT:friend EXISTS:∃ IDENT:a2 COLON:: IDENT:age EXISTS:∃ IDENT:g2 COLON:: IDENT:gender EXISTS:∃ IDENT:j2 COLON:: IDENT:job EXISTS:∃ IDENT:y COLON:: IDENT:year LPAR:( IDENT:Person LPAR:( IDENT:p COMMA:, IDENT:a1 COMMA:, IDENT:c1 COMMA:, IDENT:g1 COMMA:, IDENT:j1 RPAR:) AND:∧ IDENT:PersonFriend LPAR:( IDENT:p COMMA:, IDENT:f COMMA:, IDENT:y RPAR:) AND:∧ IDENT:Person LPAR:( IDENT:f COMMA:, IDENT:a2 COMMA:, LIT:new york city COMMA:, IDENT:g2 COMMA:, IDENT:j2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS a1:age
+            EXISTS c1:city
+              EXISTS g1:gender
+                EXISTS j1:job
+                  EXISTS f:friend
+                    EXISTS a2:age
+                      EXISTS g2:gender
+                        EXISTS j2:job
+                          EXISTS y:year
+                            AND
+                              PRED Person(p, a1, c1, g1, j1)
+                              PRED PersonFriend(p, f, y)
+                              PRED Person(f, a2, 'new york city', g2, j2)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_name_0 : name   Gold n1 <-> Predicted p
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local age, global integer -> IntSort()
+        c : local city, global text -> StringSort()
+        f : local friend, global varchar(20) -> StringSort()
+        g : local gender, global text -> StringSort()
+        j : local job, global text -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        n1 : local name, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+      Predicted FOL:
+        a1 : local age, global integer -> IntSort()
+        a2 : local age, global integer -> IntSort()
+        c1 : local city, global text -> StringSort()
+        f : local friend, global varchar(20) -> StringSort()
+        g1 : local gender, global text -> StringSort()
+        g2 : local gender, global text -> StringSort()
+        j1 : local job, global text -> StringSort()
+        j2 : local job, global text -> StringSort()
+        p : local name, global varchar(20) -> StringSort()
+        y : local year, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5, gold_f_6, gold_y_7], And(D_varchar_20_(gold_n_1), D_varchar_20_(gold_f_6), And(And(And(P_Person(gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5), P_PersonFriend(FV_name_0, gold_f_6, gold_y_7)), (gold_n_1 == gold_f_6)), (gold_c_3 == L_new_york_city))))
+      gold_skolem (witnesses WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_f, WGOLD_y):  And(D_varchar_20_(WGOLD_n), D_varchar_20_(WGOLD_f), And(And(And(P_Person(WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), P_PersonFriend(FV_name_0, WGOLD_f, WGOLD_y)), (WGOLD_n == WGOLD_f)), (WGOLD_c == L_new_york_city)))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_a1_1, predicted_c1_2, predicted_g1_3, predicted_j1_4, predicted_f_5, predicted_a2_6, predicted_g2_7, predicted_j2_8, predicted_y_9], And(D_varchar_20_(predicted_f_5), And(P_Person(FV_name_0, predicted_a1_1, predicted_c1_2, predicted_g1_3, predicted_j1_4), P_PersonFriend(FV_name_0, predicted_f_5, predicted_y_9), P_Person(predicted_f_5, predicted_a2_6, L_new_york_city, predicted_g2_7, predicted_j2_8))))
+      predicted_skolem (witnesses WPREDICTED_a1, WPREDICTED_c1, WPREDICTED_g1, WPREDICTED_j1, WPREDICTED_f, WPREDICTED_a2, WPREDICTED_g2, WPREDICTED_j2, WPREDICTED_y):  And(D_varchar_20_(WPREDICTED_f), And(P_Person(FV_name_0, WPREDICTED_a1, WPREDICTED_c1, WPREDICTED_g1, WPREDICTED_j1), P_PersonFriend(FV_name_0, WPREDICTED_f, WPREDICTED_y), P_Person(WPREDICTED_f, WPREDICTED_a2, L_new_york_city, WPREDICTED_g2, WPREDICTED_j2)))
+   Predicted: 9 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'new york city' at text -> L_new_york_city = StringVal('new york city')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 773 lines, 30371 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1779.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_name_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j, WGOLD_f, WGOLD_y
+      claim: And(And(Length(WGOLD_n) <= 20, Length(WGOLD_f) <= 20, And(And(And(Person(WGOLD_n, WGOLD_a, WGOLD_c, WGOLD_g, WGOLD_j), PersonFriend(FV_name_0, WGOLD_f, WGOLD_y)), WGOLD_n == WGOLD_f), WGOLD_c == "new york city")), Not(Exists([predicted_a1_1, predicted_c1_2, predicted_g1_3, predicted_j1_4, predicted_f_5, predicted_a2_6, predicted_g2_7, predicted_j2_8, predicted_y_9], And(Length(predicted_f_5) <= 20, And(Person(FV_name_0, predicted_a1_1, predicted_c1_2, predicted_g1_3, predicted_j1_4), PersonFriend(FV_name_0, predicted_f_5, predicted_y_9), Person(predicted_f_5, predicted_a2_6, "new york city", predicted_g2_7, predicted_j2_8))))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.010 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 17 relation tuple(s) listed, 15 probe queries
+        --- counter-model (local sorts) ---
+        Gold witnesses:
+          n : name = 'A'
+          a : age = 2
+          c : city = 'new york city'
+          g : gender = ''
+          j : job = ''
+          f : friend = 'A'
+          y : year = 3
+        free (answer) variables:
+          FV_name_0 : name = ''
+        literals / constants:
+          new york city : city = 'new york city'
+        relations (each value tagged with the local sort of its position):
+          Person(name, age, city, gender, job):
+            Person(name='A', age=0, city='', gender='', job='')
+            Person(name='A', age=0, city='', gender='', job='!1!')
+            Person(name='A', age=0, city='', gender='', job='C')
+            Person(name='A', age=0, city='', gender='', job='new york city')
+            Person(name='A', age=0, city='', gender='!0!', job='')
+            Person(name='A', age=0, city='', gender='!1!', job='')
+            Person(name='A', age=0, city='', gender='new york city', job='')
+            Person(name='A', age=0, city='!0!', gender='', job='')
+            Person(name='A', age=0, city='C', gender='', job='')
+            Person(name='A', age=2, city='new york city', gender='', job='')
+            Person(name='A', age=4, city='', gender='', job='')
+            Person(name='B', age=3, city='!1!', gender='C', job='!0!')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+          PersonFriend(name, friend, year):
+            PersonFriend(name='', friend='', year=2)
+            PersonFriend(name='', friend='A', year=3)
+            PersonFriend(name='', friend='B', year=0)
+            PersonFriend(name='A', friend='A', year=3)
+            PersonFriend(name='B', friend='', year=4)
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          age    : {0, 2, 3, 4}
+          city   : {'', '!0!', '!1!', 'C', 'new york city'}
+          friend : {'', 'A', 'B'}
+          gender : {'', '!0!', '!1!', 'C', 'new york city'}
+          job    : {'', '!0!', '!1!', 'C', 'new york city'}
+          name   : {'', 'A', 'B'}
+          year   : {0, 2, 3, 4}
+        values shared across local sorts (joins):
+          0 : age, year
+          2 : age, year
+          3 : age, year
+          4 : age, year
+          '!0!' : city, gender, job
+          '!1!' : city, gender, job
+          '' : city, gender, job
+          'C' : city, gender, job
+          'new york city' : city, gender, job
+          '' : friend, name
+          'A' : friend, name
+          'B' : friend, name
+   [R2] took 0.089 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_a1, WPREDICTED_c1, WPREDICTED_g1, WPREDICTED_j1, WPREDICTED_f, WPREDICTED_a2, WPREDICTED_g2, WPREDICTED_j2, WPREDICTED_y
+      claim: And(And(Length(WPREDICTED_f) <= 20, And(Person(FV_name_0, WPREDICTED_a1, WPREDICTED_c1, WPREDICTED_g1, WPREDICTED_j1), PersonFriend(FV_name_0, WPREDICTED_f, WPREDICTED_y), Person(WPREDICTED_f, WPREDICTED_a2, "new york city", WPREDICTED_g2, WPREDICTED_j2))), Not(Exists([gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5, gold_f_6, gold_y_7], And(Length(gold_n_1) <= 20, Length(gold_f_6) <= 20, And(And(And(Person(gold_n_1, gold_a_2, gold_c_3, gold_g_4, gold_j_5), PersonFriend(FV_name_0, gold_f_6, gold_y_7)), gold_n_1 == gold_f_6), gold_c_3 == "new york city")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

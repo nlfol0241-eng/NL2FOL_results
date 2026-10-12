@@ -1,0 +1,108 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_3434.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3434.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2382 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: find the ids of reviewers who did not give 4 star.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        date -> IntSort()   [days since 1970-01-01]
+        int -> IntSort()
+      local sorts:
+        mID = int -> IntSort()
+        rID = int -> IntSort()
+        ratingDate = date -> IntSort()
+        stars = int -> IntSort()
+      symbols:
+        Rating(rID, mID, stars, ratingDate)
+        constant 4 : stars
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃s : stars ∃m : mID ∃r1 : ratingDate( Rating(r,m,s,r1) )) ∧ (¬(∃s : stars ∃m : mID ∃r1 : ratingDate( (Rating(r,m,s,r1)) ∧ (s = 4) )))
+        tokens: LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:r1 COLON:: IDENT:ratingDate LPAR:( LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= NUM:4 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS s:stars
+              EXISTS m:mID
+                EXISTS r1:ratingDate
+                  PRED Rating(r, m, s, r1)
+            NOT
+              EXISTS s:stars
+                EXISTS m:mID
+                  EXISTS r1:ratingDate
+                    AND
+                      PRED Rating(r, m, s, r1)
+                      EQ  s = 4
+      Predicted FOL: ∃m : mID ∃s : stars ∃d : ratingDate (Rating(r, m, s, d) ∧ ¬∃m' : mID ∃d' : ratingDate Rating(r, m', 4, d'))
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:mID EXISTS:∃ IDENT:s COLON:: IDENT:stars EXISTS:∃ IDENT:d COLON:: IDENT:ratingDate LPAR:( IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:d RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:m' COLON:: IDENT:mID EXISTS:∃ IDENT:d' COLON:: IDENT:ratingDate IDENT:Rating LPAR:( IDENT:r COMMA:, IDENT:m' COMMA:, NUM:4 COMMA:, IDENT:d' RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:mID
+            EXISTS s:stars
+              EXISTS d:ratingDate
+                AND
+                  PRED Rating(r, m, s, d)
+                  NOT
+                    EXISTS m':mID
+                      EXISTS d':ratingDate
+                        PRED Rating(r, m', 4, d')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_rID_0 : rID   Gold r <-> Predicted r
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local mID, global int -> IntSort()
+        r : local rID, global int -> IntSort()
+        r1 : local ratingDate, global date -> IntSort()
+        s : local stars, global int -> IntSort()
+      Predicted FOL:
+        d : local ratingDate, global date -> IntSort()
+        d' : local ratingDate, global date -> IntSort()
+        m : local mID, global int -> IntSort()
+        m' : local mID, global int -> IntSort()
+        r : local rID, global int -> IntSort()
+        s : local stars, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  And(Exists([gold_s_1, gold_m_2, gold_r1_3], P_Rating(FV_rID_0, gold_m_2, gold_s_1, gold_r1_3)), Not(Exists([gold_s_4, gold_m_5, gold_r1_6], And(P_Rating(FV_rID_0, gold_m_5, gold_s_4, gold_r1_6), (gold_s_4 == L_v_4_int)))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1, predicted_s_2, predicted_d_3], And(P_Rating(FV_rID_0, predicted_m_1, predicted_s_2, predicted_d_3), Not(Exists([predicted_m_p_4, predicted_d_p_5], P_Rating(FV_rID_0, predicted_m_p_4, L_v_4_int, predicted_d_p_5)))))
+      predicted_skolem (witnesses WPREDICTED_m, WPREDICTED_s, WPREDICTED_d):  And(P_Rating(FV_rID_0, WPREDICTED_m, WPREDICTED_s, WPREDICTED_d), Not(Exists([predictedsk_m_p_1, predictedsk_d_p_2], P_Rating(FV_rID_0, predictedsk_m_p_1, L_v_4_int, predictedsk_d_p_2))))
+   Predicted: 3 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '4' at int -> L_v_4_int = IntVal(4)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 732 lines, 27322 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_3434.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(And(Exists([gold_s_1, gold_m_2, gold_r1_3], Rating(FV_rID_0, gold_m_2, gold_s_1, gold_r1_3)), Not(Exists([gold_s_4, gold_m_5, gold_r1_6], And(Rating(FV_rID_0, gold_m_5, gold_s_4, gold_r1_6), 4 == gold_s_4)))), Not(Exists([predicted_m_1, predicted_s_2, predicted_d_3], And(Rating(FV_rID_0, predicted_m_1, predicted_s_2, predicted_d_3), Not(Exists([predicted_m_p_4, predicted_d_p_5], Rating(FV_rID_0, predicted_m_p_4, 4, predicted_d_p_5)))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m, WPREDICTED_s, WPREDICTED_d
+      claim: And(And(Rating(FV_rID_0, WPREDICTED_m, WPREDICTED_s, WPREDICTED_d), Not(Exists([predictedsk_m_p_1, predictedsk_d_p_2], Rating(FV_rID_0, predictedsk_m_p_1, 4, predictedsk_d_p_2)))), Not(And(Exists([gold_s_1, gold_m_2, gold_r1_3], Rating(FV_rID_0, gold_m_2, gold_s_1, gold_r1_3)), Not(Exists([gold_s_4, gold_m_5, gold_r1_6], And(Rating(FV_rID_0, gold_m_5, gold_s_4, gold_r1_6), 4 == gold_s_4))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

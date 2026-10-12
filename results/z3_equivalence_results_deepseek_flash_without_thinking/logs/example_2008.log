@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_2008.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_2008.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3884 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names of wines made from red grapes?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 13 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Appelation = text -> StringSort()
+        Cases = integer -> IntSort()
+        Color = text -> StringSort()
+        Drink = text -> StringSort()
+        Grape = text -> StringSort()
+        ID = integer -> IntSort()
+        Name = text -> StringSort()
+        No = integer -> IntSort()
+        Price = integer -> IntSort()
+        Score = integer -> IntSort()
+        State = text -> StringSort()
+        Winery = text -> StringSort()
+        Year = integer -> IntSort()
+      symbols:
+        grapes(ID, Grape, Color)
+        wine(No, Grape, Winery, Appelation, State, Name, Year, Price, Score, Cases, Drink)
+        constant Red : Color
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : ID ∃g : Grape ∃c : Color ∃n : No ∃g1 : Grape ∃d : Drink ∃w : Winery ∃a : Appelation ∃s : State ∃y : Year ∃p : Price ∃s1 : Score ∃c1 : Cases ( (((grapes(i,g,c)) ∧ (wine(n,g1,w,a,s,n1,y,p,s1,c1,d))) ∧ (g = g1)) ∧ (c = 'Red') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:ID EXISTS:∃ IDENT:g COLON:: IDENT:Grape EXISTS:∃ IDENT:c COLON:: IDENT:Color EXISTS:∃ IDENT:n COLON:: IDENT:No EXISTS:∃ IDENT:g1 COLON:: IDENT:Grape EXISTS:∃ IDENT:d COLON:: IDENT:Drink EXISTS:∃ IDENT:w COLON:: IDENT:Winery EXISTS:∃ IDENT:a COLON:: IDENT:Appelation EXISTS:∃ IDENT:s COLON:: IDENT:State EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:p COLON:: IDENT:Price EXISTS:∃ IDENT:s1 COLON:: IDENT:Score EXISTS:∃ IDENT:c1 COLON:: IDENT:Cases LPAR:( LPAR:( LPAR:( LPAR:( IDENT:grapes LPAR:( IDENT:i COMMA:, IDENT:g COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:wine LPAR:( IDENT:n COMMA:, IDENT:g1 COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:n1 COMMA:, IDENT:y COMMA:, IDENT:p COMMA:, IDENT:s1 COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:g EQ:= IDENT:g1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:Red RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:ID
+            EXISTS g:Grape
+              EXISTS c:Color
+                EXISTS n:No
+                  EXISTS g1:Grape
+                    EXISTS d:Drink
+                      EXISTS w:Winery
+                        EXISTS a:Appelation
+                          EXISTS s:State
+                            EXISTS y:Year
+                              EXISTS p:Price
+                                EXISTS s1:Score
+                                  EXISTS c1:Cases
+                                    AND
+                                      AND
+                                        AND
+                                          PRED grapes(i, g, c)
+                                          PRED wine(n, g1, w, a, s, n1, y, p, s1, c1, d)
+                                        EQ  g = g1
+                                      EQ  c = 'Red'
+      Predicted FOL: ∃g : Grape ∃c : Color (grapes(g, c) ∧ c = 'Red' ∧ wine(n, g, w, a, s, n, y, p, sc, ca, d))
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:Grape EXISTS:∃ IDENT:c COLON:: IDENT:Color LPAR:( IDENT:grapes LPAR:( IDENT:g COMMA:, IDENT:c RPAR:) AND:∧ IDENT:c EQ:= LIT:Red AND:∧ IDENT:wine LPAR:( IDENT:n COMMA:, IDENT:g COMMA:, IDENT:w COMMA:, IDENT:a COMMA:, IDENT:s COMMA:, IDENT:n COMMA:, IDENT:y COMMA:, IDENT:p COMMA:, IDENT:sc COMMA:, IDENT:ca COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:Grape
+            EXISTS c:Color
+              AND
+                PRED grapes(g, c)
+                EQ  c = 'Red'
+                PRED wine(n, g, w, a, s, n, y, p, sc, ca, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n1 : Name) but Predicted has 9 (n : Name, w : Winery, a : Appelation, s : State, y : Year, p : Price, sc : Score, ca : Cases, d : Drink): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: predicate 'grapes' applied to 2 arguments but declared with arity 3
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 146, in infer
+    raise ValueError(
+ValueError: predicate 'grapes' applied to 2 arguments but declared with arity 3

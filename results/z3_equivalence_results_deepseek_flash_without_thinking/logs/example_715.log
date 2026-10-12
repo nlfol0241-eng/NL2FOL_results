@@ -1,0 +1,69 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_715.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_715.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4843 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the code of the school where the accounting department belongs to?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   6 global sorts, 6 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        varchar(8) -> StringSort()   [domain Length(x) <= 8; length <= 8]
+        varchar(4) -> StringSort()   [domain Length(x) <= 4; length <= 4]
+        int -> IntSort()
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+      local sorts:
+        DEPT_ADDRESS = varchar(20) -> StringSort()
+        DEPT_CODE = text -> StringSort()
+        DEPT_EXTENSION = varchar(4) -> StringSort()
+        DEPT_NAME = varchar(30) -> StringSort()
+        EMP_NUM = int -> IntSort()
+        SCHOOL_CODE = varchar(8) -> StringSort()
+      symbols:
+        DEPARTMENT(DEPT_CODE, DEPT_NAME, SCHOOL_CODE, EMP_NUM, DEPT_ADDRESS, DEPT_EXTENSION)
+        constant Accounting : DEPT_NAME
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : DEPT_CODE ∃d1 : DEPT_NAME ∃e : EMP_NUM ∃d2 : DEPT_ADDRESS ∃d3 : DEPT_EXTENSION ( (DEPARTMENT(d,d1,s,e,d2,d3)) ∧ (d1 = 'Accounting') )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:DEPT_CODE EXISTS:∃ IDENT:d1 COLON:: IDENT:DEPT_NAME EXISTS:∃ IDENT:e COLON:: IDENT:EMP_NUM EXISTS:∃ IDENT:d2 COLON:: IDENT:DEPT_ADDRESS EXISTS:∃ IDENT:d3 COLON:: IDENT:DEPT_EXTENSION LPAR:( LPAR:( IDENT:DEPARTMENT LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:s COMMA:, IDENT:e COMMA:, IDENT:d2 COMMA:, IDENT:d3 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:Accounting RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:DEPT_CODE
+            EXISTS d1:DEPT_NAME
+              EXISTS e:EMP_NUM
+                EXISTS d2:DEPT_ADDRESS
+                  EXISTS d3:DEPT_EXTENSION
+                    AND
+                      PRED DEPARTMENT(d, d1, s, e, d2, d3)
+                      EQ  d1 = 'Accounting'
+      Predicted FOL: ∃x : DEPT_CODE ∃y : DEPT_NAME ∃z : SCHOOL_CODE ∃w : EMP_NUM ∃u : DEPT_ADDRESS ∃v : DEPT_EXTENSION (DEPARTMENT(x, y, z, w, u, v) ∧ y = 'Accounting')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:DEPT_CODE EXISTS:∃ IDENT:y COLON:: IDENT:DEPT_NAME EXISTS:∃ IDENT:z COLON:: IDENT:SCHOOL_CODE EXISTS:∃ IDENT:w COLON:: IDENT:EMP_NUM EXISTS:∃ IDENT:u COLON:: IDENT:DEPT_ADDRESS EXISTS:∃ IDENT:v COLON:: IDENT:DEPT_EXTENSION LPAR:( IDENT:DEPARTMENT LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:u COMMA:, IDENT:v RPAR:) AND:∧ IDENT:y EQ:= LIT:Accounting RPAR:) EOF
+        AST:
+          EXISTS x:DEPT_CODE
+            EXISTS y:DEPT_NAME
+              EXISTS z:SCHOOL_CODE
+                EXISTS w:EMP_NUM
+                  EXISTS u:DEPT_ADDRESS
+                    EXISTS v:DEPT_EXTENSION
+                      AND
+                        PRED DEPARTMENT(x, y, z, w, u, v)
+                        EQ  y = 'Accounting'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) x do not occur free in the formula
+!! FAILED in stage [G4] pair free variables: ValueError: free-variable sorts differ: Gold ['SCHOOL_CODE'] vs Predicted ['DEPT_CODE']
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 121, in analyze
+    pairs = pair_free_vars(gold_fv, pred_fv, sig)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\free_vars.py", line 47, in pair_free_vars
+    raise ValueError(
+ValueError: free-variable sorts differ: Gold ['SCHOOL_CODE'] vs Predicted ['DEPT_CODE']

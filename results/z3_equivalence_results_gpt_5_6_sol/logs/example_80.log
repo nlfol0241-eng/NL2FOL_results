@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_80.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_80.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2561 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the final tables made and best finishes for all poker players?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+      local sorts:
+        Best_Finish = real -> Float32()
+        Earnings = real -> Float32()
+        Final_Table_Made = real -> Float32()
+        Money_Rank = real -> Float32()
+        People_ID = int -> IntSort()
+        Poker_Player_ID = int -> IntSort()
+      symbols:
+        poker_player(Poker_Player_ID, People_ID, Final_Table_Made, Best_Finish, Money_Rank, Earnings)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Poker_Player_ID ∃p1 : People_ID ∃m : Money_Rank ∃e : Earnings ( poker_player(p,p1,f,b,m,e) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Poker_Player_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:People_ID EXISTS:∃ IDENT:m COLON:: IDENT:Money_Rank EXISTS:∃ IDENT:e COLON:: IDENT:Earnings LPAR:( IDENT:poker_player LPAR:( IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:f COMMA:, IDENT:b COMMA:, IDENT:m COMMA:, IDENT:e RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Poker_Player_ID
+            EXISTS p1:People_ID
+              EXISTS m:Money_Rank
+                EXISTS e:Earnings
+                  PRED poker_player(p, p1, f, b, m, e)
+      Predicted FOL: ∃p : Poker_Player_ID ∃i : People_ID ∃m : Money_Rank ∃e : Earnings poker_player(p, i, f, b, m, e)
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Poker_Player_ID EXISTS:∃ IDENT:i COLON:: IDENT:People_ID EXISTS:∃ IDENT:m COLON:: IDENT:Money_Rank EXISTS:∃ IDENT:e COLON:: IDENT:Earnings IDENT:poker_player LPAR:( IDENT:p COMMA:, IDENT:i COMMA:, IDENT:f COMMA:, IDENT:b COMMA:, IDENT:m COMMA:, IDENT:e RPAR:) EOF
+        AST:
+          EXISTS p:Poker_Player_ID
+            EXISTS i:People_ID
+              EXISTS m:Money_Rank
+                EXISTS e:Earnings
+                  PRED poker_player(p, i, f, b, m, e)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Best_Finish_0 : Best_Finish   Gold b <-> Predicted b
+      FV_Final_Table_Made_0 : Final_Table_Made   Gold f <-> Predicted f
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 12 variable occurrences in 2 formulas
+      Gold FOL:
+        b : local Best_Finish, global real -> Float32()
+        e : local Earnings, global real -> Float32()
+        f : local Final_Table_Made, global real -> Float32()
+        m : local Money_Rank, global real -> Float32()
+        p : local Poker_Player_ID, global int -> IntSort()
+        p1 : local People_ID, global int -> IntSort()
+      Predicted FOL:
+        b : local Best_Finish, global real -> Float32()
+        e : local Earnings, global real -> Float32()
+        f : local Final_Table_Made, global real -> Float32()
+        i : local People_ID, global int -> IntSort()
+        m : local Money_Rank, global real -> Float32()
+        p : local Poker_Player_ID, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_p1_2, gold_m_3, gold_e_4], And(D_real(gold_m_3), D_real(gold_e_4), P_poker_player(gold_p_1, gold_p1_2, FV_Final_Table_Made_0, FV_Best_Finish_0, gold_m_3, gold_e_4)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_p1, WGOLD_m, WGOLD_e):  And(D_real(WGOLD_m), D_real(WGOLD_e), P_poker_player(WGOLD_p, WGOLD_p1, FV_Final_Table_Made_0, FV_Best_Finish_0, WGOLD_m, WGOLD_e))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_i_2, predicted_m_3, predicted_e_4], And(D_real(predicted_m_3), D_real(predicted_e_4), P_poker_player(predicted_p_1, predicted_i_2, FV_Final_Table_Made_0, FV_Best_Finish_0, predicted_m_3, predicted_e_4)))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_i, WPREDICTED_m, WPREDICTED_e):  And(D_real(WPREDICTED_m), D_real(WPREDICTED_e), P_poker_player(WPREDICTED_p, WPREDICTED_i, FV_Final_Table_Made_0, FV_Best_Finish_0, WPREDICTED_m, WPREDICTED_e))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 743 lines, 28362 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_80.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Best_Finish_0)), Not(And(fpIsZero(FV_Best_Finish_0), fpIsNegative(FV_Best_Finish_0))))
+      [1] And(Not(fpIsNaN(FV_Final_Table_Made_0)), Not(And(fpIsZero(FV_Final_Table_Made_0), fpIsNegative(FV_Final_Table_Made_0))))
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_p1, WGOLD_m, WGOLD_e
+      claim: And(And(And(Not(fpIsNaN(WGOLD_m)), Not(And(fpIsZero(WGOLD_m), fpIsNegative(WGOLD_m)))), And(Not(fpIsNaN(WGOLD_e)), Not(And(fpIsZero(WGOLD_e), fpIsNegative(WGOLD_e)))), poker_player(WGOLD_p, WGOLD_p1, FV_Final_Table_Made_0, FV_Best_Finish_0, WGOLD_m, WGOLD_e)), Not(Exists([predicted_p_1, predicted_i_2, predicted_m_3, predicted_e_4], And(And(Not(fpIsNaN(predicted_m_3)), Not(And(fpIsZero(predicted_m_3), fpIsNegative(predicted_m_3)))), And(Not(fpIsNaN(predicted_e_4)), Not(And(fpIsZero(predicted_e_4), fpIsNegative(predicted_e_4)))), poker_player(predicted_p_1, predicted_i_2, FV_Final_Table_Made_0, FV_Best_Finish_0, predicted_m_3, predicted_e_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_i, WPREDICTED_m, WPREDICTED_e
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_m)), Not(And(fpIsZero(WPREDICTED_m), fpIsNegative(WPREDICTED_m)))), And(Not(fpIsNaN(WPREDICTED_e)), Not(And(fpIsZero(WPREDICTED_e), fpIsNegative(WPREDICTED_e)))), poker_player(WPREDICTED_p, WPREDICTED_i, FV_Final_Table_Made_0, FV_Best_Finish_0, WPREDICTED_m, WPREDICTED_e)), Not(Exists([gold_p_1, gold_p1_2, gold_m_3, gold_e_4], And(And(Not(fpIsNaN(gold_m_3)), Not(And(fpIsZero(gold_m_3), fpIsNegative(gold_m_3)))), And(Not(fpIsNaN(gold_e_4)), Not(And(fpIsZero(gold_e_4), fpIsNegative(gold_e_4)))), poker_player(gold_p_1, gold_p1_2, FV_Final_Table_Made_0, FV_Best_Finish_0, gold_m_3, gold_e_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

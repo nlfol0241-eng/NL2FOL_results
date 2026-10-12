@@ -1,0 +1,101 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_1024.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1024.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5969 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the price ranges of hotels?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+        char(15) -> StringSort()   [domain Length(x) <= 15; length <= 15 (blank padding not modelled)]
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+      local sorts:
+        hotel_id = integer -> IntSort()
+        other_hotel_details = varchar(255) -> StringSort()
+        pets_allowed_yn = char(1) -> StringSort()
+        price_range = real -> Float32()
+        star_rating_code = char(15) -> StringSort()
+      symbols:
+        Hotels(hotel_id, star_rating_code, pets_allowed_yn, price_range, other_hotel_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃h : hotel_id ∃s : star_rating_code ∃p : pets_allowed_yn ∃o : other_hotel_details ( Hotels(h,s,p,p1,o) )
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:hotel_id EXISTS:∃ IDENT:s COLON:: IDENT:star_rating_code EXISTS:∃ IDENT:p COLON:: IDENT:pets_allowed_yn EXISTS:∃ IDENT:o COLON:: IDENT:other_hotel_details LPAR:( IDENT:Hotels LPAR:( IDENT:h COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:hotel_id
+            EXISTS s:star_rating_code
+              EXISTS p:pets_allowed_yn
+                EXISTS o:other_hotel_details
+                  PRED Hotels(h, s, p, p1, o)
+      Predicted FOL: ∃h : hotel_id ∃s : star_rating_code ∃p : pets_allowed_yn ∃d : other_hotel_details (Hotels(h, s, p, pr, d))
+        tokens: EXISTS:∃ IDENT:h COLON:: IDENT:hotel_id EXISTS:∃ IDENT:s COLON:: IDENT:star_rating_code EXISTS:∃ IDENT:p COLON:: IDENT:pets_allowed_yn EXISTS:∃ IDENT:d COLON:: IDENT:other_hotel_details LPAR:( IDENT:Hotels LPAR:( IDENT:h COMMA:, IDENT:s COMMA:, IDENT:p COMMA:, IDENT:pr COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS h:hotel_id
+            EXISTS s:star_rating_code
+              EXISTS p:pets_allowed_yn
+                EXISTS d:other_hotel_details
+                  PRED Hotels(h, s, p, pr, d)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_price_range_0 : price_range   Gold p1 <-> Predicted pr
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        h : local hotel_id, global integer -> IntSort()
+        o : local other_hotel_details, global varchar(255) -> StringSort()
+        p : local pets_allowed_yn, global char(1) -> StringSort()
+        p1 : local price_range, global real -> Float32()
+        s : local star_rating_code, global char(15) -> StringSort()
+      Predicted FOL:
+        d : local other_hotel_details, global varchar(255) -> StringSort()
+        h : local hotel_id, global integer -> IntSort()
+        p : local pets_allowed_yn, global char(1) -> StringSort()
+        pr : local price_range, global real -> Float32()
+        s : local star_rating_code, global char(15) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_h_1, gold_s_2, gold_p_3, gold_o_4], And(D_char_15_(gold_s_2), D_char_1_(gold_p_3), D_varchar_255_(gold_o_4), P_Hotels(gold_h_1, gold_s_2, gold_p_3, FV_price_range_0, gold_o_4)))
+      gold_skolem (witnesses WGOLD_h, WGOLD_s, WGOLD_p, WGOLD_o):  And(D_char_15_(WGOLD_s), D_char_1_(WGOLD_p), D_varchar_255_(WGOLD_o), P_Hotels(WGOLD_h, WGOLD_s, WGOLD_p, FV_price_range_0, WGOLD_o))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_h_1, predicted_s_2, predicted_p_3, predicted_d_4], And(D_char_15_(predicted_s_2), D_char_1_(predicted_p_3), D_varchar_255_(predicted_d_4), P_Hotels(predicted_h_1, predicted_s_2, predicted_p_3, FV_price_range_0, predicted_d_4)))
+      predicted_skolem (witnesses WPREDICTED_h, WPREDICTED_s, WPREDICTED_p, WPREDICTED_d):  And(D_char_15_(WPREDICTED_s), D_char_1_(WPREDICTED_p), D_varchar_255_(WPREDICTED_d), P_Hotels(WPREDICTED_h, WPREDICTED_s, WPREDICTED_p, FV_price_range_0, WPREDICTED_d))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 753 lines, 28769 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_1024.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_price_range_0)), Not(And(fpIsZero(FV_price_range_0), fpIsNegative(FV_price_range_0))))
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_h, WGOLD_s, WGOLD_p, WGOLD_o
+      claim: And(And(Length(WGOLD_s) <= 15, Length(WGOLD_p) <= 1, Length(WGOLD_o) <= 255, Hotels(WGOLD_h, WGOLD_s, WGOLD_p, FV_price_range_0, WGOLD_o)), Not(Exists([predicted_h_1, predicted_s_2, predicted_p_3, predicted_d_4], And(Length(predicted_s_2) <= 15, Length(predicted_p_3) <= 1, Length(predicted_d_4) <= 255, Hotels(predicted_h_1, predicted_s_2, predicted_p_3, FV_price_range_0, predicted_d_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.016 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_h, WPREDICTED_s, WPREDICTED_p, WPREDICTED_d
+      claim: And(And(Length(WPREDICTED_s) <= 15, Length(WPREDICTED_p) <= 1, Length(WPREDICTED_d) <= 255, Hotels(WPREDICTED_h, WPREDICTED_s, WPREDICTED_p, FV_price_range_0, WPREDICTED_d)), Not(Exists([gold_h_1, gold_s_2, gold_p_3, gold_o_4], And(Length(gold_s_2) <= 15, Length(gold_p_3) <= 1, Length(gold_o_4) <= 255, Hotels(gold_h_1, gold_s_2, gold_p_3, FV_price_range_0, gold_o_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.010 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

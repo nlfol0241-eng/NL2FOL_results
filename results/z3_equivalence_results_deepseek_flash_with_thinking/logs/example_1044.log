@@ -1,0 +1,71 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_1044.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1044.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2637 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show all video games with type Collectible card game.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+      local sorts:
+        GName = varchar(40) -> StringSort()
+        GType = varchar(40) -> StringSort()
+        GameID = integer -> IntSort()
+      symbols:
+        Video_Games(GameID, GName, GType)
+        constant Collectible card game : GType
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : GameID ∃g2 : GType ( (Video_Games(g,g1,g2)) ∧ (g2 = 'Collectible card game') )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:GameID EXISTS:∃ IDENT:g2 COLON:: IDENT:GType LPAR:( LPAR:( IDENT:Video_Games LPAR:( IDENT:g COMMA:, IDENT:g1 COMMA:, IDENT:g2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:g2 EQ:= LIT:Collectible card game RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:GameID
+            EXISTS g2:GType
+              AND
+                PRED Video_Games(g, g1, g2)
+                EQ  g2 = 'Collectible card game'
+      Predicted FOL: Video_Games(x, y, z) ∧ z = 'Collectible card game'
+        tokens: IDENT:Video_Games LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) AND:∧ IDENT:z EQ:= LIT:Collectible card game EOF
+        AST:
+          AND
+            PRED Video_Games(x, y, z)
+            EQ  z = 'Collectible card game'
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (g1 : GName) but Predicted has 3 (x : GameID, y : GName, z : GType): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local GameID, global integer -> IntSort()
+        g1 : local GName, global varchar(40) -> StringSort()
+        g2 : local GType, global varchar(40) -> StringSort()
+      Predicted FOL:
+        x : local GameID, global integer -> IntSort()
+        y : local GName, global varchar(40) -> StringSort()
+        z : local GType, global varchar(40) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5283 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_1044.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (g1 : GName) but Predicted has 3 (x : GameID, y : GName, z : GType): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

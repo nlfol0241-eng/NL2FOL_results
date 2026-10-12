@@ -1,0 +1,90 @@
+{
+  "NL": "What are the names of regions that were not affected?",
+  "Vocabulary": {
+    "Predicates": [
+      "region",
+      "affected_region"
+    ],
+    "Functions": [],
+    "Constants": []
+  },
+  "Arity": {
+    "Predicates": {
+      "region": [
+        "Region_id",
+        "Region_code",
+        "Region_name"
+      ],
+      "affected_region": [
+        "Region_id",
+        "Storm_ID",
+        "Number_city_affected"
+      ]
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Axioms": {
+    "axiom1": "∀a0∀a1∀a2∀a3∀a4∀a5∀a0'∀a1'∀a2'∀a3'∀a4'∀a5'( storm(a0, a1, a2, a3, a4, a5) ∧ storm(a0', a1', a2', a3', a4', a5') ∧ a0 = a0' ) → ( a1 = a1' ∧ a2 = a2' ∧ a3 = a3' ∧ a4 = a4' ∧ a5 = a5' )",
+    "axiom2": "∀b0∀b1∀b2∀b0'∀b1'∀b2'( region(b0, b1, b2) ∧ region(b0', b1', b2') ∧ b0 = b0' ) → ( b1 = b1' ∧ b2 = b2' )",
+    "axiom3": "∀c0∀c1∀c2∀c0'∀c1'∀c2'( affected_region(c0, c1, c2) ∧ affected_region(c0', c1', c2') ∧ c0 = c0' ∧ c1 = c1' ) → ( c2 = c2' )",
+    "axiom4": "∀c0∀c1∀c2 ( affected_region(c0, c1, c2) → ∃a0∃a1∃a2∃a3∃a4∃a5 ( storm(a0, a1, a2, a3, a4, a5) ∧ a0 = c1 ) )",
+    "axiom5": "∀c0∀c1∀c2 ( affected_region(c0, c1, c2) → ∃b0∃b1∃b2 ( region(b0, b1, b2) ∧ b0 = c0 ) )"
+  },
+  "Internal Symbols": {
+    "Predicates": {
+      "region": {
+        "A": "region",
+        "A0": "Region_id",
+        "A1": "Region_code",
+        "A2": "Region_name"
+      },
+      "affected_region": {
+        "B": "affected_region",
+        "B0": "Region_id",
+        "B1": "Storm_ID",
+        "B2": "Number_city_affected"
+      }
+    },
+    "Functions": {},
+    "Constants": {}
+  },
+  "Gold FOL": {
+    "string": "∃r1 : Region_code ∃r : Region_id( (region(r,r1,r2)) ∧ (¬(∃r3 : Region_id( ((region(r,r1,r2)) ∧ (∃n : Number_city_affected ∃s : Storm_ID( affected_region(r3,s,n) ))) ∧ (r = r3) ))) )",
+    "free vars": "r2 : Region_name"
+  },
+  "Gold FOL internal": {
+    "RA": "<P>[A2]((<P>[A0,A1,A2](A))<D>(<P>[A0,A1,A2](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "Processed_RA": "<P>[A2]((<P>[A0,A1,A2](A))<D>(<P>[A0,A1,A2](<S>[A0 = B0]((A)<X>(<P>[B0](B))))))",
+    "RC": "[E]?A1,?A0( (A(?A0,?A1,?A2)) & (~([E]?B0( ((A(?A0,?A1,?A2)) & ([E]?B2,?B1( B(?B0,?B1,?B2) ))) & (?A0 = ?B0) ))) )",
+    "string": "∃A1 ∃A0( (A(A0,A1,A2)) ∧ (¬(∃B0( ((A(A0,A1,A2)) ∧ (∃B2 ∃B1( B(B0,B1,B2) ))) ∧ (A0 = B0) ))) )",
+    "free variables": "A2",
+    "db_id": "storm_record",
+    "processed_sql": "SELECT region_name FROM region WHERE region_id NOT IN (SELECT region_id FROM affected_region)"
+  },
+  "Global Sorts": [
+    "int",
+    "real",
+    "text"
+  ],
+  "Sort Axioms": {
+    "region": {
+      "sortaxiom0": "Region_id = int",
+      "sortaxiom1": "Region_code = text",
+      "sortaxiom2": "Region_name = text"
+    },
+    "affected_region": {
+      "sortaxiom0": "Region_id = int",
+      "sortaxiom1": "Storm_ID = int",
+      "sortaxiom2": "Number_city_affected = real"
+    }
+  },
+  "Additional info": {
+    "SQL from original dataset": "SELECT region_name FROM region WHERE region_id NOT IN (SELECT region_id FROM affected_region)"
+  },
+  "id": 3195,
+  "Predicted FOL": {
+    "string": "∃r_id : Region_id ∃r_code : Region_code ∃r_name : Region_name (region(r_id, r_code, r_name) ∧ ¬∃s_id : Storm_ID ∃num : Number_city_affected affected_region(r_id, s_id, num))",
+    "free vars": ""
+  }
+}

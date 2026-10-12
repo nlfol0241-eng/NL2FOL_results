@@ -1,0 +1,140 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3232.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3232.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 9363 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Find all procedures which cost more than 1000 or which physician John Wen was trained in.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 10 local sorts, 3 predicates, 0 functions, 3 constants, 0 warnings
+      global sorts:
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+        integer -> IntSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+      local sorts:
+        CertificationDate = datetime -> IntSort()
+        CertificationExpires = datetime -> IntSort()
+        Code = integer -> IntSort()
+        Cost = real -> Float32()
+        EmployeeID = integer -> IntSort()
+        Name = varchar(30) -> StringSort()
+        Physician = integer -> IntSort()
+        Position = varchar(30) -> StringSort()
+        SSN = integer -> IntSort()
+        Treatment = integer -> IntSort()
+      symbols:
+        Physician(EmployeeID, Name, Position, SSN)
+        Procedures(Code, Name, Cost)
+        Trained_In(Physician, Treatment, CertificationDate, CertificationExpires)
+        constant 1000 : Cost
+        constant John Wen : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃c1 : Cost ∃c : Code( (Procedures(c,n,c1)) ∧ (c1 > 1000) )) ∨ (∃e : EmployeeID ∃s : SSN ∃c2 : CertificationDate ∃c1 : Cost ∃p : Position ∃c3 : CertificationExpires ∃p1 : Physician ∃n1 : Name ∃c : Code ∃t : Treatment( (((((Physician(e,n1,p,s)) ∧ (Trained_In(p1,t,c2,c3))) ∧ (e = p1)) ∧ (Procedures(c,n,c1))) ∧ (c = t)) ∧ (n1 = 'John Wen') ))
+        tokens: LPAR:( EXISTS:∃ IDENT:c1 COLON:: IDENT:Cost EXISTS:∃ IDENT:c COLON:: IDENT:Code LPAR:( LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 GT:> NUM:1000 RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:e COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:s COLON:: IDENT:SSN EXISTS:∃ IDENT:c2 COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:c1 COLON:: IDENT:Cost EXISTS:∃ IDENT:p COLON:: IDENT:Position EXISTS:∃ IDENT:c3 COLON:: IDENT:CertificationExpires EXISTS:∃ IDENT:p1 COLON:: IDENT:Physician EXISTS:∃ IDENT:n1 COLON:: IDENT:Name EXISTS:∃ IDENT:c COLON:: IDENT:Code EXISTS:∃ IDENT:t COLON:: IDENT:Treatment LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:Physician LPAR:( IDENT:e COMMA:, IDENT:n1 COMMA:, IDENT:p COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Trained_In LPAR:( IDENT:p1 COMMA:, IDENT:t COMMA:, IDENT:c2 COMMA:, IDENT:c3 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:Procedures LPAR:( IDENT:c COMMA:, IDENT:n COMMA:, IDENT:c1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= IDENT:t RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n1 EQ:= LIT:John Wen RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS c1:Cost
+              EXISTS c:Code
+                AND
+                  PRED Procedures(c, n, c1)
+                  CMP  c1 > 1000
+            EXISTS e:EmployeeID
+              EXISTS s:SSN
+                EXISTS c2:CertificationDate
+                  EXISTS c1:Cost
+                    EXISTS p:Position
+                      EXISTS c3:CertificationExpires
+                        EXISTS p1:Physician
+                          EXISTS n1:Name
+                            EXISTS c:Code
+                              EXISTS t:Treatment
+                                AND
+                                  AND
+                                    AND
+                                      AND
+                                        AND
+                                          PRED Physician(e, n1, p, s)
+                                          PRED Trained_In(p1, t, c2, c3)
+                                        EQ  e = p1
+                                      PRED Procedures(c, n, c1)
+                                    EQ  c = t
+                                  EQ  n1 = 'John Wen'
+      Predicted FOL: ∃p0 : Code ∃p1 : Name ∃p2 : Cost ( Procedures(p0, p1, p2) ∧ ( p2 > 1000 ∨ ∃t0 : Physician ∃t1 : Treatment ∃t2 : CertificationDate ∃t3 : CertificationExpires ( Trained_In(t0, t1, t2, t3) ∧ t0 = p0 ∧ ∃a0 : EmployeeID ∃a1 : Name ∃a2 : Position ∃a3 : SSN ( Physician(a0, a1, a2, a3) ∧ a1 = 'John Wen' ∧ a0 = t0 ) ) ) )
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:Code EXISTS:∃ IDENT:p1 COLON:: IDENT:Name EXISTS:∃ IDENT:p2 COLON:: IDENT:Cost LPAR:( IDENT:Procedures LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 RPAR:) AND:∧ LPAR:( IDENT:p2 GT:> NUM:1000 OR:∨ EXISTS:∃ IDENT:t0 COLON:: IDENT:Physician EXISTS:∃ IDENT:t1 COLON:: IDENT:Treatment EXISTS:∃ IDENT:t2 COLON:: IDENT:CertificationDate EXISTS:∃ IDENT:t3 COLON:: IDENT:CertificationExpires LPAR:( IDENT:Trained_In LPAR:( IDENT:t0 COMMA:, IDENT:t1 COMMA:, IDENT:t2 COMMA:, IDENT:t3 RPAR:) AND:∧ IDENT:t0 EQ:= IDENT:p0 AND:∧ EXISTS:∃ IDENT:a0 COLON:: IDENT:EmployeeID EXISTS:∃ IDENT:a1 COLON:: IDENT:Name EXISTS:∃ IDENT:a2 COLON:: IDENT:Position EXISTS:∃ IDENT:a3 COLON:: IDENT:SSN LPAR:( IDENT:Physician LPAR:( IDENT:a0 COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 RPAR:) AND:∧ IDENT:a1 EQ:= LIT:John Wen AND:∧ IDENT:a0 EQ:= IDENT:t0 RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p0:Code
+            EXISTS p1:Name
+              EXISTS p2:Cost
+                AND
+                  PRED Procedures(p0, p1, p2)
+                  OR
+                    CMP  p2 > 1000
+                    EXISTS t0:Physician
+                      EXISTS t1:Treatment
+                        EXISTS t2:CertificationDate
+                          EXISTS t3:CertificationExpires
+                            AND
+                              PRED Trained_In(t0, t1, t2, t3)
+                              EQ  t0 = p0
+                              EXISTS a0:EmployeeID
+                                EXISTS a1:Name
+                                  EXISTS a2:Position
+                                    EXISTS a3:SSN
+                                      AND
+                                        PRED Physician(a0, a1, a2, a3)
+                                        EQ  a1 = 'John Wen'
+                                        EQ  a0 = t0
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 22 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Code, global integer -> IntSort()
+        c1 : local Cost, global real -> Float32()
+        c2 : local CertificationDate, global datetime -> IntSort()
+        c3 : local CertificationExpires, global datetime -> IntSort()
+        e : local EmployeeID, global integer -> IntSort()
+        n : local Name, global varchar(30) -> StringSort()
+        n1 : local Name, global varchar(30) -> StringSort()
+        p : local Position, global varchar(30) -> StringSort()
+        p1 : local Physician, global integer -> IntSort()
+        s : local SSN, global integer -> IntSort()
+        t : local Treatment, global integer -> IntSort()
+      Predicted FOL:
+        a0 : local EmployeeID, global integer -> IntSort()
+        a1 : local Name, global varchar(30) -> StringSort()
+        a2 : local Position, global varchar(30) -> StringSort()
+        a3 : local SSN, global integer -> IntSort()
+        p0 : local Code, global integer -> IntSort()
+        p1 : local Name, global varchar(30) -> StringSort()
+        p2 : local Cost, global real -> Float32()
+        t0 : local Physician, global integer -> IntSort()
+        t1 : local Treatment, global integer -> IntSort()
+        t2 : local CertificationDate, global datetime -> IntSort()
+        t3 : local CertificationExpires, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5845 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3232.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

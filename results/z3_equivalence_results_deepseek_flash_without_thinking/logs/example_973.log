@@ -1,0 +1,94 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_973.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_973.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4431 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct secretary votes in the fall election cycle?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 9 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        integer -> IntSort()
+      local sorts:
+        Class_President_Vote = integer -> IntSort()
+        Class_Senator_Vote = integer -> IntSort()
+        Election_Cycle = varchar(12) -> StringSort()
+        President_Vote = integer -> IntSort()
+        Registration_Date = varchar(12) -> StringSort()
+        Secretary_Vote = integer -> IntSort()
+        StuID = integer -> IntSort()
+        Treasurer_Vote = integer -> IntSort()
+        Vice_President_Vote = integer -> IntSort()
+      symbols:
+        Voting_record(StuID, Registration_Date, Election_Cycle, President_Vote, Vice_President_Vote, Secretary_Vote, Treasurer_Vote, Class_President_Vote, Class_Senator_Vote)
+        constant Fall : Election_Cycle
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : StuID ∃r : Registration_Date ∃e : Election_Cycle ∃p : President_Vote ∃v : Vice_President_Vote ∃t : Treasurer_Vote ∃c : Class_President_Vote ∃c1 : Class_Senator_Vote ( (Voting_record(s,r,e,p,v,s1,t,c,c1)) ∧ (e = 'Fall') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:r COLON:: IDENT:Registration_Date EXISTS:∃ IDENT:e COLON:: IDENT:Election_Cycle EXISTS:∃ IDENT:p COLON:: IDENT:President_Vote EXISTS:∃ IDENT:v COLON:: IDENT:Vice_President_Vote EXISTS:∃ IDENT:t COLON:: IDENT:Treasurer_Vote EXISTS:∃ IDENT:c COLON:: IDENT:Class_President_Vote EXISTS:∃ IDENT:c1 COLON:: IDENT:Class_Senator_Vote LPAR:( LPAR:( IDENT:Voting_record LPAR:( IDENT:s COMMA:, IDENT:r COMMA:, IDENT:e COMMA:, IDENT:p COMMA:, IDENT:v COMMA:, IDENT:s1 COMMA:, IDENT:t COMMA:, IDENT:c COMMA:, IDENT:c1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:e EQ:= LIT:Fall RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS r:Registration_Date
+              EXISTS e:Election_Cycle
+                EXISTS p:President_Vote
+                  EXISTS v:Vice_President_Vote
+                    EXISTS t:Treasurer_Vote
+                      EXISTS c:Class_President_Vote
+                        EXISTS c1:Class_Senator_Vote
+                          AND
+                            PRED Voting_record(s, r, e, p, v, s1, t, c, c1)
+                            EQ  e = 'Fall'
+      Predicted FOL: ∃s : Secretary_Vote (Voting_record(s, r, Fall, p, v, s, t, cp, cs))
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:Secretary_Vote LPAR:( IDENT:Voting_record LPAR:( IDENT:s COMMA:, IDENT:r COMMA:, IDENT:Fall COMMA:, IDENT:p COMMA:, IDENT:v COMMA:, IDENT:s COMMA:, IDENT:t COMMA:, IDENT:cp COMMA:, IDENT:cs RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:Secretary_Vote
+            PRED Voting_record(s, r, Fall<const>, p, v, s, t, cp, cs)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) s do not occur free in the formula
+   MISMATCH: Gold has 1 free variable(s) (s1 : Secretary_Vote) but Predicted has 7 (s : Secretary_Vote, r : Registration_Date, p : President_Vote, v : Vice_President_Vote, t : Treasurer_Vote, cp : Class_President_Vote, cs : Class_Senator_Vote): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Class_President_Vote, global integer -> IntSort()
+        c1 : local Class_Senator_Vote, global integer -> IntSort()
+        e : local Election_Cycle, global varchar(12) -> StringSort()
+        p : local President_Vote, global integer -> IntSort()
+        r : local Registration_Date, global varchar(12) -> StringSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Secretary_Vote, global integer -> IntSort()
+        t : local Treasurer_Vote, global integer -> IntSort()
+        v : local Vice_President_Vote, global integer -> IntSort()
+      Predicted FOL:
+        cp : local Class_President_Vote, global integer -> IntSort()
+        cs : local Class_Senator_Vote, global integer -> IntSort()
+        p : local President_Vote, global integer -> IntSort()
+        r : local Registration_Date, global varchar(12) -> StringSort()
+        s : local Secretary_Vote, global integer -> IntSort()
+        t : local Treasurer_Vote, global integer -> IntSort()
+        v : local Vice_President_Vote, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 151 lines, 5819 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_973.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s1 : Secretary_Vote) but Predicted has 7 (s : Secretary_Vote, r : Registration_Date, p : President_Vote, v : Vice_President_Vote, t : Treasurer_Vote, cp : Class_President_Vote, cs : Class_Senator_Vote): their answers have different arities
+   WARNING: Predicted FOL: declared free variable(s) s do not occur free in the formula
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

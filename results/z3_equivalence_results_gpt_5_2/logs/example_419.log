@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_419.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_419.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2961 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show first name, last name, age for all female students. Their sex is F.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 8 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(12) -> StringSort()   [domain Length(x) <= 12; length <= 12]
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+      local sorts:
+        Advisor = integer -> IntSort()
+        Age = integer -> IntSort()
+        Fname = varchar(12) -> StringSort()
+        LName = varchar(12) -> StringSort()
+        Major = integer -> IntSort()
+        Sex = varchar(1) -> StringSort()
+        StuID = integer -> IntSort()
+        city_code = varchar(3) -> StringSort()
+      symbols:
+        Student(StuID, LName, Fname, Age, Sex, Major, Advisor, city_code)
+        constant F : Sex
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : StuID ∃s1 : Sex ∃m : Major ∃a1 : Advisor ∃c : city_code ( (Student(s,l,f,a,s1,m,a1,c)) ∧ (s1 = 'F') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:s1 COLON:: IDENT:Sex EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:a1 COLON:: IDENT:Advisor EXISTS:∃ IDENT:c COLON:: IDENT:city_code LPAR:( LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:l COMMA:, IDENT:f COMMA:, IDENT:a COMMA:, IDENT:s1 COMMA:, IDENT:m COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:F RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS s1:Sex
+              EXISTS m:Major
+                EXISTS a1:Advisor
+                  EXISTS c:city_code
+                    AND
+                      PRED Student(s, l, f, a, s1, m, a1, c)
+                      EQ  s1 = 'F'
+      Predicted FOL: ∃s:StuID ∃ln:LName ∃fn:Fname ∃a:Age ∃m:Major ∃adv:Advisor ∃cc:city_code ( Student(s, ln, fn, a, F, m, adv, cc) ∧ sex = F ∧ fname = fn ∧ lname = ln ∧ age = a )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:StuID EXISTS:∃ IDENT:ln COLON:: IDENT:LName EXISTS:∃ IDENT:fn COLON:: IDENT:Fname EXISTS:∃ IDENT:a COLON:: IDENT:Age EXISTS:∃ IDENT:m COLON:: IDENT:Major EXISTS:∃ IDENT:adv COLON:: IDENT:Advisor EXISTS:∃ IDENT:cc COLON:: IDENT:city_code LPAR:( IDENT:Student LPAR:( IDENT:s COMMA:, IDENT:ln COMMA:, IDENT:fn COMMA:, IDENT:a COMMA:, IDENT:F COMMA:, IDENT:m COMMA:, IDENT:adv COMMA:, IDENT:cc RPAR:) AND:∧ IDENT:sex EQ:= IDENT:F AND:∧ IDENT:fname EQ:= IDENT:fn AND:∧ IDENT:lname EQ:= IDENT:ln AND:∧ IDENT:age EQ:= IDENT:a RPAR:) EOF
+        AST:
+          EXISTS s:StuID
+            EXISTS ln:LName
+              EXISTS fn:Fname
+                EXISTS a:Age
+                  EXISTS m:Major
+                    EXISTS adv:Advisor
+                      EXISTS cc:city_code
+                        AND
+                          PRED Student(s, ln, fn, a, F<const>, m, adv, cc)
+                          EQ  sex = F<const>
+                          EQ  fname = fn
+                          EQ  lname = ln
+                          EQ  age = a
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 3 free variable(s) (l : LName, f : Fname, a : Age) but Predicted has 4 (fname : Fname, lname : LName, age : Age, sex : Sex): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 19 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Age, global integer -> IntSort()
+        a1 : local Advisor, global integer -> IntSort()
+        c : local city_code, global varchar(3) -> StringSort()
+        f : local Fname, global varchar(12) -> StringSort()
+        l : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local Sex, global varchar(1) -> StringSort()
+      Predicted FOL:
+        a : local Age, global integer -> IntSort()
+        adv : local Advisor, global integer -> IntSort()
+        age : local Age, global integer -> IntSort()
+        cc : local city_code, global varchar(3) -> StringSort()
+        fn : local Fname, global varchar(12) -> StringSort()
+        fname : local Fname, global varchar(12) -> StringSort()
+        ln : local LName, global varchar(12) -> StringSort()
+        lname : local LName, global varchar(12) -> StringSort()
+        m : local Major, global integer -> IntSort()
+        s : local StuID, global integer -> IntSort()
+        sex : local Sex, global varchar(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5533 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_419.py
+   [G8] took 0.030 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 3 free variable(s) (l : LName, f : Fname, a : Age) but Predicted has 4 (fname : Fname, lname : LName, age : Age, sex : Sex): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

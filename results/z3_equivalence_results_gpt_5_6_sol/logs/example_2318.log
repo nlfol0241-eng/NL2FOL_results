@@ -1,0 +1,133 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_2318.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2318.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6388 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the names and salaries of instructors who advises students in the History department?
+   [G1] took 0.003 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 3 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        numeric(3,0) -> RealSort()   [domain And(IsInt(x), x > -1000, x < 1000); 3 digits, 0 after the point]
+        numeric(8,2) -> RealSort()   [domain And(IsInt(x * 100), x > -1000000, x < 1000000); 8 digits, 2 after the point]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        varchar(5) -> StringSort()   [domain Length(x) <= 5; length <= 5]
+      local sorts:
+        ID = varchar(5) -> StringSort()
+        dept_name = varchar(20) -> StringSort()
+        i_ID = varchar(5) -> StringSort()
+        name = varchar(20) -> StringSort()
+        s_ID = varchar(5) -> StringSort()
+        salary = numeric(8,2) -> RealSort()
+        tot_cred = numeric(3,0) -> RealSort()
+      symbols:
+        advisor(s_ID, i_ID)
+        instructor(ID, name, dept_name, salary)
+        student(ID, name, dept_name, tot_cred)
+        constant History : dept_name
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : s_ID ∃i : i_ID ∃i1 : ID ∃d : dept_name ∃i2 : ID ∃n1 : name ∃d1 : dept_name ∃t : tot_cred ( (((((advisor(s,i)) ∧ (instructor(i1,n,d,s1))) ∧ (i = i1)) ∧ (student(i2,n1,d1,t))) ∧ (s = i2)) ∧ (d1 = 'History') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:s_ID EXISTS:∃ IDENT:i COLON:: IDENT:i_ID EXISTS:∃ IDENT:i1 COLON:: IDENT:ID EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:i2 COLON:: IDENT:ID EXISTS:∃ IDENT:n1 COLON:: IDENT:name EXISTS:∃ IDENT:d1 COLON:: IDENT:dept_name EXISTS:∃ IDENT:t COLON:: IDENT:tot_cred LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( LPAR:( IDENT:advisor LPAR:( IDENT:s COMMA:, IDENT:i RPAR:) RPAR:) AND:∧ LPAR:( IDENT:instructor LPAR:( IDENT:i1 COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:s1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:i EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:student LPAR:( IDENT:i2 COMMA:, IDENT:n1 COMMA:, IDENT:d1 COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:i2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d1 EQ:= LIT:History RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:s_ID
+            EXISTS i:i_ID
+              EXISTS i1:ID
+                EXISTS d:dept_name
+                  EXISTS i2:ID
+                    EXISTS n1:name
+                      EXISTS d1:dept_name
+                        EXISTS t:tot_cred
+                          AND
+                            AND
+                              AND
+                                AND
+                                  AND
+                                    PRED advisor(s, i)
+                                    PRED instructor(i1, n, d, s1)
+                                  EQ  i = i1
+                                PRED student(i2, n1, d1, t)
+                              EQ  s = i2
+                            EQ  d1 = 'History'
+      Predicted FOL: ∃i : i_ID ∃d : dept_name ∃s : s_ID ∃sn : name ∃c : tot_cred (instructor(i, n, d, sal) ∧ advisor(s, i) ∧ student(s, sn, 'History', c))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:i_ID EXISTS:∃ IDENT:d COLON:: IDENT:dept_name EXISTS:∃ IDENT:s COLON:: IDENT:s_ID EXISTS:∃ IDENT:sn COLON:: IDENT:name EXISTS:∃ IDENT:c COLON:: IDENT:tot_cred LPAR:( IDENT:instructor LPAR:( IDENT:i COMMA:, IDENT:n COMMA:, IDENT:d COMMA:, IDENT:sal RPAR:) AND:∧ IDENT:advisor LPAR:( IDENT:s COMMA:, IDENT:i RPAR:) AND:∧ IDENT:student LPAR:( IDENT:s COMMA:, IDENT:sn COMMA:, LIT:History COMMA:, IDENT:c RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:i_ID
+            EXISTS d:dept_name
+              EXISTS s:s_ID
+                EXISTS sn:name
+                  EXISTS c:tot_cred
+                    AND
+                      PRED instructor(i, n, d, sal)
+                      PRED advisor(s, i)
+                      PRED student(s, sn, 'History', c)
+   [G3] took 0.007 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_name_0 : name   Gold n <-> Predicted n
+      FV_salary_0 : salary   Gold s1 <-> Predicted sal
+   [G4] took 0.001 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 17 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local dept_name, global varchar(20) -> StringSort()
+        d1 : local dept_name, global varchar(20) -> StringSort()
+        i : local i_ID, global varchar(5) -> StringSort()
+        i1 : local ID, global varchar(5) -> StringSort()
+        i2 : local ID, global varchar(5) -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        n1 : local name, global varchar(20) -> StringSort()
+        s : local s_ID, global varchar(5) -> StringSort()
+        s1 : local salary, global numeric(8,2) -> RealSort()
+        t : local tot_cred, global numeric(3,0) -> RealSort()
+      Predicted FOL:
+        c : local tot_cred, global numeric(3,0) -> RealSort()
+        d : local dept_name, global varchar(20) -> StringSort()
+        i : local i_ID, global varchar(5) -> StringSort()
+        n : local name, global varchar(20) -> StringSort()
+        s : local s_ID, global varchar(5) -> StringSort()
+        sal : local salary, global numeric(8,2) -> RealSort()
+        sn : local name, global varchar(20) -> StringSort()
+   [G5] took 0.001 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_i_2, gold_i1_3, gold_d_4, gold_i2_5, gold_n1_6, gold_d1_7, gold_t_8], And(D_varchar_5_(gold_s_1), D_varchar_5_(gold_i_2), D_varchar_5_(gold_i1_3), D_varchar_20_(gold_d_4), D_varchar_5_(gold_i2_5), D_varchar_20_(gold_n1_6), D_varchar_20_(gold_d1_7), D_numeric_3_0_(gold_t_8), And(And(And(And(And(P_advisor(gold_s_1, gold_i_2), P_instructor(gold_i1_3, FV_name_0, gold_d_4, FV_salary_0)), (gold_i_2 == gold_i1_3)), P_student(gold_i2_5, gold_n1_6, gold_d1_7, gold_t_8)), (gold_s_1 == gold_i2_5)), (gold_d1_7 == L_History))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_i, WGOLD_i1, WGOLD_d, WGOLD_i2, WGOLD_n1, WGOLD_d1, WGOLD_t):  And(D_varchar_5_(WGOLD_s), D_varchar_5_(WGOLD_i), D_varchar_5_(WGOLD_i1), D_varchar_20_(WGOLD_d), D_varchar_5_(WGOLD_i2), D_varchar_20_(WGOLD_n1), D_varchar_20_(WGOLD_d1), D_numeric_3_0_(WGOLD_t), And(And(And(And(And(P_advisor(WGOLD_s, WGOLD_i), P_instructor(WGOLD_i1, FV_name_0, WGOLD_d, FV_salary_0)), (WGOLD_i == WGOLD_i1)), P_student(WGOLD_i2, WGOLD_n1, WGOLD_d1, WGOLD_t)), (WGOLD_s == WGOLD_i2)), (WGOLD_d1 == L_History)))
+   Gold: 8 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_d_2, predicted_s_3, predicted_sn_4, predicted_c_5], And(D_varchar_5_(predicted_i_1), D_varchar_20_(predicted_d_2), D_varchar_5_(predicted_s_3), D_varchar_20_(predicted_sn_4), D_numeric_3_0_(predicted_c_5), And(P_instructor(predicted_i_1, FV_name_0, predicted_d_2, FV_salary_0), P_advisor(predicted_s_3, predicted_i_1), And(P_student(predicted_s_3, predicted_sn_4, L_History, predicted_c_5), D_varchar_20_(L_History)))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_s, WPREDICTED_sn, WPREDICTED_c):  And(D_varchar_5_(WPREDICTED_i), D_varchar_20_(WPREDICTED_d), D_varchar_5_(WPREDICTED_s), D_varchar_20_(WPREDICTED_sn), D_numeric_3_0_(WPREDICTED_c), And(P_instructor(WPREDICTED_i, FV_name_0, WPREDICTED_d, FV_salary_0), P_advisor(WPREDICTED_s, WPREDICTED_i), And(P_student(WPREDICTED_s, WPREDICTED_sn, L_History, WPREDICTED_c), D_varchar_20_(L_History))))
+   Predicted: 5 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.002 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'History' at varchar(20) -> L_History = StringVal('History')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 781 lines, 31370 bytes
+   [G7] took 0.001 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_2318.py
+   [G8] took 0.013 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_name_0) <= 20
+      [1] And(IsInt(FV_salary_0*100), FV_salary_0 > -1000000, FV_salary_0 < 1000000)
+   [R1] took 0.008 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_i, WGOLD_i1, WGOLD_d, WGOLD_i2, WGOLD_n1, WGOLD_d1, WGOLD_t
+      claim: And(And(Length(WGOLD_s) <= 5, Length(WGOLD_i) <= 5, Length(WGOLD_i1) <= 5, Length(WGOLD_d) <= 20, Length(WGOLD_i2) <= 5, Length(WGOLD_n1) <= 20, Length(WGOLD_d1) <= 20, And(IsInt(WGOLD_t), WGOLD_t > -1000, WGOLD_t < 1000), And(And(And(And(And(advisor(WGOLD_s, WGOLD_i), instructor(WGOLD_i1, FV_name_0, WGOLD_d, FV_salary_0)), WGOLD_i == WGOLD_i1), student(WGOLD_i2, WGOLD_n1, WGOLD_d1, WGOLD_t)), WGOLD_s == WGOLD_i2), WGOLD_d1 == "History")), Not(Exists([predicted_i_1, predicted_d_2, predicted_s_3, predicted_sn_4, predicted_c_5], And(Length(predicted_i_1) <= 5, Length(predicted_d_2) <= 20, Length(predicted_s_3) <= 5, Length(predicted_sn_4) <= 20, And(IsInt(predicted_c_5), predicted_c_5 > -1000, predicted_c_5 < 1000), And(instructor(predicted_i_1, FV_name_0, predicted_d_2, FV_salary_0), advisor(predicted_s_3, predicted_i_1), And(student(predicted_s_3, predicted_sn_4, "History", predicted_c_5), Length("History") <= 20))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.016 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.079 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_d, WPREDICTED_s, WPREDICTED_sn, WPREDICTED_c
+      claim: And(And(Length(WPREDICTED_i) <= 5, Length(WPREDICTED_d) <= 20, Length(WPREDICTED_s) <= 5, Length(WPREDICTED_sn) <= 20, And(IsInt(WPREDICTED_c), WPREDICTED_c > -1000, WPREDICTED_c < 1000), And(instructor(WPREDICTED_i, FV_name_0, WPREDICTED_d, FV_salary_0), advisor(WPREDICTED_s, WPREDICTED_i), And(student(WPREDICTED_s, WPREDICTED_sn, "History", WPREDICTED_c), Length("History") <= 20))), Not(Exists([gold_s_1, gold_i_2, gold_i1_3, gold_d_4, gold_i2_5, gold_n1_6, gold_d1_7, gold_t_8], And(Length(gold_s_1) <= 5, Length(gold_i_2) <= 5, Length(gold_i1_3) <= 5, Length(gold_d_4) <= 20, Length(gold_i2_5) <= 5, Length(gold_n1_6) <= 20, Length(gold_d1_7) <= 20, And(IsInt(gold_t_8), gold_t_8 > -1000, gold_t_8 < 1000), And(And(And(And(And(advisor(gold_s_1, gold_i_2), instructor(gold_i1_3, FV_name_0, gold_d_4, FV_salary_0)), gold_i_2 == gold_i1_3), student(gold_i2_5, gold_n1_6, gold_d1_7, gold_t_8)), gold_s_1 == gold_i2_5), gold_d1_7 == "History")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.011 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.060 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

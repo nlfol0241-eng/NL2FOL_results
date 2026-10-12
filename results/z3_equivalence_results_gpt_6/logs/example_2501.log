@@ -1,0 +1,116 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_2501.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2501.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6087 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which employees have either destroyed a document or made an authorization to do so? Return their employee ids.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 6 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        Actual_Destruction_Date = datetime -> IntSort()
+        Destroyed_by_Employee_ID = integer -> IntSort()
+        Destruction_Authorised_by_Employee_ID = integer -> IntSort()
+        Document_ID = integer -> IntSort()
+        Other_Details = varchar(255) -> StringSort()
+        Planned_Destruction_Date = datetime -> IntSort()
+      symbols:
+        Documents_to_be_Destroyed(Document_ID, Destruction_Authorised_by_Employee_ID, Destroyed_by_Employee_ID, Planned_Destruction_Date, Actual_Destruction_Date, Other_Details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃o : Other_Details ∃d1 : Destruction_Authorised_by_Employee_ID ∃a : Actual_Destruction_Date ∃p : Planned_Destruction_Date ∃d : Document_ID( Documents_to_be_Destroyed(d,d1,x,p,a,o) )) ∨ (∃d2 : Destroyed_by_Employee_ID ∃o : Other_Details ∃a : Actual_Destruction_Date ∃p : Planned_Destruction_Date ∃d : Document_ID( Documents_to_be_Destroyed(d,x,d2,p,a,o) ))
+        tokens: LPAR:( EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details EXISTS:∃ IDENT:d1 COLON:: IDENT:Destruction_Authorised_by_Employee_ID EXISTS:∃ IDENT:a COLON:: IDENT:Actual_Destruction_Date EXISTS:∃ IDENT:p COLON:: IDENT:Planned_Destruction_Date EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID LPAR:( IDENT:Documents_to_be_Destroyed LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:x COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) OR:∨ LPAR:( EXISTS:∃ IDENT:d2 COLON:: IDENT:Destroyed_by_Employee_ID EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details EXISTS:∃ IDENT:a COLON:: IDENT:Actual_Destruction_Date EXISTS:∃ IDENT:p COLON:: IDENT:Planned_Destruction_Date EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID LPAR:( IDENT:Documents_to_be_Destroyed LPAR:( IDENT:d COMMA:, IDENT:x COMMA:, IDENT:d2 COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          OR
+            EXISTS o:Other_Details
+              EXISTS d1:Destruction_Authorised_by_Employee_ID
+                EXISTS a:Actual_Destruction_Date
+                  EXISTS p:Planned_Destruction_Date
+                    EXISTS d:Document_ID
+                      PRED Documents_to_be_Destroyed(d, d1, x, p, a, o)
+            EXISTS d2:Destroyed_by_Employee_ID
+              EXISTS o:Other_Details
+                EXISTS a:Actual_Destruction_Date
+                  EXISTS p:Planned_Destruction_Date
+                    EXISTS d:Document_ID
+                      PRED Documents_to_be_Destroyed(d, x, d2, p, a, o)
+      Predicted FOL: ∃d : Document_ID ∃a : Destruction_Authorised_by_Employee_ID ∃b : Destroyed_by_Employee_ID ∃p : Planned_Destruction_Date ∃t : Actual_Destruction_Date ∃o : Other_Details (Documents_to_be_Destroyed(d, a, b, p, t, o) ∧ (e = b ∨ e = a))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:Document_ID EXISTS:∃ IDENT:a COLON:: IDENT:Destruction_Authorised_by_Employee_ID EXISTS:∃ IDENT:b COLON:: IDENT:Destroyed_by_Employee_ID EXISTS:∃ IDENT:p COLON:: IDENT:Planned_Destruction_Date EXISTS:∃ IDENT:t COLON:: IDENT:Actual_Destruction_Date EXISTS:∃ IDENT:o COLON:: IDENT:Other_Details LPAR:( IDENT:Documents_to_be_Destroyed LPAR:( IDENT:d COMMA:, IDENT:a COMMA:, IDENT:b COMMA:, IDENT:p COMMA:, IDENT:t COMMA:, IDENT:o RPAR:) AND:∧ LPAR:( IDENT:e EQ:= IDENT:b OR:∨ IDENT:e EQ:= IDENT:a RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:Document_ID
+            EXISTS a:Destruction_Authorised_by_Employee_ID
+              EXISTS b:Destroyed_by_Employee_ID
+                EXISTS p:Planned_Destruction_Date
+                  EXISTS t:Actual_Destruction_Date
+                    EXISTS o:Other_Details
+                      AND
+                        PRED Documents_to_be_Destroyed(d, a, b, p, t, o)
+                        OR
+                          EQ  e = b
+                          EQ  e = a
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_Destroyed_by_Employee_ID_0 : Destroyed_by_Employee_ID   Gold x <-> Predicted e
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Actual_Destruction_Date, global datetime -> IntSort()
+        d : local Document_ID, global integer -> IntSort()
+        d1 : local Destruction_Authorised_by_Employee_ID, global integer -> IntSort()
+        d2 : local Destroyed_by_Employee_ID, global integer -> IntSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Planned_Destruction_Date, global datetime -> IntSort()
+        x : local Destroyed_by_Employee_ID, global integer -> IntSort()
+      Predicted FOL:
+        a : local Destruction_Authorised_by_Employee_ID, global integer -> IntSort()
+        b : local Destroyed_by_Employee_ID, global integer -> IntSort()
+        d : local Document_ID, global integer -> IntSort()
+        e : local Destroyed_by_Employee_ID, global integer -> IntSort()
+        o : local Other_Details, global varchar(255) -> StringSort()
+        p : local Planned_Destruction_Date, global datetime -> IntSort()
+        t : local Actual_Destruction_Date, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Or(Exists([gold_o_1, gold_d1_2, gold_a_3, gold_p_4, gold_d_5], And(D_varchar_255_(gold_o_1), P_Documents_to_be_Destroyed(gold_d_5, gold_d1_2, FV_Destroyed_by_Employee_ID_0, gold_p_4, gold_a_3, gold_o_1))), Exists([gold_d2_6, gold_o_7, gold_a_8, gold_p_9, gold_d_10], And(D_varchar_255_(gold_o_7), P_Documents_to_be_Destroyed(gold_d_10, FV_Destroyed_by_Employee_ID_0, gold_d2_6, gold_p_9, gold_a_8, gold_o_7))))
+   Gold: 0 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1, predicted_a_2, predicted_b_3, predicted_p_4, predicted_t_5, predicted_o_6], And(D_varchar_255_(predicted_o_6), And(P_Documents_to_be_Destroyed(predicted_d_1, predicted_a_2, predicted_b_3, predicted_p_4, predicted_t_5, predicted_o_6), Or((FV_Destroyed_by_Employee_ID_0 == predicted_b_3), (FV_Destroyed_by_Employee_ID_0 == predicted_a_2)))))
+      predicted_skolem (witnesses WPREDICTED_d, WPREDICTED_a, WPREDICTED_b, WPREDICTED_p, WPREDICTED_t, WPREDICTED_o):  And(D_varchar_255_(WPREDICTED_o), And(P_Documents_to_be_Destroyed(WPREDICTED_d, WPREDICTED_a, WPREDICTED_b, WPREDICTED_p, WPREDICTED_t, WPREDICTED_o), Or((FV_Destroyed_by_Employee_ID_0 == WPREDICTED_b), (FV_Destroyed_by_Employee_ID_0 == WPREDICTED_a))))
+   Predicted: 6 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 747 lines, 30180 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_2501.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses -
+      claim: And(Or(Exists([gold_o_1, gold_d1_2, gold_a_3, gold_p_4, gold_d_5], And(Length(gold_o_1) <= 255, Documents_to_be_Destroyed(gold_d_5, gold_d1_2, FV_Destroyed_by_Employee_ID_0, gold_p_4, gold_a_3, gold_o_1))), Exists([gold_d2_6, gold_o_7, gold_a_8, gold_p_9, gold_d_10], And(Length(gold_o_7) <= 255, Documents_to_be_Destroyed(gold_d_10, FV_Destroyed_by_Employee_ID_0, gold_d2_6, gold_p_9, gold_a_8, gold_o_7)))), Not(Exists([predicted_d_1, predicted_a_2, predicted_b_3, predicted_p_4, predicted_t_5, predicted_o_6], And(Length(predicted_o_6) <= 255, And(Documents_to_be_Destroyed(predicted_d_1, predicted_a_2, predicted_b_3, predicted_p_4, predicted_t_5, predicted_o_6), Or(FV_Destroyed_by_Employee_ID_0 == predicted_b_3, FV_Destroyed_by_Employee_ID_0 == predicted_a_2))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.007 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.021 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_d, WPREDICTED_a, WPREDICTED_b, WPREDICTED_p, WPREDICTED_t, WPREDICTED_o
+      claim: And(And(Length(WPREDICTED_o) <= 255, And(Documents_to_be_Destroyed(WPREDICTED_d, WPREDICTED_a, WPREDICTED_b, WPREDICTED_p, WPREDICTED_t, WPREDICTED_o), Or(FV_Destroyed_by_Employee_ID_0 == WPREDICTED_b, FV_Destroyed_by_Employee_ID_0 == WPREDICTED_a))), Not(Or(Exists([gold_o_1, gold_d1_2, gold_a_3, gold_p_4, gold_d_5], And(Length(gold_o_1) <= 255, Documents_to_be_Destroyed(gold_d_5, gold_d1_2, FV_Destroyed_by_Employee_ID_0, gold_p_4, gold_a_3, gold_o_1))), Exists([gold_d2_6, gold_o_7, gold_a_8, gold_p_9, gold_d_10], And(Length(gold_o_7) <= 255, Documents_to_be_Destroyed(gold_d_10, FV_Destroyed_by_Employee_ID_0, gold_d2_6, gold_p_9, gold_a_8, gold_o_7))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.016 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

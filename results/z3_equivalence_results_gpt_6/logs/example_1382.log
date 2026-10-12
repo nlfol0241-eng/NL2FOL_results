@@ -1,0 +1,103 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1382.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1382.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 6228 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List Aerosmith's albums.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        artist_id = integer -> IntSort()
+        id = integer -> IntSort()
+        name = text -> StringSort()
+        title = text -> StringSort()
+      symbols:
+        albums(id, title, artist_id)
+        artists(id, name)
+        constant Aerosmith : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃i : id ∃a : artist_id ∃i1 : id ∃n : name ( (((albums(i,t,a)) ∧ (artists(i1,n))) ∧ (a = i1)) ∧ (n = 'Aerosmith') )
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:a COLON:: IDENT:artist_id EXISTS:∃ IDENT:i1 COLON:: IDENT:id EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( LPAR:( LPAR:( IDENT:albums LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:a RPAR:) RPAR:) AND:∧ LPAR:( IDENT:artists LPAR:( IDENT:i1 COMMA:, IDENT:n RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= IDENT:i1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Aerosmith RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS a:artist_id
+              EXISTS i1:id
+                EXISTS n:name
+                  AND
+                    AND
+                      AND
+                        PRED albums(i, t, a)
+                        PRED artists(i1, n)
+                      EQ  a = i1
+                    EQ  n = 'Aerosmith'
+      Predicted FOL: ∃i : id ∃a : artist_id (albums(i, t, a) ∧ artists(a, 'Aerosmith'))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:id EXISTS:∃ IDENT:a COLON:: IDENT:artist_id LPAR:( IDENT:albums LPAR:( IDENT:i COMMA:, IDENT:t COMMA:, IDENT:a RPAR:) AND:∧ IDENT:artists LPAR:( IDENT:a COMMA:, LIT:Aerosmith RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:id
+            EXISTS a:artist_id
+              AND
+                PRED albums(i, t, a)
+                PRED artists(a, 'Aerosmith')
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_title_0 : title   Gold t <-> Predicted t
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local artist_id, global integer -> IntSort()
+        i : local id, global integer -> IntSort()
+        i1 : local id, global integer -> IntSort()
+        n : local name, global text -> StringSort()
+        t : local title, global text -> StringSort()
+      Predicted FOL:
+        a : local artist_id, global integer -> IntSort()
+        i : local id, global integer -> IntSort()
+        t : local title, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_i_1, gold_a_2, gold_i1_3, gold_n_4], And(And(And(P_albums(gold_i_1, FV_title_0, gold_a_2), P_artists(gold_i1_3, gold_n_4)), (gold_a_2 == gold_i1_3)), (gold_n_4 == L_Aerosmith)))
+      gold_skolem (witnesses WGOLD_i, WGOLD_a, WGOLD_i1, WGOLD_n):  And(And(And(P_albums(WGOLD_i, FV_title_0, WGOLD_a), P_artists(WGOLD_i1, WGOLD_n)), (WGOLD_a == WGOLD_i1)), (WGOLD_n == L_Aerosmith))
+   Gold: 4 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_a_2], And(P_albums(predicted_i_1, FV_title_0, predicted_a_2), P_artists(predicted_a_2, L_Aerosmith)))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_a):  And(P_albums(WPREDICTED_i, FV_title_0, WPREDICTED_a), P_artists(WPREDICTED_a, L_Aerosmith))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Aerosmith' at text -> L_Aerosmith = StringVal('Aerosmith')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 733 lines, 27147 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1382.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_i, WGOLD_a, WGOLD_i1, WGOLD_n
+      claim: And(And(And(And(albums(WGOLD_i, FV_title_0, WGOLD_a), artists(WGOLD_i1, WGOLD_n)), WGOLD_a == WGOLD_i1), WGOLD_n == "Aerosmith"), Not(Exists([predicted_i_1, predicted_a_2], And(albums(predicted_i_1, FV_title_0, predicted_a_2), artists(predicted_a_2, "Aerosmith")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.009 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_a
+      claim: And(And(albums(WPREDICTED_i, FV_title_0, WPREDICTED_a), artists(WPREDICTED_a, "Aerosmith")), Not(Exists([gold_i_1, gold_a_2, gold_i1_3, gold_n_4], And(And(And(albums(gold_i_1, FV_title_0, gold_a_2), artists(gold_i1_3, gold_n_4)), gold_a_2 == gold_i1_3), gold_n_4 == "Aerosmith"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

@@ -1,0 +1,92 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1262.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1262.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4316 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: which capitals are in the states that border texas
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        integer -> IntSort()
+        text -> StringSort()
+        double -> Float64()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE double; NaN and -0 excluded]
+      local sorts:
+        area = double -> Float64()
+        border = text -> StringSort()
+        capital = text -> StringSort()
+        country_name = varchar(3) -> StringSort()
+        density = double -> Float64()
+        population = integer -> IntSort()
+        state_name = text -> StringSort()
+      symbols:
+        border_info(state_name, border)
+        state(state_name, population, area, country_name, capital, density)
+        constant texas : state_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : state_name ∃p : population ∃a : area ∃c : country_name ∃d : density ∃s1 : state_name ∃b : border ( (((state(s,p,a,c,c1,d)) ∧ (border_info(s1,b))) ∧ (s = b)) ∧ (s1 = 'texas') )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:state_name EXISTS:∃ IDENT:p COLON:: IDENT:population EXISTS:∃ IDENT:a COLON:: IDENT:area EXISTS:∃ IDENT:c COLON:: IDENT:country_name EXISTS:∃ IDENT:d COLON:: IDENT:density EXISTS:∃ IDENT:s1 COLON:: IDENT:state_name EXISTS:∃ IDENT:b COLON:: IDENT:border LPAR:( LPAR:( LPAR:( LPAR:( IDENT:state LPAR:( IDENT:s COMMA:, IDENT:p COMMA:, IDENT:a COMMA:, IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:d RPAR:) RPAR:) AND:∧ LPAR:( IDENT:border_info LPAR:( IDENT:s1 COMMA:, IDENT:b RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s EQ:= IDENT:b RPAR:) RPAR:) AND:∧ LPAR:( IDENT:s1 EQ:= LIT:texas RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:state_name
+            EXISTS p:population
+              EXISTS a:area
+                EXISTS c:country_name
+                  EXISTS d:density
+                    EXISTS s1:state_name
+                      EXISTS b:border
+                        AND
+                          AND
+                            AND
+                              PRED state(s, p, a, c, c1, d)
+                              PRED border_info(s1, b)
+                            EQ  s = b
+                          EQ  s1 = 'texas'
+      Predicted FOL: ∃x : state_name ∃y : state_name ∃z : text ( state(x, y, z, w, v, u) ∧ border_info(x, 'texas') ∧ state(x, y, z, w, v, u) ∧ capital(x, y, z, w, v, u) )
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:state_name EXISTS:∃ IDENT:y COLON:: IDENT:state_name EXISTS:∃ IDENT:z COLON:: IDENT:text LPAR:( IDENT:state LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, IDENT:u RPAR:) AND:∧ IDENT:border_info LPAR:( IDENT:x COMMA:, LIT:texas RPAR:) AND:∧ IDENT:state LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, IDENT:u RPAR:) AND:∧ IDENT:capital LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v COMMA:, IDENT:u RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:state_name
+            EXISTS y:state_name
+              EXISTS z:text
+                AND
+                  PRED state(x, y, z, w, v, u)
+                  PRED border_info(x, 'texas')
+                  PRED state(x, y, z, w, v, u)
+                  PRED capital(x, y, z, w, v, u)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) w, v, u occur free in the formula but are not declared in 'free vars'
+   MISMATCH: Gold has 1 free variable(s) (c1 : capital) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'y' used at incompatible global sorts text and integer
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'y' used at incompatible global sorts text and integer

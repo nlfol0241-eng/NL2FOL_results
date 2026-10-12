@@ -1,0 +1,93 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_48.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_48.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2592 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the opening year and staff number of the museum named Plaza Museum?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Museum_ID = int -> IntSort()
+        Name = text -> StringSort()
+        Num_of_Staff = int -> IntSort()
+        Open_Year = text -> StringSort()
+      symbols:
+        museum(Museum_ID, Name, Num_of_Staff, Open_Year)
+        constant Plaza Museum : Name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : Museum_ID ∃n : Name ( (museum(m,n,n1,o)) ∧ (n = 'Plaza Museum') )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Museum_ID EXISTS:∃ IDENT:n COLON:: IDENT:Name LPAR:( LPAR:( IDENT:museum LPAR:( IDENT:m COMMA:, IDENT:n COMMA:, IDENT:n1 COMMA:, IDENT:o RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Plaza Museum RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:Museum_ID
+            EXISTS n:Name
+              AND
+                PRED museum(m, n, n1, o)
+                EQ  n = 'Plaza Museum'
+      Predicted FOL: ∃m : Museum_ID museum(m, 'Plaza Museum', staff, year)
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:Museum_ID IDENT:museum LPAR:( IDENT:m COMMA:, LIT:Plaza Museum COMMA:, IDENT:staff COMMA:, IDENT:year RPAR:) EOF
+        AST:
+          EXISTS m:Museum_ID
+            PRED museum(m, 'Plaza Museum', staff, year)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_Num_of_Staff_0 : Num_of_Staff   Gold n1 <-> Predicted staff
+      FV_Open_Year_0 : Open_Year   Gold o <-> Predicted year
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local Museum_ID, global int -> IntSort()
+        n : local Name, global text -> StringSort()
+        n1 : local Num_of_Staff, global int -> IntSort()
+        o : local Open_Year, global text -> StringSort()
+      Predicted FOL:
+        m : local Museum_ID, global int -> IntSort()
+        staff : local Num_of_Staff, global int -> IntSort()
+        year : local Open_Year, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_m_1, gold_n_2], And(P_museum(gold_m_1, gold_n_2, FV_Num_of_Staff_0, FV_Open_Year_0), (gold_n_2 == L_Plaza_Museum)))
+      gold_skolem (witnesses WGOLD_m, WGOLD_n):  And(P_museum(WGOLD_m, WGOLD_n, FV_Num_of_Staff_0, FV_Open_Year_0), (WGOLD_n == L_Plaza_Museum))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_m_1], P_museum(predicted_m_1, L_Plaza_Museum, FV_Num_of_Staff_0, FV_Open_Year_0))
+      predicted_skolem (witnesses WPREDICTED_m):  P_museum(WPREDICTED_m, L_Plaza_Museum, FV_Num_of_Staff_0, FV_Open_Year_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Plaza Museum' at text -> L_Plaza_Museum = StringVal('Plaza Museum')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 723 lines, 26602 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_48.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_m, WGOLD_n
+      claim: And(And(museum(WGOLD_m, WGOLD_n, FV_Num_of_Staff_0, FV_Open_Year_0), WGOLD_n == "Plaza Museum"), Not(Exists(predicted_m_1, museum(predicted_m_1, "Plaza Museum", FV_Num_of_Staff_0, FV_Open_Year_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.007 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_m
+      claim: And(museum(WPREDICTED_m, "Plaza Museum", FV_Num_of_Staff_0, FV_Open_Year_0), Not(Exists([gold_m_1, gold_n_2], And(museum(gold_m_1, gold_n_2, FV_Num_of_Staff_0, FV_Open_Year_0), gold_n_2 == "Plaza Museum"))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.004 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

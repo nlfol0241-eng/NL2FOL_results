@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_395.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_395.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2547 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the id and salary of Mark Young.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 3 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        number(10,2) -> RealSort()   [domain And(IsInt(x * 100), x > -100000000, x < 100000000); 10 digits, 2 after the point]
+        number(9,0) -> RealSort()   [domain And(IsInt(x), x > -1000000000, x < 1000000000); 9 digits, 0 after the point]
+        varchar2(30) -> StringSort()   [domain Length(x) <= 30; length <= 30]
+      local sorts:
+        eid = number(9,0) -> RealSort()
+        name = varchar2(30) -> StringSort()
+        salary = number(10,2) -> RealSort()
+      symbols:
+        employee(eid, name, salary)
+        constant Mark Young : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃n : name ( (employee(e,n,s)) ∧ (n = 'Mark Young') )
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:name LPAR:( LPAR:( IDENT:employee LPAR:( IDENT:e COMMA:, IDENT:n COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Mark Young RPAR:) RPAR:) EOF
+        AST:
+          EXISTS n:name
+            AND
+              PRED employee(e, n, s)
+              EQ  n = 'Mark Young'
+      Predicted FOL: employee(eid, 'Mark Young', salary)
+        tokens: IDENT:employee LPAR:( IDENT:eid COMMA:, LIT:Mark Young COMMA:, IDENT:salary RPAR:) EOF
+        AST:
+          PRED employee(eid, 'Mark Young', salary)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_eid_0 : eid   Gold e <-> Predicted eid
+      FV_salary_0 : salary   Gold s <-> Predicted salary
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        e : local eid, global number(9,0) -> RealSort()
+        n : local name, global varchar2(30) -> StringSort()
+        s : local salary, global number(10,2) -> RealSort()
+      Predicted FOL:
+        eid : local eid, global number(9,0) -> RealSort()
+        salary : local salary, global number(10,2) -> RealSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_n_1], And(D_varchar2_30_(gold_n_1), And(P_employee(FV_eid_0, gold_n_1, FV_salary_0), (gold_n_1 == L_Mark_Young))))
+      gold_skolem (witnesses WGOLD_n):  And(D_varchar2_30_(WGOLD_n), And(P_employee(FV_eid_0, WGOLD_n, FV_salary_0), (WGOLD_n == L_Mark_Young)))
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  And(P_employee(FV_eid_0, L_Mark_Young, FV_salary_0), D_varchar2_30_(L_Mark_Young))
+   Predicted: 0 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Mark Young' at varchar2(30) -> L_Mark_Young = StringVal('Mark Young')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 725 lines, 26389 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_395.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(IsInt(FV_eid_0), FV_eid_0 > -1000000000, FV_eid_0 < 1000000000)
+      [1] And(IsInt(FV_salary_0*100), FV_salary_0 > -100000000, FV_salary_0 < 100000000)
+   [R1] took 0.002 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_n
+      claim: And(And(Length(WGOLD_n) <= 30, And(employee(FV_eid_0, WGOLD_n, FV_salary_0), WGOLD_n == "Mark Young")), Not(And(employee(FV_eid_0, "Mark Young", FV_salary_0), Length("Mark Young") <= 30)))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses -
+      claim: And(And(employee(FV_eid_0, "Mark Young", FV_salary_0), Length("Mark Young") <= 30), Not(Exists(gold_n_1, And(Length(gold_n_1) <= 30, And(employee(FV_eid_0, gold_n_1, FV_salary_0), gold_n_1 == "Mark Young")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.000 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

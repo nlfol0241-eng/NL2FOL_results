@@ -1,0 +1,132 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_727.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_727.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3615 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the distinct years in which the competitions type is not "Tournament"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Competition_ID = int -> IntSort()
+        Competition_type = text -> StringSort()
+        Country = text -> StringSort()
+        Year = real -> Float32()
+      symbols:
+        competition(Competition_ID, Year, Competition_type, Country)
+        constant Tournament : Competition_type
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : Competition_ID ∃c1 : Competition_type ∃c2 : Country ( (competition(c,y,c1,c2)) ∧ (c1 <> 'Tournament') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:Competition_type EXISTS:∃ IDENT:c2 COLON:: IDENT:Country LPAR:( LPAR:( IDENT:competition LPAR:( IDENT:c COMMA:, IDENT:y COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c1 NEQ:<> LIT:Tournament RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:Competition_ID
+            EXISTS c1:Competition_type
+              EXISTS c2:Country
+                AND
+                  PRED competition(c, y, c1, c2)
+                  NEQ  c1 != 'Tournament'
+      Predicted FOL: ∃y:Year ∃cid:Competition_ID ∃ct:Competition_type ∃c:Country (competition(cid, y, ct, c) ∧ ct ≠ 'Tournament')
+        tokens: EXISTS:∃ IDENT:y COLON:: IDENT:Year EXISTS:∃ IDENT:cid COLON:: IDENT:Competition_ID EXISTS:∃ IDENT:ct COLON:: IDENT:Competition_type EXISTS:∃ IDENT:c COLON:: IDENT:Country LPAR:( IDENT:competition LPAR:( IDENT:cid COMMA:, IDENT:y COMMA:, IDENT:ct COMMA:, IDENT:c RPAR:) AND:∧ IDENT:ct NEQ:≠ LIT:Tournament RPAR:) EOF
+        AST:
+          EXISTS y:Year
+            EXISTS cid:Competition_ID
+              EXISTS ct:Competition_type
+                EXISTS c:Country
+                  AND
+                    PRED competition(cid, y, ct, c)
+                    NEQ  ct != 'Tournament'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: declared free variable(s) y do not occur free in the formula
+   1 shared answer variable(s)
+      FV_Year_0 : Year   Gold y <-> Predicted y
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Competition_ID, global int -> IntSort()
+        c1 : local Competition_type, global text -> StringSort()
+        c2 : local Country, global text -> StringSort()
+        y : local Year, global real -> Float32()
+      Predicted FOL:
+        c : local Country, global text -> StringSort()
+        cid : local Competition_ID, global int -> IntSort()
+        ct : local Competition_type, global text -> StringSort()
+        y : local Year, global real -> Float32()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_c2_3], And(P_competition(gold_c_1, FV_Year_0, gold_c1_2, gold_c2_3), (gold_c1_2 != L_Tournament)))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_c2):  And(P_competition(WGOLD_c, FV_Year_0, WGOLD_c1, WGOLD_c2), (WGOLD_c1 != L_Tournament))
+   Gold: 3 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_y_1, predicted_cid_2, predicted_ct_3, predicted_c_4], And(D_real(predicted_y_1), And(P_competition(predicted_cid_2, predicted_y_1, predicted_ct_3, predicted_c_4), (predicted_ct_3 != L_Tournament))))
+      predicted_skolem (witnesses WPREDICTED_y, WPREDICTED_cid, WPREDICTED_ct, WPREDICTED_c):  And(D_real(WPREDICTED_y), And(P_competition(WPREDICTED_cid, WPREDICTED_y, WPREDICTED_ct, WPREDICTED_c), (WPREDICTED_ct != L_Tournament)))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Tournament' at text -> L_Tournament = StringVal('Tournament')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 737 lines, 27794 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_727.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_Year_0)), Not(And(fpIsZero(FV_Year_0), fpIsNegative(FV_Year_0))))
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_c2
+      claim: And(And(competition(WGOLD_c, FV_Year_0, WGOLD_c1, WGOLD_c2), WGOLD_c1 != "Tournament"), Not(Exists([predicted_y_1, predicted_cid_2, predicted_ct_3, predicted_c_4], And(And(Not(fpIsNaN(predicted_y_1)), Not(And(fpIsZero(predicted_y_1), fpIsNegative(predicted_y_1)))), And(competition(predicted_cid_2, predicted_y_1, predicted_ct_3, predicted_c_4), predicted_ct_3 != "Tournament")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.010 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_y, WPREDICTED_cid, WPREDICTED_ct, WPREDICTED_c
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_y)), Not(And(fpIsZero(WPREDICTED_y), fpIsNegative(WPREDICTED_y)))), And(competition(WPREDICTED_cid, WPREDICTED_y, WPREDICTED_ct, WPREDICTED_c), WPREDICTED_ct != "Tournament")), Not(Exists([gold_c_1, gold_c1_2, gold_c2_3], And(competition(gold_c_1, FV_Year_0, gold_c1_2, gold_c2_3), gold_c1_2 != "Tournament"))))
+      attempt 1: seed=0 timeout=2000ms -> sat in 0.010 s
+   result: sat after 1 attempt(s)  -> direction FAILS (counter-model)
+   counter-model: 6 relation tuple(s) listed, 5 probe queries
+        --- counter-model (local sorts) ---
+        Predicted witnesses:
+          y : Year = 1.5075715049295837e-36
+          cid : Competition_ID = 2
+          ct : Competition_type = ''
+          c : Country = ''
+        free (answer) variables:
+          FV_Year_0 : Year = 1.176068322673275e-38
+        literals / constants:
+          Tournament : Competition_type = 'Tournament'
+        relations (each value tagged with the local sort of its position):
+          competition(Competition_ID, Year, Competition_type, Country):
+            competition(Competition_ID=0, Year=1.175494490952134e-38, Competition_type='', Country='A')
+            competition(Competition_ID=0, Year=1.175494490952134e-38, Competition_type='', Country='Tournament')
+            competition(Competition_ID=0, Year=1.175494490952134e-38, Competition_type='!0!', Country='')
+            competition(Competition_ID=2, Year=1.5075715049295837e-36, Competition_type='', Country='')
+            competition(Competition_ID=2, Year=1.5075715049295837e-36, Competition_type='Tournament', Country='')
+            competition(Competition_ID=3, Year=-2.350988981904268e-38, Competition_type='A', Country='!0!')
+            [Z3 gave this relation symbolically; listed: one tuple per value of interest per column (join closure)]
+        local-sort domains (values occurring at positions of each local sort):
+          Competition_ID   : {0, 2, 3}
+          Competition_type : {'', '!0!', 'A', 'Tournament'}
+          Country          : {'', '!0!', 'A', 'Tournament'}
+          Year             : {-2.350988981904268e-38, 1.175494490952134e-38, 1.176068322673275e-38, 1.5075715049295837e-36}
+        values shared across local sorts (joins):
+          '!0!' : Competition_type, Country
+          '' : Competition_type, Country
+          'A' : Competition_type, Country
+          'Tournament' : Competition_type, Country
+   [R3] took 0.043 s
+== [R4] verdict
+   VERDICT: NOT EQUIVALENT
+   [R4] took 0.000 s

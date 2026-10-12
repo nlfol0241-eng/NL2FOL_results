@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1307.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1307.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 5235 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: list all the reviews by Niloofar
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 8 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        business_id = text -> StringSort()
+        month = text -> StringSort()
+        name = text -> StringSort()
+        rating = real -> Float32()
+        rid = int -> IntSort()
+        uid = int -> IntSort()
+        user_id = text -> StringSort()
+        year = int -> IntSort()
+      symbols:
+        review(rid, business_id, user_id, rating, text, year, month)
+        user(uid, user_id, name)
+        constant Niloofar : name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃u1 : user_id ∃n : name ∃r : rid ∃b : business_id ∃u2 : user_id ∃r1 : rating ∃y : year ∃m : month ( (((user(u,u1,n)) ∧ (review(r,b,u2,r1,t,y,m))) ∧ (u1 = u2)) ∧ (n = 'Niloofar') )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:u1 COLON:: IDENT:user_id EXISTS:∃ IDENT:n COLON:: IDENT:name EXISTS:∃ IDENT:r COLON:: IDENT:rid EXISTS:∃ IDENT:b COLON:: IDENT:business_id EXISTS:∃ IDENT:u2 COLON:: IDENT:user_id EXISTS:∃ IDENT:r1 COLON:: IDENT:rating EXISTS:∃ IDENT:y COLON:: IDENT:year EXISTS:∃ IDENT:m COLON:: IDENT:month LPAR:( LPAR:( LPAR:( LPAR:( IDENT:user LPAR:( IDENT:u COMMA:, IDENT:u1 COMMA:, IDENT:n RPAR:) RPAR:) AND:∧ LPAR:( IDENT:review LPAR:( IDENT:r COMMA:, IDENT:b COMMA:, IDENT:u2 COMMA:, IDENT:r1 COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:m RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:u1 EQ:= IDENT:u2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= LIT:Niloofar RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS u1:user_id
+              EXISTS n:name
+                EXISTS r:rid
+                  EXISTS b:business_id
+                    EXISTS u2:user_id
+                      EXISTS r1:rating
+                        EXISTS y:year
+                          EXISTS m:month
+                            AND
+                              AND
+                                AND
+                                  PRED user(u, u1, n)
+                                  PRED review(r, b, u2, r1, t, y, m)
+                                EQ  u1 = u2
+                              EQ  n = 'Niloofar'
+      Predicted FOL: ∃u : user_id (user(u, u, 'Niloofar') ∧ ∀r : rid ∀b : business_id ∀u2 : user_id ∀ra : rating ∀t : text ∀y : int ∀m : text (review(r, b, u2, ra, t, y, m) ∧ u2 = u → true))
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:user_id LPAR:( IDENT:user LPAR:( IDENT:u COMMA:, IDENT:u COMMA:, LIT:Niloofar RPAR:) AND:∧ FORALL:∀ IDENT:r COLON:: IDENT:rid FORALL:∀ IDENT:b COLON:: IDENT:business_id FORALL:∀ IDENT:u2 COLON:: IDENT:user_id FORALL:∀ IDENT:ra COLON:: IDENT:rating FORALL:∀ IDENT:t COLON:: IDENT:text FORALL:∀ IDENT:y COLON:: IDENT:int FORALL:∀ IDENT:m COLON:: IDENT:text LPAR:( IDENT:review LPAR:( IDENT:r COMMA:, IDENT:b COMMA:, IDENT:u2 COMMA:, IDENT:ra COMMA:, IDENT:t COMMA:, IDENT:y COMMA:, IDENT:m RPAR:) AND:∧ IDENT:u2 EQ:= IDENT:u IMPL:→ TRUE:true RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:user_id
+            AND
+              PRED user(u, u, 'Niloofar')
+              FORALL r:rid
+                FORALL b:business_id
+                  FORALL u2:user_id
+                    FORALL ra:rating
+                      FORALL t:text
+                        FORALL y:int
+                          FORALL m:text
+                            IMPLIES
+                              AND
+                                PRED review(r, b, u2, ra, t, y, m)
+                                EQ  u2 = u
+                              TRUE
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (t : text) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+!! FAILED in stage [G5] infer sorts: ValueError: variable 'u' used at incompatible global sorts text and int
+Traceback (most recent call last):
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 178, in _generate
+    fe = analyze(spec, log)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 138, in analyze
+    pred_env = build(pred_ast, dict(pred_fv))
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 133, in build
+    infer(ast, sig, env, lits)       # two passes: propagate through '='
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 132, in infer
+    infer(node[4], sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 137, in infer
+    infer(f, sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 150, in infer
+    constrain_term(t, sig.g(ls), sig, env, lits)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 105, in constrain_term
+    env.assign(t[1], gsort)
+  File "C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\fol_equiv\sort_inference.py", line 44, in assign
+    raise ValueError(
+ValueError: variable 'u' used at incompatible global sorts text and int

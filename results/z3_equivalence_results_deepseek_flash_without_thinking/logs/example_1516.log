@@ -1,0 +1,104 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_1516.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1516.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4139 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Show the names of sponsors of players whose residence is either "Brandon" or "Birtle".
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Gender = text -> StringSort()
+        Occupation = text -> StringSort()
+        Player_ID = int -> IntSort()
+        Player_name = text -> StringSort()
+        Rank = text -> StringSort()
+        Residence = text -> StringSort()
+        Sponsor_name = text -> StringSort()
+        Votes = int -> IntSort()
+      symbols:
+        player(Player_ID, Sponsor_name, Player_name, Gender, Residence, Occupation, Votes, Rank)
+        constant Birtle : Residence
+        constant Brandon : Residence
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Player_ID ∃p1 : Player_name ∃g : Gender ∃r : Residence ∃o : Occupation ∃v : Votes ∃r1 : Rank ( (player(p,s,p1,g,r,o,v,r1)) ∧ ((r = 'Brandon') ∨ (r = 'Birtle')) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Player_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Player_name EXISTS:∃ IDENT:g COLON:: IDENT:Gender EXISTS:∃ IDENT:r COLON:: IDENT:Residence EXISTS:∃ IDENT:o COLON:: IDENT:Occupation EXISTS:∃ IDENT:v COLON:: IDENT:Votes EXISTS:∃ IDENT:r1 COLON:: IDENT:Rank LPAR:( LPAR:( IDENT:player LPAR:( IDENT:p COMMA:, IDENT:s COMMA:, IDENT:p1 COMMA:, IDENT:g COMMA:, IDENT:r COMMA:, IDENT:o COMMA:, IDENT:v COMMA:, IDENT:r1 RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:r EQ:= LIT:Brandon RPAR:) OR:∨ LPAR:( IDENT:r EQ:= LIT:Birtle RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Player_ID
+            EXISTS p1:Player_name
+              EXISTS g:Gender
+                EXISTS r:Residence
+                  EXISTS o:Occupation
+                    EXISTS v:Votes
+                      EXISTS r1:Rank
+                        AND
+                          PRED player(p, s, p1, g, r, o, v, r1)
+                          OR
+                            EQ  r = 'Brandon'
+                            EQ  r = 'Birtle'
+      Predicted FOL: ∃p_id : Player_ID ∃s_name : Sponsor_name ∃p_name : Player_name ∃g : Gender ∃r : Residence ∃o : Occupation ∃v : Votes ∃rk : Rank (player(p_id, s_name, p_name, g, r, o, v, rk) ∧ (r = Brandon ∨ r = Birtle))
+        tokens: EXISTS:∃ IDENT:p_id COLON:: IDENT:Player_ID EXISTS:∃ IDENT:s_name COLON:: IDENT:Sponsor_name EXISTS:∃ IDENT:p_name COLON:: IDENT:Player_name EXISTS:∃ IDENT:g COLON:: IDENT:Gender EXISTS:∃ IDENT:r COLON:: IDENT:Residence EXISTS:∃ IDENT:o COLON:: IDENT:Occupation EXISTS:∃ IDENT:v COLON:: IDENT:Votes EXISTS:∃ IDENT:rk COLON:: IDENT:Rank LPAR:( IDENT:player LPAR:( IDENT:p_id COMMA:, IDENT:s_name COMMA:, IDENT:p_name COMMA:, IDENT:g COMMA:, IDENT:r COMMA:, IDENT:o COMMA:, IDENT:v COMMA:, IDENT:rk RPAR:) AND:∧ LPAR:( IDENT:r EQ:= IDENT:Brandon OR:∨ IDENT:r EQ:= IDENT:Birtle RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p_id:Player_ID
+            EXISTS s_name:Sponsor_name
+              EXISTS p_name:Player_name
+                EXISTS g:Gender
+                  EXISTS r:Residence
+                    EXISTS o:Occupation
+                      EXISTS v:Votes
+                        EXISTS rk:Rank
+                          AND
+                            PRED player(p_id, s_name, p_name, g, r, o, v, rk)
+                            OR
+                              EQ  r = Brandon<const>
+                              EQ  r = Birtle<const>
+   [G3] took 0.003 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s : Sponsor_name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local Gender, global text -> StringSort()
+        o : local Occupation, global text -> StringSort()
+        p : local Player_ID, global int -> IntSort()
+        p1 : local Player_name, global text -> StringSort()
+        r : local Residence, global text -> StringSort()
+        r1 : local Rank, global text -> StringSort()
+        s : local Sponsor_name, global text -> StringSort()
+        v : local Votes, global int -> IntSort()
+      Predicted FOL:
+        g : local Gender, global text -> StringSort()
+        o : local Occupation, global text -> StringSort()
+        p_id : local Player_ID, global int -> IntSort()
+        p_name : local Player_name, global text -> StringSort()
+        r : local Residence, global text -> StringSort()
+        rk : local Rank, global text -> StringSort()
+        s_name : local Sponsor_name, global text -> StringSort()
+        v : local Votes, global int -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5538 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_1516.py
+   [G8] took 0.005 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s : Sponsor_name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

@@ -1,0 +1,96 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_758.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_758.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2815 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the name, origin and owner of each program.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Launch = real -> Float32()
+        Name = text -> StringSort()
+        Origin = text -> StringSort()
+        Owner = text -> StringSort()
+        Program_ID = int -> IntSort()
+      symbols:
+        program(Program_ID, Name, Origin, Launch, Owner)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : Program_ID ∃l : Launch ( program(p,n,o,l,o1) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID EXISTS:∃ IDENT:l COLON:: IDENT:Launch LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:o1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Program_ID
+            EXISTS l:Launch
+              PRED program(p, n, o, l, o1)
+      Predicted FOL: ∃p : Program_ID ∃l : Launch (program(p, n, o, l, w))
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID EXISTS:∃ IDENT:l COLON:: IDENT:Launch LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:w RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:Program_ID
+            EXISTS l:Launch
+              PRED program(p, n, o, l, w)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_Name_0 : Name   Gold n <-> Predicted n
+      FV_Origin_0 : Origin   Gold o <-> Predicted o
+      FV_Owner_0 : Owner   Gold o1 <-> Predicted w
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        l : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Origin, global text -> StringSort()
+        o1 : local Owner, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+      Predicted FOL:
+        l : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Origin, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+        w : local Owner, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1, gold_l_2], And(D_real(gold_l_2), P_program(gold_p_1, FV_Name_0, FV_Origin_0, gold_l_2, FV_Owner_0)))
+      gold_skolem (witnesses WGOLD_p, WGOLD_l):  And(D_real(WGOLD_l), P_program(WGOLD_p, FV_Name_0, FV_Origin_0, WGOLD_l, FV_Owner_0))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1, predicted_l_2], And(D_real(predicted_l_2), P_program(predicted_p_1, FV_Name_0, FV_Origin_0, predicted_l_2, FV_Owner_0)))
+      predicted_skolem (witnesses WPREDICTED_p, WPREDICTED_l):  And(D_real(WPREDICTED_l), P_program(WPREDICTED_p, FV_Name_0, FV_Origin_0, WPREDICTED_l, FV_Owner_0))
+   Predicted: 2 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 731 lines, 26978 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_758.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_p, WGOLD_l
+      claim: And(And(And(Not(fpIsNaN(WGOLD_l)), Not(And(fpIsZero(WGOLD_l), fpIsNegative(WGOLD_l)))), program(WGOLD_p, FV_Name_0, FV_Origin_0, WGOLD_l, FV_Owner_0)), Not(Exists([predicted_p_1, predicted_l_2], And(And(Not(fpIsNaN(predicted_l_2)), Not(And(fpIsZero(predicted_l_2), fpIsNegative(predicted_l_2)))), program(predicted_p_1, FV_Name_0, FV_Origin_0, predicted_l_2, FV_Owner_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.012 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_p, WPREDICTED_l
+      claim: And(And(And(Not(fpIsNaN(WPREDICTED_l)), Not(And(fpIsZero(WPREDICTED_l), fpIsNegative(WPREDICTED_l)))), program(WPREDICTED_p, FV_Name_0, FV_Origin_0, WPREDICTED_l, FV_Owner_0)), Not(Exists([gold_p_1, gold_l_2], And(And(Not(fpIsNaN(gold_l_2)), Not(And(fpIsZero(gold_l_2), fpIsNegative(gold_l_2)))), program(gold_p_1, FV_Name_0, FV_Origin_0, gold_l_2, FV_Owner_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.007 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

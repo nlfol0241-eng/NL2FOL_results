@@ -1,0 +1,82 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\inputs\example_534.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_5_2_rerun\checks\equiv_check_534.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3933 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Return the first names and last names of all guests
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 5 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(80) -> StringSort()   [domain Length(x) <= 80; length <= 80]
+        integer -> IntSort()
+      local sorts:
+        date_of_birth = datetime -> IntSort()
+        gender_code = char(1) -> StringSort()
+        guest_first_name = varchar(80) -> StringSort()
+        guest_id = integer -> IntSort()
+        guest_last_name = varchar(80) -> StringSort()
+      symbols:
+        Guests(guest_id, gender_code, guest_first_name, guest_last_name, date_of_birth)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃g : guest_id ∃g1 : gender_code ∃d : date_of_birth ( Guests(g,g1,g2,g3,d) )
+        tokens: EXISTS:∃ IDENT:g COLON:: IDENT:guest_id EXISTS:∃ IDENT:g1 COLON:: IDENT:gender_code EXISTS:∃ IDENT:d COLON:: IDENT:date_of_birth LPAR:( IDENT:Guests LPAR:( IDENT:g COMMA:, IDENT:g1 COMMA:, IDENT:g2 COMMA:, IDENT:g3 COMMA:, IDENT:d RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g:guest_id
+            EXISTS g1:gender_code
+              EXISTS d:date_of_birth
+                PRED Guests(g, g1, g2, g3, d)
+      Predicted FOL: ∃g0:guest_id ∃g1:gender_code (Guests(g0, g1, guest_first_name, guest_last_name, date_of_birth))
+        tokens: EXISTS:∃ IDENT:g0 COLON:: IDENT:guest_id EXISTS:∃ IDENT:g1 COLON:: IDENT:gender_code LPAR:( IDENT:Guests LPAR:( IDENT:g0 COMMA:, IDENT:g1 COMMA:, IDENT:guest_first_name COMMA:, IDENT:guest_last_name COMMA:, IDENT:date_of_birth RPAR:) RPAR:) EOF
+        AST:
+          EXISTS g0:guest_id
+            EXISTS g1:gender_code
+              PRED Guests(g0, g1, guest_first_name, guest_last_name, date_of_birth)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   WARNING: Predicted FOL: variable(s) date_of_birth occur free in the formula but are not declared in 'free vars'
+   2 shared answer variable(s)
+      FV_guest_first_name_0 : guest_first_name   Gold g2 <-> Predicted guest_first_name
+      FV_guest_last_name_0 : guest_last_name   Gold g3 <-> Predicted guest_last_name
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 10 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_of_birth, global datetime -> IntSort()
+        g : local guest_id, global integer -> IntSort()
+        g1 : local gender_code, global char(1) -> StringSort()
+        g2 : local guest_first_name, global varchar(80) -> StringSort()
+        g3 : local guest_last_name, global varchar(80) -> StringSort()
+      Predicted FOL:
+        date_of_birth : local date_of_birth, global datetime -> IntSort()
+        g0 : local guest_id, global integer -> IntSort()
+        g1 : local gender_code, global char(1) -> StringSort()
+        guest_first_name : local guest_first_name, global varchar(80) -> StringSort()
+        guest_last_name : local guest_last_name, global varchar(80) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_g_1, gold_g1_2, gold_d_3], And(D_char_1_(gold_g1_2), P_Guests(gold_g_1, gold_g1_2, FV_guest_first_name_0, FV_guest_last_name_0, gold_d_3)))
+      gold_skolem (witnesses WGOLD_g, WGOLD_g1, WGOLD_d):  And(D_char_1_(WGOLD_g1), P_Guests(WGOLD_g, WGOLD_g1, FV_guest_first_name_0, FV_guest_last_name_0, WGOLD_d))
+   Gold: 3 witness constant(s) for the leading existential prefix
+!! FAILED in stage [G6] emit formulas: ValueError: unbound variable 'date_of_birth'
+Traceback (most recent call last):
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 171, in generate
+    return _generate(spec, log)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 283, in _generate
+    emit_side("Predicted", "predicted", pred_ast, pred_env, pred_binding,
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\generator.py", line 238, in emit_side
+    code = em.formula(ast)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 169, in formula
+    inner = self.formula(body)
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 139, in formula
+    code = self.term(t, self.sig.g(ls))[0]
+  File "C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\fol_equiv\emitter.py", line 73, in term
+    raise ValueError(f"unbound variable {t[1]!r}")
+ValueError: unbound variable 'date_of_birth'

@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3315.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3315.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3567 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the ids of all students who played video games and sports?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(1) -> StringSort()   [domain Length(x) <= 1; length <= 1]
+        varchar(32) -> StringSort()   [domain Length(x) <= 32; length <= 32]
+        integer -> IntSort()
+      local sorts:
+        GameID = integer -> IntSort()
+        GamesPlayed = integer -> IntSort()
+        HoursPerWeek = integer -> IntSort()
+        Hours_Played = integer -> IntSort()
+        OnScholarship = varchar(1) -> StringSort()
+        SportName = varchar(32) -> StringSort()
+        StuID = integer -> IntSort()
+      symbols:
+        Plays_Games(StuID, GameID, Hours_Played)
+        SportsInfo(StuID, SportName, HoursPerWeek, GamesPlayed, OnScholarship)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃h : HoursPerWeek ∃s1 : SportName ∃o : OnScholarship ∃g : GamesPlayed( SportsInfo(s,s1,h,g,o) )) ∧ (¬((∃h : HoursPerWeek ∃s1 : SportName ∃o : OnScholarship ∃g : GamesPlayed( SportsInfo(s,s1,h,g,o) )) ∧ (¬(∃h1 : Hours_Played ∃g1 : GameID( Plays_Games(s,g1,h1) )))))
+        tokens: LPAR:( EXISTS:∃ IDENT:h COLON:: IDENT:HoursPerWeek EXISTS:∃ IDENT:s1 COLON:: IDENT:SportName EXISTS:∃ IDENT:o COLON:: IDENT:OnScholarship EXISTS:∃ IDENT:g COLON:: IDENT:GamesPlayed LPAR:( IDENT:SportsInfo LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:h COMMA:, IDENT:g COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( LPAR:( EXISTS:∃ IDENT:h COLON:: IDENT:HoursPerWeek EXISTS:∃ IDENT:s1 COLON:: IDENT:SportName EXISTS:∃ IDENT:o COLON:: IDENT:OnScholarship EXISTS:∃ IDENT:g COLON:: IDENT:GamesPlayed LPAR:( IDENT:SportsInfo LPAR:( IDENT:s COMMA:, IDENT:s1 COMMA:, IDENT:h COMMA:, IDENT:g COMMA:, IDENT:o RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:h1 COLON:: IDENT:Hours_Played EXISTS:∃ IDENT:g1 COLON:: IDENT:GameID LPAR:( IDENT:Plays_Games LPAR:( IDENT:s COMMA:, IDENT:g1 COMMA:, IDENT:h1 RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS h:HoursPerWeek
+              EXISTS s1:SportName
+                EXISTS o:OnScholarship
+                  EXISTS g:GamesPlayed
+                    PRED SportsInfo(s, s1, h, g, o)
+            NOT
+              AND
+                EXISTS h:HoursPerWeek
+                  EXISTS s1:SportName
+                    EXISTS o:OnScholarship
+                      EXISTS g:GamesPlayed
+                        PRED SportsInfo(s, s1, h, g, o)
+                NOT
+                  EXISTS h1:Hours_Played
+                    EXISTS g1:GameID
+                      PRED Plays_Games(s, g1, h1)
+      Predicted FOL: ∃x : StuID (SportsInfo(x, y, z, w, v) ∧ Plays_Games(x, u, t))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:StuID LPAR:( IDENT:SportsInfo LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w COMMA:, IDENT:v RPAR:) AND:∧ IDENT:Plays_Games LPAR:( IDENT:x COMMA:, IDENT:u COMMA:, IDENT:t RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:StuID
+            AND
+              PRED SportsInfo(x, y, z, w, v)
+              PRED Plays_Games(x, u, t)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (s : StuID) but Predicted has 6 (y : SportName, z : HoursPerWeek, w : GamesPlayed, v : OnScholarship, u : GameID, t : Hours_Played): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 14 variable occurrences in 2 formulas
+      Gold FOL:
+        g : local GamesPlayed, global integer -> IntSort()
+        g1 : local GameID, global integer -> IntSort()
+        h : local HoursPerWeek, global integer -> IntSort()
+        h1 : local Hours_Played, global integer -> IntSort()
+        o : local OnScholarship, global varchar(1) -> StringSort()
+        s : local StuID, global integer -> IntSort()
+        s1 : local SportName, global varchar(32) -> StringSort()
+      Predicted FOL:
+        t : local Hours_Played, global integer -> IntSort()
+        u : local GameID, global integer -> IntSort()
+        v : local OnScholarship, global varchar(1) -> StringSort()
+        w : local GamesPlayed, global integer -> IntSort()
+        x : local StuID, global integer -> IntSort()
+        y : local SportName, global varchar(32) -> StringSort()
+        z : local HoursPerWeek, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5640 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3315.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (s : StuID) but Predicted has 6 (y : SportName, z : HoursPerWeek, w : GamesPlayed, v : OnScholarship, u : GameID, t : Hours_Played): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

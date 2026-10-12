@@ -1,0 +1,83 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1062.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1062.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2886 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the details of all products?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 2 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        product_details = varchar(255) -> StringSort()
+        product_id = integer -> IntSort()
+      symbols:
+        Products(product_id, product_details)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃p : product_id ( Products(p,p1) )
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id LPAR:( IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:p1 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            PRED Products(p, p1)
+      Predicted FOL: ∃p : product_id Products(p, d)
+        tokens: EXISTS:∃ IDENT:p COLON:: IDENT:product_id IDENT:Products LPAR:( IDENT:p COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS p:product_id
+            PRED Products(p, d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_product_details_0 : product_details   Gold p1 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 4 variable occurrences in 2 formulas
+      Gold FOL:
+        p : local product_id, global integer -> IntSort()
+        p1 : local product_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        d : local product_details, global varchar(255) -> StringSort()
+        p : local product_id, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_p_1], P_Products(gold_p_1, FV_product_details_0))
+      gold_skolem (witnesses WGOLD_p):  P_Products(WGOLD_p, FV_product_details_0)
+   Gold: 1 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_p_1], P_Products(predicted_p_1, FV_product_details_0))
+      predicted_skolem (witnesses WPREDICTED_p):  P_Products(WPREDICTED_p, FV_product_details_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 0 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   0 sort axiom(s), 0 literal(s), 0 order(s) needing a definition; 714 lines, 25989 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1062.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_product_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_p
+      claim: And(Products(WGOLD_p, FV_product_details_0), Not(Exists(predicted_p_1, Products(predicted_p_1, FV_product_details_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.006 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_p
+      claim: And(Products(WPREDICTED_p, FV_product_details_0), Not(Exists(gold_p_1, Products(gold_p_1, FV_product_details_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

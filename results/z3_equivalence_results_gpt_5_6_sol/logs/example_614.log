@@ -1,0 +1,90 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\inputs\example_614.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_614.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4280 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is draft detail of the document with id 7?
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        integer -> IntSort()
+      local sorts:
+        document_id = integer -> IntSort()
+        draft_details = varchar(255) -> StringSort()
+        draft_number = integer -> IntSort()
+      symbols:
+        Document_Drafts(document_id, draft_number, draft_details)
+        constant 7 : document_id
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃d : document_id ∃d1 : draft_number ( (Document_Drafts(d,d1,d2)) ∧ (d = 7) )
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:document_id EXISTS:∃ IDENT:d1 COLON:: IDENT:draft_number LPAR:( LPAR:( IDENT:Document_Drafts LPAR:( IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:d2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:d EQ:= NUM:7 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:document_id
+            EXISTS d1:draft_number
+              AND
+                PRED Document_Drafts(d, d1, d2)
+                EQ  d = 7
+      Predicted FOL: ∃n : draft_number Document_Drafts(7, n, d)
+        tokens: EXISTS:∃ IDENT:n COLON:: IDENT:draft_number IDENT:Document_Drafts LPAR:( NUM:7 COMMA:, IDENT:n COMMA:, IDENT:d RPAR:) EOF
+        AST:
+          EXISTS n:draft_number
+            PRED Document_Drafts(7, n, d)
+   [G3] took 0.000 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_draft_details_0 : draft_details   Gold d2 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 5 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local document_id, global integer -> IntSort()
+        d1 : local draft_number, global integer -> IntSort()
+        d2 : local draft_details, global varchar(255) -> StringSort()
+      Predicted FOL:
+        d : local draft_details, global varchar(255) -> StringSort()
+        n : local draft_number, global integer -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_d_1, gold_d1_2], And(P_Document_Drafts(gold_d_1, gold_d1_2, FV_draft_details_0), (gold_d_1 == L_v_7_integer)))
+      gold_skolem (witnesses WGOLD_d, WGOLD_d1):  And(P_Document_Drafts(WGOLD_d, WGOLD_d1, FV_draft_details_0), (WGOLD_d == L_v_7_integer))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_n_1], P_Document_Drafts(L_v_7_integer, predicted_n_1, FV_draft_details_0))
+      predicted_skolem (witnesses WPREDICTED_n):  P_Document_Drafts(L_v_7_integer, WPREDICTED_n, FV_draft_details_0)
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '7' at integer -> L_v_7_integer = IntVal(7)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 721 lines, 26610 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results\checks\equiv_check_614.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R1] assemble background
+   1 assertion(s): 0 sort axiom(s), 1 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_draft_details_0) <= 255
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 1 background assertion(s) + claim; witnesses WGOLD_d, WGOLD_d1
+      claim: And(And(Document_Drafts(WGOLD_d, WGOLD_d1, FV_draft_details_0), 7 == WGOLD_d), Not(Exists(predicted_n_1, Document_Drafts(7, predicted_n_1, FV_draft_details_0))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.003 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.005 s
+== [R3] check predicted |= gold
+   solver: 1 background assertion(s) + claim; witnesses WPREDICTED_n
+      claim: And(Document_Drafts(7, WPREDICTED_n, FV_draft_details_0), Not(Exists([gold_d_1, gold_d1_2], And(Document_Drafts(gold_d_1, gold_d1_2, FV_draft_details_0), 7 == gold_d_1))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.001 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.003 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

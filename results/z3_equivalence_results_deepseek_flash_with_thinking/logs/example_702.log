@@ -1,0 +1,117 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\inputs\example_702.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_702.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 3466 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the states, account types, and credit scores for customers who have 0 loans?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   5 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        char(1) -> StringSort()   [domain Length(x) <= 1; length <= 1 (blank padding not modelled)]
+        int -> IntSort()
+        varchar(3) -> StringSort()   [domain Length(x) <= 3; length <= 3]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        text -> StringSort()
+      local sorts:
+        acc_bal = int -> IntSort()
+        acc_type = char(1) -> StringSort()
+        branch_ID = text -> StringSort()
+        credit_score = int -> IntSort()
+        cust_ID = varchar(3) -> StringSort()
+        cust_name = varchar(20) -> StringSort()
+        no_of_loans = int -> IntSort()
+        state = varchar(20) -> StringSort()
+      symbols:
+        customer(cust_ID, cust_name, acc_type, acc_bal, no_of_loans, credit_score, branch_ID, state)
+        constant 0 : no_of_loans
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : cust_ID ∃c1 : cust_name ∃a1 : acc_bal ∃n : no_of_loans ∃b : branch_ID ( (customer(c,c1,a,a1,n,c2,b,s)) ∧ (n = 0) )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:cust_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:cust_name EXISTS:∃ IDENT:a1 COLON:: IDENT:acc_bal EXISTS:∃ IDENT:n COLON:: IDENT:no_of_loans EXISTS:∃ IDENT:b COLON:: IDENT:branch_ID LPAR:( LPAR:( IDENT:customer LPAR:( IDENT:c COMMA:, IDENT:c1 COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:n COMMA:, IDENT:c2 COMMA:, IDENT:b COMMA:, IDENT:s RPAR:) RPAR:) AND:∧ LPAR:( IDENT:n EQ:= NUM:0 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:cust_ID
+            EXISTS c1:cust_name
+              EXISTS a1:acc_bal
+                EXISTS n:no_of_loans
+                  EXISTS b:branch_ID
+                    AND
+                      PRED customer(c, c1, a, a1, n, c2, b, s)
+                      EQ  n = 0
+      Predicted FOL: ∃ c0 : cust_ID ∃ c1 : cust_name ∃ c3 : acc_bal ∃ c6 : branch_ID ( customer(c0, c1, t, c3, 0, cs, c6, s) )
+        tokens: EXISTS:∃ IDENT:c0 COLON:: IDENT:cust_ID EXISTS:∃ IDENT:c1 COLON:: IDENT:cust_name EXISTS:∃ IDENT:c3 COLON:: IDENT:acc_bal EXISTS:∃ IDENT:c6 COLON:: IDENT:branch_ID LPAR:( IDENT:customer LPAR:( IDENT:c0 COMMA:, IDENT:c1 COMMA:, IDENT:t COMMA:, IDENT:c3 COMMA:, NUM:0 COMMA:, IDENT:cs COMMA:, IDENT:c6 COMMA:, IDENT:s RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c0:cust_ID
+            EXISTS c1:cust_name
+              EXISTS c3:acc_bal
+                EXISTS c6:branch_ID
+                  PRED customer(c0, c1, t, c3, 0, cs, c6, s)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   3 shared answer variable(s)
+      FV_acc_type_0 : acc_type   Gold a <-> Predicted t
+      FV_credit_score_0 : credit_score   Gold c2 <-> Predicted cs
+      FV_state_0 : state   Gold s <-> Predicted s
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local acc_type, global char(1) -> StringSort()
+        a1 : local acc_bal, global int -> IntSort()
+        b : local branch_ID, global text -> StringSort()
+        c : local cust_ID, global varchar(3) -> StringSort()
+        c1 : local cust_name, global varchar(20) -> StringSort()
+        c2 : local credit_score, global int -> IntSort()
+        n : local no_of_loans, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+      Predicted FOL:
+        c0 : local cust_ID, global varchar(3) -> StringSort()
+        c1 : local cust_name, global varchar(20) -> StringSort()
+        c3 : local acc_bal, global int -> IntSort()
+        c6 : local branch_ID, global text -> StringSort()
+        cs : local credit_score, global int -> IntSort()
+        s : local state, global varchar(20) -> StringSort()
+        t : local acc_type, global char(1) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_c1_2, gold_a1_3, gold_n_4, gold_b_5], And(D_varchar_3_(gold_c_1), D_varchar_20_(gold_c1_2), And(P_customer(gold_c_1, gold_c1_2, FV_acc_type_0, gold_a1_3, gold_n_4, FV_credit_score_0, gold_b_5, FV_state_0), (gold_n_4 == L_v_0_int))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_c1, WGOLD_a1, WGOLD_n, WGOLD_b):  And(D_varchar_3_(WGOLD_c), D_varchar_20_(WGOLD_c1), And(P_customer(WGOLD_c, WGOLD_c1, FV_acc_type_0, WGOLD_a1, WGOLD_n, FV_credit_score_0, WGOLD_b, FV_state_0), (WGOLD_n == L_v_0_int)))
+   Gold: 5 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_c0_1, predicted_c1_2, predicted_c3_3, predicted_c6_4], And(D_varchar_3_(predicted_c0_1), D_varchar_20_(predicted_c1_2), P_customer(predicted_c0_1, predicted_c1_2, FV_acc_type_0, predicted_c3_3, L_v_0_int, FV_credit_score_0, predicted_c6_4, FV_state_0)))
+      predicted_skolem (witnesses WPREDICTED_c0, WPREDICTED_c1, WPREDICTED_c3, WPREDICTED_c6):  And(D_varchar_3_(WPREDICTED_c0), D_varchar_20_(WPREDICTED_c1), P_customer(WPREDICTED_c0, WPREDICTED_c1, FV_acc_type_0, WPREDICTED_c3, L_v_0_int, FV_credit_score_0, WPREDICTED_c6, FV_state_0))
+   Predicted: 4 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal '0' at int -> L_v_0_int = IntVal(0)
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 766 lines, 29456 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_high_effort_with_thinking\checks\equiv_check_702.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] Length(FV_acc_type_0) <= 1
+      [1] Length(FV_state_0) <= 20
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_c1, WGOLD_a1, WGOLD_n, WGOLD_b
+      claim: And(And(Length(WGOLD_c) <= 3, Length(WGOLD_c1) <= 20, And(customer(WGOLD_c, WGOLD_c1, FV_acc_type_0, WGOLD_a1, WGOLD_n, FV_credit_score_0, WGOLD_b, FV_state_0), 0 == WGOLD_n)), Not(Exists([predicted_c0_1, predicted_c1_2, predicted_c3_3, predicted_c6_4], And(Length(predicted_c0_1) <= 3, Length(predicted_c1_2) <= 20, customer(predicted_c0_1, predicted_c1_2, FV_acc_type_0, predicted_c3_3, 0, FV_credit_score_0, predicted_c6_4, FV_state_0)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.011 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_c0, WPREDICTED_c1, WPREDICTED_c3, WPREDICTED_c6
+      claim: And(And(Length(WPREDICTED_c0) <= 3, Length(WPREDICTED_c1) <= 20, customer(WPREDICTED_c0, WPREDICTED_c1, FV_acc_type_0, WPREDICTED_c3, 0, FV_credit_score_0, WPREDICTED_c6, FV_state_0)), Not(Exists([gold_c_1, gold_c1_2, gold_a1_3, gold_n_4, gold_b_5], And(Length(gold_c_1) <= 3, Length(gold_c1_2) <= 20, And(customer(gold_c_1, gold_c1_2, FV_acc_type_0, gold_a1_3, gold_n_4, FV_credit_score_0, gold_b_5, FV_state_0), 0 == gold_n_4)))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.008 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

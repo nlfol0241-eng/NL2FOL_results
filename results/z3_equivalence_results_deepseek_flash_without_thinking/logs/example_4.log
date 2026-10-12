@@ -1,0 +1,68 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_4.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_4.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2902 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are all the makers and models?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 3 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Maker_ID = integer -> IntSort()
+        Model = text -> StringSort()
+        ModelId = integer -> IntSort()
+      symbols:
+        model_list(ModelId, Maker_ID, Model)
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : ModelId ( model_list(m,m1,m2) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:ModelId LPAR:( IDENT:model_list LPAR:( IDENT:m COMMA:, IDENT:m1 COMMA:, IDENT:m2 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:ModelId
+            PRED model_list(m, m1, m2)
+      Predicted FOL: ∃x : ModelId ∃y : Maker_ID ∃z : Model (model_list(x, y, z))
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:ModelId EXISTS:∃ IDENT:y COLON:: IDENT:Maker_ID EXISTS:∃ IDENT:z COLON:: IDENT:Model LPAR:( IDENT:model_list LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z RPAR:) RPAR:) EOF
+        AST:
+          EXISTS x:ModelId
+            EXISTS y:Maker_ID
+              EXISTS z:Model
+                PRED model_list(x, y, z)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 2 free variable(s) (m1 : Maker_ID, m2 : Model) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 6 variable occurrences in 2 formulas
+      Gold FOL:
+        m : local ModelId, global integer -> IntSort()
+        m1 : local Maker_ID, global integer -> IntSort()
+        m2 : local Model, global text -> StringSort()
+      Predicted FOL:
+        x : local ModelId, global integer -> IntSort()
+        y : local Maker_ID, global integer -> IntSort()
+        z : local Model, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5201 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_4.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 2 free variable(s) (m1 : Maker_ID, m2 : Model) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

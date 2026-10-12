@@ -1,0 +1,126 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_1710.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1710.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4792 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What are the dates of the latest logon of the students with family name "Jaskolski" or "Langosh"?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 8 local sorts, 1 predicates, 0 functions, 2 constants, 0 warnings
+      global sorts:
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+        varchar(40) -> StringSort()   [domain Length(x) <= 40; length <= 40]
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        date_of_latest_logon = datetime -> IntSort()
+        date_of_registration = datetime -> IntSort()
+        family_name = text -> StringSort()
+        login_name = varchar(40) -> StringSort()
+        middle_name = text -> StringSort()
+        password = text -> StringSort()
+        personal_name = text -> StringSort()
+        student_id = integer -> IntSort()
+      symbols:
+        Students(student_id, date_of_registration, date_of_latest_logon, login_name, password, personal_name, middle_name, family_name)
+        constant Jaskolski : family_name
+        constant Langosh : family_name
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃s : student_id ∃d : date_of_registration ∃l : login_name ∃p : password ∃p1 : personal_name ∃m : middle_name ∃f : family_name ( (Students(s,d,d1,l,p,p1,m,f)) ∧ ((f = 'Jaskolski') ∨ (f = 'Langosh')) )
+        tokens: EXISTS:∃ IDENT:s COLON:: IDENT:student_id EXISTS:∃ IDENT:d COLON:: IDENT:date_of_registration EXISTS:∃ IDENT:l COLON:: IDENT:login_name EXISTS:∃ IDENT:p COLON:: IDENT:password EXISTS:∃ IDENT:p1 COLON:: IDENT:personal_name EXISTS:∃ IDENT:m COLON:: IDENT:middle_name EXISTS:∃ IDENT:f COLON:: IDENT:family_name LPAR:( LPAR:( IDENT:Students LPAR:( IDENT:s COMMA:, IDENT:d COMMA:, IDENT:d1 COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:p1 COMMA:, IDENT:m COMMA:, IDENT:f RPAR:) RPAR:) AND:∧ LPAR:( LPAR:( IDENT:f EQ:= LIT:Jaskolski RPAR:) OR:∨ LPAR:( IDENT:f EQ:= LIT:Langosh RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          EXISTS s:student_id
+            EXISTS d:date_of_registration
+              EXISTS l:login_name
+                EXISTS p:password
+                  EXISTS p1:personal_name
+                    EXISTS m:middle_name
+                      EXISTS f:family_name
+                        AND
+                          PRED Students(s, d, d1, l, p, p1, m, f)
+                          OR
+                            EQ  f = 'Jaskolski'
+                            EQ  f = 'Langosh'
+      Predicted FOL: ∃i : student_id ∃r : date_of_registration ∃l : login_name ∃p : password ∃n : personal_name ∃m : middle_name ∃f : family_name (Students(i, r, d, l, p, n, m, f) ∧ (f = 'Jaskolski' ∨ f = 'Langosh'))
+        tokens: EXISTS:∃ IDENT:i COLON:: IDENT:student_id EXISTS:∃ IDENT:r COLON:: IDENT:date_of_registration EXISTS:∃ IDENT:l COLON:: IDENT:login_name EXISTS:∃ IDENT:p COLON:: IDENT:password EXISTS:∃ IDENT:n COLON:: IDENT:personal_name EXISTS:∃ IDENT:m COLON:: IDENT:middle_name EXISTS:∃ IDENT:f COLON:: IDENT:family_name LPAR:( IDENT:Students LPAR:( IDENT:i COMMA:, IDENT:r COMMA:, IDENT:d COMMA:, IDENT:l COMMA:, IDENT:p COMMA:, IDENT:n COMMA:, IDENT:m COMMA:, IDENT:f RPAR:) AND:∧ LPAR:( IDENT:f EQ:= LIT:Jaskolski OR:∨ IDENT:f EQ:= LIT:Langosh RPAR:) RPAR:) EOF
+        AST:
+          EXISTS i:student_id
+            EXISTS r:date_of_registration
+              EXISTS l:login_name
+                EXISTS p:password
+                  EXISTS n:personal_name
+                    EXISTS m:middle_name
+                      EXISTS f:family_name
+                        AND
+                          PRED Students(i, r, d, l, p, n, m, f)
+                          OR
+                            EQ  f = 'Jaskolski'
+                            EQ  f = 'Langosh'
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   1 shared answer variable(s)
+      FV_date_of_latest_logon_0 : date_of_latest_logon   Gold d1 <-> Predicted d
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 16 variable occurrences in 2 formulas
+      Gold FOL:
+        d : local date_of_registration, global datetime -> IntSort()
+        d1 : local date_of_latest_logon, global datetime -> IntSort()
+        f : local family_name, global text -> StringSort()
+        l : local login_name, global varchar(40) -> StringSort()
+        m : local middle_name, global text -> StringSort()
+        p : local password, global text -> StringSort()
+        p1 : local personal_name, global text -> StringSort()
+        s : local student_id, global integer -> IntSort()
+      Predicted FOL:
+        d : local date_of_latest_logon, global datetime -> IntSort()
+        f : local family_name, global text -> StringSort()
+        i : local student_id, global integer -> IntSort()
+        l : local login_name, global varchar(40) -> StringSort()
+        m : local middle_name, global text -> StringSort()
+        n : local personal_name, global text -> StringSort()
+        p : local password, global text -> StringSort()
+        r : local date_of_registration, global datetime -> IntSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_s_1, gold_d_2, gold_l_3, gold_p_4, gold_p1_5, gold_m_6, gold_f_7], And(D_varchar_40_(gold_l_3), And(P_Students(gold_s_1, gold_d_2, FV_date_of_latest_logon_0, gold_l_3, gold_p_4, gold_p1_5, gold_m_6, gold_f_7), Or((gold_f_7 == L_Jaskolski), (gold_f_7 == L_Langosh)))))
+      gold_skolem (witnesses WGOLD_s, WGOLD_d, WGOLD_l, WGOLD_p, WGOLD_p1, WGOLD_m, WGOLD_f):  And(D_varchar_40_(WGOLD_l), And(P_Students(WGOLD_s, WGOLD_d, FV_date_of_latest_logon_0, WGOLD_l, WGOLD_p, WGOLD_p1, WGOLD_m, WGOLD_f), Or((WGOLD_f == L_Jaskolski), (WGOLD_f == L_Langosh))))
+   Gold: 7 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_i_1, predicted_r_2, predicted_l_3, predicted_p_4, predicted_n_5, predicted_m_6, predicted_f_7], And(D_varchar_40_(predicted_l_3), And(P_Students(predicted_i_1, predicted_r_2, FV_date_of_latest_logon_0, predicted_l_3, predicted_p_4, predicted_n_5, predicted_m_6, predicted_f_7), Or((predicted_f_7 == L_Jaskolski), (predicted_f_7 == L_Langosh)))))
+      predicted_skolem (witnesses WPREDICTED_i, WPREDICTED_r, WPREDICTED_l, WPREDICTED_p, WPREDICTED_n, WPREDICTED_m, WPREDICTED_f):  And(D_varchar_40_(WPREDICTED_l), And(P_Students(WPREDICTED_i, WPREDICTED_r, FV_date_of_latest_logon_0, WPREDICTED_l, WPREDICTED_p, WPREDICTED_n, WPREDICTED_m, WPREDICTED_f), Or((WPREDICTED_f == L_Jaskolski), (WPREDICTED_f == L_Langosh))))
+   Predicted: 7 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 2 literal(s) registered
+   [G6] took 0.001 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'Jaskolski' at text -> L_Jaskolski = StringVal('Jaskolski')
+      literal 'Langosh' at text -> L_Langosh = StringVal('Langosh')
+   0 sort axiom(s), 2 literal(s), 0 order(s) needing a definition; 772 lines, 30741 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_1710.py
+   [G8] took 0.004 s
+
+==== checking ====
+== [R1] assemble background
+   0 assertion(s): 0 sort axiom(s), 0 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+   [R1] took 0.000 s
+== [R2] check gold |= predicted
+   solver: 0 background assertion(s) + claim; witnesses WGOLD_s, WGOLD_d, WGOLD_l, WGOLD_p, WGOLD_p1, WGOLD_m, WGOLD_f
+      claim: And(And(Length(WGOLD_l) <= 40, And(Students(WGOLD_s, WGOLD_d, FV_date_of_latest_logon_0, WGOLD_l, WGOLD_p, WGOLD_p1, WGOLD_m, WGOLD_f), Or(WGOLD_f == "Jaskolski", WGOLD_f == "Langosh"))), Not(Exists([predicted_i_1, predicted_r_2, predicted_l_3, predicted_p_4, predicted_n_5, predicted_m_6, predicted_f_7], And(Length(predicted_l_3) <= 40, And(Students(predicted_i_1, predicted_r_2, FV_date_of_latest_logon_0, predicted_l_3, predicted_p_4, predicted_n_5, predicted_m_6, predicted_f_7), Or(predicted_f_7 == "Jaskolski", predicted_f_7 == "Langosh"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.008 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.019 s
+== [R3] check predicted |= gold
+   solver: 0 background assertion(s) + claim; witnesses WPREDICTED_i, WPREDICTED_r, WPREDICTED_l, WPREDICTED_p, WPREDICTED_n, WPREDICTED_m, WPREDICTED_f
+      claim: And(And(Length(WPREDICTED_l) <= 40, And(Students(WPREDICTED_i, WPREDICTED_r, FV_date_of_latest_logon_0, WPREDICTED_l, WPREDICTED_p, WPREDICTED_n, WPREDICTED_m, WPREDICTED_f), Or(WPREDICTED_f == "Jaskolski", WPREDICTED_f == "Langosh"))), Not(Exists([gold_s_1, gold_d_2, gold_l_3, gold_p_4, gold_p1_5, gold_m_6, gold_f_7], And(Length(gold_l_3) <= 40, And(Students(gold_s_1, gold_d_2, FV_date_of_latest_logon_0, gold_l_3, gold_p_4, gold_p1_5, gold_m_6, gold_f_7), Or(gold_f_7 == "Jaskolski", gold_f_7 == "Langosh"))))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.005 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.014 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

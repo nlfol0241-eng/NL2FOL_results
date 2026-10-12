@@ -1,0 +1,97 @@
+fol_equiv_gen log
+  input   : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\inputs\example_718.json
+  output  : C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_718.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4475 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: What is the description for the CIS-220 and how many credits does it have?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        varchar(35) -> StringSort()   [domain Length(x) <= 35; length <= 35]
+        float(8) -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        varchar(10) -> StringSort()   [domain Length(x) <= 10; length <= 10]
+        text -> StringSort()
+      local sorts:
+        CRS_CODE = varchar(10) -> StringSort()
+        CRS_CREDIT = float(8) -> Float32()
+        CRS_DESCRIPTION = varchar(35) -> StringSort()
+        DEPT_CODE = text -> StringSort()
+      symbols:
+        COURSE(CRS_CODE, DEPT_CODE, CRS_DESCRIPTION, CRS_CREDIT)
+        constant CIS-220 : CRS_CODE
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃c : CRS_CODE ∃d : DEPT_CODE ( (COURSE(c,d,c1,c2)) ∧ (c = 'CIS-220') )
+        tokens: EXISTS:∃ IDENT:c COLON:: IDENT:CRS_CODE EXISTS:∃ IDENT:d COLON:: IDENT:DEPT_CODE LPAR:( LPAR:( IDENT:COURSE LPAR:( IDENT:c COMMA:, IDENT:d COMMA:, IDENT:c1 COMMA:, IDENT:c2 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:c EQ:= LIT:CIS-220 RPAR:) RPAR:) EOF
+        AST:
+          EXISTS c:CRS_CODE
+            EXISTS d:DEPT_CODE
+              AND
+                PRED COURSE(c, d, c1, c2)
+                EQ  c = 'CIS-220'
+      Predicted FOL: ∃d : DEPT_CODE (COURSE('CIS-220', d, description, credits))
+        tokens: EXISTS:∃ IDENT:d COLON:: IDENT:DEPT_CODE LPAR:( IDENT:COURSE LPAR:( LIT:CIS-220 COMMA:, IDENT:d COMMA:, IDENT:description COMMA:, IDENT:credits RPAR:) RPAR:) EOF
+        AST:
+          EXISTS d:DEPT_CODE
+            PRED COURSE('CIS-220', d, description, credits)
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   2 shared answer variable(s)
+      FV_CRS_CREDIT_0 : CRS_CREDIT   Gold c2 <-> Predicted credits
+      FV_CRS_DESCRIPTION_0 : CRS_DESCRIPTION   Gold c1 <-> Predicted description
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 7 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local CRS_CODE, global varchar(10) -> StringSort()
+        c1 : local CRS_DESCRIPTION, global varchar(35) -> StringSort()
+        c2 : local CRS_CREDIT, global float(8) -> Float32()
+        d : local DEPT_CODE, global text -> StringSort()
+      Predicted FOL:
+        credits : local CRS_CREDIT, global float(8) -> Float32()
+        d : local DEPT_CODE, global text -> StringSort()
+        description : local CRS_DESCRIPTION, global varchar(35) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+      gold_formula:  Exists([gold_c_1, gold_d_2], And(D_varchar_10_(gold_c_1), And(P_COURSE(gold_c_1, gold_d_2, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), (gold_c_1 == L_CIS_220))))
+      gold_skolem (witnesses WGOLD_c, WGOLD_d):  And(D_varchar_10_(WGOLD_c), And(P_COURSE(WGOLD_c, WGOLD_d, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), (WGOLD_c == L_CIS_220)))
+   Gold: 2 witness constant(s) for the leading existential prefix
+      predicted_formula:  Exists([predicted_d_1], And(P_COURSE(L_CIS_220, predicted_d_1, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), D_varchar_10_(L_CIS_220)))
+      predicted_skolem (witnesses WPREDICTED_d):  And(P_COURSE(L_CIS_220, WPREDICTED_d, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), D_varchar_10_(L_CIS_220))
+   Predicted: 1 witness constant(s) for the leading existential prefix
+   emitted 0 axioms, Gold, Predicted; 1 literal(s) registered
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+      literal 'CIS-220' at varchar(10) -> L_CIS_220 = StringVal('CIS-220')
+   0 sort axiom(s), 1 literal(s), 0 order(s) needing a definition; 736 lines, 27392 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2842257\Desktop\fol_equiv_v5_fv_mismatch\fol_equiv_v5_fv_mismatch\Spider_Equivalence_gpt_6\checks\equiv_check_718.py
+   [G8] took 0.007 s
+
+==== checking ====
+== [R1] assemble background
+   2 assertion(s): 0 sort axiom(s), 2 free-variable domain(s), 0 order axiom(s), 0 FOL axiom(s), 0 uniqueness
+      [0] And(Not(fpIsNaN(FV_CRS_CREDIT_0)), Not(And(fpIsZero(FV_CRS_CREDIT_0), fpIsNegative(FV_CRS_CREDIT_0))))
+      [1] Length(FV_CRS_DESCRIPTION_0) <= 35
+   [R1] took 0.001 s
+== [R2] check gold |= predicted
+   solver: 2 background assertion(s) + claim; witnesses WGOLD_c, WGOLD_d
+      claim: And(And(Length(WGOLD_c) <= 10, And(COURSE(WGOLD_c, WGOLD_d, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), WGOLD_c == "CIS-220")), Not(Exists(predicted_d_1, And(COURSE("CIS-220", predicted_d_1, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), Length("CIS-220") <= 10))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.004 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R2] took 0.008 s
+== [R3] check predicted |= gold
+   solver: 2 background assertion(s) + claim; witnesses WPREDICTED_d
+      claim: And(And(COURSE("CIS-220", WPREDICTED_d, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), Length("CIS-220") <= 10), Not(Exists([gold_c_1, gold_d_2], And(Length(gold_c_1) <= 10, And(COURSE(gold_c_1, gold_d_2, FV_CRS_DESCRIPTION_0, FV_CRS_CREDIT_0), gold_c_1 == "CIS-220")))))
+      attempt 1: seed=0 timeout=2000ms -> unsat in 0.002 s
+   result: unsat after 1 attempt(s)  -> direction holds
+   [R3] took 0.005 s
+== [R4] verdict
+   VERDICT: EQUIVALENT
+   [R4] took 0.000 s

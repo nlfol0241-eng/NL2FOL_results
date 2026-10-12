@@ -1,0 +1,79 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_6.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_6.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 2642 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which country does Airline "JetBlue Airways" belong to?
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   2 global sorts, 4 local sorts, 1 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        integer -> IntSort()
+        text -> StringSort()
+      local sorts:
+        Abbreviation = text -> StringSort()
+        Airline = text -> StringSort()
+        Country = text -> StringSort()
+        uid = integer -> IntSort()
+      symbols:
+        airlines(uid, Airline, Abbreviation, Country)
+        constant JetBlue Airways : Airline
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃u : uid ∃a : Airline ∃a1 : Abbreviation ( (airlines(u,a,a1,c)) ∧ (a = 'JetBlue Airways') )
+        tokens: EXISTS:∃ IDENT:u COLON:: IDENT:uid EXISTS:∃ IDENT:a COLON:: IDENT:Airline EXISTS:∃ IDENT:a1 COLON:: IDENT:Abbreviation LPAR:( LPAR:( IDENT:airlines LPAR:( IDENT:u COMMA:, IDENT:a COMMA:, IDENT:a1 COMMA:, IDENT:c RPAR:) RPAR:) AND:∧ LPAR:( IDENT:a EQ:= LIT:JetBlue Airways RPAR:) RPAR:) EOF
+        AST:
+          EXISTS u:uid
+            EXISTS a:Airline
+              EXISTS a1:Abbreviation
+                AND
+                  PRED airlines(u, a, a1, c)
+                  EQ  a = 'JetBlue Airways'
+      Predicted FOL: ∃x : uid ∃y : Airline ∃z : Abbreviation ∃w : Country (airlines(x, y, z, w) ∧ y = 'JetBlue Airways')
+        tokens: EXISTS:∃ IDENT:x COLON:: IDENT:uid EXISTS:∃ IDENT:y COLON:: IDENT:Airline EXISTS:∃ IDENT:z COLON:: IDENT:Abbreviation EXISTS:∃ IDENT:w COLON:: IDENT:Country LPAR:( IDENT:airlines LPAR:( IDENT:x COMMA:, IDENT:y COMMA:, IDENT:z COMMA:, IDENT:w RPAR:) AND:∧ IDENT:y EQ:= LIT:JetBlue Airways RPAR:) EOF
+        AST:
+          EXISTS x:uid
+            EXISTS y:Airline
+              EXISTS z:Abbreviation
+                EXISTS w:Country
+                  AND
+                    PRED airlines(x, y, z, w)
+                    EQ  y = 'JetBlue Airways'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (c : Country) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 8 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local Airline, global text -> StringSort()
+        a1 : local Abbreviation, global text -> StringSort()
+        c : local Country, global text -> StringSort()
+        u : local uid, global integer -> IntSort()
+      Predicted FOL:
+        w : local Country, global text -> StringSort()
+        x : local uid, global integer -> IntSort()
+        y : local Airline, global text -> StringSort()
+        z : local Abbreviation, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5298 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_6.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (c : Country) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

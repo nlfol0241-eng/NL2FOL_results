@@ -1,0 +1,100 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_712.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_712.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 7300 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: List the asset id, details, make and model for every asset.
+   [G1] took 0.001 s
+== [G2] build signature  (signature.py, sql_types.py)
+   4 global sorts, 9 local sorts, 1 predicates, 0 functions, 0 constants, 0 warnings
+      global sorts:
+        varchar(255) -> StringSort()   [domain Length(x) <= 255; length <= 255]
+        varchar(20) -> StringSort()   [domain Length(x) <= 20; length <= 20]
+        integer -> IntSort()
+        datetime -> IntSort()   [seconds since 1970-01-01 00:00:00]
+      local sorts:
+        asset_acquired_date = datetime -> IntSort()
+        asset_details = varchar(255) -> StringSort()
+        asset_disposed_date = datetime -> IntSort()
+        asset_id = integer -> IntSort()
+        asset_make = varchar(20) -> StringSort()
+        asset_model = varchar(20) -> StringSort()
+        maintenance_contract_id = integer -> IntSort()
+        other_asset_details = varchar(255) -> StringSort()
+        supplier_company_id = integer -> IntSort()
+      symbols:
+        Assets(asset_id, maintenance_contract_id, supplier_company_id, asset_details, asset_make, asset_model, asset_acquired_date, asset_disposed_date, other_asset_details)
+   [G2] took 0.001 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: ∃m : maintenance_contract_id ∃s : supplier_company_id ∃a4 : asset_acquired_date ∃a5 : asset_disposed_date ∃o : other_asset_details ( Assets(a,m,s,a1,a2,a3,a4,a5,o) )
+        tokens: EXISTS:∃ IDENT:m COLON:: IDENT:maintenance_contract_id EXISTS:∃ IDENT:s COLON:: IDENT:supplier_company_id EXISTS:∃ IDENT:a4 COLON:: IDENT:asset_acquired_date EXISTS:∃ IDENT:a5 COLON:: IDENT:asset_disposed_date EXISTS:∃ IDENT:o COLON:: IDENT:other_asset_details LPAR:( IDENT:Assets LPAR:( IDENT:a COMMA:, IDENT:m COMMA:, IDENT:s COMMA:, IDENT:a1 COMMA:, IDENT:a2 COMMA:, IDENT:a3 COMMA:, IDENT:a4 COMMA:, IDENT:a5 COMMA:, IDENT:o RPAR:) RPAR:) EOF
+        AST:
+          EXISTS m:maintenance_contract_id
+            EXISTS s:supplier_company_id
+              EXISTS a4:asset_acquired_date
+                EXISTS a5:asset_disposed_date
+                  EXISTS o:other_asset_details
+                    PRED Assets(a, m, s, a1, a2, a3, a4, a5, o)
+      Predicted FOL: ∀x0 : asset_id ∀x1 : maintenance_contract_id ∀x2 : supplier_company_id ∀x3 : asset_details ∀x4 : asset_make ∀x5 : asset_model ∀x6 : asset_acquired_date ∀x7 : asset_disposed_date ∀x8 : other_asset_details (Assets(x0, x1, x2, x3, x4, x5, x6, x7, x8) → True)
+        tokens: FORALL:∀ IDENT:x0 COLON:: IDENT:asset_id FORALL:∀ IDENT:x1 COLON:: IDENT:maintenance_contract_id FORALL:∀ IDENT:x2 COLON:: IDENT:supplier_company_id FORALL:∀ IDENT:x3 COLON:: IDENT:asset_details FORALL:∀ IDENT:x4 COLON:: IDENT:asset_make FORALL:∀ IDENT:x5 COLON:: IDENT:asset_model FORALL:∀ IDENT:x6 COLON:: IDENT:asset_acquired_date FORALL:∀ IDENT:x7 COLON:: IDENT:asset_disposed_date FORALL:∀ IDENT:x8 COLON:: IDENT:other_asset_details LPAR:( IDENT:Assets LPAR:( IDENT:x0 COMMA:, IDENT:x1 COMMA:, IDENT:x2 COMMA:, IDENT:x3 COMMA:, IDENT:x4 COMMA:, IDENT:x5 COMMA:, IDENT:x6 COMMA:, IDENT:x7 COMMA:, IDENT:x8 RPAR:) IMPL:→ TRUE:True RPAR:) EOF
+        AST:
+          FORALL x0:asset_id
+            FORALL x1:maintenance_contract_id
+              FORALL x2:supplier_company_id
+                FORALL x3:asset_details
+                  FORALL x4:asset_make
+                    FORALL x5:asset_model
+                      FORALL x6:asset_acquired_date
+                        FORALL x7:asset_disposed_date
+                          FORALL x8:other_asset_details
+                            IMPLIES
+                              PRED Assets(x0, x1, x2, x3, x4, x5, x6, x7, x8)
+                              TRUE
+   [G3] took 0.002 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 4 free variable(s) (a : asset_id, a1 : asset_details, a2 : asset_make, a3 : asset_model) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 18 variable occurrences in 2 formulas
+      Gold FOL:
+        a : local asset_id, global integer -> IntSort()
+        a1 : local asset_details, global varchar(255) -> StringSort()
+        a2 : local asset_make, global varchar(20) -> StringSort()
+        a3 : local asset_model, global varchar(20) -> StringSort()
+        a4 : local asset_acquired_date, global datetime -> IntSort()
+        a5 : local asset_disposed_date, global datetime -> IntSort()
+        m : local maintenance_contract_id, global integer -> IntSort()
+        o : local other_asset_details, global varchar(255) -> StringSort()
+        s : local supplier_company_id, global integer -> IntSort()
+      Predicted FOL:
+        x0 : local asset_id, global integer -> IntSort()
+        x1 : local maintenance_contract_id, global integer -> IntSort()
+        x2 : local supplier_company_id, global integer -> IntSort()
+        x3 : local asset_details, global varchar(255) -> StringSort()
+        x4 : local asset_make, global varchar(20) -> StringSort()
+        x5 : local asset_model, global varchar(20) -> StringSort()
+        x6 : local asset_acquired_date, global datetime -> IntSort()
+        x7 : local asset_disposed_date, global datetime -> IntSort()
+        x8 : local other_asset_details, global varchar(255) -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5656 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_712.py
+   [G8] took 0.003 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 4 free variable(s) (a : asset_id, a1 : asset_details, a2 : asset_make, a3 : asset_model) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s

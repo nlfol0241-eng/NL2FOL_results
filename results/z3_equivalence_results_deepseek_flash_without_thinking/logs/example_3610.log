@@ -1,0 +1,112 @@
+fol_equiv_gen log
+  input   : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\inputs\example_3610.json
+  output  : C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3610.py
+  run     : no
+
+==== generation ====
+== [G1] load input  (fol_equiv_gen.py, jsonio.py)
+   read 4217 characters; sections: NL, Vocabulary, Arity, Axioms, Internal Symbols, Gold FOL, Gold FOL internal, Global Sorts, Sort Axioms, Additional info, id, Predicted FOL
+      NL: Which programs are never broadcasted in the morning? Give me the names of the programs.
+   [G1] took 0.000 s
+== [G2] build signature  (signature.py, sql_types.py)
+   3 global sorts, 7 local sorts, 2 predicates, 0 functions, 1 constants, 0 warnings
+      global sorts:
+        int -> IntSort()
+        real -> Float32()   [domain And(Not(fpIsNaN(x)), Not(And(fpIsZero(x), fpIsNegative(x)))); IEEE single; NaN and -0 excluded]
+        text -> StringSort()
+      local sorts:
+        Channel_ID = int -> IntSort()
+        Launch = real -> Float32()
+        Name = text -> StringSort()
+        Origin = text -> StringSort()
+        Owner = text -> StringSort()
+        Program_ID = int -> IntSort()
+        Time_of_day = text -> StringSort()
+      symbols:
+        broadcast(Channel_ID, Program_ID, Time_of_day)
+        program(Program_ID, Name, Origin, Launch, Owner)
+        constant Morning : Time_of_day
+   [G2] took 0.000 s
+== [G3] tokenize and parse  (tokenizer.py, parser.py)
+   parsed 0 axioms, Gold FOL, Predicted FOL
+      Gold FOL: (∃o : Origin ∃o1 : Owner ∃l : Launch ∃p : Program_ID( program(p,n,o,l,o1) )) ∧ (¬(∃c : Channel_ID ∃o : Origin ∃t : Time_of_day ∃o1 : Owner ∃l : Launch ∃p1 : Program_ID ∃p : Program_ID( (((program(p,n,o,l,o1)) ∧ (broadcast(c,p1,t))) ∧ (p = p1)) ∧ (t = 'Morning') )))
+        tokens: LPAR:( EXISTS:∃ IDENT:o COLON:: IDENT:Origin EXISTS:∃ IDENT:o1 COLON:: IDENT:Owner EXISTS:∃ IDENT:l COLON:: IDENT:Launch EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:o1 RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( NOT:¬ LPAR:( EXISTS:∃ IDENT:c COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:o COLON:: IDENT:Origin EXISTS:∃ IDENT:t COLON:: IDENT:Time_of_day EXISTS:∃ IDENT:o1 COLON:: IDENT:Owner EXISTS:∃ IDENT:l COLON:: IDENT:Launch EXISTS:∃ IDENT:p1 COLON:: IDENT:Program_ID EXISTS:∃ IDENT:p COLON:: IDENT:Program_ID LPAR:( LPAR:( LPAR:( LPAR:( IDENT:program LPAR:( IDENT:p COMMA:, IDENT:n COMMA:, IDENT:o COMMA:, IDENT:l COMMA:, IDENT:o1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:broadcast LPAR:( IDENT:c COMMA:, IDENT:p1 COMMA:, IDENT:t RPAR:) RPAR:) RPAR:) AND:∧ LPAR:( IDENT:p EQ:= IDENT:p1 RPAR:) RPAR:) AND:∧ LPAR:( IDENT:t EQ:= LIT:Morning RPAR:) RPAR:) RPAR:) RPAR:) EOF
+        AST:
+          AND
+            EXISTS o:Origin
+              EXISTS o1:Owner
+                EXISTS l:Launch
+                  EXISTS p:Program_ID
+                    PRED program(p, n, o, l, o1)
+            NOT
+              EXISTS c:Channel_ID
+                EXISTS o:Origin
+                  EXISTS t:Time_of_day
+                    EXISTS o1:Owner
+                      EXISTS l:Launch
+                        EXISTS p1:Program_ID
+                          EXISTS p:Program_ID
+                            AND
+                              AND
+                                AND
+                                  PRED program(p, n, o, l, o1)
+                                  PRED broadcast(c, p1, t)
+                                EQ  p = p1
+                              EQ  t = 'Morning'
+      Predicted FOL: ∃p0 : Program_ID ∃p1 : Name ∃p2 : Origin ∃p3 : Launch ∃p4 : Owner (program(p0, p1, p2, p3, p4) ∧ ¬∃c0 : Channel_ID ∃c2 : Time_of_day broadcast(c0, p0, c2) ∧ c2 = 'Morning')
+        tokens: EXISTS:∃ IDENT:p0 COLON:: IDENT:Program_ID EXISTS:∃ IDENT:p1 COLON:: IDENT:Name EXISTS:∃ IDENT:p2 COLON:: IDENT:Origin EXISTS:∃ IDENT:p3 COLON:: IDENT:Launch EXISTS:∃ IDENT:p4 COLON:: IDENT:Owner LPAR:( IDENT:program LPAR:( IDENT:p0 COMMA:, IDENT:p1 COMMA:, IDENT:p2 COMMA:, IDENT:p3 COMMA:, IDENT:p4 RPAR:) AND:∧ NOT:¬ EXISTS:∃ IDENT:c0 COLON:: IDENT:Channel_ID EXISTS:∃ IDENT:c2 COLON:: IDENT:Time_of_day IDENT:broadcast LPAR:( IDENT:c0 COMMA:, IDENT:p0 COMMA:, IDENT:c2 RPAR:) AND:∧ IDENT:c2 EQ:= LIT:Morning RPAR:) EOF
+        AST:
+          EXISTS p0:Program_ID
+            EXISTS p1:Name
+              EXISTS p2:Origin
+                EXISTS p3:Launch
+                  EXISTS p4:Owner
+                    AND
+                      PRED program(p0, p1, p2, p3, p4)
+                      NOT
+                        EXISTS c0:Channel_ID
+                          EXISTS c2:Time_of_day
+                            AND
+                              PRED broadcast(c0, p0, c2)
+                              EQ  c2 = 'Morning'
+   [G3] took 0.001 s
+== [G4] pair free variables  (free_vars.py)
+   MISMATCH: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   -> verdict NOT EQUIVALENT, decided here without Z3
+   [G4] took 0.000 s
+== [G5] infer sorts  (sort_inference.py)
+   sorted 15 variable occurrences in 2 formulas
+      Gold FOL:
+        c : local Channel_ID, global int -> IntSort()
+        l : local Launch, global real -> Float32()
+        n : local Name, global text -> StringSort()
+        o : local Origin, global text -> StringSort()
+        o1 : local Owner, global text -> StringSort()
+        p : local Program_ID, global int -> IntSort()
+        p1 : local Program_ID, global int -> IntSort()
+        t : local Time_of_day, global text -> StringSort()
+      Predicted FOL:
+        c0 : local Channel_ID, global int -> IntSort()
+        c2 : local Time_of_day, global text -> StringSort()
+        p0 : local Program_ID, global int -> IntSort()
+        p1 : local Name, global text -> StringSort()
+        p2 : local Origin, global text -> StringSort()
+        p3 : local Launch, global real -> Float32()
+        p4 : local Owner, global text -> StringSort()
+   [G5] took 0.000 s
+== [G6] emit formulas  (emitter.py, ast_utils.py)
+   skipped: the verdict was decided in G4 (free-variable mismatch)
+   [G6] took 0.000 s
+== [G7] assemble file  (generator.py, sql_types.py, templates.py)
+   short-circuit file (no Z3): 150 lines, 5603 bytes
+   [G7] took 0.000 s
+== [G8] write output  (fol_equiv_gen.py)
+   wrote C:\Users\2851349\Desktop\Equivalence_result\fol_equiv_v5_fv_mismatch\Final_Spider_Equivalence_results_deepseek_thinking_off\checks\equiv_check_3610.py
+   [G8] took 0.002 s
+
+==== checking ====
+== [R4] verdict
+   R1-R3 skipped: the free variables decide the verdict
+   mismatch: Gold has 1 free variable(s) (n : Name) but Predicted has 0 (none): their answers have different arities
+   VERDICT: NOT EQUIVALENT (free-variable mismatch)
+   [R4] took 0.000 s
