@@ -27,7 +27,7 @@ A predicted formula is **equivalent** to the gold formula if and only if they ar
 - `Gold ⊨ Predicted`
 - `Predicted ⊨ Gold`
 
-Before the check, the free (answer) variables of the two formulas are paired by sort. Each example gets one of three verdicts: `EQUIVALENT`, `NOT EQUIVALENT`,`CHECK ERROR` or `TIMEOUT`.
+Before the check, the free (answer) variables of the two formulas are paired by sort. Each example gets one of four verdicts: `EQUIVALENT`, `NOT EQUIVALENT`,`CHECK ERROR` or `TIMEOUT`.
 
 ## Quick Start
 
