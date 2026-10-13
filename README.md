@@ -1,6 +1,6 @@
-# Translating NL2SQL Datasets into NL2FOL Benchmark
+# Translating NL2SQL Datasets into NL2FOL Benchmarks
 
-This repository contains a dataset for translating natural-language database queries into **Multi-Sorted First-Order Logic (FOL)**. It also contains the **Z3-based equivalence results** for FOL formulas predicted by several large language models (LLMs).
+This repository contains a dataset for translating natural-language statements into **Multi-Sorted First-Order Logic (FOL)**. It also contains the **Z3-based equivalence results** for FOL formulas predicted by several large language models (LLMs).
 
 ## Repository Structure
 
