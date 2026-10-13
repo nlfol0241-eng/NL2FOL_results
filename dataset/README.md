@@ -34,6 +34,7 @@ The order and values of dataset instances are preserved. Instance IDs are not re
 
 ## Loading the Dataset
 Python
+```python
 import json
  
 with open("dataset/<dataset_file>.json", "r", encoding="utf-8") as file:
@@ -41,13 +42,6 @@ data = json.load(file)
  
 print(f"Number of instances: {len(data)}")
 print(data[0])
+```
 
 Replace <dataset_file>.json with the actual dataset filename.
-
-## Citation
-
-If you use this dataset in academic work, please cite the associated paper or repository. Citation information will be added upon publication.
-
-## License
-
-This dataset is distributed under the license specified in the root of this repository. Any source datasets or external resources remain subject to their respective licenses.

@@ -1,4 +1,4 @@
-# NL2FOL: Natural Language to Multi-Sorted First-Order Logic
+# Translating NL2SQL Datasets into NL2FOL Benchmark
 
 This repository contains a dataset for translating natural-language database queries into **Multi-Sorted First-Order Logic (FOL)**. It also contains the **Z3-based equivalence results** for FOL formulas predicted by several large language models (LLMs).
 
@@ -22,7 +22,7 @@ This repository contains a dataset for translating natural-language database que
 
 ## Equivalence Checking
 
-A predicted formula is **equivalent** to the gold formula when it is equivalent to it **modulo the schema's sort axioms and key/foreign-key axioms**. Equivalence is checked in both directions:
+A predicted formula is **equivalent** to the gold formula if and only if they are logically equivalent **modulo the sort axioms and FOL axioms**. Equivalence is checked in **both directions**.
 
 - `Gold ⊨ Predicted`
 - `Predicted ⊨ Gold`
@@ -35,11 +35,3 @@ Before the check, the free (answer) variables of the two formulas are paired by 
 pip install z3-solver
 python results/z3_equivalence_results_gpt_6/checks/equiv_check_0.py -v
 ```
-
-## Citation
-
-If you use this dataset or these results, please cite the associated paper. Citation details will be added upon publication.
-
-## License
-
-The dataset and results are released under the license in this repository. Source datasets (for example, Spider) remain subject to their own licenses.
